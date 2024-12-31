@@ -1,0 +1,23 @@
+TODO:
+GFZ1 - Presumably, Samwise will make some tweaks.
+DSZ2 - Finish the rest of the level design.
+MMZ1 - Finish the rest of the level design.
+MMZ2 - Only a small portion of this level has seen any changes.
+MMZ3 - Dunno what Samwise wants, but apparently we're not done here.
+RVZ1 - Complete rework, Final Demo-style.
+RVZ2 - Complete rework, Final Demo-style.
+RVZ3 - Dunno what Samwise wants, but apparently we're not done here.
+DCZ1 - Complete rework, Final Demo-style.
+DCZ2 - Complete rework, Final Demo-style.
+DCZ3 - Everything.
+GEZ1 - Unfinished ending section filled with nothingness.
+GEZ2 - Most of the level design is either featureless hallways or non-existant.
+GEZ3 - Everything.
+RRZ1 - Complete rework, Final Demo-style.
+RRZ2 - Complete rework, Final Demo-style.
+RRZ3 - Reskin an unused Doom enemy with the SD2 Metal sprites (scaled-down Cyberdemon?) and make the level end when he is killed.
+FFZ - Everything.
+WZ - Rework the start, and make the rest of the level based on 
+HPZ (Glitch) - Import from Feb 2000.
+HPZ - Finish the rest of the level design.
+SHZ - Boot up my copy of SADX or noclip.website and remake the rest of level. Oh yeah, and restore that bell object.

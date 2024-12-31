@@ -1,0 +1,77 @@
+type = "Doom Builder Map Settings Configuration";
+gameconfig = "SRB2_Demo2.cfg";
+strictpatches = 0;
+
+maps
+{
+	
+	MAP04
+	{
+		defaultwalltexture = "GFZGRASS";
+		overridemiddletexture = false;
+		defaultceiltexture = "F_SKY1";
+		overrideceiltexture = false;
+		custombrightness = 196;
+		
+		resources
+		{
+		}
+		viewpositiony = -7100.709f;
+		viewpositionx = 13801.59f;
+		
+		testprecommand
+		{
+			autocloseonsuccess = true;
+			exitcodeiserror = true;
+			stderriserror = true;
+		}
+		customceilheight = 128;
+		customfloorheight = 0;
+		
+		grid
+		{
+			backoffsetx = 0;
+			backsource = 0;
+			gridoriginy = 0;
+			backscaley = 100;
+			gridrotate = 0;
+			backscalex = 100;
+			gridoriginx = 0;
+			gridsize = 32;
+			background = "";
+			backoffsety = 0;
+		}
+		viewscale = 0.7800898f;
+		
+		reloadresourceprecommand
+		{
+			autocloseonsuccess = true;
+			exitcodeiserror = true;
+			stderriserror = true;
+		}
+		defaulttoptexture = "GFZGRASS";
+		overridebottomtexture = false;
+		defaultbottomtexture = "GFZGRASS";
+		defaultfloortexture = "FLOOR0_6";
+		overrideceilheight = false;
+		overridebrightness = false;
+		
+		testpostcommand
+		{
+			autocloseonsuccess = true;
+			exitcodeiserror = true;
+			stderriserror = true;
+		}
+		overridefloorheight = false;
+		overridetoptexture = false;
+		uselongtexturenames = false;
+		overridefloortexture = false;
+		
+		reloadresourcepostcommand
+		{
+			autocloseonsuccess = true;
+			exitcodeiserror = true;
+			stderriserror = true;
+		}
+	}
+}
