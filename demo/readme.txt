@@ -2,7 +2,7 @@ Sonic Robo Blast 2
 Demo 2 Ultimate - Demo
 by save_as and Sam the Wise
 Release date: 01-01-2025
-File Date: 30.12.2024
+File Date: 01.01.2025
 -------------------
 
 12:07 PM (for save)
@@ -10,6 +10,15 @@ Hey there! Thanks for checking out our demo.
 This is Save talking.
 
 This is a mod of SRB2 Demo 2 designed to finish the campaign, and improve on the existing code, levels, music, and graphics.
+
+5:08 AM (for save)
+A while ago, Sam was having trouble with getting the window size to 640x400.
+I gave him the executable, and afterwards he asked if I wanted to help out
+with the project. 
+
+I did! And so I started working on Demo 2 Ultimate with him.
+It's been really fun being able to radically change the old Beta Quest maps
+into something I'd willingly play.
                                                                                                 ^
 7:03 PM (for Samwise)                                                                           |
 Heya!                                                                                           |
