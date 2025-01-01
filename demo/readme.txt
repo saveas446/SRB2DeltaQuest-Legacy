@@ -5,6 +5,10 @@ Release date: 01-01-2025
 File Date: 01.01.2025
 -------------------
 
+Notes:
+It is recommended to use a program like VirtualMidiSynth with the Arachno soundfont.
+--------------------------
+
 12:07 PM (for save)
 Hey there! Thanks for checking out our demo.
 This is Save talking.
