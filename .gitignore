@@ -6,3 +6,7 @@
 *.autosave1
 *.autosave2
 *.ini
+errorlog.txt
+CONFIG.CFG
+*.rar
+*.ini
