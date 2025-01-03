@@ -16,7 +16,7 @@ GEZ3 - Everything.
 RRZ1 - Complete rework, Final Demo-style.
 RRZ2 - Complete rework, Final Demo-style.
 RRZ3 - Reskin an unused Doom enemy with the SD2 Metal sprites (scaled-down Cyberdemon?) and make the level end when he is killed.
-FFZ - Everything.
+FFZ - Make the Mastermind able to be damaged, find some actual sprites.
 WZ - Rework the start, and make the rest of the level based on 
 HPZ (Glitch) - Import from Feb 2000.
 HPZ - Finish the rest of the level design.
