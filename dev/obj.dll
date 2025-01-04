@@ -15,6 +15,11 @@ Height = 4915200
 Thing 23 (Pain Elemental)
 Speed = 32
 
+Thing 110 (Hanging leg 2)
+Width = 3276800
+Height = 6553600
+Bits = NOGRAVITY+SOLID
+
 Thing 126 (Seaweed)
 Initial frame = 763
 
@@ -31,7 +36,7 @@ Height = 1048576
 Bits = SOLID
 
 Thing 132 (RMZ Tree 2)
-Bits = SOLID+NOGRAVITY
+Bits = NOGRAVITY+SOLID
 
 Frame 763
 Duration = 6

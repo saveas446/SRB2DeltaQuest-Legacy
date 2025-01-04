@@ -17,3 +17,4 @@ dev/CONFIG.CFG
 *.CFG
 dev/autosave.xml
 dev/CONFIG.CFG
+*.whacked
