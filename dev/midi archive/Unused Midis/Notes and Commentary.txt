@@ -1,0 +1,11 @@
+/////////
+//Notes//
+/////////
+
+Various MIDIs that never got used in any version of the game with one exception.
+These were all either released by a developer or composer who worked on SRB2. The
+aforementioned exception is System Shock - Intro (Techno Hill Zone; DOS).mid.
+This song in particular was used in, as the filename suggests SRB2 DOS, which was
+created by Stealth. Why didn't we lump this with the SRB2 TGF MIDIs? Simple, the
+version Stealth used was a recorded MIDI. Massive props to Vertz1515 for the
+find!
