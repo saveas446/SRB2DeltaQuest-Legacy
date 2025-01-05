@@ -13,7 +13,7 @@ MMZ3 - 100%
 RMZ1 - 60% 
 RMZ2 - 30%
 RMZ3 - 100%
-RVZ1 - 0%
+RVZ1 - 0% 
 RVZ2 - 0%
 RVZ3 - 90%
 DCZ1 - 25%
