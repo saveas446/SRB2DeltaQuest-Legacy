@@ -1,8 +1,9 @@
 TODO:
-DSZ2 - Clean up the ending of the level.
 MMZ1 - Finish the rest of the level design.
 MMZ2 - Only a small portion of this level has seen any changes.
 MMZ3 - Dunno what Samwise wants, but apparently we're not done here.
+RMZ1 - Finish the rest of the level design.
+RMZ2 - Remake this level to get it up to new standards.
 RVZ1 - Complete rework, Final Demo-style.
 RVZ2 - Complete rework, Final Demo-style.
 RVZ3 - Dunno what Samwise wants, but apparently we're not done here.
