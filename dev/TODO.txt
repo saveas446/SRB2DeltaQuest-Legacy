@@ -20,4 +20,4 @@ FFZ - Make the Mastermind able to be damaged, find some actual sprites.
 WZ - Rework the start, and make the rest of the level based on 
 HPZ (Glitch) - Import from Feb 2000.
 HPZ - Finish the rest of the level design.
-SHZ - Boot up my copy of SADX or noclip.website and remake the rest of level. Oh yeah, and restore that bell object.
+SHZ - Add a couple finishing touches.
