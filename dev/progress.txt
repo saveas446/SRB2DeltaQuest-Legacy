@@ -5,7 +5,7 @@ THZ1 - 100%
 THZ2 - 100%
 THZ3 - 100%
 DSZ1 - 100%
-DSZ2 - 20%
+DSZ2 - 90%
 DSZ3 - 100%
 MMZ1 - 70%
 MMZ2 - 5%
@@ -19,7 +19,7 @@ RVZ3 - 90%
 DCZ1 - 20%
 DCZ2 - 20%
 DCZ3 - 0%
-GEZ1 - 80%
+GEZ1 - 85%
 GEZ2 - 10%
 GEZ3 - 0%
 RRZ1 - 0%
