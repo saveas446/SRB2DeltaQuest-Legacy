@@ -7,7 +7,7 @@ THZ3 - 100%
 DSZ1 - 100%
 DSZ2 - 100%
 DSZ3 - 100%
-MMZ1 - 70%
+MMZ1 - 100%
 MMZ2 - 5%
 MMZ3 - 100% 
 RMZ1 - 60% 
@@ -28,7 +28,7 @@ RRZ3 - 0%
 FFZ - 80%
 WDZ - 5%
 DHZ - 0%
-SHZ - 90%
+SHZ - 100%
 HPZ - 25%
 STZ - 15%
 CCZ - 0%
@@ -58,7 +58,6 @@ FFZ - Make the Mastermind able to be damaged, find some actual sprites.
 WZ - Rework the start, and make the rest of the level based on Sonic 2.
 DHZ - Everything. Not even the assets have been made yet.
 HPZ - Finish the rest of the level design.
-SHZ - Add a couple finishing touches.
 STZ - Finish the rest of the level design.
 CCZ - Everything.
 EFZ - Everything.

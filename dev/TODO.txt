@@ -1,5 +1,4 @@
 TODO:
-MMZ1 - Finish the rest of the level design.
 MMZ2 - Only a small portion of this level has seen any changes.
 MMZ3 - Dunno what Samwise wants, but apparently we're not done here.
 RMZ1 - Finish the rest of the level design.
@@ -20,7 +19,6 @@ FFZ - Make the Mastermind able to be damaged, find some actual sprites.
 WZ - Rework the start, and make the rest of the level based on Sonic 2.
 DHZ - Everything. Not even the assets have been made yet.
 HPZ - Finish the rest of the level design.
-SHZ - Add a couple finishing touches.
 STZ - Finish the rest of the level design.
 CCZ - Everything.
 EFZ - Everything.
