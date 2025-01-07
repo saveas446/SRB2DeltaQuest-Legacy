@@ -1,7 +1,7 @@
-GFZ1 - 100% 
-GFZ2 - 100% 
-GFZ3 - 100% 
-THZ1 - 100% 
+GFZ1 - ETERNAL DEVELOPMENT 
+GFZ2 - ETERNAL DEVELOPMENT  
+GFZ3 - ETERNAL DEVELOPMENT 
+THZ1 - ETERNAL DEVELOPMENT 
 THZ2 - 100%
 THZ3 - 100%
 DSZ1 - 100%
@@ -37,7 +37,6 @@ SVZ - 0%
 FSZ - 0%
 
 TODO:
-MMZ1 - Finish the rest of the level design.
 MMZ2 - Only a small portion of this level has seen any changes.
 MMZ3 - Dunno what Samwise wants, but apparently we're not done here.
 RMZ1 - Finish the rest of the level design.
