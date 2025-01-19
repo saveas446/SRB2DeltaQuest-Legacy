@@ -806,63 +806,37 @@ void D_AdvanceDemo (void)
 //
 void D_DoAdvanceDemo (void)
 {
-//extern consvar_t cv_cam_dist; // Tails 06-23-2001
     players[consoleplayer].playerstate = PST_LIVE;  // not reborn
     advancedemo = false;
     usergame = false;               // no save / end game here
     gameaction = ga_nothing;
-// Done lots of stuff here Tails
-        demosequence = (demosequence+1)%12;
+	// Done lots of stuff here Tails
+    demosequence = (demosequence+1)%12;
 
     switch (demosequence)
     {
       case 0:
 		G_DeferedPlayDemo ("titledem"); // Title demo Tails 01-06-2000
         break;
-	  case 1:
-        pagetic = 1;
-        gamestate = GS_DEMOSCREEN;
-        pagename = "BLACK";
-	    break;
-      case 2:
+      case 1:
 		G_DeferedPlayDemo ("demo1");
         break;
+	  case 2:
+        pagetic = 200;
+        gamestate = GS_DEMOSCREEN;
+        pagename = "CREDITS";
+	    break;
       case 3:
-        pagetic = 1;
-        gamestate = GS_DEMOSCREEN;
-        pagename = "BLACK";
-        break;
-      case 4:
-        G_DeferedPlayDemo ("titledem");
-        break;
-      case 5:
-        pagetic = 1;
-        gamestate = GS_DEMOSCREEN;
-        pagename = "BLACK";
-        break;
-      case 6:
         G_DeferedPlayDemo ("demo2");
         break;
-      case 7:
-        pagetic = 1;
-        gamestate = GS_DEMOSCREEN;
-        pagename = "BLACK";
+      case 4:
+		G_DeferedPlayDemo ("titledem"); // Title demo Tails 01-06-2000
         break;
-      case 8:
-        G_DeferedPlayDemo ("titledem");
-        break;
-      case 9:
-        pagetic = 1;
-        gamestate = GS_DEMOSCREEN;
-        pagename = "BLACK";
-        break;
-      case 10:
+      case 5:
         G_DeferedPlayDemo ("demo3");
         break;
-      case 11:
-        pagetic = 1;
-        gamestate = GS_DEMOSCREEN;
-        pagename = "BLACK";
+      case 6:
+        G_DeferedPlayDemo ("demo4");
         break;
     }
 }
@@ -1122,16 +1096,12 @@ void IdentifyVersion (void)
     }
     else
     {
-        I_Error ("SRB2.SRB not found!\n"); // Tails 12-23-2001
+        I_Error ("Main WAD file not found!\n");
         // unused code : I_ERROR never return
         gamemode = indetermined;
     }
 
 //    D_AddFile(legacywad);
-	// Add the players Tails 12-24-2001
-	D_AddFile("sonic.plr");
-	D_AddFile("tails.plr");
-	D_AddFile("knux.plr");
 }
 
 

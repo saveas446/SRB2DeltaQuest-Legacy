@@ -371,7 +371,7 @@ int WINAPI HandledWinMain(HINSTANCE hInstance,
 
     // open a dummy window, both 3dfx Glide and DirectX need one.
     if ( (hWndMain = OpenMainWindow(hInstance,nCmdShow,
-		                va("Sonic Robo Blast 2 v0.6"))) == NULL )
+		                va("Sonic Robo Blast 2 v0.5"))) == NULL )
 //                va("Sonic Robo Blast 2 v%i.%i"VERSIONSTRING,VERSION/100,VERSION%100))) == NULL )
     {
         tlErrorMessage("Couldn't open window");

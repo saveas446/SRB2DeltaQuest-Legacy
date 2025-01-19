@@ -53,3 +53,13 @@ dev/autosave.xml
 *.svclog
 *.scc
 *.plg
+
+objs/Release/DoomLegacy.res
+objs/Release/vc60.idb
+src/WIN32/wLegacy.ncb
+src/WIN32/wLegacy.ncb
+src/WIN32/wLegacy.ncb
+src/WIN32/wLegacy.ncb
+src/WIN32/wLegacy.ncb
+*.ncb
+src/WIN32/wLegacy.ncb

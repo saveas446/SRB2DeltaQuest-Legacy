@@ -3263,19 +3263,6 @@ void WI_loadData(void)
     // "entering"
     entering = W_CachePatchName("WIENTER", PU_STATIC);
 
-	cscore = W_CachePatchName("CSCORE", PU_STATIC); // Tails 08-11-2001
-
-	gotemall = W_CachePatchName("GOTEMALL", PU_STATIC); // Tails 08-12-2001
-	cemerald = W_CachePatchName("CEMERALD", PU_STATIC); // Tails 08-12-2001
-	nowsuper = W_CachePatchName("NOWSUPER", PU_STATIC); // Tails 08-12-2001
-	chaos1 = W_CachePatchName("CHAOS1", PU_STATIC); // Tails 08-12-2001
-	chaos2 = W_CachePatchName("CHAOS2", PU_STATIC); // Tails 08-12-2001
-	chaos3 = W_CachePatchName("CHAOS3", PU_STATIC); // Tails 08-12-2001
-	chaos4 = W_CachePatchName("CHAOS4", PU_STATIC); // Tails 08-12-2001
-	chaos5 = W_CachePatchName("CHAOS5", PU_STATIC); // Tails 08-12-2001
-	chaos6 = W_CachePatchName("CHAOS6", PU_STATIC); // Tails 08-12-2001
-	chaos7 = W_CachePatchName("CHAOS7", PU_STATIC); // Tails 08-12-2001
-
     // "kills"
     kills = W_CachePatchName("WIOSTK", PU_STATIC);
 
@@ -3395,17 +3382,6 @@ void WI_unloadData(void)
     Z_ChangeTag(colon, PU_CACHE);
     Z_ChangeTag(finished, PU_CACHE);
     Z_ChangeTag(entering, PU_CACHE);
-    Z_ChangeTag(cscore, PU_CACHE); // Tails 08-11-2001
-    Z_ChangeTag(cemerald, PU_CACHE); // Tails 08-12-2001
-    Z_ChangeTag(gotemall, PU_CACHE); // Tails 08-12-2001
-	Z_ChangeTag(nowsuper, PU_CACHE); // Tails 08-12-2001
-	Z_ChangeTag(chaos1, PU_CACHE); // Tails 08-12-2001
-	Z_ChangeTag(chaos2, PU_CACHE); // Tails 08-12-2001
-	Z_ChangeTag(chaos3, PU_CACHE); // Tails 08-12-2001
-	Z_ChangeTag(chaos4, PU_CACHE); // Tails 08-12-2001
-	Z_ChangeTag(chaos5, PU_CACHE); // Tails 08-12-2001
-	Z_ChangeTag(chaos6, PU_CACHE); // Tails 08-12-2001
-	Z_ChangeTag(chaos7, PU_CACHE); // Tails 08-12-2001
     Z_ChangeTag(kills, PU_CACHE);
     Z_ChangeTag(fscore, PU_CACHE); // Oops! Forgot this! Tails 08-11-2001
     Z_ChangeTag(secret, PU_CACHE);
