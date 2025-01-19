@@ -224,11 +224,12 @@ consvar_t cv_teamdamage = {"teamdamage","0",CV_NETVAR,CV_OnOff};
 consvar_t cv_timetic = {"timetic","0",0,CV_OnOff}; // Tails 04-01-2001
 consvar_t cv_debug = {"debug","0",0,CV_OnOff}; // Tails 06-17-2001
 
-consvar_t cv_fraglimit  = {"fraglimit" ,"0",CV_NETVAR | CV_CALL | CV_NOINIT,fraglimit_cons_t, FragLimit_OnChange};
+/*consvar_t cv_fraglimit  = {"fraglimit" ,"0",CV_NETVAR | CV_CALL | CV_NOINIT,fraglimit_cons_t, FragLimit_OnChange};
 consvar_t cv_timelimit  = {"timelimit" ,"0",CV_NETVAR | CV_CALL | CV_NOINIT,CV_Unsigned, TimeLimit_OnChange};
 consvar_t cv_deathmatch = {"deathmatch","0",CV_NETVAR | CV_CALL,deathmatch_cons_t, Deahtmatch_OnChange};
 consvar_t cv_gametype   = {"gametype","0",CV_NETVAR | CV_CALL,gametype_cons_t, GameType_OnChange};
-consvar_t cv_autoctf   = {"autoctf","0",CV_NETVAR, CV_YesNo, NULL}; // Tails 07-22-2001
+consvar_t cv_autoctf   = {"autoctf","0",CV_NETVAR, CV_YesNo, NULL}; // Tails 07-22-2001*/
+
 consvar_t cv_allowexitlevel = {"allowexitlevel"  ,"1",CV_NETVAR , CV_YesNo, NULL};
 
 consvar_t cv_netstat = {"netstat","0",0,CV_OnOff};

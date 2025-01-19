@@ -1582,43 +1582,6 @@ void D_DoomMain (void)
     wipegamestate = gamestate;
   //------------------------------------------------ COMMAND LINE PARAMS
 
-// check for gametype definition Tails 05-19-2001
-	p = M_CheckParm ("-gametype");
-	if(p && p < myargc-1)
-	{
-		COM_BufAddText ("gametype ");
-		COM_BufAddText (myargv[p+1]);
-		COM_BufAddText ("\n");
-	}
-
-    if (M_CheckParm ("-autoctf"))   COM_BufAddText ("autoctf yes\n"); // Tails 08-04-2001
-
-p = M_CheckParm ("-ctfteam"); // Tails 08-04-2001
-    if (p && p < myargc-1) // Tails 08-04-2001
-    { // Tails 08-04-2001
-		ctfteam = myargv[p+1]; // Tails 08-04-2001
-		COM_BufAddText("preferredteam \""); // Tails 08-04-2001
-		COM_BufAddText(ctfteam); // Tails 08-04-2001
-		COM_BufAddText("\"\n"); // Tails 08-04-2001
-    } // Tails 08-04-2001
-
-// Joystick fun! Tails 06-13-2001
-	p = M_CheckParm ("-joystick");
-	if(p && p < myargc-1)
-	{
-		COM_BufAddText ("use_joystick ");
-		COM_BufAddText (myargv[p+1]);
-		COM_BufAddText ("\n");
-	}
-// Maxplayers setting Tails 06-10-2001
-	p = M_CheckParm ("-maxplayers");
-	if(p && p < myargc-1)
-	{
-		COM_BufAddText ("sv_maxplayers ");
-		COM_BufAddText (myargv[p+1]);
-		COM_BufAddText ("\n");
-	}
-
     // Initialize CD-Audio
     if (!M_CheckParm ("-nocd"))        I_InitCD ();
     if (M_CheckParm ("-respawn"))      COM_BufAddText ("respawnmonsters 1\n");
