@@ -2185,7 +2185,6 @@ void G_DeferedInitNew (skill_t skill, char* mapname, boolean StartSplitScreenGam
     
     CV_SetValue(&cv_splitscreen,StartSplitScreenGame);
     CV_SetValue(&cv_deathmatch,0);
-    CV_SetValue(&cv_gametype,0); // Tails 03-13-2001
     CV_SetValue(&cv_fastmonsters,0);
     CV_SetValue(&cv_respawnmonsters,0);
     CV_SetValue(&cv_timelimit,0);

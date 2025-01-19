@@ -2995,13 +2995,7 @@ void WI_drawStats(void)
     V_DrawScaledPatch(SP_TIMEX, SP_TIMEY, FB, time);
 
 // Draw the time Tails 11-21-2000
-	if(cv_timetic.value) // new TimeTic option Tails 04-02-2001
-	{
-		WI_drawPercent(112, 26, players[me].realtime);
-	}
-	else
-	{
-          if(players[me].seconds < 10)
+    if(players[me].seconds < 10)
            {
 			WI_drawPercent(104, 26, 0);
            }
@@ -3018,7 +3012,6 @@ void WI_drawStats(void)
 //        V_DrawScaledPatch(BASEVIDWIDTH/2 + SP_TIMEX, SP_TIMEY, FB, par);
 //        WI_drawTime(BASEVIDWIDTH - SP_TIMEX, SP_TIMEY, cnt_par);
 //    }
-	}
 	else // Special Stage Drawer Tails 08-12-2001
 	{
 		// Draw big CHAOS EMERALDS thing

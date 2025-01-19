@@ -1831,35 +1831,25 @@ void ST_overlayDrawer (int playernum)
 			}
 			else
 			{
-				if(cv_timetic.value) // Special option to show tics instead of MM:SS
+				if(plyr->seconds < 10)
 				{
-					ST_drawOverlayNum(SCX(112), // Tails 02-29-2000
-                             SCY(42)-(16*vid.dupy), // Draw the current single seconds time Tails 02-29-2000
-                             leveltime,
-                             tallnum,NULL);
+					ST_drawOverlayNum(SCX(104), // Tails 02-29-2000
+						SCY(42)-(16*vid.dupy), // Draw the current single seconds time Tails 02-29-2000
+						0,
+						tallnum,NULL);
 				}
-				else
-				{
-					if(plyr->seconds < 10)
-					{
-						ST_drawOverlayNum(SCX(104), // Tails 02-29-2000
-                             SCY(42)-(16*vid.dupy), // Draw the current single seconds time Tails 02-29-2000
-                             0,
-                             tallnum,NULL);
-					}
 
-					ST_drawOverlayNum(SCX(112), // Tails 02-29-2000
-                             SCY(42)-(16*vid.dupy), // Draw the current single seconds time Tails 02-29-2000
-                             plyr->seconds,
-                             tallnum,NULL);
+				ST_drawOverlayNum(SCX(112), // Tails 02-29-2000
+					SCY(42)-(16*vid.dupy), // Draw the current single seconds time Tails 02-29-2000
+                    plyr->seconds,
+                    tallnum,NULL);
 
-					ST_drawOverlayNum(SCX(88), // Tails 02-29-2000
-                             SCY(42)-(16*vid.dupy), // Draw the current single seconds time Tails 02-29-2000
-                             plyr->minutes,
-                             tallnum,NULL);
+				ST_drawOverlayNum(SCX(88), // Tails 02-29-2000
+                    SCY(42)-(16*vid.dupy), // Draw the current single seconds time Tails 02-29-2000
+                    plyr->minutes,
+                    tallnum,NULL);
 
-					V_DrawScaledPatch (SCX(88),SCY(42)-(16*vid.dupy), FG | V_NOSCALESTART,sbocolon); // colon location Tails 02-29-2000
-				}
+			   V_DrawScaledPatch (SCX(88),SCY(42)-(16*vid.dupy), FG | V_NOSCALESTART,sbocolon); // colon location Tails 02-29-2000
 
                V_DrawScaledPatch (SCX(17),SCY(26), FG | V_NOSCALESTART,sbotime); // TIME location Tails 02-29-2000
 

@@ -1664,13 +1664,6 @@ void D_DoomMain (void)
         autostart = true;
     }
 
-	// Start "TimeTic" option Tails 04-01-2001
-	p = M_CheckParm ("-timetic");
-	if(p)
-	{
-		cv_timetic.value = true;
-	}
-
 
     // demo doesn't need anymore to be added with D_AddFile()
     p = M_CheckParm ("-playdemo");

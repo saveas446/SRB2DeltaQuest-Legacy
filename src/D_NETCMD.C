@@ -221,14 +221,13 @@ CV_PossibleValue_t fraglimit_cons_t[]={{0,"MIN"},{1000,"MAX"},{0,NULL}};
 
 consvar_t cv_teamplay   = {"teamplay"  ,"0",CV_NETVAR | CV_CALL,teamplay_cons_t, TeamPlay_OnChange};
 consvar_t cv_teamdamage = {"teamdamage","0",CV_NETVAR,CV_OnOff};
-consvar_t cv_timetic = {"timetic","0",0,CV_OnOff}; // Tails 04-01-2001
 consvar_t cv_debug = {"debug","0",0,CV_OnOff}; // Tails 06-17-2001
 
-/*consvar_t cv_fraglimit  = {"fraglimit" ,"0",CV_NETVAR | CV_CALL | CV_NOINIT,fraglimit_cons_t, FragLimit_OnChange};
+consvar_t cv_fraglimit  = {"fraglimit" ,"0",CV_NETVAR | CV_CALL | CV_NOINIT,fraglimit_cons_t, FragLimit_OnChange};
 consvar_t cv_timelimit  = {"timelimit" ,"0",CV_NETVAR | CV_CALL | CV_NOINIT,CV_Unsigned, TimeLimit_OnChange};
 consvar_t cv_deathmatch = {"deathmatch","0",CV_NETVAR | CV_CALL,deathmatch_cons_t, Deahtmatch_OnChange};
 consvar_t cv_gametype   = {"gametype","0",CV_NETVAR | CV_CALL,gametype_cons_t, GameType_OnChange};
-consvar_t cv_autoctf   = {"autoctf","0",CV_NETVAR, CV_YesNo, NULL}; // Tails 07-22-2001*/
+consvar_t cv_autoctf   = {"autoctf","0",CV_NETVAR, CV_YesNo, NULL}; // Tails 07-22-2001
 
 consvar_t cv_allowexitlevel = {"allowexitlevel"  ,"1",CV_NETVAR , CV_YesNo, NULL};
 
@@ -389,10 +388,7 @@ void D_RegisterClientCommands (void)
     CV_RegisterVar (&cv_teamdamage);
     CV_RegisterVar (&cv_fraglimit);
     CV_RegisterVar (&cv_deathmatch);
-	CV_RegisterVar (&cv_gametype); // Tails 03-13-2001
-	CV_RegisterVar (&cv_timetic); // Tails 04-01-2001
 	CV_RegisterVar (&cv_debug); // Tails 06-17-2001
-	CV_RegisterVar (&cv_autoctf); // Tails 06-17-2001
     CV_RegisterVar (&cv_timelimit);
     CV_RegisterVar (&cv_playdemospeed);
     CV_RegisterVar (&cv_netstat);
@@ -445,43 +441,6 @@ void SendNameAndColor(void)
 
 	WRITEBYTE(p,cv_playercolor.value);
 
-	if(cv_gametype.value == 4)
-		{
-			if(players[consoleplayer].ctfteam != 1 && players[consoleplayer].ctfteam != 2)
-			{
-			team = cv_preferredteam.value;
-
-			if(team < 1)
-				team = 1;
-
-				if(cv_autoctf.value)
-				{
-					y = z = 0;
-					for (i=0; i<MAXPLAYERS; i++)
-					{
-						if(players[i].ctfteam == 1)
-							z++;
-						else if (players[i].ctfteam == 2)
-							y++;
-					}
-					
-					if(z > y)
-						team = 2;
-					else if (y > z)
-						team = 1;
-					else
-					{
-						if(P_Random() &1)
-							team = 2;
-						else
-							team = 1;
-					}
-				}
-				WRITEBYTE(p,team); // CTF Tails 07-31-2001
-			}
-			else
-				WRITEBYTE(p, players[consoleplayer].ctfteam);
-		}
     WRITESTRINGN(p,cv_playername.string,MAXPLAYERNAME);
     *(p-1) = 0; // finish the string;
 
@@ -516,17 +475,6 @@ void SendNameAndColor(void)
 		else if(cv_skin.value == 2 && cv_playercolor.value != 0)
 		{
 			CV_SetValue(&cv_playercolor, 0);
-		}
-	}
-	else if(cv_gametype.value == 4)
-	{
-		if(players[consoleplayer].ctfteam == 1 && cv_playercolor.value != 6)
-		{
-			CV_SetValue(&cv_playercolor, 6);
-		}
-		else if(players[consoleplayer].ctfteam == 2 && cv_playercolor.value != 7)
-		{
-			CV_SetValue(&cv_playercolor, 7);
 		}
 	}
 }

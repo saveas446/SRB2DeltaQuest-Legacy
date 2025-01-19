@@ -63,3 +63,4 @@ src/WIN32/wLegacy.ncb
 src/WIN32/wLegacy.ncb
 *.ncb
 src/WIN32/wLegacy.ncb
+src/R_THINGS.C
