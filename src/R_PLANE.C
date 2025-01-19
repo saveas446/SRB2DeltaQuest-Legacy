@@ -748,13 +748,14 @@ void R_DrawPlanes (void)
     //    I_Error ("R_DrawPlanes: drawsegs overflow (%i)",
     //             ds_p - drawsegs);
 
-    if (lastvisplane - visplanes > MAXVISPLANES)
+	// doesn't seem to work - Save 20-01-25
+    /*if (lastvisplane - visplanes > MAXVISPLANES)
         I_Error ("R_DrawPlanes: visplane overflow (%i)",
                  lastvisplane - visplanes);
 
     if (lastopening - openings > MAXOPENINGS)
         I_Error ("R_DrawPlanes: opening overflow (%i)",
-                 lastopening - openings);
+                 lastopening - openings);*/
 #endif
 
 

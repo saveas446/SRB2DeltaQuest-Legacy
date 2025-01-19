@@ -1799,7 +1799,7 @@ void P_MovePlayer (player_t* player)
 							else // Otherwise, THOK!
 							{
 								P_InstaThrust (player->mo, player->mo->angle, 60*FRACUNIT); // Catapult the player
-								S_StartSound (player->mo, sfx_thok); // Play the THOK sound
+								S_StartSound (player->mo, sfx_jump); // Play the THOK sound
 										
 								// Now check the player's color so the right THOK object is displayed.
 								if(player->skincolor == 0)
