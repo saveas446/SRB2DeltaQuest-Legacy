@@ -612,7 +612,7 @@ if(thing->player)
 		{
 		   switch(tmthing->type)
 		   {
-				 // Blue Crawla
+				case MT_BLUECRAWLA: // Blue Crawla
 				case MT_REDCRAWLA: // Red Crawla
 				case MT_EGGMOBILE: // Eggmobile 1
 				case MT_JETTBOMBER: // Jetty-Syn Bomber
@@ -726,6 +726,7 @@ if(tmthing->player) // Is the moving/interacting object the player?
 				case MT_MISC74: // Super Sneaker box
 				case MT_PRUP: // 1-Up box
 				case MT_MISC10: // 10-Ring box
+				case MT_BLUECRAWLA:
 				case MT_MISC11: // 25-Ring box
 				case MT_INV: // Invincibility box
 					if(((tmthing->player->mfjumped == 0) && (tmthing->player->mfspinning == 0)) && ((tmthing->player->powers[pw_super]) || (tmthing->player->powers[pw_invulnerability]))) // Don't bust boxes like Sonic Adventure Tails 11-02-2000
@@ -816,7 +817,7 @@ if(tmthing->player) // Is the moving/interacting object the player?
 		{
 			switch(thing->type)
 			{
-                 // Blue Crawla
+                case MT_BLUECRAWLA: // Blue Crawla
                 case MT_REDCRAWLA: // Red Crawla
                 case MT_SKIM: // Skim
                 case MT_GFZFISH: // Jumping Fish
@@ -907,6 +908,7 @@ if(tmthing->player) // Is the moving/interacting object the player?
 			switch(tmthing->type)
 				{
                  // Blue Crawla
+				case MT_BLUECRAWLA:
                 case MT_REDCRAWLA: // Red Crawla
                 case MT_SKIM: // Skim
                 case MT_GFZFISH: // Jumping Fish
@@ -2265,6 +2267,7 @@ boolean PIT_RadiusAttack (mobj_t* thing)
 			case MT_MISC74: // Super Sneaker box
 			case MT_PRUP: // 1-Up box
 			case MT_MISC10: // 10-Ring box
+			case MT_BLUECRAWLA:
 			case MT_MISC11: // 25-Ring box
 			case MT_INV: // Invincibility box
 				return true;

@@ -626,6 +626,7 @@ if((mo->type==MT_MINE) && (mo->z <= mo->floorz) && !(mo->state == &states[S_MINE
 						case MT_MISC74: // Super Sneaker box
 						case MT_PRUP: // 1-Up box
 						case MT_MISC10: // 10-Ring box
+						case MT_BLUECRAWLA:
 						case MT_MISC11: // 25-Ring box
 						case MT_INV: // Invincibility box
 							mo->momz = 4*FRACUNIT;
@@ -644,6 +645,7 @@ if((mo->type==MT_MINE) && (mo->z <= mo->floorz) && !(mo->state == &states[S_MINE
 				case MT_MISC74: // Super Sneaker box
 				case MT_PRUP: // 1-Up box
 				case MT_MISC10: // 10-Ring box
+				case MT_BLUECRAWLA:
 				case MT_MISC11: // 25-Ring box
 				case MT_INV: // Invincibility box
 				if(mo->player)
