@@ -1669,6 +1669,7 @@ void ST_overlayDrawer (int playernum)
 				// start lives status Tails 03-12-2000
 				if(!cv_gametype.value || cv_gametype.value == 2)
 				{
+					
 					if (plyr->skin == 0)
 					{
 								   V_DrawScaledPatch (SCX(52),SCY(192)-(sboslife->height*vid.dupy), FG | V_NOSCALESTART,stsonic); // Tails 03-11-2000
@@ -1689,7 +1690,8 @@ void ST_overlayDrawer (int playernum)
 								   V_DrawScaledPatch (SCX(52),SCY(192)-(sboulife->height*vid.dupy), FG | V_NOSCALESTART,stuser); // Tails 03-11-2000
 								   V_DrawScaledPatch (SCX(16),SCY(192)-(sboulife->height*vid.dupy), FG | V_NOSCALESTART,sboulife); // Tails 03-11-2000
 					}
-
+					
+					
 					// draw the number of lives
 					ST_drawOverlayNum(SCX(88), // was 50 Tails 10-31-99
 									SCY(197)-(16*vid.dupy),

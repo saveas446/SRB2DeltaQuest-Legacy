@@ -424,14 +424,6 @@ boolean PIT_CheckThing (mobj_t* thing)
 
     //SoM: 3/15/2000: Moved to front.
 
-	// Stop getting stuck in Eggman! Tails 07-21-2001
-	if (thing->type == MT_EGGMOBILE && (thing->state->nextstate == S_EGGMOBILE_PAIN || thing->state->nextstate == S_EGGMOBILE_PAIN2 || thing->state->nextstate == S_EGGMOBILE_PAIN3 || thing->state->nextstate == S_EGGMOBILE_PAIN4 || thing->state->nextstate == S_EGGMOBILE_PAIN5 || thing->state->nextstate == S_EGGMOBILE_PAIN6 || 
-		thing->state->nextstate == S_EGGMOBILE_PAIN7 || thing->state->nextstate == S_EGGMOBILE_PAIN8 || thing->state->nextstate == S_EGGMOBILE_PAIN9 || thing->state->nextstate == S_EGGMOBILE_PAIN10 || thing->state->nextstate == S_EGGMOBILE_PAIN11 || thing->state->nextstate == S_EGGMOBILE_PAIN12)) 
-		return true;
-	else if (tmthing->type == MT_EGGMOBILE && (tmthing->state->nextstate == S_EGGMOBILE_PAIN || tmthing->state->nextstate == S_EGGMOBILE_PAIN2 || tmthing->state->nextstate == S_EGGMOBILE_PAIN3 || tmthing->state->nextstate == S_EGGMOBILE_PAIN4 || tmthing->state->nextstate == S_EGGMOBILE_PAIN5 || tmthing->state->nextstate == S_EGGMOBILE_PAIN6 || 
-		tmthing->state->nextstate == S_EGGMOBILE_PAIN7 || tmthing->state->nextstate == S_EGGMOBILE_PAIN8 || tmthing->state->nextstate == S_EGGMOBILE_PAIN9 || tmthing->state->nextstate == S_EGGMOBILE_PAIN10 || tmthing->state->nextstate == S_EGGMOBILE_PAIN11 || tmthing->state->nextstate == S_EGGMOBILE_PAIN12)) 
-		return true;
-
     // don't clip against self
     if (thing == tmthing)
         return true;
@@ -475,53 +467,9 @@ boolean PIT_CheckThing (mobj_t* thing)
 		}
     }
 
-// Snowballs can hit other things Tails 12-12-2001
-    if (tmthing->type == MT_SNOWBALL) // Tails 12-12-2001
-    {
-        // see if it went over / under
-        if (tmthing->z > thing->z + thing->height)
-            return true;                // overhead
-        if (tmthing->z+tmthing->height < thing->z)
-            return true;                // underneath
-
-        if (( tmthing->target && (
-            tmthing->target->type == thing->type)) )
-        {
-            // Don't hit same species as originator.
-            if (thing == tmthing->target)
-                return true;
-
-            if (thing->type != MT_PLAYER)
-            {
-                // Explode, but do no damage.
-                // Let players missile other players.
-                return false;
-            }
-        }
-
-        if (! (thing->flags & MF_SHOOTABLE) )
-        {
-            // didn't do any damage
-            return !(thing->flags & MF_SOLID);
-        }
-
-        // damage / explode
-        damage = ((P_Random()%8)+1)*tmthing->info->damage;
-		if(tmthing->type == MT_DETON)
-			P_DamageMobj (thing, tmthing, tmthing, damage); // New way Tails 12-10-2000
-		else
-			P_DamageMobj (thing, tmthing, tmthing->target, damage); // New way Tails 12-10-2000
-/*
-        if( P_DamageMobj (thing, tmthing, tmthing->target, damage) && (thing->flags & MF_NOBLOOD)==0 && demoversion>=129 )
-            P_SpawnBloodSplats (tmthing->x,tmthing->y,tmthing->z, damage, thing->momx, thing->momy);
-*/
-
-        // don't traverse any more
-			return true;
-    }
 
     // missiles can hit other things
-    if (tmthing->flags & MF_MISSILE || tmthing->type == MT_SNOWBALL) // Tails 12-12-2001
+    if (tmthing->flags & MF_MISSILE)
     {
         // see if it went over / under
         if (tmthing->z > thing->z + thing->height)
@@ -649,12 +597,11 @@ if(thing->player)
 		{
 		   switch(tmthing->type)
 		   {
-				case MT_BLUECRAWLA: // Blue Crawla
+				 // Blue Crawla
 				case MT_REDCRAWLA: // Red Crawla
 				case MT_EGGMOBILE: // Eggmobile 1
 				case MT_JETTBOMBER: // Jetty-Syn Bomber
 				case MT_JETTGUNNER: // Jetty-Syn Gunner
-					CONS_Printf("Damage\n");
 					P_DamageMobj(tmthing, thing, thing, 1);
 					break;
 				default:
@@ -665,12 +612,11 @@ if(thing->player)
 		{
 		   switch(tmthing->type)
 		   {
-				case MT_BLUECRAWLA: // Blue Crawla
+				 // Blue Crawla
 				case MT_REDCRAWLA: // Red Crawla
 				case MT_EGGMOBILE: // Eggmobile 1
 				case MT_JETTBOMBER: // Jetty-Syn Bomber
 				case MT_JETTGUNNER: // Jetty-Syn Gunner
-					CONS_Printf("Damage\n");
 					P_DamageMobj(thing, tmthing, tmthing, 1);
 					break;
 				default:
@@ -870,7 +816,7 @@ if(tmthing->player) // Is the moving/interacting object the player?
 		{
 			switch(thing->type)
 			{
-                case MT_BLUECRAWLA: // Blue Crawla
+                 // Blue Crawla
                 case MT_REDCRAWLA: // Red Crawla
                 case MT_SKIM: // Skim
                 case MT_GFZFISH: // Jumping Fish
@@ -960,7 +906,7 @@ if(tmthing->player) // Is the moving/interacting object the player?
 			{
 			switch(tmthing->type)
 				{
-                case MT_BLUECRAWLA: // Blue Crawla
+                 // Blue Crawla
                 case MT_REDCRAWLA: // Red Crawla
                 case MT_SKIM: // Skim
                 case MT_GFZFISH: // Jumping Fish
@@ -983,7 +929,7 @@ if(tmthing->player) // Is the moving/interacting object the player?
 		{
 			switch(tmthing->type)
 			{
-                case MT_BLUECRAWLA: // Blue Crawla
+                 // Blue Crawla
                 case MT_REDCRAWLA: // Red Crawla
                 case MT_SKIM: // Skim
                 case MT_GFZFISH: // Jumping Fish

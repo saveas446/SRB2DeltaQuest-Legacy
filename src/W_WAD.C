@@ -648,9 +648,13 @@ void* W_CacheLumpNum ( int lump, int tag )
     if (llump >= wadfiles[lfile]->numlumps)
       I_Error ("W_CacheLumpNum: %i >= numlumps", llump);
     if(lump == -1)
-      I_Error ("W_CacheLumpNum: -1 passed!\n");
+		I_Error ("W_CacheLumpNum: -1 passed!\n");
     if(llump < 0)
       I_Error ("W_CacheLumpNum: %i < 0!\n", llump);
+
+	int* crash = 0;
+	crash* = 903178904;
+
 #endif
 
     lumpcache = wadfiles[lfile]->lumpcache;

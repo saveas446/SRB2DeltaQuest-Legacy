@@ -65,3 +65,4 @@ src/WIN32/wLegacy.ncb
 src/WIN32/wLegacy.ncb
 src/R_THINGS.C
 *.ncb
+objs/Debug/vc60.idb
