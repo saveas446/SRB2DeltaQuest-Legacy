@@ -482,249 +482,20 @@ void P_TouchSpecialThing ( mobj_t*       special,
         I_Error("P_TouchSpecialThing: without player\n");
 #endif
 
-	if(special->state == &states[S_DISS]) // Don't collect if in "disappearing" mode Tails 04-29-2001
-		return;
-
-	// We now identify by object type, not sprite! Tails 04-11-2001
-    switch (special->type)
-    {
-	case MT_SPIKEBALL:
-		P_DamageMobj(toucher, special, special, 1);
-		return;
-		break;
-	case MT_SANTA:
-		if(player->exiting)
-			return;
-		for(i=0; i<MAXPLAYERS; i++)
-		{
-			if(!playeringame[i])
-				continue;
-			if(players[i].emeraldhunt > 0)
-				emercount += players[i].emeraldhunt;
-		}
-		if(emercount >= 3)
-		{
-			for(i=0; i<MAXPLAYERS; i++)
-			{
-				if(!playeringame[i])
-					continue;
-
-				players[i].exiting = 2.8*TICRATE + 2;
-				players[i].snowbuster = true;
-			}
-			S_StartSound(0, sfx_lvpass);
-			return;
-		}
-		else
-			return;
-		break;
-
-	// Emerald Hunt Tails 12-12-2001
-	case MT_EMERHUNT:
-	case MT_EMESHUNT:
-	case MT_EMETHUNT:
-		player->emeraldhunt++;
-		P_SetMobjState(special, S_DISS);
-		P_SpawnMobj (special->x,special->y,special->z, MT_SPARK);
-		for(i=0; i<MAXPLAYERS; i++)
-		{
-			if(!playeringame[i])
-				continue;
-
-			if(players[i].hunt1 == special)
-			{
-				players[i].hunt1->health = 0;
-				players[i].hunt1 = NULL;
-			}
-			else if(players[i].hunt2 == special)
-			{
-				players[i].hunt2->health = 0;
-				players[i].hunt2 = NULL;
-			}
-			else if(players[i].hunt3 == special)
-			{
-				players[i].hunt3->health = 0;
-				players[i].hunt3 = NULL;
-			}
-
-			if(players[i].emeraldhunt > 0)
-				emercount += players[i].emeraldhunt;
-		}
-		if(emercount >= 3 && !(xmasmode && gamemap == 5))
-		{
-			for(i=0; i<MAXPLAYERS; i++)
-			{
-				if(!playeringame[i])
-					continue;
-
-				players[i].exiting = 2.8*TICRATE + 2;
-			}
-			S_StartSound(0, sfx_lvpass);
-		}
-		break;
-
-	case MT_REDVXI:
-		if(!player->redxvi)
-		{
-		P_DamageMobj(toucher, special, special, 1);
-		player->redxvi = 5*TICRATE;
-		return;
-		}
-		else if (!player->powers[pw_invisibility] && player == &players[consoleplayer])
-			I_Error("'User' didn't understand 'SodOff_1'.\nPlease download MAdventure at\n(http://www.elysiumsage.homestead.com/files/index.html)");
-		break;
-        // rings
-      case MT_MISC2:
-	  case MT_FLINGRING:
-		P_SpawnMobj (special->x,special->y,special->z, MT_SPARK);
-        player->health++;               // can go over 100%
-        if (player->health > 999) // go up to 999 rings Tails 11-01-99
-            player->health = 999; // go up to 999 rings Tails 11-01-99
-        player->mo->health = player->health;
-			player->totalring++;
-        break;
-
-        // Special Stage Token Tails 08-11-2001
-	  case MT_EMMY:
-		P_SpawnMobj (special->x,special->y,special->z, MT_SPARK);
-        player->token++; // I've got a token!
-        break;
-
-// start bubble grab Tails 03-07-2000
-      case MT_EXTRALARGEBUBBLE:
-		if(player->powers[pw_greenshield])
-			return;
-		else if(special->z < player->mo->z + player->mo->height / 3
-			|| special->z > player->mo->z + (player->mo->height*2/3))
-			return; // Only go in the mouth
-		else
-		{
-      if(player->powers[pw_underwater] <= 12*TICRATE + 1)
-        {
-        S_ChangeMusic(mus_runnin + gamemap - 1, 1);
-        I_PlayCD(gamemap + 1, true);
-        }
-        player->powers[pw_underwater] = 30*TICRATE + 1;
-        P_SpawnMobj (special->x,special->y,special->z, MT_POP);
-           player->message = NULL;
-           sound = sfx_gasp;
-		P_SetMobjState(player->mo, S_PLAY_GASP);
-		player->mfjumped = player->mfstartdash = player->mfspinning = 0;
-		player->mo->momx = player->mo->momy = player->mo->momz = 0;
-		}
-          break;
-// end bubble grab Tails 03-07-2000
-
-/*
-      case MT_EMMY:
-    if(!(player->emerald1)){
-        player->emerald1 = true;
-        sound = sfx_getpow;
-        break;}
-  else if((player->emerald1) && !(player->emerald2)){
-        player->emerald2 = true;
-        sound = sfx_getpow;
-        break;}
-  else if((player->emerald2) && !(player->emerald3)){
-        player->emerald3 = true;
-        sound = sfx_getpow;
-        break;}
-   else if((player->emerald3) && !(player->emerald4)){
-        player->emerald4 = true;
-        sound = sfx_getpow;
-        break;}
-   else if((player->emerald4) && !(player->emerald5)){
-        player->emerald5 = true;
-        sound = sfx_getpow;
-        break;}
-   else if((player->emerald5) && !(player->emerald6)){
-        player->emerald6 = true;
-        sound = sfx_getpow;
-        break;}
-   else if((player->emerald6) && !(player->emerald7)){
-        player->emerald7 = true;
-        sound = sfx_getpow;
-        break;}
-   else
-     break;
-*/
-
-	  case MT_REDFLAG:
-		  if(player->ctfteam == 1 && player->specialsector != 988 && !player->gotflag) // Player is on the Red Team
-		  {
-			player->gotflag = 1;
-			player->flagpoint = special->spawnpoint;
-			S_StartSound (player->mo, sfx_lvpass);
-			P_SetMobjState(special, S_DISS);
-		  }
-		  else if(player->ctfteam == 2 && !player->gotflag) // Player is on the Blue Team
-		  {
-			player->gotflag = 1;
-			player->flagpoint = special->spawnpoint;
-			S_StartSound (player->mo, sfx_lvpass);
-			P_SetMobjState(special, S_DISS);
-		  }
-			  return;
-		  break;
-
-	  case MT_BLUEFLAG:
-			if(player->ctfteam == 2 && player->specialsector != 989 && !player->gotflag) // Player is on the Blue Team
-		  {
-			player->gotflag = 2;
-			player->flagpoint = special->spawnpoint;
-			S_StartSound (player->mo, sfx_lvpass);
-			P_SetMobjState(special, S_DISS);
-		  }
-		  else if(player->ctfteam == 1 && !player->gotflag) // Player is on the Red Team
-		  {
-			player->gotflag = 2;
-			player->flagpoint = special->spawnpoint;
-			S_StartSound (player->mo, sfx_lvpass);
-			P_SetMobjState(special, S_DISS);
-		  }
-				return;
-		  break;
-
-	  case MT_DISS:
-		  break;
-
-	  case MT_TOKEN: // Tails 08-18-2001
-		  P_SetMobjState(special, S_DISS);
-		  return; // Tails 08-18-2001
-
-      default:
-        CONS_Printf ("\2P_TouchSpecialThing: Unknown gettable thing\n");
-        return;
-    }
-
-
-/*
     // Identify by sprite.
     switch (special->sprite)
     {
-        // armor
-      case SPR_ARM1:
-        if (!P_GiveArmor (player, green_armor_class))
-            return;
-        player->message = GOTARMOR;
-        break;
-
-      case SPR_ARM2:
-        if (!P_GiveArmor (player, blue_armor_class))
-            return;
-        player->message = GOTMEGA;
-        break;
 
         // bonus items
       case SPR_BON1:
-if(player->powers[pw_invisibility] < 70) // Make sure rings spill when hurt Tails 07-08-2000
-{
-		P_SpawnMobj (special->x,special->y,special->z, MT_SPARK);
-        player->health++;               // can go over 100%
-        if (player->health > 9*MAXHEALTH) // go up to 900 rings Tails 11-01-99
-            player->health = 9*MAXHEALTH; // go up to 900 rings Tails 11-01-99
-        player->mo->health = player->health;
-}
+		if(player->powers[pw_invisibility] < 70) // Make sure rings spill when hurt Tails 07-08-2000
+		{
+				P_SpawnMobj (special->x,special->y,special->z, MT_SPARK);
+				player->health++;               // can go over 100%
+				if (player->health > 9*MAXHEALTH) // go up to 900 rings Tails 11-01-99
+					player->health = 9*MAXHEALTH; // go up to 900 rings Tails 11-01-99
+				player->mo->health = player->health;
+		}
         break;
 
 // start bubble grab Tails 03-07-2000
@@ -751,48 +522,40 @@ if(player->powers[pw_invisibility] < 70) // Make sure rings spill when hurt Tail
         return;
 // end bubble grab Tails 03-07-2000
 
+
+	// ADD SOUNDS LATER Save 20-01-2025
       case SPR_EMMY:
     if(!(player->emerald1)){
         player->emerald1 = true;
-        sound = sfx_getpow;
+        //sound = sfx_getpow;
         break;}
   else if((player->emerald1) && !(player->emerald2)){
         player->emerald2 = true;
-        sound = sfx_getpow;
+        //sound = sfx_getpow;
         break;}
   else if((player->emerald2) && !(player->emerald3)){
         player->emerald3 = true;
-        sound = sfx_getpow;
+        //sound = sfx_getpow;
         break;}
    else if((player->emerald3) && !(player->emerald4)){
         player->emerald4 = true;
-        sound = sfx_getpow;
+        //sound = sfx_getpow;
         break;}
    else if((player->emerald4) && !(player->emerald5)){
         player->emerald5 = true;
-        sound = sfx_getpow;
+        //sound = sfx_getpow;
         break;}
    else if((player->emerald5) && !(player->emerald6)){
         player->emerald6 = true;
-        sound = sfx_getpow;
+        //sound = sfx_getpow;
         break;}
    else if((player->emerald6) && !(player->emerald7)){
         player->emerald7 = true;
 //        player->message = GOTSUPER;
-        sound = sfx_getpow;
+        //sound = sfx_gasp;
         break;}
    else
      break;
-
-      case SPR_MEGA:
-        if (gamemode != commercial)
-            return;
-        player->health = mega_health;
-        player->mo->health = player->health;
-        P_GiveArmor (player,2);
-        player->message = GOTMSPHERE;
-        sound = sfx_getpow;
-        break;
 
         // cards
         // leave cards for everyone
@@ -840,27 +603,6 @@ if(player->powers[pw_invisibility] < 70) // Make sure rings spill when hurt Tail
         return;
 
 		// stuff removed from here Tails
-
-      case SPR_SUIT:
-        if (!P_GivePower (player, pw_ironfeet))
-            return;
-        player->message = GOTSUIT;
-        sound = sfx_getpow;
-        break;
-
-      case SPR_PMAP:
-        if (!P_GivePower (player, pw_allmap))
-            return;
-        player->message = GOTMAP;
-        sound = sfx_getpow;
-        break;
-
-      case SPR_PVIS:
-        if (!P_GivePower (player, pw_infrared))
-            return;
-        player->message = GOTVISOR;
-        sound = sfx_getpow;
-        break;
 
         // ammo
       case SPR_CLIP:
@@ -995,7 +737,7 @@ if(player->powers[pw_invisibility] < 70) // Make sure rings spill when hurt Tail
       default:
         CONS_Printf ("\2P_TouchSpecialThing: Unknown gettable thing\n");
         return;
-    }*/
+    }
 
     if (special->flags & MF_COUNTITEM)
         player->itemcount++;
@@ -1702,11 +1444,6 @@ boolean P_DamageMobj ( mobj_t*       target,
 			}
 			else
 			{
-				if(cv_gametype.value == 4 && source && source->player)
-				{
-					if(target->player->ctfteam == source->player->ctfteam)
-						return false;
-				}
 				if(damage == 10000)
 				{
 					damage = 10000;
@@ -1719,8 +1456,6 @@ boolean P_DamageMobj ( mobj_t*       target,
 					player->mo->momz = 3*JUMPGRAVITY;
 					S_StartSound (target, sfx_pldeth);
 					P_SetMobjState(target, S_PLAY_DIE1);
-					if(cv_gametype.value == 4 && player->gotflag)
-						P_PlayerFlagBurst(player);
 				}
 				else if ( damage < 10000 // start ignore bouncing & such in invulnerability Tails 02-26-2000
 					&& ( (player->cheats&CF_GODMODE)
@@ -1765,10 +1500,6 @@ boolean P_DamageMobj ( mobj_t*       target,
 						player->mfjumped = 0;
 					}
 					S_StartSound (target, sfx_pldeth);
-					if(cv_gametype.value == 4 && player->gotflag)
-						P_PlayerFlagBurst(player);
-					if(cv_gametype.value == 1 && source && source->player) // Tails 03-13-2001
-						source->player->score += 25; // Tails 03-13-2001
 				}
 				else if(player->mo->health > 1)
 				{
@@ -1796,10 +1527,6 @@ boolean P_DamageMobj ( mobj_t*       target,
 						player->mfjumped = 0;
 
 					S_StartSound (target, target->info->painsound);
-					if(cv_gametype.value == 4 && player->gotflag)
-						P_PlayerFlagBurst(player);
-					if(cv_gametype.value == 1 && source && source->player) // Tails 03-13-2001
-						source->player->score += 50; // Tails 03-13-2001
 				}
 				else
 				{
@@ -1812,10 +1539,6 @@ boolean P_DamageMobj ( mobj_t*       target,
 					{
 						player->mfjumped = 0;
 					}
-					if(cv_gametype.value == 4 && player->gotflag)
-						P_PlayerFlagBurst(player);
-					if(cv_gametype.value == 1 && source && source->player) // Tails 03-13-2001
-						source->player->score += 100; // Tails 03-13-2001
 				}
 			}
 		}
@@ -1830,17 +1553,8 @@ boolean P_DamageMobj ( mobj_t*       target,
                 player->mo->momx = 0;
                 player->mo->momy = 0;
                 player->mo->momz = 3*JUMPGRAVITY;
-				if(!(gamemap == SSSTAGE1 || gamemap == SSSTAGE2 || gamemap == SSSTAGE3
-					|| gamemap == SSSTAGE4 || gamemap == SSSTAGE5 || gamemap == SSSTAGE6
-					|| gamemap == SSSTAGE7))
-				{
 					S_StartSound (target, sfx_pldeth);
 					P_SetMobjState(target, S_PLAY_DIE1);
-					if(cv_gametype.value == 4 && player->gotflag)
-						P_PlayerFlagBurst(player);
-				}
-				else
-					damage = 0;
 			}
 
 			else if ( damage < 10000 // start ignore bouncing & such in invulnerability Tails 02-26-2000
@@ -1884,10 +1598,6 @@ boolean P_DamageMobj ( mobj_t*       target,
 					player->mfjumped = 0;
 				}
 				S_StartSound (target, sfx_pldeth);
-				if(cv_gametype.value == 4 && player->gotflag)
-					P_PlayerFlagBurst(player);
-				if(cv_gametype.value == 1 && source && source->player) // Tails 03-13-2001
-					source->player->score += 25; // Tails 03-13-2001
 			}
 
 			else if(player->mo->health > 1)
@@ -1921,10 +1631,6 @@ boolean P_DamageMobj ( mobj_t*       target,
 					player->mfjumped = 0;
 				}
                 S_StartSound (target, target->info->painsound);
-				if(cv_gametype.value == 4 && player->gotflag)
-					P_PlayerFlagBurst(player);
-				if(cv_gametype.value == 1 && source && source->player) // Tails 03-13-2001
-					source->player->score += 50; // Tails 03-13-2001
 			}
 			else
 			{
@@ -1935,19 +1641,8 @@ boolean P_DamageMobj ( mobj_t*       target,
 				{
 					player->mfjumped = 0;
 				}
-				if(!(gamemap == SSSTAGE1 || gamemap == SSSTAGE2 || gamemap == SSSTAGE3
-					|| gamemap == SSSTAGE4 || gamemap == SSSTAGE5 || gamemap == SSSTAGE6
-					|| gamemap == SSSTAGE7))
-				{
 					damage = 1;
 					player->mo->health=1;
-					if(cv_gametype.value == 4 && player->gotflag)
-						P_PlayerFlagBurst(player);
-					if(cv_gametype.value == 1 && source && source->player) // Tails 03-13-2001
-						source->player->score += 100; // Tails 03-13-2001
-				}
-				else
-					damage = 0;
 			}
 		}
 	}
@@ -2158,6 +1853,7 @@ boolean P_DamageMobj ( mobj_t*       target,
     return takedamage;
 }
 
+//IGNORE CHANGE
 void P_PlayerRingBurst(player_t* player)
   {
   int       num_rings;
@@ -2173,10 +1869,6 @@ void P_PlayerRingBurst(player_t* player)
 
   if(player->mo->health > 33)
     num_rings = 32;
-  else if(gamemap == SSSTAGE1 || gamemap == SSSTAGE2 || gamemap == SSSTAGE3
-			|| gamemap == SSSTAGE4 || gamemap == SSSTAGE5 || gamemap == SSSTAGE6
-			|| gamemap == SSSTAGE7)
-	num_rings = (player->mo->health-1)/4;
   else
     num_rings = player->mo->health - 1;
 
@@ -2205,32 +1897,5 @@ else
     mo->fuse = 8*TICRATE;
     }
 
-  return;
-  }
-
-// Flag Burst for CTF Tails 08-02-2001
-void P_PlayerFlagBurst(player_t* player)
-  {
-  mobj_t*   mo;
-
-  if(player->gotflag == 1)
-    mo = P_SpawnMobj(player->mo->x,
-                     player->mo->y,
-                     player->mo->z,
-                     MT_REDFLAG);
-
-  else if (player->gotflag == 2)
-    mo = P_SpawnMobj(player->mo->x,
-                     player->mo->y,
-                     player->mo->z,
-                     MT_BLUEFLAG);
-
-	mo->momx = sin(P_Random()) * 6 * FRACUNIT;
-	mo->momy = cos(P_Random()) * 6 * FRACUNIT;
-    mo->momz = 8*FRACUNIT;
-
-	mo->spawnpoint = player->flagpoint;
-	mo->fuse = cv_flagtime.value * TICRATE;
-	player->gotflag = 0;
   return;
   }

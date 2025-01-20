@@ -1008,21 +1008,6 @@ void HU_drawDeathmatchRankings (void)
     p = W_CachePatchName("RESULT",PU_CACHE);
     V_DrawScaledPatch ((BASEVIDWIDTH-p->width)/2,5,0,p);
     // count frags for each present player
-if(cv_gametype.value == 4) // CTF Mode behaves differently Tails 07-31-2001
-{
-	fragtab[0].count = players[0].bluescore;
-	fragtab[0].num = 0;
-	fragtab[0].color = 7;
-	fragtab[0].name = "Blue Team";
-
-	fragtab[1].count = players[0].redscore;
-	fragtab[1].num = 1;
-	fragtab[1].color = 6;
-	fragtab[1].name = "Red Team";
-	scorelines = 2;
-}
-else
-{
     scorelines = 0;
     for (i=0; i<MAXPLAYERS; i++)
     {
@@ -1040,7 +1025,6 @@ else
             scorelines++;
         }
     }
-}
 
     //Fab:25-04-98: when you play, you quickly see your frags because your
     //  name is displayed white, when playback demo, you quicly see who's the

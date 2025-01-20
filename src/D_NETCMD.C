@@ -227,7 +227,6 @@ consvar_t cv_fraglimit  = {"fraglimit" ,"0",CV_NETVAR | CV_CALL | CV_NOINIT,frag
 consvar_t cv_timelimit  = {"timelimit" ,"0",CV_NETVAR | CV_CALL | CV_NOINIT,CV_Unsigned, TimeLimit_OnChange};
 consvar_t cv_deathmatch = {"deathmatch","0",CV_NETVAR | CV_CALL,deathmatch_cons_t, Deahtmatch_OnChange};
 consvar_t cv_gametype   = {"gametype","0",CV_NETVAR | CV_CALL,gametype_cons_t, GameType_OnChange};
-consvar_t cv_autoctf   = {"autoctf","0",CV_NETVAR, CV_YesNo, NULL}; // Tails 07-22-2001
 
 consvar_t cv_allowexitlevel = {"allowexitlevel"  ,"1",CV_NETVAR , CV_YesNo, NULL};
 
@@ -513,11 +512,6 @@ void Got_NameAndcolor(char **cp,int playernum)
     if(p->mo)
         p->mo->flags =  (p->mo->flags & ~MF_TRANSLATION)
                      | ((p->skincolor)<<MF_TRANSSHIFT);
-
-	// CTF Stuff Tails 07-31-2001
-	if(cv_gametype.value == 4)
-		p->ctfteam=READBYTE(*cp); // CTF Tails 07-31-2001
-
 
     // name
     if(demoversion>=128)

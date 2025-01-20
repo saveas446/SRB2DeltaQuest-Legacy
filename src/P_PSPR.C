@@ -316,39 +316,8 @@ void A_WeaponReady ( player_t*     player,
     //  the missile launcher and bfg do not auto fire
     if (player->cmd.buttons & BT_ATTACK) // Tails 12-03-2000
     {
-		player->bustercount++; // Tails 12-12-2001
-		if(((cv_gametype.value == 1 || cv_gametype.value == 4) && player->mo->health > 1 && !player->attackdown) || (cv_gametype.value == 3 && player->mo->health > 1 && !player->attackdown && player->tagit))
-		{
-			player->attackdown = true;
-		player->mo->health--;
-		player->health--;
-		P_SpawnPlayerMissile (player->mo, MT_REDRING, player); // Tails 03-13-2001
-			return;
-		}
-		else
-        if ( player->mo->health > 1 && !player->attackdown
-             && (!cv_gametype.value==1) && (player->charability == 3 || player->snowbuster)) // Megaman
-        {
-		P_SpawnPlayerMissile (player->mo, MT_REDRING, player);
-		player->mo->health--;
-		player->health--;
-		player->attackdown = true;
-            return;
-        }
+		// Replace with decompiled code from Demo 2 later Save 20-01-2025
     }
-	else if (player->bustercount > 2*TICRATE && player->mo->health > 5) // Tails 12-12-2001
-	{
-		P_SpawnPlayerMissile (player->mo, MT_SNOWBALL, player); // Tails 12-12-2001
-		player->mo->health -= 5; // Tails 12-12-2001
-		player->health -= 5; // Tails 12-12-2001
-		player->bustercount = 0; // Tails 12-12-2001
-		player->attackdown = false; // Tails 12-12-2001
-	}
-    else
-	{
-        player->attackdown = false;
-		player->bustercount = 0; // Tails 12-12-2001
-	}
 
     // bob the weapon based on movement speed
     angle = (128*leveltime)&FINEMASK;

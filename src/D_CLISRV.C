@@ -155,7 +155,7 @@ boolean       notimecheck; // check file time through network ?
 
 consvar_t cv_playdemospeed  = {"playdemospeed","0",0,CV_Unsigned};
 
-void P_PlayerFlagBurst(player_t* player); // Protos Tails 08-02-2001
+//void P_PlayerFlagBurst(player_t* player); // Protos Tails 08-02-201
 
 
 // some software don't support largest packet
@@ -457,7 +457,6 @@ static void SV_SendServerInfo(int node, ULONG time)
     netbuffer->u.serverinfo.load = 0;        // unused for the moment
     netbuffer->u.serverinfo.deathmatch = cv_deathmatch.value;
     netbuffer->u.serverinfo.gametype = cv_gametype.value; // Tails 03-13-2001
-    netbuffer->u.serverinfo.autoctf = cv_autoctf.value; // Tails 07-22-2001
     if(gamemapname[0])
         strcpy(netbuffer->u.serverinfo.mapname,gamemapname);
     else
@@ -759,11 +758,6 @@ void ExecuteExitCmd(char **cp,int playernum)
         // we should use a reset player but there is not such function
         players[playernum].frags[i] = 0;
     }
-	players[playernum].tagit = 0; // Tails 08-02-2001
-	if(players[playernum].gotflag)
-		P_PlayerFlagBurst(&players[playernum]); // Don't take the flag with you! Tails 08-02-2001
-	players[playernum].ctfteam = 0; // Tails 08-04-2001
-    players[playernum].addfrags = 0;
     if( players[playernum].mo )
     {
         players[playernum].mo->player = NULL;

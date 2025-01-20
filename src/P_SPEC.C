@@ -2232,7 +2232,6 @@ int             iquetail;
 void P_PlayerInSpecialSector (player_t* player)
 {
     sector_t*   sector;
-	mobj_t*		mo; // Tails 08-02-2001
     boolean     instantdamage=false;
 	line_t      junk; // Tails 12-03-99 buttons and more
 
@@ -2259,68 +2258,6 @@ void P_PlayerInSpecialSector (player_t* player)
 
 	if(player->specialsector == 982 || player->specialsector == 985 || player->specialsector == 987 || player->specialsector == 990 || player->specialsector == 991)  // de-generalize the exit sector Tails 12-15-2000
 		return;
-
-	if(player->specialsector == 988 && player->mo->z == player->mo->floorz)
-	{
-		if(player->gotflag == 2 && player->ctfteam == 1)
-		{
-			players[0].redscore++;
-			mo = P_SpawnMobj(player->mo->x,
-							player->mo->y,
-							player->mo->z,
-							MT_BLUEFLAG);
-			player->gotflag = 0;
-			mo->flags &= ~MF_SPECIAL;
-			mo->fuse = TICRATE;
-			mo->spawnpoint = player->flagpoint;
-		}
-		else if(player->gotflag == 1 && player->ctfteam == 1)
-		{
-			mo = P_SpawnMobj(player->mo->x,
-							player->mo->y,
-							player->mo->z,
-							MT_REDFLAG);
-			mo->flags &= ~MF_SPECIAL;
-			player->gotflag = 0;
-			mo->fuse = TICRATE;
-			mo->spawnpoint = player->flagpoint;
-		}
-		return;
-	}
-	else if(player->specialsector == 989 && player->mo->z == player->mo->floorz)
-	{
-		if(player->gotflag == 1 && player->ctfteam == 2)
-		{
-			players[0].bluescore++;
-			mo = P_SpawnMobj(player->mo->x,
-							player->mo->y,
-							player->mo->z,
-							MT_REDFLAG);
-			player->gotflag = 0;
-			mo->flags &= ~MF_SPECIAL;
-			mo->fuse = TICRATE;
-			mo->spawnpoint = player->flagpoint;
-		}
-		else if(player->gotflag == 2 && player->ctfteam == 2)
-		{
-			mo = P_SpawnMobj(player->mo->x,
-							player->mo->y,
-							player->mo->z,
-							MT_BLUEFLAG);
-			mo->flags &= ~MF_SPECIAL;
-			player->gotflag = 0;
-			mo->fuse = TICRATE;
-			mo->spawnpoint = player->flagpoint;
-		}
-		return;
-	}
-
-	if(player->specialsector == 983 || player->specialsector == 984) // Slime! Tails 04-15-2001
-	{
-		if(player->mo->z+player->mo->height/4 < player->mo->waterz && !player->powers[pw_greenshield])
-			P_DamageMobj(player->mo, NULL, NULL, 1);
-		return;
-	}
 
 	// 3D floor special sector support Tails 11-17-2001
 	if (sector->ffloors)

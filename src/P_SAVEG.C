@@ -120,8 +120,6 @@ void P_ArchivePlayers (void)
 		WRITEBYTE(save_p, players[i].emerald5);
 		WRITEBYTE(save_p, players[i].emerald6);
 		WRITEBYTE(save_p, players[i].emerald7);
-		WRITEBYTE(save_p, players[i].superready);
-		WRITEBYTE(save_p, players[i].snowbuster);
 		WRITEBYTE(save_p, players[i].xtralife);
 		WRITEBYTE(save_p, players[i].xtralife2);
 		// Tails
@@ -163,8 +161,6 @@ void P_UnArchivePlayers (void)
 		players[i].emerald5 = READBYTE(save_p);
 		players[i].emerald6 = READBYTE(save_p);
 		players[i].emerald7 = READBYTE(save_p);
-		players[i].superready = READBYTE(save_p);
-		players[i].snowbuster = READBYTE(save_p);
 		players[i].xtralife = READBYTE(save_p);
 		players[i].xtralife2 = READBYTE(save_p);
 		// Tails

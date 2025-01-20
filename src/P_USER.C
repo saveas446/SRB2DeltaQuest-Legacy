@@ -225,13 +225,8 @@ extern consvar_t cv_numsnow; // Tails 12-25-2001
 void P_MovePlayer (player_t* player)
 {
     ticcmd_t*           cmd;
-	int					i; // Tails 04-25-2001
-	int					tag = 0; // Tails 05-08-2001
-	angle_t				movepushangle; // Analog Test Tails 06-10-2001
-	angle_t				movepushsideangle; // Analog Test Tails 06-10-2001
-	fixed_t tempx; // Tails 06-14-2001
-	fixed_t tempy; // Tails 06-14-2001
-	angle_t tempangle; // Tails 06-14-2001
+	angle_t				movepushangle; 
+	angle_t				movepushsideangle; 
 	int snormalspeed;
 	int swaterspeed;
 	int sflyspeed;
@@ -273,6 +268,7 @@ void P_MovePlayer (player_t* player)
 					player->mo->angle = (cmd->angleturn<<16);
 		#endif
 	}
+
 
 // Start lots of cmomx/y stuff Tails 04-18-2001
 // CMOMx stands for the conveyor belt speed.
@@ -1159,33 +1155,7 @@ void P_MovePlayer (player_t* player)
 // Check if player is in the exit sector.
 // If so, begin the level end process. Tails 12-15-2000
 		if(player->mo->subsector->sector->special == 982 && !player->exiting)
-		{
-				if(cv_gametype.value == 2) // If in Race Mode, allow
-				{                          // a 60-second wait ala Sonic 2. Tails 04-25-2001
-					for(i=0; i<MAXPLAYERS; i++) // Tails 04-25-2001
-					{ // Tails 04-25-2001
-						if(playeringame[i])
-							players[i].countdown = 60*TICRATE; // Tails 04-25-2001
-					} // Tails 04-25-2001
-					player->exiting = 3*TICRATE;
-					player->countdown2 = 71*TICRATE;
-
-					// Check if all the players in the race have finished. If so, end the level.
-					for(i = 0; i < MAXPLAYERS; i++)
-					{
-						if(playeringame[i])
-						{
-							if(!players[i].exiting)
-								break;
-						}
-					}
-
-					if(i == MAXPLAYERS)  // finished
-						player->exiting = 2.8*TICRATE + 2;
-				}
-				else
-					player->exiting = 2.8*TICRATE + 2;
-		}
+			player->exiting = 2.8*TICRATE + 2;
 
 
 		// If 10 seconds are left on the timer,
@@ -1904,130 +1874,6 @@ void P_MovePlayer (player_t* player)
 		}
 
 
-//////////////////
-//TAG MODE STUFF//
-//////////////////
-		// Tails 05-08-2001
-		if(cv_gametype.value == 3)
-		{
-			for(i=0; i<MAXPLAYERS; i++)
-			{
-				if(tag == 1 && playeringame[i]) // If "IT"'s time is up, make the next player in line "IT" Tails 05-08-2001
-				{
-					players[i].tagit = 300*TICRATE + 1;
-					player->tagit = 0;
-					tag = 0;
-					CONS_Printf("%s is it!\n", player_names[i]); // Tell everyone who is it! Tails 05-08-2001
-				}
-				if(players[i].tagit == 1)
-					tag = 1;
-			}
-
-			// If nobody is it... find someone! Tails 05-08-2001
-			if(!players[0].tagit && !players[1].tagit && !players[2].tagit && !players[3].tagit && !players[4].tagit && !players[5].tagit && !players[6].tagit && !players[7].tagit && !players[8].tagit && !players[9].tagit && !players[10].tagit && !players[11].tagit && !players[12].tagit && !players[13].tagit && !players[14].tagit && !players[15].tagit && !players[16].tagit && !players[17].tagit && !players[18].tagit && !players[19].tagit && !players[20].tagit && !players[21].tagit && !players[22].tagit && !players[23].tagit && !players[24].tagit && !players[25].tagit && !players[26].tagit && !players[27].tagit && !players[28].tagit && !players[29].tagit && !players[30].tagit && !players[31].tagit)
-			{
-				for(i = 0; i<MAXPLAYERS; i++)
-				{
-					if(playeringame[i])
-					{
-						players[i].tagit = 300*TICRATE + 1;
-						CONS_Printf("%s is it!\n", player_names[i]); // Tell everyone who is it! Tails 05-08-2001
-						break;
-					}
-				}
-			}
-
-			// If you're "IT", show a big "IT" over your head for others to see.
-			if(player->tagit)
-			{
-				if(!(player == &players[consoleplayer])) // Don't display it on your own view.
-				P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height, MT_TAG);
-
-				player->tagit--;
-			}
-
-			// "No-Tag-Zone" Stuff Tails 05-11-2001
-			// If in the No-Tag sector and don't have any "tagzone lag",
-			// protect the player for 10 seconds.
-			if(player->mo->subsector->sector->special == 987 && !player->tagzone && !player->taglag && !player->tagit)
-				player->tagzone = 10*TICRATE;
-
-			// If your time is up, set a certain time that you aren't
-			// allowed back in, known as "tagzone lag".
-			if(player->tagzone == 1)
-				player->taglag = 60*TICRATE;
-
-			// Or if you left the no-tag sector, do the same.
-			if(player->mo->subsector->sector->special != 987 && player->tagzone)
-				player->taglag = 60*TICRATE;
-
-			// If you have "tagzone lag", you shouldn't be protected.
-			if(player->taglag)
-				player->tagzone = 0;
-		}
-//////////////////////////
-//CAPTURE THE FLAG STUFF//
-//////////////////////////
-
-		else if(cv_gametype.value == 4)
-		{
-			if(player->gotflag) // If you have the flag (duh).
-			{
-				// Spawn a got-flag message over the head of the player that
-				// has it (but not on your own screen if you have the flag).
-				if(!(player == &players[consoleplayer]) && player->ctfteam != players[consoleplayer].ctfteam)
-				{
-					if(player->gotflag == 1)
-						P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height, MT_GOTFLAG);
-					else if(player->gotflag == 2)
-						P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height, MT_GOTFLAG2);
-				}
-			}
-
-			// If the player isn't on a team, put them on one! Tails 08-04-2001
-			if(player->ctfteam != 1 && player->ctfteam != 2)
-			{
-				CV_SetValue(&cv_preferredteam, cv_preferredteam.value);
-			}
-		}
-
-//////////////////
-//ANALOG CONTROL//
-//////////////////
-
-		if(cv_analog.value && (cmd->forwardmove || cmd->sidemove))
-		{
-			// If travelling slow enough, face the way the controls
-			// point and not your direction of movement.
-			if(player->speed < 2 || player->gliding)
-			{
-			tempx = tempy = 0;
-
-			tempangle = camera.mo->angle;
-			tempangle >>= ANGLETOFINESHIFT;
-			tempx += FixedMul(cmd->forwardmove,finecosine[tempangle]);
-			tempy += FixedMul(cmd->forwardmove,finesine[tempangle]);
-
-			tempangle = camera.mo->angle-ANG90;
-			tempangle >>= ANGLETOFINESHIFT;
-			tempx += FixedMul(cmd->sidemove,finecosine[tempangle]);
-			tempy += FixedMul(cmd->sidemove,finesine[tempangle]);
-
-			tempx = tempx*FRACUNIT;
-			tempy = tempy*FRACUNIT;
-
-			player->mo->angle = R_PointToAngle2(player->mo->x, player->mo->y, player->mo->x + tempx, player->mo->y + tempy);
-			}
-			// Otherwise, face the direction you're travelling.
-			else if (player->walking || player->running || player->spinning || ((player->mo->state == &states[S_PLAY_ABL1] || player->mo->state == &states[S_PLAY_ABL1] || player->mo->state == &states[S_PLAY_ABL2] || player->mo->state == &states[S_PLAY_SPC1] || player->mo->state == &states[S_PLAY_SPC2] || player->mo->state == &states[S_PLAY_SPC3] || player->mo->state == &states[S_PLAY_SPC4]) && player->charability == 1))
-				player->mo->angle = R_PointToAngle2(player->mo->x, player->mo->y, player->rmomx + player->mo->x, player->rmomy + player->mo->y);
-
-			// Update the local angle control.
-			if (player==&players[consoleplayer])
-				localangle = player->mo->angle;
-		}
-
-
 ////////////////////////////
 //BLACK SHIELD ACTIVATION,//
 //HOMING, AND OTHER COOL  //
@@ -2054,124 +1900,10 @@ void P_MovePlayer (player_t* player)
 			player->blackow = 0;
 		}
 
-		// Uber-secret HOMING option. Experimental!
-		if(cv_homing.value)
-		{
-			// If you've got a target, chase after it!
-			if(player->homing && player->mo->tracer)
-				P_HomingAttack(player, player->mo->tracer);
-
-			// But if you don't, then stop homing.
-			if(player->mo->tracer && player->mo->tracer->health <= 0 && player->homing)
-			{
-				player->mo->momz = 10*FRACUNIT;
-				player->mo->momx = player->mo->momy = player->homing = 0;
-			}
-
-			// If you're not jumping, then you obviously wouldn't be homing.
-			if(!player->mfjumped && player->homing)
-				player->homing = 0;
-		}
-/*
-		// Makes the player point to location 0,0 on the map. To "go in a circle".
-		if(cv_nights.value)
-		{
-			tempangle = R_PointToAngle2(player->mo->x , player->mo->y, 0, 0)-ANG90;
-			tempangle >>= ANGLETOFINESHIFT;
-			player->mo->momx += FixedMul(player->mo->momx,finecosine[tempangle]);
-			player->mo->momy += FixedMul(player->mo->momy,finesine[tempangle]);
-		}
-*/
 
 ///////////////////////
 //SPECIAL STAGE STUFF//
 ///////////////////////
-
-
-		if(gamemap == SSSTAGE1 || gamemap == SSSTAGE2 || gamemap == SSSTAGE3
-		|| gamemap == SSSTAGE4 || gamemap == SSSTAGE5 || gamemap == SSSTAGE6
-		|| gamemap == SSSTAGE7)
-		{
-			if(player->sstimer < 4 && player->sstimer > 0) // The special stage time is up! Tails 08-11-2001
-			{
-				player->sstimer = 1;
-				player->exiting = 2.8*TICRATE + 2;
-				player->sstimer--;
-			}
-
-			if(player->sstimer > 1) // As long as time isn't up...
-			{
-				int ssrings = 0;
-				// Count up the rings of all the players and see if
-				// they've collected the required amount.
-				if(multiplayer || netgame)
-				{
-					for(i=0; i<MAXPLAYERS; i++)
-					{
-						if(playeringame[i])
-							ssrings += (players[i].mo->health-1);
-					}
-				}
-				else
-					ssrings = player->mo->health-1;
-
-				if(ssrings == totalrings)
-				{
-					if(player == &players[consoleplayer])
-						S_StartSound(0, sfx_cgot); // Got the emerald!
-
-					player->mo->momx = player->mo->momy = 0;
-					player->exiting = 2.8*TICRATE + 2;
-					player->sstimer = 1;
-
-					// Check what emeralds the player has so you know which one to award next.
-					if(!(player->emerald1))
-					{
-						player->emerald1 = true;
-						P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height, MT_GREENEMERALD);
-					}
-					else if((player->emerald1) && !(player->emerald2))
-					{
-						player->emerald2 = true;
-						P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height, MT_ORANGEEMERALD);
-					}
-					else if((player->emerald2) && !(player->emerald3))
-					{
-						player->emerald3 = true;
-						P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height, MT_PINKEMERALD);
-					}
-					else if((player->emerald3) && !(player->emerald4))
-					{
-						player->emerald4 = true;
-						P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height, MT_BLUEEMERALD);
-					}
-					else if((player->emerald4) && !(player->emerald5))
-					{
-						player->emerald5 = true;
-						P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height, MT_REDEMERALD);
-					}
-					else if((player->emerald5) && !(player->emerald6))
-					{
-						player->emerald6 = true;
-						P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height, MT_LIGHTBLUEEMERALD);
-					}
-					else if((player->emerald6) && !(player->emerald7))
-					{
-						player->emerald7 = true;
-						P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height, MT_GREYEMERALD);
-					}
-				}
-
-				if(player->mo->z <= player->mo->waterz) // If in water, deplete timer 3x as fast.
-				{
-					player->sstimer--; // No idea why player->sstimer -= 3; doesn't work here...
-					player->sstimer--;
-					player->sstimer--;
-				}
-				else
-					player->sstimer--;
-			}
-		}
 
 		// The Super-Secret RedXVI thing!
 		if(player->redxvi > 1)
@@ -2263,58 +1995,6 @@ void P_MovePlayer (player_t* player)
 		{
 			P_InstaThrust(player->mo, player->mo->angle, 4*FRACUNIT); // Shove up against the wall
 			player->climbing--;
-		}
-
-		if(xmasmode && cv_numsnow.value <= 128 && !(netgame || multiplayer))
-		{
-			fixed_t x;
-			fixed_t y;
-			int z;
-			subsector_t* snowsector;
-			z = 0;
-
-			for(i=0; i<cv_numsnow.value; i++)
-			{
-				x = ((rand() * 65535) - 32768) << FRACBITS;
-				y = ((rand() * 65535) - 32768) << FRACBITS;
-
-				if(rand() & 1)
-					x = -x;
-
-				if(rand() & 1)
-					y = -y;
-
-				snowsector = R_PointInSubsector(x, y);
-
-				if(snowsector->sector->ceilingpic == skyflatnum && snowsector->sector->floorheight < snowsector->sector->ceilingheight)
-				{
-					z = P_Random();
-					if(z < 64)
-						P_SetMobjState(P_SpawnMobj(x, y, ONCEILINGZ, MT_SNOWFLAKE), S_SNOW3);
-					else if (z < 144)
-						P_SetMobjState(P_SpawnMobj(x, y, ONCEILINGZ, MT_SNOWFLAKE), S_SNOW2);
-					else
-						P_SpawnMobj(x, y, ONCEILINGZ, MT_SNOWFLAKE);
-				}
-			}
-		}
-
-		if(player->bustercount > 2*TICRATE && player->bustercount & 2)
-			player->mo->flags |= MF_SHADOW;
-		else if(!(player->powers[pw_invisibility] & 1))
-			player->mo->flags &= ~MF_SHADOW;
-
-		if(player->bustercount == TICRATE)
-			S_StartSound(player->mo, sfx_posit1);
-		else if (player->bustercount > 2*TICRATE && player->bustercount & 1)
-			S_StartSound(player->mo, sfx_posit2);
-
-		if(player->bustercount > 0 && (player->mo->health <= 5 || !player->snowbuster))
-			player->bustercount = 0;
-
-		if(leveltime == 2)
-		{
-			P_FindEmerald(player); // Look for emeralds to hunt for.
 		}
 
 		// Check for spikes!

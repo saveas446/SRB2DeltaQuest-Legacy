@@ -1151,17 +1151,6 @@ state_t states[NUMSTATES] = {
 	{SPR_STEM,7,18,{NULL}, S_STEAM1}, // S_STEAM8 Tails 05-28-2001
 // End steam riser Tails 05-28-2001
 
-// CTF Flags Tails 07-22-2001
-	{SPR_RFLG,0,-1,{NULL}, S_NULL}, // S_REDFLAG Tails 07-22-2001
-	{SPR_BFLG,0,-1,{NULL}, S_NULL}, // S_BLUEFLAG Tails 07-22-2001
-
-	// CTF Sign
-	{SPR_GFLG,0,1,{NULL}, S_GOTFLAG2}, // S_GOTFLAG1 Tails 07-22-2001
-	{SPR_GFLG,1,1,{NULL}, S_DISS}, // S_GOTFLAG2 Tails 07-22-2001
-	{SPR_GFLG,0,1,{NULL}, S_GOTFLAG4}, // S_GOTFLAG3 Tails 07-22-2001
-	{SPR_GFLG,2,1,{NULL}, S_DISS}, // S_GOTFLAG4 Tails 07-22-2001
-// End CTF Flags
-
 	{SPR_TOKE,32768,-1,{NULL}, S_TOKEN2}, // S_TOKEN - Special Stage Token Tails 08-11-2001
 	{SPR_TOKE,32769,1,{NULL}, S_TOKEN}, // S_TOKEN2 - Special Stage Token Tails 08-11-2001
 
@@ -5461,112 +5450,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
         S_NULL          // raisestate
     },
 // End steam riser Tails 05-28-2001
-
-// Start CTF Flags Tails 07-22-2001
-    {           // MT_REDFLAG
-        31,           // doomednum
-        S_REDFLAG,         // spawnstate
-        1000,           // spawnhealth
-        S_NULL,         // seestate
-        sfx_None,               // seesound
-        8,              // reactiontime
-        sfx_None,               // attacksound
-        S_NULL,         // painstate
-        0,              // painchance
-        sfx_None,               // painsound
-        S_NULL,         // meleestate
-        S_NULL,         // missilestate
-        S_NULL,         // deathstate
-        S_NULL,         // xdeathstate
-        sfx_None,               // deathsound
-        8,              // speed
-        8*FRACUNIT,            // radius //Tails 12-05-99
-        64*FRACUNIT,            // height //Tails 12-05-99
-        16,            // mass
-        0,              // damage
-        sfx_None,               // activesound
-        MF_SPECIAL|MF_DROPOFF|MF_FLOAT,                // flags //Tails 12-05-99
-        S_NULL          // raisestate
-    },
-    {           // MT_BLUEFLAG
-        34,           // doomednum
-        S_BLUEFLAG,         // spawnstate
-        1000,           // spawnhealth
-        S_NULL,         // seestate
-        sfx_None,               // seesound
-        8,              // reactiontime
-        sfx_None,               // attacksound
-        S_NULL,         // painstate
-        0,              // painchance
-        sfx_None,               // painsound
-        S_NULL,         // meleestate
-        S_NULL,         // missilestate
-        S_NULL,         // deathstate
-        S_NULL,         // xdeathstate
-        sfx_None,               // deathsound
-        8,              // speed
-        8*FRACUNIT,            // radius //Tails 12-05-99
-        64*FRACUNIT,            // height //Tails 12-05-99
-        16,            // mass
-        0,              // damage
-        sfx_None,               // activesound
-        MF_SPECIAL|MF_DROPOFF|MF_FLOAT,                // flags //Tails 12-05-99
-        S_NULL          // raisestate
-    },
-// End CTF Flags Tails 07-22-2001
-
-// Start Got Flag Sign Tails 05-08-2001
-    {           // MT_GOTFLAG
-        -1,           // doomednum
-        S_GOTFLAG1,         // spawnstate
-        1000,           // spawnhealth
-        S_NULL,         // seestate
-        sfx_None,               // seesound
-        8,              // reactiontime
-        sfx_None,               // attacksound
-        S_NULL,         // painstate
-        0,              // painchance
-        sfx_None,               // painsound
-        S_NULL,         // meleestate
-        S_NULL,         // missilestate
-        S_NULL,         // deathstate
-        S_NULL,         // xdeathstate
-        sfx_None,               // deathsound
-        8,              // speed
-        64*FRACUNIT,            // radius //Tails 12-05-99
-        32*FRACUNIT,            // height //Tails 12-05-99
-        16,            // mass
-        0,              // damage
-        sfx_None,               // activesound
-        MF_NOCLIP|MF_NOGRAVITY|MF_FLOAT,                // flags //Tails 12-05-99
-        S_NULL          // raisestate
-    },
-    {           // MT_GOTFLAG2
-        -1,           // doomednum
-        S_GOTFLAG3,         // spawnstate
-        1000,           // spawnhealth
-        S_NULL,         // seestate
-        sfx_None,               // seesound
-        8,              // reactiontime
-        sfx_None,               // attacksound
-        S_NULL,         // painstate
-        0,              // painchance
-        sfx_None,               // painsound
-        S_NULL,         // meleestate
-        S_NULL,         // missilestate
-        S_NULL,         // deathstate
-        S_NULL,         // xdeathstate
-        sfx_None,               // deathsound
-        8,              // speed
-        64*FRACUNIT,            // radius //Tails 12-05-99
-        32*FRACUNIT,            // height //Tails 12-05-99
-        16,            // mass
-        0,              // damage
-        sfx_None,               // activesound
-        MF_NOCLIP|MF_NOGRAVITY|MF_FLOAT,                // flags //Tails 12-05-99
-        S_NULL          // raisestate
-    },
-// End Got Flag Sign Tails 05-08-2001
 
 // Start Special Stage Token Tails 08-11-2001
     {           // MT_TOKEN

@@ -1358,9 +1358,6 @@ void G_PlayerReborn (int player)
 	int			charability; // Tails
 	int			charspeed; // Tails
 	int			tagit; // Tails 05-08-2001
-	int			bluescore; // Tails 07-31-2001
-	int			redscore; // Tails 07-31-2001
-	int			ctfteam; // Tails 08-03-2001
 	int			lastmap; // Tails 08-11-2001
 	int			sstimer; // Tails 08-11-2001
 	int			token; // Tails 08-12-2001
@@ -1395,9 +1392,6 @@ void G_PlayerReborn (int player)
 	xtralife = players[player].xtralife;
 	xtralife2 = players[player].xtralife2;
 	tagit = players[player].tagit; // Tails 05-08-2001
-	bluescore = players[player].bluescore; // Tails 07-31-2001
-	redscore = players[player].redscore; // Tails 07-31-2001
-	ctfteam = players[player].ctfteam; // Tails 08-03-2001
 	lastmap = players[player].lastmap; // Tails 08-11-2001
 	token = players[player].token; // Tails 08-12-2001
 	sstimer = players[player].sstimer; // Tails 08-11-2001
@@ -1435,9 +1429,6 @@ void G_PlayerReborn (int player)
 	players[player].xtralife = xtralife;
 	players[player].xtralife2 = xtralife2;
 	players[player].tagit = tagit; // Tails 05-08-2001
-	players[player].bluescore = bluescore; // Tails 07-31-2001
-	players[player].redscore = redscore; // Tails 07-31-2001
-	players[player].ctfteam = ctfteam; // Tails 08-03-2001
 	players[player].lastmap = lastmap; // Tails 08-11-2001
 	players[player].token = token; // Tails 08-12-2001
 	players[player].sstimer = sstimer; // Tails 08-11-2001
@@ -1643,60 +1634,6 @@ void G_CoopSpawnPlayer (int playernum)
 
     if(demoversion<113)
         P_SpawnPlayer (&playerstarts[playernum]);
-    else
-    {
-		int  selections;
-
-	if(cv_gametype.value == 4)
-	{
-		if(players[playernum].ctfteam == 1)
-		{
-			selections = redctfstarts_p - redctfstarts;
-			if( !selections)
-			{
-				CONS_Printf("No Red Team start in this map, resorting to Deathmatch starts!");
-				goto startdeath;
-			}
-
-			selections = P_Random() % selections;
-			redctfstarts[selections].type = playernum+1;
-			P_SpawnPlayer (&redctfstarts[selections]);
-
-		}
-		else if (players[playernum].ctfteam == 2)
-		{
-			selections = bluectfstarts_p - bluectfstarts;
-			if( !selections)
-			{
-				CONS_Printf("No Blue Team start in this map, resorting to Deathmatch starts!");
-				goto startdeath;
-			}
-
-			selections = P_Random() % selections;
-			bluectfstarts[selections].type = playernum+1;
-			P_SpawnPlayer (&bluectfstarts[selections]);
-		}
-		else
-		{
-startdeath:
-			selections = deathmatch_p - deathmatchstarts;
-			if( !selections)
-			    I_Error("No deathmatch start in this map! (Error 2)");
-			selections = P_Random() % selections;
-			deathmatchstarts[selections].type = playernum+1;
-			P_SpawnPlayer (&deathmatchstarts[selections]);
-		}
-	}
-		else
-		{
-			selections = deathmatch_p - deathmatchstarts;
-			if( !selections)
-			    I_Error("No deathmatch start in this map! (Error 3)");
-			selections = P_Random() % selections;
-			deathmatchstarts[selections].type = playernum+1;
-			P_SpawnPlayer (&deathmatchstarts[selections]);
-		}
-    }
 }
 
 //
@@ -1847,21 +1784,6 @@ void G_DoCompleted (void)
 			{
 				if(players[i].token)
 				{
-					if(!players[i].emerald1)
-						wminfo.next = SSSTAGE1-1; // Special Stage 1
-					else if(!players[i].emerald2)
-						wminfo.next = SSSTAGE2-1; // Special Stage 2
-					else if(!players[i].emerald3)
-						wminfo.next = SSSTAGE3-1; // Special Stage 3
-					else if(!players[i].emerald4)
-						wminfo.next = SSSTAGE4-1; // Special Stage 4
-					else if(!players[i].emerald5)
-						wminfo.next = SSSTAGE5-1; // Special Stage 5
-					else if(!players[i].emerald6)
-						wminfo.next = SSSTAGE6-1; // Special Stage 6
-					else if(!players[i].emerald7)
-						wminfo.next = SSSTAGE7-1; // Special Stage 7
-
 					players[i].token--;
 					gottoken = true;
 				}
@@ -1869,37 +1791,8 @@ void G_DoCompleted (void)
 		}
 	}
 
-	if((players[0].emerald1 && players[0].emerald2 && players[0].emerald3 && players[0].emerald4 && 
-		players[0].emerald5 && players[0].emerald6 && players[0].emerald7)
-		&& (gamemap == 4 || (xmasmode && gamemap == 5)))
-		wminfo.next = 21; // Castle Eggman Tails 12-23-2001
-	else if (gamemap == 24)
-		wminfo.next = 0;
-	else if(xmasmode) // Tails 12-13-2001
-	{
-		if(gamemap == 5)
-			wminfo.next = 0;
-	}
-	else if(gamemap == 4 && !gottoken) // Tails 08-16-2001
+	if(gamemap == 4 && !gottoken) // Tails 08-16-2001
 		wminfo.next = 0; // Tails 08-16-2001
-
-		if((gamemap == SSSTAGE1 || gamemap == SSSTAGE2 || gamemap == SSSTAGE3 || gamemap == SSSTAGE4
-			|| gamemap == SSSTAGE5 || gamemap == SSSTAGE6 || gamemap == SSSTAGE7) && !gottoken)
-		{
-			if(players[0].lastmap == 4 && !xmasmode)
-				wminfo.next = 0;
-			else
-				wminfo.next = players[0].lastmap; // Exiting from a special stage? Go back to the game. Tails 08-11-2001
-		}
-
-		if(!(gamemap == SSSTAGE1 || gamemap == SSSTAGE2 || gamemap == SSSTAGE3 || gamemap == SSSTAGE4
-			|| gamemap == SSSTAGE5 || gamemap == SSSTAGE6 || gamemap == SSSTAGE7)) // Remember last map
-		{
-		for(i=0; i<MAXPLAYERS; i++)
-			if(playeringame[i])
-				players[i].lastmap = gamemap; // Remember last map you were at for when you come out of the special stage! Tails 08-11-2001
-		}
-
 	}
     else
     {

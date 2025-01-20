@@ -290,22 +290,7 @@ typedef struct player_s
 	int tagzone; // Tag Zone timer Tails 05-11-2001
 	int taglag; // Don't go back in the tag zone too early Tails 05-11-2001
 
-	////////////////////
-	// CTF Mode Stuff //
-	////////////////////
-	int ctfteam; // 1 == Red, 2 == Blue Tails 07-22-2001
-	int gotflag; // 1 == Red  2 == Blue Do you have the flag? Tails 07-22-2001
-	int bluescore; // Team Scores Tails 07-31-2001
-	int redscore; // Team Scores Tails 07-31-2001
-    mapthing_t          *flagpoint; // Original flag spawn location Tails 08-02-2001
-
 	int redxvi; // RedXVI
-
-	int emeraldhunt; // # of emeralds found Tails 12-12-2001
-
-	boolean snowbuster; // Snow Buster upgrade! Tails 12-12-2001
-	int bustercount; // Charge for Snow Buster Tails 12-12-2001
-
 } player_t;
 
 

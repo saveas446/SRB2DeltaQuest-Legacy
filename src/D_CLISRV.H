@@ -161,7 +161,6 @@ typedef struct {
     byte       maxplayer;
     byte       deathmatch;
 	byte	   gametype; // Tails 03-13-2001
-	byte	   autoctf; // Tails 07-22-2001
     ULONG      time;
     float      load;        // unused for the moment
     char       mapname[8];

@@ -1006,11 +1006,7 @@ void CV_Set (consvar_t *var, char *value)
         char buf[128];
         if (!server)
         {
-            CONS_Printf("Only the server can change this variable: "); // Tails 05-19-2001
-			CONS_Printf(var->name); // Tails 05-19-2001
-			CONS_Printf(" "); // Tails 05-19-2001
-			CONS_Printf(var->string); // Tails 05-19-2001
-			CONS_Printf("\n"); // Tails 05-19-2001
+            CONS_Printf("Only the server can change this variable\n"); // Reverted based on decompiled code by Save 20-01-25
             return;
         }
         *((unsigned short *)buf) = var->netid;

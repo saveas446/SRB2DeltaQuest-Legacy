@@ -134,7 +134,6 @@ extern  consvar_t       cv_deathmatch;
 
 extern consvar_t		cv_gametype; // Tails 03-13-2001
 extern consvar_t		cv_debug; // Tails 06-17-2001
-extern consvar_t		cv_autoctf; // Tails 07-22-2001
 
 
 // ========================================
