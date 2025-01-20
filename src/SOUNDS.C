@@ -192,7 +192,7 @@ sfxinfo_t S_sfx[NUMSFX] =
   { "claw\0\0" , false,  70, 0, -1, -1, 0, -1},
   { "skeswg"   , false,  70, 0, -1, -1, 0, -1},
   { "pldeth"   , false,  32, 0, -1, -1, 0, SKSPLDETH},
-  { "thok\0\0"   , false,  32, 0, -1, -1, 0, SKSTHOK},
+  { "pdiehi"   , false,  32, 0, -1, -1, 0, SKSTHOK},
   { "podth1"   , false,  70, 0, -1, -1, 0, -1},
   { "podth2"   , false,  70, 0, -1, -1, 0, -1},
   { "podth3"   , false,  70, 0, -1, -1, 0, -1},
