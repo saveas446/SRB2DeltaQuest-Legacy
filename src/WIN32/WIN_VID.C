@@ -97,11 +97,12 @@ static int VID_SetWindowedDisplayMode (viddef_t *lvid, vmode_t *pcurrentmode);
 // this holds description of the startup video mode,
 // the resolution is 320x200, windowed on the desktop
 #define NUMSPECIALMODES  1
-vmode_t specialmodes[NUMSPECIALMODES] = {
+#ifdef DEMO2ULTIMATE
+vmode_t specialmodes[NUMSPECIALMODES] = {	
         {
             NULL,
-            "320x200W", //faB: W to make sure it's the windowed mode
-            320, 200,   //(200.0/320.0)*(320.0/240.0),
+            "640x400W", //faB: W to make sure it's the windowed mode
+            640, 400,   //(200.0/320.0)*(320.0/240.0),
             640, 1,     // rowbytes, bytes per pixel
             1, 2,       // windowed (TRUE), numpages
             NULL,
@@ -109,7 +110,20 @@ vmode_t specialmodes[NUMSPECIALMODES] = {
             0          // misc
         }
 };
-
+#else
+vmode_t specialmodes[NUMSPECIALMODES] = {	
+        {
+            NULL,
+            "320x200W", //faB: W to make sure it's the windowed mode
+            320, 200,   //(200.0/320.0)*(320.0/240.0),
+            320, 1,     // rowbytes, bytes per pixel
+            1, 2,       // windowed (TRUE), numpages
+            NULL,
+            VID_SetWindowedDisplayMode,
+            0          // misc
+        }
+};
+#endif
 
 // ------
 // Protos
@@ -305,11 +319,20 @@ void I_FinishUpdate (void)
         // paranoia
         if ( !hDCMain || !bmiMain || !vid.buffer )
             return;
-        // main game loop, still in a window (-win parm)
+		
+		// main game loop, still in a window (-win parm)
+		 
+		#ifdef DEMO2ULTIMATE
+         SetDIBitsToDevice (hDCMain,
+                           0, 0, 640, 400,
+                           0, 0, 0, 400,
+                           vid.buffer, bmiMain, DIB_RGB_COLORS);      
+		#else
         SetDIBitsToDevice (hDCMain,
                            0, 0, 320, 200,
                            0, 0, 0, 200,
                            vid.buffer, bmiMain, DIB_RGB_COLORS);
+		#endif
     }
     else
     if (rendermode != render_soft) {
@@ -353,11 +376,18 @@ void I_LoadingScreen ( LPCSTR msg )
 
     //hdc = BeginPaint (vid.WndParent, &ps);
     GetClientRect (vid.WndParent, &rect);
-
+	
+	#ifdef DEMO2ULTIMATE
+    SetDIBitsToDevice (hDCMain,
+                       0, 0, 640, 400,
+                       0, 0, 0, 400,
+                       vid.buffer, bmiMain, DIB_RGB_COLORS);
+	#else
     SetDIBitsToDevice (hDCMain,
                        0, 0, 320, 200,
                        0, 0, 0, 200,
                        vid.buffer, bmiMain, DIB_RGB_COLORS);
+	#endif
 
     if ( msg ) {
         if ( rect.bottom - rect.top > 32 )

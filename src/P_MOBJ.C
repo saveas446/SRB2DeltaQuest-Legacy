@@ -1836,10 +1836,7 @@ void P_SpawnMapThing (mapthing_t* mthing)
     }
 
 	if ((i == 84 || i == 44 || i == MT_MISC2 || i == MT_MISC10 || i == MT_MISC11 || i == MT_MISC50 || i == MT_MISC48 || i == MT_MISC31 || i == MT_BKTV)
-		&& gameskill == sk_nightmare
-		&& !(gamemap == SSSTAGE1 || gamemap == SSSTAGE2 || gamemap == SSSTAGE3
-		|| gamemap == SSSTAGE4 || gamemap == SSSTAGE5 || gamemap == SSSTAGE6
-		|| gamemap == SSSTAGE7)) // Don't have rings in Very Hard mode Tails 03-26-2001
+		&& gameskill == sk_nightmare) // Don't have rings in Very Hard mode Tails 03-26-2001
 		return;
 
 	if((i == MT_BLUEFLAG || i == MT_REDFLAG) && !cv_gametype.value == 4)

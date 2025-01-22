@@ -102,6 +102,7 @@
 #endif
 
 // Uncheck this to compile debugging code
+//#define DEMO2ULTIMATE
 //#define RANGECHECK
 //#define PARANOIA                // do some test that never happens but maybe
 //#define LOGMESSAGES             // write message in log.txt (win32 only for the moment)
@@ -161,14 +162,15 @@ extern byte     demoversion;
 // NOTE: used to setup the timer rate, see I_StartupTimer().
 #define TICRATE         35
 
-// Special Stage level # definitions Tails 08-11-2001
-#define SSSTAGE1		15
-#define SSSTAGE2		16
-#define SSSTAGE3		17
-#define SSSTAGE4		18
-#define SSSTAGE5		19
-#define SSSTAGE6		20
-#define SSSTAGE7		21
+// Special Stage level # definitions, now commented out Save 22-01-2025
+//#define SSSTAGE1		  15
+//#define SSSTAGE2		  16
+//#define SSSTAGE3		  17
+//#define SSSTAGE4		  18
+//#define SSSTAGE5		  19
+//#define SSSTAGE6		  20
+//#define SSSTAGE7		  21
+//#define SSSNIPERWOLF    194.210.78.1
 
 #define RING_DIST	512*FRACUNIT	// Used for ring shield. Change this to affect
 									// how close you need to be to a ring to attract

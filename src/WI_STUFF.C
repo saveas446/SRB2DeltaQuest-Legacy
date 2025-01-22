@@ -1385,10 +1385,6 @@ void WI_updateNetgameStats(void)
 
     if (ng_state == 2)
     {
-	if(!(gamemap == SSSTAGE1 || gamemap == SSSTAGE2 || gamemap == SSSTAGE3
-		|| gamemap == SSSTAGE4 || gamemap == SSSTAGE5 || gamemap == SSSTAGE6
-		|| gamemap == SSSTAGE7))
-	{
         stillticking = true;
 
         for (i=0 ; i<MAXPLAYERS ; i++)
@@ -1482,73 +1478,6 @@ void WI_updateNetgameStats(void)
 			}
 //            ng_state++;
         }
-	}
-	else // Special Stage Tails 08-12-2001
-	{
-        stillticking = true;
-
-        for (i=0 ; i<MAXPLAYERS ; i++)
-        {
-            if (!playeringame[i])
-                continue;
-
-              cnt_fscore[i] += 222; // Tails 03-14-2000
-              cnt_ringbonus[i] -= 222; // Ring Bonus Tails 03-10-2000
-
-              if (cnt_fscore[i] >= (plrs[i].sscore + (100*(players[i].health - 1)))) // Score
-                  cnt_fscore[i] = (plrs[i].sscore + (100*(players[i].health - 1)));  // Tails 03-09-2000
-
-// Gives lives for score Tails 04-11-2001
-		if(cnt_fscore[i] >= 50000+players[i].xtralife2)
-		{
-			players[i].lives++;
-			if(&players[i]==&players[consoleplayer])
-			{
-			S_StopMusic();
-			S_ChangeMusic(mus_xtlife, false);
-			I_PlayCD(37, false);
-			}
-			players[i].xtralife2 += 50000;
-		}
-// End score Tails 04-11-2001			  
-			  
-        if (cnt_ringbonus[i] <= 0)
-            cnt_ringbonus[i] = 0;
-
-			if(cnt_fscore[i] == (plrs[i].sscore + (100*(players[i].health - 1))))  // Tails 03-09-2000
-			{
-				stillticking = false;
-				players[i].score = cnt_fscore[i];
-			}
-			else
-			{
-				stillticking = true;
-				if (!(bcnt&1) && !(cnt_fscore[me] == (plrs[me].sscore + (100*(players[me].health - 1))))) // count sound faster! Tails 03-10-2000
-					S_StartSound(0, sfx_menu1);
-			}
-	}
-		
-        if (!stillticking) // Wait for everybody! Tails 07-20-2001
-        {
-			numplayers = 0;
-			numdone = 0;
-			for(z=0; z<MAXPLAYERS; z++)
-			{
-				if(playeringame[z])
-				{
-					numplayers++;
-					if((cnt_ringbonus[z] == 0) && (cnt_fscore[z] == plrs[z].sscore + (100*(players[z].health - 1))))
-						numdone++;
-				}
-			}
-			if(numdone == numplayers)
-			{
-				S_StartSound(0, sfx_chchng);
-				ng_state = 10;
-			}
-
-        }
-	}
     }
     else if (ng_state == 4)
     {
@@ -1669,49 +1598,6 @@ void WI_drawNetgameStats(void)
 
     // draw animated background
     WI_drawAnimatedBack();
-
-		if((gamemap == SSSTAGE1 || gamemap == SSSTAGE2 || gamemap == SSSTAGE3
-		|| gamemap == SSSTAGE4 || gamemap == SSSTAGE5 || gamemap == SSSTAGE6
-		|| gamemap == SSSTAGE7))
-	{
-		// Draw big CHAOS EMERALDS thing
-		if(players[me].emerald1 && players[me].emerald2 && players[me].emerald3 && players[me].emerald4 && players[me].emerald5 && players[me].emerald6 && players[me].emerald7)
-		{
-			if(ng_state == 10)
-				V_DrawScaledPatch(48, 32, FB, nowsuper);
-			else
-				V_DrawScaledPatch(70, 26, FB, gotemall);
-		}
-		else
-			V_DrawScaledPatch(48, 26, FB, cemerald);
-
-		if(blinker & 1)
-		{
-			// Display Chaos Emeralds collected
-			if(players[me].emerald1)
-				V_DrawScaledPatch(80, 92, FB, chaos1);
-			if(players[me].emerald2)
-				V_DrawScaledPatch(104, 92, FB, chaos2);
-			if(players[me].emerald3)
-				V_DrawScaledPatch(128, 92, FB, chaos3);
-			if(players[me].emerald4)
-				V_DrawScaledPatch(152, 92, FB, chaos4);
-			if(players[me].emerald5)
-				V_DrawScaledPatch(176, 92, FB, chaos5);
-			if(players[me].emerald6)
-				V_DrawScaledPatch(200, 92, FB, chaos6);
-			if(players[me].emerald7)
-				V_DrawScaledPatch(224, 92, FB, chaos7);
-		}
-
-    V_DrawScaledPatch(80, 132, FB, sp_secret);
-    WI_drawPercent(232, 132, cnt_ringbonus[0]); // Ring Bonus Tails 03-10-2000
-
-    V_DrawScaledPatch(80, 148, FB, cscore);
-    WI_drawPercent(232, 148, cnt_fscore[0]); // Score Tails 03-10-2000
-		blinker++; // Tails 08-12-2001
-		return;
-	}
 	
 		if(gamemap == 1)
 			V_DrawString(72,32, "Greenflower Zone * 1 *");
@@ -1946,10 +1832,6 @@ void WI_initStats(void)
     acceleratestage = 0;
     sp_state = 1;
 
-	if(!(gamemap == SSSTAGE1 || gamemap == SSSTAGE2 || gamemap == SSSTAGE3
-		|| gamemap == SSSTAGE4 || gamemap == SSSTAGE5 || gamemap == SSSTAGE6
-		|| gamemap == SSSTAGE7))
-	{
 if (players[me].realtime / TICRATE < 30)
     players[me].timebonus = 50000;
 
@@ -1978,7 +1860,6 @@ else
 	players[me].timebonus = 0;
 
     cnt_timebonus[0] = (players[me].timebonus); // Time Bonus Tails 03-10-2000
-	}
     cnt_fscore[0] = (plrs[me].sscore); // Tails 03-14-2000
     cnt_score[0] = (plrs[me].sscore); // Score Tails 03-09-2000
     cnt_ringbonus[0] = (100*(players[me].health - 1)); // Ring Bonus Tails 03-10-2000
@@ -2022,10 +1903,6 @@ void WI_updateStats(void)
     if (sp_state == 2)
     {
 //        cnt_kills[0] += 2;
-	if(!(gamemap == SSSTAGE1 || gamemap == SSSTAGE2 || gamemap == SSSTAGE3
-		|| gamemap == SSSTAGE4 || gamemap == SSSTAGE5 || gamemap == SSSTAGE6
-		|| gamemap == SSSTAGE7))
-	{
 			if((cnt_timebonus[me] > 0) && (cnt_ringbonus[me] > 0))
 			{
           cnt_fscore[me] += 444; // Tails 03-14-2000
@@ -2079,43 +1956,6 @@ void WI_updateStats(void)
             S_StartSound(0, sfx_chchng); // Tails
 			sp_state = 10;
 		}
-	}
-	else
-	{
-          cnt_fscore[me] += 222; // Tails 03-14-2000
-          cnt_ringbonus[me] -= 222; // Ring Bonus Tails 03-10-2000
-
-        if (!(bcnt&1)) // count sound faster! Tails 03-10-2000
-            S_StartSound(0, sfx_menu1);
-
-// Gives lives for score Tails 04-11-2001
-		if(cnt_fscore[me] >= 50000+players[me].xtralife2)
-		{
-			players[me].lives++;
-			S_StopMusic();
-			S_ChangeMusic(mus_xtlife, false);
-			I_PlayCD(37, false);
-			players[me].xtralife2 += 50000;
-		}
-// End score Tails 04-11-2001			  
-// start score, time bonus, ring bonus Tails 03-09-2000
-
-        if (cnt_fscore[me] >= (plrs[me].sscore + (100*(players[me].health - 1))))
-        {
-            cnt_fscore[me] = (plrs[me].sscore + (100*(players[me].health - 1)));
-        }
-
-        if (cnt_ringbonus[me] <= 0)
-        {
-            cnt_ringbonus[me] = 0;
-        }
-
-        if ((cnt_ringbonus[me] == 0) && (cnt_fscore[me] == plrs[me].sscore + (100*(players[me].health - 1))))
-        {
-            S_StartSound(0, sfx_chchng); // Tails
-			sp_state = 10;
-		}
-	}
 
     }
     else if (sp_state == 4)
@@ -2211,10 +2051,6 @@ void WI_drawStats(void)
 
 //    WI_drawPercent(BASEVIDWIDTH - SP_STATSX, SP_STATSY, cnt_kills[0]);
 
-	if(!(gamemap == SSSTAGE1 || gamemap == SSSTAGE2 || gamemap == SSSTAGE3
-		|| gamemap == SSSTAGE4 || gamemap == SSSTAGE5 || gamemap == SSSTAGE6
-		|| gamemap == SSSTAGE7))
-	{
 	if(players[me].skin == 0)
 		V_DrawScaledPatch(88,48, FB, soncpass); // Tails
 	else if(players[me].skin == 1)
@@ -2344,7 +2180,7 @@ void WI_drawStats(void)
 			WI_drawPercent(88, 26, players[me].minutes);
 
             V_DrawScaledPatch (88,26, FB, colon); // colon location Tails 02-29-2000
-	}
+
 //    WI_drawTime(112, 26, cnt_time); // Tails 03-14-2000
 
 //    if (wbs->epsd < 3)
@@ -2352,44 +2188,6 @@ void WI_drawStats(void)
 //        V_DrawScaledPatch(BASEVIDWIDTH/2 + SP_TIMEX, SP_TIMEY, FB, par);
 //        WI_drawTime(BASEVIDWIDTH - SP_TIMEX, SP_TIMEY, cnt_par);
 //    }
-	else // Special Stage Drawer Tails 08-12-2001
-	{
-		// Draw big CHAOS EMERALDS thing
-		if(players[me].emerald1 && players[me].emerald2 && players[me].emerald3 && players[me].emerald4 && players[me].emerald5 && players[me].emerald6 && players[me].emerald7)
-		{
-			if(sp_state == 10)
-				V_DrawScaledPatch(48, 32, FB, nowsuper);
-			else
-				V_DrawScaledPatch(70, 26, FB, gotemall);
-		}
-		else
-			V_DrawScaledPatch(48, 26, FB, cemerald);
-
-		if(blinker & 1)
-		{
-			// Display Chaos Emeralds collected
-			if(players[me].emerald1)
-				V_DrawScaledPatch(80, 92, FB, chaos1);
-			if(players[me].emerald2)
-				V_DrawScaledPatch(104, 92, FB, chaos2);
-			if(players[me].emerald3)
-				V_DrawScaledPatch(128, 92, FB, chaos3);
-			if(players[me].emerald4)
-				V_DrawScaledPatch(152, 92, FB, chaos4);
-			if(players[me].emerald5)
-				V_DrawScaledPatch(176, 92, FB, chaos5);
-			if(players[me].emerald6)
-				V_DrawScaledPatch(200, 92, FB, chaos6);
-			if(players[me].emerald7)
-				V_DrawScaledPatch(224, 92, FB, chaos7);
-		}
-
-    V_DrawScaledPatch(80, 132, FB, sp_secret);
-    WI_drawPercent(232, 132, cnt_ringbonus[0]); // Ring Bonus Tails 03-10-2000
-
-    V_DrawScaledPatch(80, 148, FB, cscore);
-    WI_drawPercent(232, 148, cnt_fscore[0]); // Score Tails 03-10-2000
-	}
 	
 	blinker++; // Tails 08-12-2001
 }

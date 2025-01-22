@@ -816,28 +816,15 @@ void D_DoAdvanceDemo (void)
     switch (demosequence)
     {
       case 0:
-		G_DeferedPlayDemo ("titledem"); // Title demo Tails 01-06-2000
-        break;
-      case 1:
-		G_DeferedPlayDemo ("demo1");
-        break;
-	  case 2:
         pagetic = 200;
         gamestate = GS_DEMOSCREEN;
-        pagename = "CREDITS";
+        pagename = "TITLEPIC";
+        break;
+	  case 1:
+        pagetic = 200;
+        gamestate = GS_DEMOSCREEN;
+        pagename = "CREDIT";
 	    break;
-      case 3:
-        G_DeferedPlayDemo ("demo2");
-        break;
-      case 4:
-		G_DeferedPlayDemo ("titledem"); // Title demo Tails 01-06-2000
-        break;
-      case 5:
-        G_DeferedPlayDemo ("demo3");
-        break;
-      case 6:
-        G_DeferedPlayDemo ("demo4");
-        break;
     }
 }
 

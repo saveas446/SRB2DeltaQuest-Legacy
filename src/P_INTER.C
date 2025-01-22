@@ -1602,11 +1602,6 @@ boolean P_DamageMobj ( mobj_t*       target,
 
 			else if(player->mo->health > 1)
 			{
-				if(gamemap == SSSTAGE1 || gamemap == SSSTAGE2 || gamemap == SSSTAGE3
-					|| gamemap == SSSTAGE4 || gamemap == SSSTAGE5 || gamemap == SSSTAGE6
-					|| gamemap == SSSTAGE7)
-					damage = (player->mo->health-1)/4;
-				else
 					damage = player->mo->health - 1;
 
                 player->mo->momx = 0;

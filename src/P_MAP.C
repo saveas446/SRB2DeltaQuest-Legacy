@@ -715,7 +715,7 @@ if(tmthing->player) // Is the moving/interacting object the player?
 	}
 	if(((thing->z <= tmthing->z + tmthing->height) && (thing->z + thing->height >= tmthing->z)) || (tmthing->z == thing->z + thing->height + FRACUNIT)) // Are you touching the side of it?
 		{
-		if((tmthing->player->mfjumped == 1) || (tmthing->player->mfspinning == 1) || (tmthing->player->powers[pw_invulnerability]) || (tmthing->player->powers[pw_super])) // Do you possess the ability to subdue the object?
+  		if((tmthing->player->mfjumped == 1) || (tmthing->player->mfspinning == 1) || (tmthing->player->powers[pw_invulnerability]) || (tmthing->player->powers[pw_super])) // Do you possess the ability to subdue the object?
 		{
 			switch(thing->type)
 				{

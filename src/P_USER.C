@@ -1296,38 +1296,6 @@ void P_MovePlayer (player_t* player)
 // EXTRA LIFE BONUSES	//
 //////////////////////////
 
-		if(!(gamemap == SSSTAGE1 || gamemap == SSSTAGE2 || gamemap == SSSTAGE3
-			|| gamemap == SSSTAGE4 || gamemap == SSSTAGE5 || gamemap == SSSTAGE6
-			|| gamemap == SSSTAGE7 || cv_gametype.value == 1 || cv_gametype.value == 3
-			|| cv_gametype.value == 4)) // Don't do it in special stages.
-		{
-			if ((player->health > 100) && (!player->xtralife))
-			{
-				player->lives += 1;
-				if(player==&players[consoleplayer])
-				{
-				S_StopMusic();
-				S_ChangeMusic(mus_xtlife, false);
-				I_PlayCD(37, false);
-				}
-				player->powers[pw_extralife] = 4*TICRATE + 1;
-				player->xtralife = 1;
-			}
-
-			if ((player->health > 200) && (player->xtralife > 0 && player->xtralife < 2))
-			{
-				player->lives += 1;
-				if(player==&players[consoleplayer])
-				{
-				S_StopMusic();
-				S_ChangeMusic(mus_xtlife, false);
-				I_PlayCD(37, false);
-				}
-				player->powers[pw_extralife] = 4*TICRATE + 1;
-				player->xtralife = 2;
-			}
-		}
-
 		if(player->score >= 50000+player->xtralife2 && !(cv_gametype.value == 1
 														|| cv_gametype.value == 3
 														|| cv_gametype.value == 4))
