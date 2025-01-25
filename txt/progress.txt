@@ -30,9 +30,9 @@ WDZ - 5%
 DHZ - 0%
 SHZ - 100%
 HPZ - 25%
-STZ - 15%
-CCZ - 0%
-EFZ - 0%
+STZ - 40%
+CCZ - 5%
+EFZ - 5%
 SVZ - 0%
 FSZ - 0%
 
@@ -44,7 +44,7 @@ RMZ2 - Remake this level to get it up to new standards.
 RVZ1 - Complete rework, Final Demo-style.
 RVZ2 - Complete rework, Final Demo-style.
 RVZ3 - Dunno what Samwise wants, but apparently we're not done here.
-DCZ1 - Complete rework, Final Demo-style.
+DCZ1 - Finish the rest of the level design.
 DCZ2 - Complete rework, Final Demo-style.
 DCZ3 - Everything.
 GEZ1 - Unfinished ending section filled with nothingness.
@@ -58,7 +58,7 @@ WZ - Rework the start, and make the rest of the level based on Sonic 2.
 DHZ - Everything. Not even the assets have been made yet.
 HPZ - Finish the rest of the level design.
 STZ - Finish the rest of the level design.
-CCZ - Everything.
-EFZ - Everything.
+CCZ - The level is very incomplete for now.
+EFZ - The level is very incomplete for now.
 SVZ - Everything.
 FSZ - Everything.
