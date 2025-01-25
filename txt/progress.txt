@@ -16,7 +16,7 @@ RMZ3 - 100%
 RVZ1 - 0% 
 RVZ2 - 0%
 RVZ3 - 90%
-DCZ1 - 25%
+DCZ1 - 30%
 DCZ2 - 20%
 DCZ3 - 0%
 GEZ1 - 85%
