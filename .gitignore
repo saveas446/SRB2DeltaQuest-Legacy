@@ -18,6 +18,9 @@ dev/autosave.xml
 *.whacked
 *.obj
 
+#Remove SRB2 screenshots from the repo
+SRB2*.pcx
+
 # Visual Studio + source code stuff
 *.rsuser
 *.suo
