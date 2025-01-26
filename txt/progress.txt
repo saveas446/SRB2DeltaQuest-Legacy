@@ -27,7 +27,7 @@ RRZ2 - 0%
 RRZ3 - 0%
 FFZ - 80%
 WDZ - 5%
-DHZ - 0%
+DHZ - 5%
 SHZ - 100%
 HPZ - 25%
 STZ - 40%
