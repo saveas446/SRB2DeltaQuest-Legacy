@@ -1,2 +1,52 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# SRB2-specific files
+*.wad	   binary
+*.cfg 	   text eol=crlf
+
+# Text files
+*.txt	   text eol=crlf
+
+# Source code files
+*.c     text diff=cpp
+*.cpp   text diff=cpp
+*.h     text diff=cpp
+
+# Visual Studio project files
+
+
+# Since editing the IWAD is also a part of D2U, EXE files are in the repository
+*.exe	   binary
+*.dll	   binary
+
+# MIDI files, because they're also in here
+*.mid	   binary
+*.midi	   binary
+
+# Image files
+*.png      binary
+*.jpg      binary
+*.jpeg     binary
+*.gif      binary
+*.tif      binary
+*.tiff     binary
+*.ico      binary
+
+# Archive files
+*.7z       binary
+*.bz       binary
+*.bz2      binary
+*.bzip2    binary
+*.gz       binary
+*.lz       binary
+*.lzma     binary
+*.rar      binary
+*.tar      binary
+*.taz      binary
+*.tbz      binary
+*.tbz2     binary
+*.tgz      binary
+*.tlz      binary
+*.txz      binary
+*.xz       binary
+*.Z        binary
+*.zip      binary
+*.zst      binary

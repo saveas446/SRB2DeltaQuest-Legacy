@@ -1,3 +1,5 @@
+
+# Various annoying editor files we need to remove
 *.dbs
 *.backup1
 *.backup2
@@ -8,17 +10,12 @@
 *.autosave3
 *.autosave4
 *.autosave5
-*.ini
+*.whacked
+
+# User-specific and unessecary SRB2 files
 errorlog.txt
 CONFIG.CFG
-*.rar
-*.ini
-dev/CONFIG.CFG
-dev/autosave.xml
-*.whacked
-*.obj
-
-#Remove SRB2 screenshots from the repo
+autosave.xml
 SRB2*.pcx
 
 # Visual Studio + source code stuff
@@ -57,13 +54,9 @@ SRB2*.pcx
 *.scc
 *.plg
 *.bsc
+*.aps
 *.res
-
-objs/Release/DoomLegacy.res
-objs/Release/vc60.idb
-src/WIN32/wLegacy.ncb
 *.ncb
-src/R_THINGS.C
-*.ncb
-objs/*.*
 *.opt
+
+objs/*.*
