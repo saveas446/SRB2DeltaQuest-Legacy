@@ -1,0 +1,76 @@
+=============================================================================
+Title                   : H I P A F R A G --- for DOOM ][ Deathmatch
+
+                          NEW QUICK-HACK VERSION WITH 8 DEATHMATCH STARTS
+                          TO TEST 8 PLAYER WITH DOOMATIC.
+
+Filename                : hipafrag.wad -- (one level)
+
+Authors                 : DENIS Fabrice aka DeF-46!
+
+Email Address           : none
+
+Misc. Author Info       : Denis Fabrice alias DeF-46! I have finally made
+                          the Web site to release all my creations for the
+                          real doom fans out there! It was open June 1997
+                          at:
+
+                          HTTP://www.newdoom.com/doomlegacy
+
+Description             : Little map, hi-tech design like Doom2 map01,
+                          corridors, rooms, but still lots of openings...
+                          makes it very high-frag! Ok from 2 to 4 players.
+
+
+Additional Credits to   : BORIS Pereira, he has worked with me and supported
+                          me to release my creations, and we finally have
+                          opened the Leprechaun web site!
+
+
+                          id Software
+                                - The MASTERS...
+
+=============================================================================
+
+
+* Play Information *
+
+Map #                   : Map01
+Single Player           : No
+Cooperative 2-4 Player  : No
+Deathmatch 2-4 Player   : YES
+Difficulty Settings     : ULTRA HOLY VIOLENCE.
+New Sounds              : Nope.
+New Graphics            : Nope.
+New Music               : Nope.
+Demos Replaced          : None
+
+
+* Construction *
+
+Base                    : head, brain, alpha waves, genius, and such.
+
+Editor(s) used          : DCK
+Known Bugs              :
+
+
+* Copyright / Permissions *
+
+Authors MAY NOT use this level as a base to build additional levels,
+concatenations, or otherwise.
+
+You MAY distribute this PWAD, provided you include this file, with
+no modifications.  You may distribute this file in any electronic
+format (BBS, Diskette, CD, etc) as long as you include this file
+intact.
+
+
+* Where to get this PWAD *
+
+The Leprechaun doom Web site! For the real doom fans still there in 1997 at:
+
+        HTTP://www.newdoom.com/doomlegacy
+
+
+* Important Notes *
+

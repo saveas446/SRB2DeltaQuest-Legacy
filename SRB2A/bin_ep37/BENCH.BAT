@@ -1,0 +1,1 @@
+doom3 -timedemo demo2
