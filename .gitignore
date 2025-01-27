@@ -56,17 +56,14 @@ SRB2*.pcx
 *.svclog
 *.scc
 *.plg
+*.bsc
+*.res
 
 objs/Release/DoomLegacy.res
 objs/Release/vc60.idb
 src/WIN32/wLegacy.ncb
-src/WIN32/wLegacy.ncb
-src/WIN32/wLegacy.ncb
-src/WIN32/wLegacy.ncb
-src/WIN32/wLegacy.ncb
 *.ncb
-src/WIN32/wLegacy.ncb
 src/R_THINGS.C
 *.ncb
-objs/Debug/vc60.idb
+objs/*.*
 *.opt
