@@ -10,7 +10,7 @@ DSZ3 - 100%
 MMZ1 - 100%
 MMZ2 - 5%
 MMZ3 - 100% 
-RMZ1 - 60% 
+RMZ1 - 100% 
 RMZ2 - 30%
 RMZ3 - 100%
 RVZ1 - 0% 
@@ -29,7 +29,7 @@ FFZ - 80%
 WDZ - 5%
 DHZ - 5%
 SHZ - 100%
-HPZ - 25%
+HPZ - 65%
 STZ - 40%
 CCZ - 5%
 EFZ - 5%
@@ -54,7 +54,7 @@ RRZ1 - Complete rework, Final Demo-style.
 RRZ2 - Complete rework, Final Demo-style.
 RRZ3 - Reskin an unused Doom enemy with the SD2 Metal sprites (scaled-down Cyberdemon?) and make the level end when he is killed.
 FFZ - Make the Mastermind able to be damaged, find some actual sprites.
-WZ - Rework the start, and make the rest of the level based on Sonic 2.
+WZ - Finish the rest of the level based on Sonic 2.
 DHZ - Everything. Not even the assets have been made yet.
 HPZ - Finish the rest of the level design.
 STZ - Finish the rest of the level design.
