@@ -13,13 +13,13 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// French (Belgium) resources
+// English (U.S.) resources
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRB)
-/*#ifdef _WIN32
-LANGUAGE LANG_FRENCH, SUBLANG_FRENCH_BELGIAN
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-#endif //_WIN32*/
+#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -77,31 +77,31 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "080c04b0"
+        BLOCK "080004b0"
         BEGIN
-            VALUE "Comments", "Do anyone read this ? Try to read the Baldur's Gate is more interesting..... Anyway If you don't know our site is www.frag.com/doomlegacy you will find our latest version and mush more\0"
+            VALUE "Comments", "Do anyone read this ? Try to read the Baldur's Gate is more interesting..... Anyway If you don't know our site is www.frag.com/doomlegacy you will find our latest version and mush more (the fuck is this???? -sam)\0"
             VALUE "CompanyName", "Sonic Team Junior\0"
             VALUE "FileDescription", "Sonic Robo Blast 2\0"
             VALUE "FileVersion", "1, 29, 6, 5\0"
-            VALUE "InternalName", "SRB2\0"
-            VALUE "LegalCopyright", "© 1998-2002 Sonic Team Junior\0"
+            VALUE "InternalName", "D2U\0"
+            VALUE "LegalCopyright", "© 1998-2002 Samwise & save__as\0"
             VALUE "LegalTrademarks", "Freeware\0"
             VALUE "OriginalFilename", "srb2win.exe\0"
             VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "Sonic Robo Blast 2\0"
+            VALUE "ProductName", "Demo 2 Ultimate\0"
             VALUE "ProductVersion", "1, 29, 6, 5\0"
             VALUE "SpecialBuild", "\0"
         END
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x80c, 1200
+        VALUE "Translation", 0x800, 1200
     END
 END
 
 #endif    // !_MAC
 
-#endif    // French (Belgium) resources
+#endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -115,3 +115,4 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
+
