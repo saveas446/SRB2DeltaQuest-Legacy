@@ -589,13 +589,13 @@ fixed_t R_ScaleFromGlobalAngle (angle_t visangle)
     {
         scale = FixedDiv (num, den);
 
-        if (scale > 64*FRACUNIT)
-            scale = 64*FRACUNIT;
-        else if (scale < 256)
-            scale = 256;
+        if (scale > 128*FRACUNIT)
+            scale = 128*FRACUNIT;
+        else if (scale < 512)
+            scale = 512;
     }
     else
-        scale = 64*FRACUNIT;
+        scale = 128*FRACUNIT;
 
     return scale;
 #endif

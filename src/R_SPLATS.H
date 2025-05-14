@@ -41,8 +41,8 @@
 
 #include "r_defs.h"
 
-//#define WALLSPLATS      // comment this out to compile without splat effects
-//#define FLOORSPLATS
+#define WALLSPLATS      // comment this out to compile without splat effects
+#define FLOORSPLATS
 
 #define MAXLEVELSPLATS      1024
 

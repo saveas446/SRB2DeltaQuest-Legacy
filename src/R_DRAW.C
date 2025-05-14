@@ -168,7 +168,7 @@ byte*                   ds_source;      // start of a 64*64 tile image
 // Spectre/Invisibility.
 //
 #define FUZZTABLE     50
-#define FUZZOFF       (1)
+#define FUZZOFF       (0)
 
 static  int fuzzoffset[FUZZTABLE] =
 {
@@ -208,8 +208,8 @@ char *Color_Names[MAXSKINCOLORS]={
    "Red"  ,
    "Silver" , // tails 02-19-2000
    "Orange", // tails 02-19-2000
-   "light_red"  ,
-   "light_blue" ,
+   "Light Red"  ,
+   "Light Blue" ,
    "Blue"       ,
    "Pink"  , // tails 02-19-2000
    "Beige"
