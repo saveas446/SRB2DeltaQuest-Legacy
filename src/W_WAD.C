@@ -708,6 +708,8 @@ void *W_CachePatchName(const char *name, int tag)
 	return W_CachePatchNum(num, tag);
 }
 
+// not needed for d2u
+
 #define MD5_LEN 16
 
 /**
@@ -717,7 +719,7 @@ void *W_CachePatchName(const char *name, int tag)
   * \param buf Where to print the textual form. Needs 2*MD5_LEN+1 (33) bytes.
   * \author Graue <graue@oceanbase.org>
   */
-#define MD5_FORMAT \
+/*#define MD5_FORMAT \
 	"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x"
 static void PrintMD5String(const unsigned char *md5, char *buf)
 {
@@ -726,7 +728,7 @@ static void PrintMD5String(const unsigned char *md5, char *buf)
 		md5[4], md5[5], md5[6], md5[7],
 		md5[8], md5[9], md5[10], md5[11],
 		md5[12], md5[13], md5[14], md5[15]);
-}
+}*/
 
 /** Verifies a file's MD5 is as it should be.
   * For releases, used as cheat prevention -- if the MD5 doesn't match, a

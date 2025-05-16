@@ -4,7 +4,7 @@ Myargc: 1
 myargv[0] : 'D:\Games\SRB2\demo_2\build\srb2debug.exe'
 I_StartupSystem() ...
 D_SRB2Main() ...
- May 16 2025                   Sonic Robo Blast 2                      17:03:54 
+ May 16 2025                   Sonic Robo Blast 2                      21:30:37 
 Sonic Robo Blast 2
 Z_Init: Init zone memory allocation daemon. 
 system memory 2047MB free 2047MB
@@ -24,7 +24,6 @@ Added file D:\Games\SRB2\demo_2\build\infn.wpn (37 lumps)
 Added file D:\Games\SRB2\demo_2\build\drill.dta (182 lumps)
 Added file D:\Games\SRB2\demo_2\build\soar.dta (102 lumps)
 Added file D:\Games\SRB2\demo_2\build\music.dta (132 lumps)
-File is corrupt or has been modified: D:\Games\SRB2\demo_2\build\srb2.srb (found md5: 25420c3b551e2ead39d6bda5665205c6, wanted: 4d26f0d5ab5c5d7b4090367f95ea9f85)
 ===========================================================================
                    We hope you enjoy this game as
                      much as we did making it!
@@ -86,8 +85,6 @@ MIDI caps:
 -Volume control
 ST_Init: Init status bar.
 D_CheckNetGame: Checking network game status.
-WinSock description: WinSock 2.0
-WinSock System Status: Running
 Entering main app loop...
 I_StartupKeyboard...
 I_StartupMouse...
@@ -102,3 +99,13 @@ Join accepted, wait next map change...
 Player 1 is in the game (node 0)
 Player 1 renamed to save_as
 Speeding off to level...
+>quit
+I_ShutdownMouse()
+I_ShutdownKeyboard()
+I_ShutdownDigMusic: 
+I_ShutdownMIDIMusic: 
+I_ShutdownSound()
+I_ShutdownDigMusic: 
+I_ShutdownMIDIMusic: 
+I_ShutdownGraphics()
+I_Quit(): end of logstream.

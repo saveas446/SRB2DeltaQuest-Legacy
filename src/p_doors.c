@@ -47,19 +47,86 @@
 #include "s_sound.h"
 #include "z_zone.h"
 
-#if 0
+//more deleted functions, these are from p_lights.c
+
 //
-// Sliding door frame information
+// TURN LINE'S TAG LIGHTS OFF
 //
-slidename_t     slideFrameNames[MAXSLIDEDOORS] =
+int EV_TurnTagLightsOff(line_t* line)
 {
-    {"GDOORF1","GDOORF2","GDOORF3","GDOORF4",   // front
-     "GDOORB1","GDOORB2","GDOORB3","GDOORB4"},  // back
+    int                 i;
+    int                 j;
+    int                 min;
+    sector_t*           sector;
+    sector_t*           tsec;
+    line_t*             templine;
 
-    {"\0","\0","\0","\0"}
-};
-#endif
+    sector = sectors;
 
+    for (j = 0;j < numsectors; j++, sector++)
+    {
+        if (sector->tag == line->tag)
+        {
+            min = sector->lightlevel;
+            for (i = 0;i < sector->linecount; i++)
+            {
+                templine = sector->lines[i];
+                tsec = getNextSector(templine,sector);
+                if (!tsec)
+                    continue;
+                if (tsec->lightlevel < min)
+                    min = tsec->lightlevel;
+            }
+            sector->lightlevel = min;
+        }
+    }
+    return 1;
+}
+
+
+//
+// TURN LINE'S TAG LIGHTS ON
+//
+int
+EV_LightTurnOn
+( line_t*       line,
+  int           bright )
+{
+    int         i;
+    int         j;
+    sector_t*   sector;
+    sector_t*   temp;
+    line_t*     templine;
+
+    sector = sectors;
+
+    for (i=0;i<numsectors;i++, sector++)
+    {
+        int tbright = bright; //SoM: 3/7/2000: Search for maximum per sector
+        if (sector->tag == line->tag)
+        {
+            // bright = 0 means to search
+            // for highest light level
+            // surrounding sector
+            if (!bright)
+            {
+                for (j = 0;j < sector->linecount; j++)
+                {
+                    templine = sector->lines[j];
+                    temp = getNextSector(templine,sector);
+
+                    if (!temp)
+                        continue;
+
+                    if (temp->lightlevel > tbright) //SoM: 3/7/2000
+                        tbright = temp->lightlevel;
+                }
+            }
+            sector-> lightlevel = tbright;
+        }
+    }
+    return 1;
+}
 
 // =========================================================================
 //                            VERTICAL DOORS
@@ -68,7 +135,7 @@ slidename_t     slideFrameNames[MAXSLIDEDOORS] =
 //
 // T_VerticalDoor
 //
-void T_VerticalDoor (vldoor_t* door)
+void T_VerticalDoor(vldoor_t* door)
 {
     result_e    res;
 
@@ -87,7 +154,7 @@ void T_VerticalDoor (vldoor_t* door)
                              sfx_bdcls);
                 break;
 
-              case normal:
+              case door_normal:
               case genRaise:   //SoM: 3/6/2000
                 door->direction = -1; // time to go back down
                 S_StartSound((mobj_t *)&door->sector->soundorg,
@@ -121,7 +188,7 @@ void T_VerticalDoor (vldoor_t* door)
             {
               case raiseIn5Mins:
                 door->direction = 1;
-                door->type = normal;
+                door->type = door_normal;
                 S_StartSound((mobj_t *)&door->sector->soundorg,
                              sfx_doropn);
                 break;
@@ -148,11 +215,10 @@ void T_VerticalDoor (vldoor_t* door)
               case genBlazeClose:
                 door->sector->ceilingdata = NULL;  // SoM: 3/6/2000
                 P_RemoveThinker (&door->thinker);  // unlink and free
-                if(boomsupport) //SoM: Removes the double closing sound of doors.
-                  S_StartSound((mobj_t *)&door->sector->soundorg, sfx_bdcls);
+                S_StartSound((mobj_t *)&door->sector->soundorg, sfx_bdcls);
                 break;
 
-              case normal:
+              case door_normal:
               case doorclose:
               case genRaise:
               case genClose:
@@ -176,7 +242,7 @@ void T_VerticalDoor (vldoor_t* door)
                 break;
             }
             //SoM: 3/6/2000: Code to turn lighting off in tagged sectors.
-            if (boomsupport && door->line && door->line->tag)
+            if (door->line && door->line->tag)
             {
               if (door->line->special > GenLockedBase &&
                   (door->line->special&6)==6)
@@ -228,7 +294,7 @@ void T_VerticalDoor (vldoor_t* door)
             switch(door->type)
             {
               case blazeRaise:
-              case normal:
+              case door_normal:
               case genRaise:     //SoM: 3/6/2000
               case genBlazeRaise://SoM: 3/6/2000
                 door->direction = 0; // wait at top
@@ -250,7 +316,7 @@ void T_VerticalDoor (vldoor_t* door)
                 break;
             }
             //SoM: 3/6/2000: turn lighting on in tagged sectors of manual doors
-            if (boomsupport && door->line && door->line->tag)
+            if (door->line && door->line->tag)
             {
               if (door->line->special > GenLockedBase &&
                   (door->line->special&6)==6)     //jff 3/9/98 all manual doors
@@ -397,7 +463,7 @@ EV_DoDoor
                 S_StartSound((mobj_t *)&door->sector->soundorg,sfx_bdopn);
             break;
 
-          case normal:
+          case door_normal:
           case dooropen:
             door->direction = 1;
             door->topheight = P_FindLowestCeilingSurrounding(sec);
@@ -548,7 +614,7 @@ EV_VerticalDoor
       case 26:
       case 27:
       case 28:
-        door->type = normal;
+        door->type = door_normal;
         break;
 
       case 31:
@@ -594,7 +660,7 @@ void P_SpawnDoorCloseIn30 (sector_t* sec)
     door->thinker.function.acp1 = (actionf_p1)T_VerticalDoor;
     door->sector = sec;
     door->direction = 0;
-    door->type = normal;
+    door->type = door_normal;
     door->speed = VDOORSPEED;
     door->topcountdown = 30 * 35;
     door->line = NULL; //SoM: Remember the line that triggered the door.

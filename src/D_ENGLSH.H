@@ -150,6 +150,18 @@ extern const char *text[];
 #define EMPTYSTRING text[EMPTYSTRING_NUM]
 
 //
+// p_doors.c
+//
+
+//Don't feel like adding these to DSTRINGS
+#define PD_BLUEO "You need a blue card to open this door"
+#define PD_REDO  "You need a red card to open this door"
+#define PD_YELLOWO "You need a yellow card to open this door"
+#define PD_BLUEK "You need a blue skull to open this door"
+#define PD_REDK "You need a red skull to open this door"
+#define PD_YELLOWK "You need a yellow skull to open this door"
+
+//
 // g_game.c
 //
 #define GGSAVED           text[GGSAVED_NUM]

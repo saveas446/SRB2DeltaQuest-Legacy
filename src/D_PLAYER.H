@@ -146,6 +146,7 @@ typedef struct player_s
 	int health;
 
 	// Power ups. invinc and invis are tic counters.
+	byte cards;
 	int powers[NUMPOWERS];
 
 	boolean autoaim_toggle;

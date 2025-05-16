@@ -1257,6 +1257,20 @@ void P_LinedefExecute(int tag, mobj_t *actor, sector_t *caller)
 	}
 }
 
+int P_SectorActive(special_e t,sector_t *sec)
+{
+    switch (t)
+    {
+      case floor_special:
+        return (int)sec->floordata;
+      case ceiling_special:
+        return (int)sec->ceilingdata;
+      case lighting_special:
+        return (int)sec->lightingdata;
+    }
+  return 1;
+}
+
 //
 // P_SwitchWeather
 //

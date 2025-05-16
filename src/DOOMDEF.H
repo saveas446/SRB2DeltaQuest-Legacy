@@ -144,6 +144,22 @@ extern int logstream;
 
 #include "g_state.h"
 
+//
+// Key cards.
+//
+typedef enum
+{
+    it_bluecard   =    1,
+    it_yellowcard =    2,
+    it_redcard    =    4,
+    it_blueskull  =    8,
+    it_yellowskull= 0x10,
+    it_redskull   = 0x20,
+    it_allkeys    = 0x3f,
+    NUMCARDS      = 6 
+
+} card_t;
+
 // commonly used routines - moved here for include convenience
 
 /**	\brief	The I_Error function
