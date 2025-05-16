@@ -6,22 +6,8 @@ Doom version = 21
 Patch format = 6
 
 
-Thing 20 (Spiderdemon)
-Hit points = 100
-Pain chance = 255
-Speed = 6
-Height = 4915200
-
 Thing 23 (Pain Elemental)
 Speed = 32
-
-Thing 110 (Hanging leg 2)
-Width = 3276800
-Height = 6553600
-Bits = SOLID+NOGRAVITY
-
-Thing 122 (Pool of blood)
-Bits = SOLID
 
 Thing 126 (Seaweed)
 Initial frame = 763
