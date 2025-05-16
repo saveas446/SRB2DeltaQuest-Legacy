@@ -60,3 +60,5 @@ SRB2*.pcx
 *.ncb
 *.opt
 objs/*
+build/log.txt
+build/log.txt
