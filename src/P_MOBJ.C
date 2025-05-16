@@ -2040,7 +2040,7 @@ void P_SpawnPuff ( fixed_t       x,
 // --------------------------------------------------------------------------
 
 static mobj_t*  bloodthing;
-static fixed_t  bloodspawnpointx,bloodspawnpointy; // Restored by Save 16/05/2025
+// static fixed_t  bloodspawnpointx,bloodspawnpointy; // Tails 11-16-2001
 
 #ifdef WALLSPLATS
 boolean PTR_BloodTraverse (intercept_t* in)

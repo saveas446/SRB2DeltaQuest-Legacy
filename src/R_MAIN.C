@@ -549,20 +549,22 @@ void R_InitPointToAngle (void)
 fixed_t R_ScaleFromGlobalAngle (angle_t visangle)
 {
     // UNUSED
+#if 0
     //added:02-02-98:note: I've tried this and it displays weird...
-    //fixed_t             scale;
-    //fixed_t             dist;
-    //fixed_t             z;
-    //fixed_t             sinv;
-    //fixed_t             cosv;
+    fixed_t             scale;
+    fixed_t             dist;
+    fixed_t             z;
+    fixed_t             sinv;
+    fixed_t             cosv;
 
-    //sinv = finesine[(visangle-rw_normalangle)>>ANGLETOFINESHIFT];
-    //dist = FixedDiv (rw_distance, sinv);
-    //cosv = finecosine[(viewangle-visangle)>>ANGLETOFINESHIFT];
-    //z = abs(FixedMul (dist, cosv));
-    //scale = FixedDiv(projection, z);
-    //return scale;
-	
+    sinv = finesine[(visangle-rw_normalangle)>>ANGLETOFINESHIFT];
+    dist = FixedDiv (rw_distance, sinv);
+    cosv = finecosine[(viewangle-visangle)>>ANGLETOFINESHIFT];
+    z = abs(FixedMul (dist, cosv));
+    scale = FixedDiv(projection, z);
+    return scale;
+
+#else
     fixed_t             scale;
     int                 anglea;
     int                 angleb;
@@ -582,19 +584,7 @@ fixed_t R_ScaleFromGlobalAngle (angle_t visangle)
     //               correct aspect ratio!
     num = FixedMul(projectiony,sineb)<<detailshift;
     den = FixedMul(rw_distance,sinea);
-#ifdef DEMO2ULTIMATE
-    if (den > num>>16)
-    {
-        scale = FixedDiv (num, den);
 
-        if (scale > 128*FRACUNIT)
-            scale = 128*FRACUNIT;
-        else if (scale < 512)
-            scale = 512;
-    }
-    else
-        scale = 128*FRACUNIT;
-#else
     if (den > num>>16)
     {
         scale = FixedDiv (num, den);
@@ -607,8 +597,8 @@ fixed_t R_ScaleFromGlobalAngle (angle_t visangle)
     else
         scale = 64*FRACUNIT;
 
-#endif
     return scale;
+#endif
 }
 
 
