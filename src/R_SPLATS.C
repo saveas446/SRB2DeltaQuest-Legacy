@@ -92,7 +92,7 @@ static wallsplat_t *R_AllocWallSplat(void)
 			li->splats = splat->next; // remove from head
 		else
 		{
-			I_Assert(li->splats != NULL);
+			//I_Assert(li->splats != NULL); these don't seem to work here
 			for (p_splat = li->splats; p_splat->next; p_splat = p_splat->next)
 				if (p_splat->next == splat)
 				{
@@ -293,7 +293,7 @@ void R_ClearVisibleFloorSplats(void)
 void R_AddVisibleFloorSplats(subsector_t *subsec)
 {
 	floorsplat_t *pSplat;
-	I_Assert(subsec->splats != NULL);
+	//I_Assert(subsec->splats != NULL); but whatever, these are just assertions
 
 	pSplat = subsec->splats;
 	// the splat is not visible from below

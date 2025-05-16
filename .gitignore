@@ -67,4 +67,4 @@ SRB2*.pcx
 *.res
 *.ncb
 *.opt
-objs/*.*
+objs/*
