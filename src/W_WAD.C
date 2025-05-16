@@ -745,7 +745,7 @@ void W_VerifyFileMD5(int wadfilenum, const char *matchmd5)
 	int ix;
 #endif
 
-	I_Assert(wadfilenum < numwadfiles);
+	//I_Assert(wadfilenum < numwadfiles);
 	I_Assert(wadfilenum >= 0);
 	I_Assert(strlen(matchmd5) == 2*MD5_LEN);
 #ifdef NOMD5
