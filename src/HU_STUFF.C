@@ -1,10 +1,8 @@
 // Emacs style mode select   -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id: hu_stuff.c,v 1.3 2000/08/03 17:57:42 bpereira Exp $
-//
 // Copyright (C) 1993-1996 by id Software, Inc.
-// Portions Copyright (C) 1998-2000 by DooM Legacy Team.
+// Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -15,30 +13,14 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-//
-// $Log: hu_stuff.c,v $
-// Revision 1.3  2000/08/03 17:57:42  bpereira
-// no message
-//
-// Revision 1.2  2000/02/27 00:42:10  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:33  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
-// DESCRIPTION:
-//      heads up displays, cleaned up (hasta la vista hu_lib)
-//      because a lot of code was unnecessary now
-//
 //-----------------------------------------------------------------------------
-
+/// \file
+/// \brief Heads up display
 
 #include "doomdef.h"
+#include "byteptr.h"
 #include "hu_stuff.h"
 
-#include "d_netcmd.h"
 #include "d_clisrv.h"
 
 #include "g_game.h"
@@ -46,11 +28,9 @@
 
 #include "i_video.h"
 
-// Data.
 #include "dstrings.h"
-#include "st_stuff.h"   //added:05-02-98: ST_HEIGHT
+#include "st_stuff.h" // ST_HEIGHT
 #include "r_local.h"
-#include "wi_stuff.h"  // for drawranckings
 
 #include "keys.h"
 #include "v_video.h"
@@ -60,280 +40,229 @@
 
 #include "console.h"
 #include "am_map.h"
+#include "d_main.h"
+
+#include "p_tick.h"
 
 #ifdef HWRENDER
 #include "hardware/hw_main.h"
 #endif
 
-
 // coords are scaled
-#define HU_INPUTX       0
-#define HU_INPUTY       0
+#define HU_INPUTX 0
+#define HU_INPUTY 0
 
-// DOOM shareware/registered/retail (Ultimate) names.
-#define HU_TITLE        (text[HUSTR_E1M1_NUM+(gameepisode-1)*9+gamemap-1])
-// DOOM 2 map names.
-#define HU_TITLE2       (text[HUSTR_1_NUM+gamemap-1])
-// Plutonia WAD map names.
-#define HU_TITLEP       (text[PHUSTR_1_NUM+gamemap-1])
-// TNT WAD map names.
-#define HU_TITLET       (text[THUSTR_1_NUM+gamemap-1])
-
-#define HU_TITLEX       0
-#define HU_TITLEY       ((BASEVIDHEIGHT-ST_HEIGHT-1) - SHORT(hu_font[0]->height))
-
+// Server message (dedicated) (flag).
+#define HU_SERVER_SAY	1
 
 //-------------------------------------------
 //              heads up font
 //-------------------------------------------
-patch_t*                hu_font[HU_FONTSIZE];
+patch_t *hu_font[HU_FONTSIZE];
 
+// Level title and credits fonts
+patch_t *lt_font[LT_FONTSIZE];
+patch_t *cred_font[CRED_FONTSIZE];
 
-static player_t*        plr;
-boolean                 chat_on;
+static player_t *plr;
+boolean chat_on; // entering a chat message?
+static char w_chat[HU_MAXMSGLEN];
+static boolean headsupactive = false;
+static boolean hu_showscores; // draw rankings
+static char hu_tick;
 
-static char             w_title[80];            //mapname
-static char             w_inputbuffer[MAXPLAYERS][80];
-static char             w_chat[HU_MAXMSGLEN];
+//-------------------------------------------
+//              coop hud
+//-------------------------------------------
 
-static boolean          headsupactive = false;
-
-boolean                 hu_showscores;        // draw deathmatch rankings
-
-static char             hu_tick;
+patch_t *emerald1;
+patch_t *emerald2;
+patch_t *emerald3;
+patch_t *emerald4;
+patch_t *emerald5;
+patch_t *emerald6;
+patch_t *emerald7;
+patch_t *emerald8;
+static patch_t *emblemicon;
 
 //-------------------------------------------
 //              misc vars
 //-------------------------------------------
 
-consvar_t*   chat_macros[10];
-
-//added:16-02-98: crosshair 0=off, 1=cross, 2=angle, 3=point, see m_menu.c
-patch_t*           crosshair[3];     //3 precached crosshair graphics
-
+// crosshair 0 = off, 1 = cross, 2 = angle, 3 = point, see m_menu.c
+static patch_t *crosshair[3]; // 3 precached crosshair graphics
 
 // -------
 // protos.
 // -------
-void   HU_drawDeathmatchRankings (void);
-void   HU_drawCrosshair (void);
-
+static void HU_DrawRankings(void);
+static void HU_DrawCoopOverlay(void);
 
 //======================================================================
 //                 KEYBOARD LAYOUTS FOR ENTERING TEXT
 //======================================================================
 
-char*     shiftxform;
-
-char french_shiftxform[] =
-{
-    0,
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-    11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-    21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-    31,
-    ' ', '!', '"', '#', '$', '%', '&',
-    '"', // shift-'
-    '(', ')', '*', '+',
-    '?', // shift-,
-    '_', // shift--
-    '>', // shift-.
-    '?', // shift-/
-    '0', // shift-0
-    '1', // shift-1
-    '2', // shift-2
-    '3', // shift-3
-    '4', // shift-4
-    '5', // shift-5
-    '6', // shift-6
-    '7', // shift-7
-    '8', // shift-8
-    '9', // shift-9
-    '/',
-    '.', // shift-;
-    '<',
-    '+', // shift-=
-    '>', '?', '@',
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
-    'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-    '[', // shift-[
-    '!', // shift-backslash - OH MY GOD DOES WATCOM SUCK
-    ']', // shift-]
-    '"', '_',
-    '\'', // shift-`
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
-    'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-    '{', '|', '}', '~', 127
-
-};
+char *shiftxform;
 
 char english_shiftxform[] =
 {
-
-    0,
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-    11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-    21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-    31,
-    ' ', '!', '"', '#', '$', '%', '&',
-    '"', // shift-'
-    '(', ')', '*', '+',
-    '<', // shift-,
-    '_', // shift--
-    '>', // shift-.
-    '?', // shift-/
-    ')', // shift-0
-    '!', // shift-1
-    '@', // shift-2
-    '#', // shift-3
-    '$', // shift-4
-    '%', // shift-5
-    '^', // shift-6
-    '&', // shift-7
-    '*', // shift-8
-    '(', // shift-9
-    ':',
-    ':', // shift-;
-    '<',
-    '+', // shift-=
-    '>', '?', '@',
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
-    'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-    '[', // shift-[
-    '!', // shift-backslash - OH MY GOD DOES WATCOM SUCK
-    ']', // shift-]
-    '"', '_',
-    '\'', // shift-`
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
-    'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-    '{', '|', '}', '~', 127
+	0,
+	1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+	11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+	21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+	31,
+	' ', '!', '"', '#', '$', '%', '&',
+	'"', // shift-'
+	'(', ')', '*', '+',
+	'<', // shift-,
+	'_', // shift--
+	'>', // shift-.
+	'?', // shift-/
+	')', // shift-0
+	'!', // shift-1
+	'@', // shift-2
+	'#', // shift-3
+	'$', // shift-4
+	'%', // shift-5
+	'^', // shift-6
+	'&', // shift-7
+	'*', // shift-8
+	'(', // shift-9
+	':',
+	':', // shift-;
+	'<',
+	'+', // shift-=
+	'>', '?', '@',
+	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+	'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+	'[', // shift-[
+	'!', // shift-backslash - OH MY GOD DOES WATCOM SUCK
+	']', // shift-]
+	'"', '_',
+	'~', // shift-` for some stupid reason this was a '
+	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+	'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+	'{', '|', '}', '~', 127
 };
 
-
-char frenchKeyMap[128]=
-{
-    0,
-    1,2,3,4,5,6,7,8,9,10,
-    11,12,13,14,15,16,17,18,19,20,
-    21,22,23,24,25,26,27,28,29,30,
-    31,
-    ' ','!','"','#','$','%','&','%','(',')','*','+',';','-',':','!',
-    '0','1','2','3','4','5','6','7','8','9',':','M','<','=','>','?',
-    '@','Q','B','C','D','E','F','G','H','I','J','K','L',',','N','O',
-    'P','A','R','S','T','U','V','Z','X','Y','W','^','\\','$','^','_',
-    '@','Q','B','C','D','E','F','G','H','I','J','K','L',',','N','O',
-    'P','A','R','S','T','U','V','Z','X','Y','W','^','\\','$','^',127
-};
-
-
-char ForeignTranslation(unsigned char ch)
-{
-    return ch < 128 ? frenchKeyMap[ch] : ch;
-}
-
+char cechotext[1024];
+tic_t cechotimer = 0;
+tic_t cechoduration = 5*TICRATE;
+int cechoflags = 0;
 
 //======================================================================
 //                          HEADS UP INIT
 //======================================================================
 
 // just after
-void Command_Say_f (void);
-void Command_Sayto_f (void);
-void Command_Sayteam_f (void);
-void Got_Saycmd(char **p,int playernum);
+static void Command_Say_f(void);
+static void Command_Sayto_f(void);
+static void Command_Sayteam_f(void);
+static void Got_Saycmd(char **p, int playernum);
 
 // Initialise Heads up
 // once at game startup.
 //
 void HU_Init(void)
 {
+	int i, j;
+	char *buffer = malloc(9);
 
-    int         i;
-    int         j;
-    char        buffer[9];
+	COM_AddCommand("say", Command_Say_f);
+	COM_AddCommand("sayto", Command_Sayto_f);
+	COM_AddCommand("sayteam", Command_Sayteam_f);
+	RegisterNetXCmd(XD_SAY, Got_Saycmd);
 
-    COM_AddCommand ("say"    , Command_Say_f);
-    COM_AddCommand ("sayto"  , Command_Sayto_f);
-    COM_AddCommand ("sayteam", Command_Sayteam_f);
-    RegisterNetXCmd(XD_SAY,Got_Saycmd);
+	// set shift translation table
+	shiftxform = english_shiftxform;
 
-    // set shift translation table
-    if (language==french)
-        shiftxform = french_shiftxform;
-    else
-        shiftxform = english_shiftxform;
+	if (dedicated)
+	{
+		free(buffer);
+		return;
+	}
 
-    // cache the heads-up font for entire game execution
-    j = HU_FONTSTART;
-    for (i=0;i<HU_FONTSIZE;i++)
-    {
-        sprintf(buffer, "STCFN%.3d", j++);
-        hu_font[i] = (patch_t *) W_CachePatchName(buffer, PU_STATIC);
-    }
+	// cache the heads-up font for entire game execution
+	j = HU_FONTSTART;
+	for (i = 0; i < HU_FONTSIZE; i++)
+	{
+		sprintf(buffer, "STCFN%.3d", j);
+		j++;
+		if (i >= HU_REALFONTSIZE && i != '~' - HU_FONTSTART && i != '`' - HU_FONTSTART) /// \note font end hack
+			continue;
+		hu_font[i] = (patch_t *)W_CachePatchName(buffer, PU_STATIC);
+	}
 
-    //hu_showscores = false;    //added:05-02-98:deathmatch rankings overlay off
+	// cache the level title font for entire game execution
+	lt_font[0] = (patch_t *)W_CachePatchName("LTFNT039", PU_STATIC); /// \note fake start hack
 
-    // cache the crosshairs, dont bother to know which one is being used,
-    // just cache them 3 all, they're so small anyway.
-    for(i=0;i<HU_CROSSHAIRS;i++)
-    {
-       sprintf(buffer, "CROSHAI%c", '1'+i);
-       crosshair[i] = (patch_t *) W_CachePatchName(buffer, PU_STATIC);
-    }
+	// Number support
+	lt_font[9] = (patch_t *)W_CachePatchName("LTFNT048", PU_STATIC);
+	lt_font[10] = (patch_t *)W_CachePatchName("LTFNT049", PU_STATIC);
+	lt_font[11] = (patch_t *)W_CachePatchName("LTFNT050", PU_STATIC);
+	lt_font[12] = (patch_t *)W_CachePatchName("LTFNT051", PU_STATIC);
+	lt_font[13] = (patch_t *)W_CachePatchName("LTFNT052", PU_STATIC);
+	lt_font[14] = (patch_t *)W_CachePatchName("LTFNT053", PU_STATIC);
+	lt_font[15] = (patch_t *)W_CachePatchName("LTFNT054", PU_STATIC);
+	lt_font[16] = (patch_t *)W_CachePatchName("LTFNT055", PU_STATIC);
+	lt_font[17] = (patch_t *)W_CachePatchName("LTFNT056", PU_STATIC);
+	lt_font[18] = (patch_t *)W_CachePatchName("LTFNT057", PU_STATIC);
+
+	j = LT_REALFONTSTART;
+	for (i = LT_REALFONTSTART - LT_FONTSTART; i < LT_FONTSIZE; i++)
+	{
+		sprintf(buffer, "LTFNT%.3d", j);
+		j++;
+		lt_font[i] = (patch_t *)W_CachePatchName(buffer, PU_STATIC);
+	}
+
+	// cache the credits font for entire game execution (why not?)
+	j = CRED_FONTSTART;
+	for (i = 0; i < CRED_FONTSIZE; i++)
+	{
+		sprintf(buffer, "CRFNT%.3d", j);
+		j++;
+		cred_font[i] = (patch_t *)W_CachePatchName(buffer, PU_STATIC);
+	}
+
+	// cache the crosshairs, don't bother to know which one is being used,
+	// just cache all 3, they're so small anyway.
+	for (i = 0; i < HU_CROSSHAIRS; i++)
+	{
+		sprintf(buffer, "CROSHAI%c", '1'+i);
+		crosshair[i] = (patch_t *)W_CachePatchName(buffer, PU_STATIC);
+	}
+	free(buffer);
+
+	emblemicon = W_CachePatchName("EMBLICON", PU_STATIC);
+	emerald1 = W_CachePatchName("CHAOS1", PU_STATIC);
+	emerald2 = W_CachePatchName("CHAOS2", PU_STATIC);
+	emerald3 = W_CachePatchName("CHAOS3", PU_STATIC);
+	emerald4 = W_CachePatchName("CHAOS4", PU_STATIC);
+	emerald5 = W_CachePatchName("CHAOS5", PU_STATIC);
+	emerald6 = W_CachePatchName("CHAOS6", PU_STATIC);
+	emerald7 = W_CachePatchName("CHAOS7", PU_STATIC);
+	emerald8 = W_CachePatchName("CHAOS8", PU_STATIC);
 }
 
-
-void HU_Stop(void)
+static inline void HU_Stop(void)
 {
-    headsupactive = false;
+	headsupactive = false;
 }
 
-
-// Reset Heads up when consoleplayer spawns
 //
+// Reset Heads up when consoleplayer spawns
 //
 void HU_Start(void)
 {
+	if (headsupactive)
+		HU_Stop();
 
-    int         i;
-    char*       s;
+	plr = &players[consoleplayer];
+	HU_clearChatChars();
 
-    if (headsupactive)
-        HU_Stop();
-
-    plr = &players[consoleplayer];
-    chat_on = false;
-
-    switch ( gamemode )
-    {
-      case shareware:
-      case registered:
-      case retail:
-        s = HU_TITLE;
-        break;
-  // FIXME
-  //  case pack_plut:
-  //    s = HU_TITLEP;
-  //    break;
-  //  case pack_tnt:
-  //    s = HU_TITLET;
-  //    break;
-      case commercial:
-      default:
-         s = HU_TITLE2;
-         break;
-    }
-    strcpy(w_title,s);
-
-    // empty the inputbuffers
-    for (i=0 ; i<MAXPLAYERS ; i++)
-        w_inputbuffer[i][0] = '\0';
-
-    headsupactive = true;
-
+	headsupactive = true;
 }
-
-
 
 //======================================================================
 //                            EXECUTION
@@ -341,837 +270,963 @@ void HU_Start(void)
 
 void TeamPlay_OnChange(void)
 {
-    int i;
-    char s[50];
+	int i;
+	char s[50];
 
-    // Change the name of the teams
+	// Change the name of the teams
 
-    if(cv_teamplay.value==1)
-    {
-        // color
-        for(i=0;i<MAXSKINCOLORS;i++)
-        {
-            sprintf(s,"%s team",Color_Names[i]);
-            strcpy(team_names[i],s);
-        }
-    }
-    else
-    if(cv_teamplay.value==2)
-    {
-        // skins
+	if (cv_teamplay.value == 1)
+	{
+		// color
+		for (i = 0; i < MAXSKINCOLORS; i++)
+		{
+			sprintf(s, "%s team", Color_Names[i]);
+			strcpy(team_names[i],s);
+		}
+	}
+	else if (cv_teamplay.value == 2)
+	{
+		// skins
 
-        for(i=0;i<numskins;i++)
-        {
-            sprintf(s,"%s team",skins[i].name);
-            strcpy(team_names[i],s);
-        }
-    }
+		for (i = 0; i < numskins; i++)
+		{
+			sprintf(s, "%s team", skins[i].name);
+			strcpy(team_names[i], s);
+		}
+	}
 }
 
-void Command_Say_f (void)
+/** Runs a say command, sending an ::XD_SAY message.
+  * A say command consists of a signed 8-bit integer for the target, an
+  * unsigned 8-bit flag variable, and then the message itself.
+  *
+  * The target is 0 to say to everyone, 1 to 32 to say to that player, or -1
+  * to -32 to say to everyone on that player's team. Note: This means you
+  * have to add 1 to the player number, since they are 0 to 31 internally.
+  *
+  * The flag HU_SERVER_SAY will be set if it is the dedicated server speaking.
+  *
+  * This function obtains the message using COM_Argc() and COM_Argv().
+  *
+  * \param target    Target to send message to.
+  * \param usedargs  Number of arguments to ignore.
+  * \sa Command_Say_f, Command_Sayteam_f, Command_Sayto_f, Got_Saycmd
+  * \author Graue <graue@oceanbase.org>
+  */
+static void DoSayCommand(signed char target, int usedargs)
 {
-    char buf[255];
-    int i,j;
+	XBOXSTATIC char buf[254];
+	int numwords, ix;
+	char *msg = &buf[2];
+	const int msgspace = sizeof buf - 2;
 
-    if((j=COM_Argc())<2)
-    {
-        CONS_Printf ("say <message> : send a message\n");
-        return;
-    }
+	numwords = COM_Argc() - usedargs;
+	I_Assert(numwords > 0);
 
-    buf[0]=0;
-    strcpy(&buf[1],COM_Argv(1));
-    for(i=2;i<j;i++)
-    {
-        strcat(&buf[1]," ");
-        strcat(&buf[1],COM_Argv(i));
-    }
-    SendNetXCmd(XD_SAY,buf,strlen(buf+1)+2); // +2 because 1 for buf[0] and the other for null terminated string
+	if (cv_mute.value && !(server || adminplayer == consoleplayer))
+	{
+		CONS_Printf("The chat is muted. You can't say anything at the moment.\n");
+		return;
+	}
+
+	buf[0] = target;
+	buf[1] = (char)(dedicated ? HU_SERVER_SAY : 0);
+	msg[0] = '\0';
+
+	for (ix = 0; ix < numwords; ix++)
+	{
+		if (ix > 0)
+			strlcat(msg, " ", msgspace);
+		strlcat(msg, COM_Argv(ix + usedargs), msgspace);
+	}
+
+	SendNetXCmd(XD_SAY, buf, strlen(msg) + 1 + msg-buf);
 }
 
-void Command_Sayto_f (void)
+/** Send a message to everyone.
+  * \sa DoSayCommand, Command_Sayteam_f, Command_Sayto_f
+  * \author Graue <graue@oceanbase.org>
+  */
+static void Command_Say_f(void)
 {
-    char buf[255];
-    int i,j;
+	if (COM_Argc() < 2)
+	{
+		CONS_Printf("say <message>: send a message\n");
+		return;
+	}
 
-    if((j=COM_Argc())<3)
-    {
-        CONS_Printf ("sayto <playername|playernum> <message> : send a message to a player\n");
-        return;
-    }
-
-    buf[0]=nametonum(COM_Argv(1));
-    if(buf[0]==-1)
-        return;
-    strcpy(&buf[1],COM_Argv(2));
-    for(i=3;i<j;i++)
-    {
-        strcat(&buf[1]," ");
-        strcat(&buf[1],COM_Argv(i));
-    }
-    SendNetXCmd(XD_SAY,buf,strlen(buf+1)+2);
+	DoSayCommand(0, 1);
 }
 
-void Command_Sayteam_f (void)
+/** Send a message to a particular person.
+  * \sa DoSayCommand, Command_Sayteam_f, Command_Say_f
+  * \author Graue <graue@oceanbase.org>
+  */
+static void Command_Sayto_f(void)
 {
-    char buf[255];
-    int i,j;
+	int target;
 
-    if((j=COM_Argc())<2)
-    {
-        CONS_Printf ("sayteam <message> : send a message to your team\n");
-        return;
-    }
+	if (COM_Argc() < 3)
+	{
+		CONS_Printf("sayto <playername|playernum> <message>: send a message to a player\n");
+		return;
+	}
 
-    buf[0]=-consoleplayer;
-    strcpy(&buf[1],COM_Argv(1));
-    for(i=2;i<j;i++)
-    {
-        strcat(&buf[1]," ");
-        strcat(&buf[1],COM_Argv(i));
-    }
-    SendNetXCmd(XD_SAY,buf,strlen(buf+1)+2); // +2 because 1 for buf[0] and the other for null terminated string
+	target = nametonum(COM_Argv(1));
+	if (target == -1)
+	{
+		CONS_Printf("sayto: No player with that name!\n");
+		return;
+	}
+	target++; // Internally we use 0 to 31, but say command uses 1 to 32.
+
+	DoSayCommand((signed char)target, 2);
 }
 
-// netsyntax : to : byte  1->32  player 1 to 32
-//                        0      all
-//                       -1->-32 say team -numplayer of the sender
-
-void Got_Saycmd(char **p,int playernum)
+/** Send a message to members of the player's team.
+  * \sa DoSayCommand, Command_Say_f, Command_Sayto_f
+  * \author Graue <graue@oceanbase.org>
+  */
+static void Command_Sayteam_f(void)
 {
-    char to;
-    to=*(*p)++;
+	if (COM_Argc() < 2)
+	{
+		CONS_Printf("sayteam <message>: send a message to your team\n");
+		return;
+	}
 
-    if(to==0 || to==consoleplayer || consoleplayer==playernum
-       || (to<0 && ST_SameTeam(&players[consoleplayer],&players[-to])) )
-         CONS_Printf("\3%s: %s\n", player_names[playernum], *p);
+	if (dedicated)
+	{
+		CONS_Printf("Dedicated servers can't send team messages. Use \"say\".\n");
+		return;
+	}
 
-    *p+=strlen(*p)+1;
+	DoSayCommand((signed char)(-(consoleplayer+1)), 1);
 }
 
-//  Handles key input and string input
+/** Receives a message, processing an ::XD_SAY command.
+  * \sa DoSayCommand
+  * \author Graue <graue@oceanbase.org>
+  */
+static void Got_Saycmd(char **p, int playernum)
+{
+	signed char target;
+	unsigned char flags;
+	const char *dispname;
+	char *msg;
+	boolean action = false;
+
+	if (cv_mute.value && playernum != serverplayer && playernum != adminplayer)
+	{
+		CONS_Printf("Illegal say command received from %s while muted\n",
+			player_names[playernum]);
+		if (server)
+		{
+			XBOXSTATIC char buf[2];
+
+			buf[0] = (char)playernum;
+			buf[1] = KICK_MSG_CON_FAIL;
+			SendNetXCmd(XD_KICK, &buf, 2);
+		}
+		return;
+	}
+
+	target = *(*p)++;
+	flags = *(*p)++;
+
+	if (flags & HU_SERVER_SAY) dispname = "SERVER";
+	else dispname = player_names[playernum];
+
+	msg = *p;
+	*p += strlen(*p) + 1;
+
+	// Handle "/me" actions, but only in messages to everyone.
+	if (target == 0 && strlen(msg) > 4 && strnicmp(msg, "/me ", 4) == 0)
+	{
+		msg += 4;
+		action = true;
+	}
+
+	// Show messages sent by you, to you, to your team, or to everyone:
+	if (consoleplayer == playernum // By you
+		|| consoleplayer == target-1 // To you
+		|| (target < 0 && ST_SameTeam(&players[consoleplayer],
+			&players[-target - 1])) // To your team
+		|| target == 0) // To everyone
+	{
+		const char *cstart = "", *cend = "", *fmt;
+
+		// In CTF, color the player's name.
+		if (gametype == GT_CTF)
+		{
+			cend = "\x80";
+			if (players[playernum].ctfteam == 1) // red
+				cstart = "\x85";
+			else if (players[playernum].ctfteam == 2) // blue
+				cstart = "\x84";
+		}
+
+		// Choose the proper format string for display.
+		// Each format includes four strings: color start, display
+		// name, color end, and the message itself.
+		// '\4' makes the message yellow and beeps; '\3' just beeps.
+		if (action)
+			fmt = "\4* %s%s%s \x82%s\n";
+		else if (target == 0) // To everyone
+			fmt = "\3<%s%s%s> %s\n";
+		else if (target-1 == consoleplayer) // To you
+			fmt = "\3*%s%s%s* %s\n";
+		else if (target > 0) // By you, to another player
+		{
+			// Use target's name.
+			dispname = player_names[target-1];
+			fmt = "\3->*%s%s%s* %s\n";
+		}
+		else // To your team
+			fmt = "\3>>%s%s%s<< (team) %s\n";
+
+		CONS_Printf(fmt, cstart, dispname, cend, msg);
+	}
+}
+
+// Handles key input and string input
 //
-boolean HU_keyInChatString (char *s, char ch)
+static inline boolean HU_keyInChatString(char *s, char ch)
 {
-    int         l;
+	size_t l;
 
-    if (ch >= ' ' && ch <= '_')
-    {
-        l = strlen(s);
-        if (l<HU_MAXMSGLEN-1)
-        {
-            s[l++]=ch;
-            s[l]=0;
-            return true;
-        }
-        return false;
-    }
-    else
-        if (ch == KEY_BACKSPACE)
-        {
-            l = strlen(s);
-            if (l)
-                s[--l]=0;
-            else
-                return false;
-        }
-        else
-            if (ch != KEY_ENTER)
-                return false; // did not eat key
+	if (ch >= ' ' && (ch <= '_' || ch == '~' || ch == '`')) /// \note font end hack
+	{
+		l = strlen(s);
+		if (l < HU_MAXMSGLEN - 1)
+		{
+			s[l++] = ch;
+			s[l]=0;
+			return true;
+		}
+		return false;
+	}
+	else if (ch == KEY_BACKSPACE)
+	{
+		l = strlen(s);
+		if (l)
+			s[--l] = 0;
+		else
+			return false;
+	}
+	else if (ch != KEY_ENTER)
+		return false; // did not eat key
 
-    return true; // ate the key
+	return true; // ate the key
 }
-
 
 //
 //
 void HU_Ticker(void)
 {
-    player_t    *pl;
+	player_t *pl;
 
-    hu_tick++;
-    hu_tick &= 7;        //currently only to blink chat input cursor
+	if (dedicated)
+		return;
 
-    // display message if necessary
-    // (display the viewplayer's messages)
-    pl = &players[displayplayer];
+	hu_tick++;
+	hu_tick &= 7; // currently only to blink chat input cursor
 
-    if (cv_showmessages.value && pl->message)
-    {
-        CONS_Printf ("%s\n",pl->message);
-        pl->message = 0;
-    }
+	// display message if necessary
+	// (display the viewplayer's messages)
+	pl = &players[displayplayer];
 
-    //deathmatch rankings overlay if press key or while in death view // Anytime! Tails 12-08-2000
-//    if (cv_deathmatch.value)
-//    {
-        if ((gamekeydown[gamecontrol[gc_scores][0]] ||
-            gamekeydown[gamecontrol[gc_scores][1]] ) && (cv_gametype.value == 1 || cv_gametype.value == 3 || cv_gametype.value == 4)) // Tails 07-12-2001
-            hu_showscores = !chat_on;
+	if (cv_showmessages.value && pl->message)
+	{
+		CONS_Printf("%s\n", pl->message);
+		pl->message = 0;
+	}
+
+	// In splitscreen, display second player's messages
+	if (cv_splitscreen.value)
+	{
+		pl = &players[secondarydisplayplayer];
+		if (cv_showmessages.value && pl->message)
+		{
+			CONS_Printf("\2%s\n",pl->message);
+			pl->message = 0;
+		}
+	}
+
+	if ((gamekeydown[gamecontrol[gc_scores][0]] || gamekeydown[gamecontrol[gc_scores][1]]))
+		hu_showscores = !chat_on;
+	else
+	{
+		if (gametype == GT_MATCH || gametype == GT_TAG || gametype == GT_CTF
+#ifdef CHAOSISNOTDEADYET
+			|| gametype == GT_CHAOS
+#endif
+			)
+		{
+			hu_showscores = playerdeadview;
+		}
 		else
 			hu_showscores = false;
-//        else
-//            hu_showscores = playerdeadview; //hack from P_DeathThink()
-//    }
-//    else
-//        hu_showscores = false;
+	}
 }
 
+#define QUEUESIZE 128
 
-
-
-#define QUEUESIZE               128
-
-static char     chatchars[QUEUESIZE];
-static int      head = 0;
-static int      tail = 0;
+static char chatchars[QUEUESIZE];
+static int head = 0, tail = 0;
 
 //
+// HU_dequeueChatChar
 //
 char HU_dequeueChatChar(void)
 {
-    char c;
+	char c;
 
-    if (head != tail)
-    {
-        c = chatchars[tail];
-        tail = (tail + 1) & (QUEUESIZE-1);
-    }
-    else
-    {
-        c = 0;
-    }
+	if (head != tail)
+	{
+		c = chatchars[tail];
+		tail = (tail + 1) & (QUEUESIZE-1);
+	}
+	else
+		c = 0;
 
-    return c;
+	return c;
 }
 
 //
 //
-void HU_queueChatChar(char c)
+static void HU_queueChatChar(char c)
 {
-    if (((head + 1) & (QUEUESIZE-1)) == tail)
-    {
-        plr->message = HUSTR_MSGU;      //message not send
-    }
-    else
-    {
-        if (c == KEY_BACKSPACE)
-        {
-            if(tail!=head)
-                head = (head - 1) & (QUEUESIZE-1);
-        }
-        else
-        {
-            chatchars[head] = c;
-            head = (head + 1) & (QUEUESIZE-1);
-        }
-    }
+	if (((head + 1) & (QUEUESIZE-1)) == tail)
+		plr->message = HUSTR_MSGU; // message not sent
+	else
+	{
+		if (c == KEY_BACKSPACE)
+		{
+			if (tail != head)
+				head = (head - 1) & (QUEUESIZE-1);
+		}
+		else
+		{
+			chatchars[head] = c;
+			head = (head + 1) & (QUEUESIZE-1);
+		}
+	}
 
-    // send automaticly the message (no more chat char)
-    if(c==KEY_ENTER)
-    {
-        char buf[255],c;
-        int i=0;
+	// send automaticly the message (no more chat char)
+	if (c == KEY_ENTER)
+	{
+		char buf[255];
+		size_t ci = 0;
 
-        do {
-            c=HU_dequeueChatChar();
-            buf[i++]=c;
-        } while(c);
-        if(i>3)
-            COM_BufInsertText (va("say %s",buf));
-    }
+		do {
+			c = HU_dequeueChatChar();
+			if (c != 13) // Graue 07-04-2004: don't know why this has to be done
+				buf[ci++]=c;
+		} while (c);
+		// Graue 09-04-2004: 1 not 2, hell if I know why
+		if (ci > 1) // Graue 07-02-2004: 2 not 3, with HU_BROADCAST disposed of
+			COM_BufInsertText(va("say \"%s\"", buf)); // Graue 07-04-2004: quote it!
+	}
 }
 
-extern int     con_keymap;
-
-//
-//  Returns true if key eaten
-//
-boolean HU_Responder (event_t *ev)
+void HU_clearChatChars(void)
 {
-static boolean        shiftdown = false;
-static boolean        altdown   = false;
-
-    boolean             eatkey = false;
-    char*               macromessage;
-    unsigned char       c;
-
-
-    if (ev->data1 == KEY_SHIFT)
-    {
-        shiftdown = (ev->type == ev_keydown);
-        return false;
-    }
-    else if (ev->data1 == KEY_ALT)
-    {
-        altdown = (ev->type == ev_keydown);
-        return false;
-    }
-
-    if (ev->type != ev_keydown)
-        return false;
-
-   // only KeyDown events now...
-
-    if (!chat_on)
-    {
-       // enter chat mode
-        if (ev->data1==gamecontrol[gc_talkkey][0]
-         || ev->data1==gamecontrol[gc_talkkey][1])
-        {
-            eatkey = chat_on = true;
-            w_chat[0] = 0;
-            HU_queueChatChar(HU_BROADCAST);
-        }
-    }
-    else
-    {
-        c = ev->data1;
-
-        // use console translations
-        if (con_keymap==french)
-            c = ForeignTranslation(c);
-        if (shiftdown)
-            c = shiftxform[c];
-
-        // send a macro
-        if (altdown)
-        {
-            c = c - '0';
-            if (c > 9)
-                return false;
-
-            macromessage = chat_macros[c]->string;
-
-            // kill last message with a '\n'
-            HU_queueChatChar(KEY_ENTER); // DEBUG!!!
-
-            // send the macro message
-            while (*macromessage)
-                HU_queueChatChar(*macromessage++);
-            HU_queueChatChar(KEY_ENTER);
-
-            // leave chat mode and notify that it was sent
-            chat_on = false;
-            eatkey = true;
-        }
-        else
-        {
-            if (language==french)
-                c = ForeignTranslation(c);
-            if (shiftdown || (c >= 'a' && c <= 'z'))
-                c = shiftxform[c];
-            eatkey = HU_keyInChatString(w_chat,c);
-            if (eatkey)
-            {
-                // static unsigned char buf[20]; // DEBUG
-                HU_queueChatChar(c);
-
-                // sprintf(buf, "KEY: %d => %d", ev->data1, c);
-                //      plr->message = buf;
-            }
-            if (c == KEY_ENTER)
-            {
-                chat_on = false;
-            }
-            else if (c == KEY_ESCAPE)
-                chat_on = false;
-        }
-    }
-
-    return eatkey;
+	while (tail != head)
+		HU_queueChatChar(KEY_BACKSPACE);
+	chat_on = false;
 }
 
+//
+// Returns true if key eaten
+//
+boolean HU_Responder(event_t *ev)
+{
+	static boolean shiftdown = false, altdown = false;
+	boolean eatkey = false;
+	unsigned char c;
+
+	if (ev->data1 == KEY_SHIFT)
+	{
+		shiftdown = (ev->type == ev_keydown);
+		return chat_on;
+	}
+	else if (ev->data1 == KEY_ALT)
+	{
+		altdown = (ev->type == ev_keydown);
+		return false;
+	}
+
+	if (ev->type != ev_keydown)
+		return false;
+
+	// only KeyDown events now...
+
+	if (!chat_on)
+	{
+		// enter chat mode
+		if ((ev->data1 == gamecontrol[gc_talkkey][0] || ev->data1 == gamecontrol[gc_talkkey][1])
+			&& netgame && (!cv_mute.value || server || (adminplayer == consoleplayer)))
+		{
+			eatkey = chat_on = true;
+			w_chat[0] = 0;
+		}
+	}
+	else
+	{
+		c = (unsigned char)ev->data1;
+
+		// use console translations
+		if (shiftdown)
+			c = shiftxform[c];
+
+		// Graue 07-04-2004: on following line, added a ! before shiftdown
+		//                   and changed || to &&
+		// if shiftdown, then the shiftxform has ALREADY been done
+		// (this is what was causing ^ to show up as ", shiftxform being done twice)
+		if (!shiftdown && (c >= 'a' && c <= 'z'))
+			c = shiftxform[c];
+
+		if (c == '"') // Graue 07-04-2004: quote marks mess it up
+			c = '\'';
+
+		eatkey = HU_keyInChatString(w_chat,c);
+		if (eatkey)
+			HU_queueChatChar(c);
+		if (c == KEY_ENTER)
+			chat_on = false;
+		else if (c == KEY_ESCAPE)
+			chat_on = false;
+
+		eatkey = true;
+	}
+
+	return eatkey;
+}
 
 //======================================================================
 //                         HEADS UP DRAWING
 //======================================================================
 
-//  Draw chat input
 //
-static void HU_DrawChat (void)
-{
-    int  i,c,y;
-
-    c=0;
-    i=0;
-    y=HU_INPUTY;
-    while (w_chat[i])
-    {
-        V_DrawCharacter( HU_INPUTX + (c<<3), y, w_chat[i++]);
-
-        c++;
-        if (c>=(vid.width>>3))
-        {
-            c = 0;
-            y+=8;
-        }
-
-    }
-
-    if (hu_tick<4)
-        V_DrawScaledPatch (HU_INPUTX + (c<<3), // Tails 11-30-2000
-                           y,0,
-                           hu_font['_'-HU_FONTSTART]); // Tails 11-30-2000
-}
-
-
-extern consvar_t cv_chasecam;
-//  Heads up displays drawer, call each frame
+// HU_DrawChat
 //
-void HU_Drawer(void)
-{
-    // draw chat string plus cursor
-    if (chat_on)
-        HU_DrawChat ();
-
-    // mapname
-    if (automapactive)
-        V_DrawString(HU_TITLEX,HU_TITLEY,w_title);
-
-    // draw deathmatch rankings
-    if (hu_showscores)
-        HU_drawDeathmatchRankings ();
-
-    // draw the crosshair, not when viewing demos nor with chasecam
-    if (viewactive && cv_crosshair.value && !demoplayback && !cv_chasecam.value)
-        HU_drawCrosshair ();
-}
-
-//======================================================================
-//                          PLAYER TIPS
-//======================================================================
-#define MAXTIPLINES 20
-char    *tiplines[MAXTIPLINES];
-int     numtiplines = 0;
-int     tiptime = 0;
-int     largestline = 0;
-
-
-
-void HU_SetTip(char *tip, int displaytics)
-{
-  int    i;
-  char   *rover, *ctipline, *ctipline_p;
-
-
-  for(i = 0; i < numtiplines; i++)
-    Z_Free(tiplines[i]);
-
-
-  numtiplines = 0;
-
-  rover = tip;
-  ctipline = ctipline_p = Z_Malloc(128, PU_STATIC, NULL);
-  *ctipline = 0;
-  largestline = 0;
-
-  while(*rover)
-  {
-    if(*rover == '\n' || strlen(ctipline) + 2 >= 128 || V_StringWidth(ctipline) + 16 >= BASEVIDWIDTH)
-    {
-      if(numtiplines > MAXTIPLINES)
-        break;
-      if(V_StringWidth(ctipline) > largestline)
-        largestline = V_StringWidth(ctipline);
-
-      tiplines[numtiplines] = ctipline;
-      ctipline = ctipline_p = Z_Malloc(128, PU_STATIC, NULL);
-      *ctipline = 0;
-      numtiplines ++;
-    }
-    else
-    {
-      *ctipline_p = *rover;
-      ctipline_p++;
-      *ctipline_p = 0;
-    }
-    rover++;
-
-    if(!*rover)
-    {
-      if(V_StringWidth(ctipline) > largestline)
-        largestline = V_StringWidth(ctipline);
-      tiplines[numtiplines] = ctipline;
-      numtiplines ++;
-    }
-  }
-
-  tiptime = displaytics;
-}
-
-
-
-
-static void HU_DrawTip()
-{
-  int    i;
-  if(!numtiplines) return;
-  if(!tiptime)
-  {
-    for(i = 0; i < numtiplines; i++)
-      Z_Free(tiplines[i]);
-    numtiplines = 0;
-    return;
-  }
-  tiptime--;
-
-
-  for(i = 0; i < numtiplines; i++)
-  {
-    V_DrawString((BASEVIDWIDTH - largestline) / 2,
-                 ((BASEVIDHEIGHT - (numtiplines * 8)) / 2) + ((i + 1) * 8),
-                 tiplines[i]);
-  }
-}
-
-
-void HU_ClearTips()
-{
-  int    i;
-
-  for(i = 0; i < numtiplines; i++)
-    Z_Free(tiplines[i]);
-  numtiplines = 0;
-
-  tiptime = 0;
-}
-
-//======================================================================
-//                 HUD MESSAGES CLEARING FROM SCREEN
-//======================================================================
-
-//  Clear old messages from the borders around the view window
-//  (only for reduced view, refresh the borders when needed)
+// Draw chat input
 //
-//  startline  : y coord to start clear,
-//  clearlines : how many lines to clear.
-//
-static int     oldclearlines;
-
-void HU_Erase (void)
+static void HU_DrawChat(void)
 {
-    int topline;
-    int bottomline;
-    int y,yoffset;
+	int i, c, y;
 
-    //faB: clear hud msgs on double buffer (Glide mode)
-    boolean secondframe;
-    static  int     secondframelines;
+	c = 0;
+	i = 0;
+	y = HU_INPUTY;
+	while (w_chat[i])
+	{
+		//Hurdler: isn't it better like that?
+		V_DrawCharacter(HU_INPUTX + (c<<3), y, w_chat[i++] | V_NOSCALEPATCH|V_NOSCALESTART);
 
-//    int x;      //DEBUG
-//static int col;
+		c++;
+		if (c >= (vid.width>>3))
+		{
+			c = 0;
+			y += 8;
+		}
+	}
 
-    if (con_clearlines==oldclearlines && !con_hudupdate)
-        return;
-
-    // clear the other frame in double-buffer modes
-    secondframe = (con_clearlines!=oldclearlines);
-    if (secondframe)
-        secondframelines = oldclearlines;
-
-    // clear the message lines that go away, so use _oldclearlines_
-    bottomline = oldclearlines;
-    oldclearlines = con_clearlines;
-
-    if (automapactive || viewwindowx==0)   // hud msgs don't need to be cleared
-        return;
-
-    // software mode copies view border pattern & beveled edges from the backbuffer
-    if (rendermode==render_soft)
-    {
-        topline = 0;
-    for (y=topline,yoffset=y*vid.width; y<bottomline ; y++,yoffset+=vid.width)
-    {
-        if (y < viewwindowy || y >= viewwindowy + viewheight)
-            R_VideoErase(yoffset, vid.width); // erase entire line
-        else
-        {
-            R_VideoErase(yoffset, viewwindowx); // erase left border
-                                                // erase right border
-            R_VideoErase(yoffset + viewwindowx + viewwidth, viewwindowx);
-        }
-    }
-        con_hudupdate = false;      // if it was set..
-    }
-#ifdef HWRENDER // not win32 only 19990829 by Kin
-    else {
-        // refresh just what is needed from the view borders
-        HWR_DrawViewBorder (secondframelines);
-        con_hudupdate = secondframe;
-    }
-#endif
-
-
-//DEBUG
-//    for (x=0;x<vid.width;x++)
-//    {
-//         screens[0][yoffset+x] = col;
-//         screens[0][vid.height*vid.width-vid.width+x] = col;
-//    }
-//    col++;
-
-}
-
-
-
-//======================================================================
-//                   IN-LEVEL DEATHMATCH RANKINGS
-//======================================================================
-
-// count frags for each team
-int HU_CreateTeamFragTbl(fragsort_t *fragtab,int dmtotals[],int fragtbl[MAXPLAYERS][MAXPLAYERS])
-{
-    int i,j,k,scorelines,team;
-
-    scorelines = 0;
-    for (i=0; i<MAXPLAYERS; i++)
-    {
-        if (playeringame[i])
-        {
-            if(cv_teamplay.value==1)
-                team=players[i].skincolor;
-            else
-                team=players[i].skin;
-
-            for(j=0;j<scorelines;j++)
-                if (fragtab[j].num == team)
-                { // found there team
-                     if(fragtbl)
-                     {
-                         for(k=0;k<MAXPLAYERS;k++)
-                             if(playeringame[k])
-                             {
-                                 if(cv_teamplay.value==1)
-                                     fragtbl[team][players[k].skincolor] +=
-                                                        players[i].frags[k];
-                                 else
-                                     fragtbl[team][players[k].skin] +=
-                                                        players[i].frags[k];
-                     }
-                     }
-
-                     fragtab[j].count += ST_PlayerFrags(i);
-                     if(dmtotals)
-                         dmtotals[team]=fragtab[j].count;
-                     break;
-                }
-            if (j==scorelines)
-            {   // team not found add it
-
-                if(fragtbl)
-                    for(k=0;k<MAXPLAYERS;k++)
-                        fragtbl[team][k] = 0;
-
-                fragtab[scorelines].count = ST_PlayerFrags(i);
-                fragtab[scorelines].num   = team;
-                fragtab[scorelines].color = players[i].skincolor;
-                fragtab[scorelines].name  = team_names[team];
-
-                if(fragtbl)
-                {
-                    for(k=0;k<MAXPLAYERS;k++)
-                        if(playeringame[k])
-                        {
-                            if(cv_teamplay.value==1)
-                                fragtbl[team][players[k].skincolor] +=
-                                                   players[i].frags[k];
-                            else
-                                fragtbl[team][players[k].skin] +=
-                                                   players[i].frags[k];
-                }
-                }
-
-                if(dmtotals)
-                    dmtotals[team]=fragtab[scorelines].count;
-
-                scorelines++;
-            }
-        }
-    }
-    return scorelines;
-}
-
-
-//
-//  draw Deathmatch Rankings
-//
-void HU_drawDeathmatchRankings (void)
-{
-    patch_t*     p;
-    fragsort_t   fragtab[MAXPLAYERS];
-    int          i;
-    int          scorelines;
-    int          whiteplayer;
-
-    // draw the ranking title panel
-    p = W_CachePatchName("RESULT",PU_CACHE);
-    V_DrawScaledPatch ((BASEVIDWIDTH-p->width)/2,5,0,p);
-    // count frags for each present player
-    scorelines = 0;
-    for (i=0; i<MAXPLAYERS; i++)
-    {
-        if (playeringame[i])
-        {
-//            fragtab[scorelines].count = ST_PlayerFrags(i);
-			if(cv_gametype.value == 1)
-				fragtab[scorelines].count = players[i].score; // Tails 12-08-2000
-			else if (cv_gametype.value == 3)
-				fragtab[scorelines].count = players[i].tagcount; // Tails 05-09-2001
-
-            fragtab[scorelines].num   = i;
-            fragtab[scorelines].color = players[i].skincolor;
-            fragtab[scorelines].name  = player_names[i];
-            scorelines++;
-        }
-    }
-
-    //Fab:25-04-98: when you play, you quickly see your frags because your
-    //  name is displayed white, when playback demo, you quicly see who's the
-    //  view.
-    whiteplayer = demoplayback ? displayplayer : consoleplayer;
-
-// Tails 04-02-2001
-    if (scorelines>14)
-        scorelines = 14; //dont draw past bottom of screen, show the best only
-
-    if(cv_teamplay.value==0)
-        WI_drawRancking(NULL,80,32,fragtab,scorelines,true,whiteplayer);
-    else
-    {
-        // draw the frag to the right
-//        WI_drawRancking("Individual",170,70,fragtab,scorelines,true,whiteplayer);
-
-        scorelines = HU_CreateTeamFragTbl(fragtab,NULL,NULL);
-
-        // and the team frag to the left
-        WI_drawRancking("Teams",80,32,fragtab,scorelines,true,players[whiteplayer].skincolor);
-    }
+	if (hu_tick < 4)
+		V_DrawCharacter(HU_INPUTX + (c<<3), y, '_' | V_NOSCALEPATCH|V_NOSCALESTART);
 }
 
 
 // draw the Crosshair, at the exact center of the view.
 //
 // Crosshairs are pre-cached at HU_Init
-#ifdef HWRENDER // not win32 only 19990829 by Kin
-    extern float gr_basewindowcentery;
-    extern float gr_viewheight;
-#endif
-void HU_drawCrosshair (void)
+
+static inline void HU_DrawCrosshair(void)
 {
-    int     i;
-    int     y;
+	int i, y;
 
-    i = cv_crosshair.value & 3;
-    if (!i)
-        return;
+	i = cv_crosshair.value & 3;
+	if (!i)
+		return;
+
+	if (gametype == GT_CTF && !players[consoleplayer].ctfteam)
+		return;
 
 #ifdef HWRENDER
-    if ( rendermode != render_soft ) {
-        HWR_ScalePatch ( FALSE );
-
-        y = gr_basewindowcentery;
-    }
-    else
+	if (rendermode != render_soft)
+		y = (int)gr_basewindowcentery;
+	else
 #endif
-        y = viewwindowy+(viewheight>>1);
+		y = viewwindowy + (viewheight>>1);
 
-    V_DrawTranslucentPatch (vid.width>>1, y, 0, crosshair[i-1]);
+	V_DrawTranslucentPatch(vid.width>>1, y, V_NOSCALESTART, crosshair[i - 1]);
+}
 
-    if( cv_splitscreen.value )
-    {
-        if ( rendermode == render_soft )
-            y += viewheight;
+static inline void HU_DrawCrosshair2(void)
+{
+	int i, y;
+
+	i = cv_crosshair2.value & 3;
+	if (!i)
+		return;
+
+	if (gametype == GT_CTF && !players[secondarydisplayplayer].ctfteam)
+		return;
+
 #ifdef HWRENDER
-        else
-            y += gr_viewheight;
+	if (rendermode != render_soft)
+		y = (int)gr_basewindowcentery;
+	else
 #endif
-        V_DrawTranslucentPatch (vid.width>>1, y, 0, crosshair[i-1]);
-    }
+		y = viewwindowy + (viewheight>>1);
+
+	if (cv_splitscreen.value)
+	{
 #ifdef HWRENDER
-    if ( rendermode != render_soft )
-        HWR_ScalePatch ( TRUE );
+		if (rendermode != render_soft)
+			y += (int)gr_viewheight;
+		else
+#endif
+			y += viewheight;
+
+		V_DrawTranslucentPatch(vid.width>>1, y, V_NOSCALESTART, crosshair[i - 1]);
+	}
+}
+
+// Heads up displays drawer, call each frame
+//
+void HU_Drawer(void)
+{
+	// draw chat string plus cursor
+	if (chat_on)
+		HU_DrawChat();
+
+	if (gamestate == GS_INTERMISSION || gamestate == GS_CUTSCENE || gamestate == GS_CREDITS)
+		return;
+
+	// draw multiplayer rankings
+	if (hu_showscores)
+	{
+		if (gametype == GT_MATCH || gametype == GT_RACE || gametype == GT_TAG || gametype == GT_CTF 
+#ifdef CHAOSISNOTDEADYET
+			|| gametype == GT_CHAOS
+#endif
+			)
+			HU_DrawRankings();
+		else if (gametype == GT_COOP)
+		{
+			HU_DrawCoopOverlay();
+
+			if (multiplayer || netgame)
+				HU_DrawRankings();
+		}
+	}
+
+	// draw the crosshair, not when viewing demos nor with chasecam
+	if (!automapactive && cv_crosshair.value && !demoplayback && !cv_chasecam.value)
+		HU_DrawCrosshair();
+
+	if (!automapactive && cv_crosshair2.value && !demoplayback && !cv_chasecam2.value)
+		HU_DrawCrosshair2();
+
+	if (cechotimer)
+	{
+		int i = 0;
+		int y = (BASEVIDHEIGHT/2)-4;
+		int pnumlines = 0;
+		char *line;
+		char *echoptr;
+		char temp[1024];
+
+		cechotimer--;
+
+		while (cechotext[i] != '\0')
+		{
+			if (cechotext[i] == '\\')
+				pnumlines++;
+
+			i++;
+		}
+
+		y -= (pnumlines-1)*6;
+		
+		strcpy(temp, cechotext);
+
+		echoptr = &temp[0];
+
+		while (*echoptr != '\0')
+		{
+			line = strchr(echoptr, '\\');
+
+			if (line == NULL)
+				return;
+
+			*line = '\0';
+
+			V_DrawCenteredString(BASEVIDWIDTH/2, y, cechoflags, echoptr);
+			y += 12;
+
+			echoptr = line;
+			echoptr++;
+		}
+	}
+}
+
+//======================================================================
+//                 HUD MESSAGES CLEARING FROM SCREEN
+//======================================================================
+
+// Clear old messages from the borders around the view window
+// (only for reduced view, refresh the borders when needed)
+//
+// startline: y coord to start clear,
+// clearlines: how many lines to clear.
+//
+static int oldclearlines;
+
+void HU_Erase(void)
+{
+	int topline, bottomline;
+	int y, yoffset;
+
+	// clear hud msgs on double buffer (Glide mode)
+	boolean secondframe;
+	static int secondframelines;
+
+	if (con_clearlines == oldclearlines && !con_hudupdate && !chat_on)
+		return;
+
+	// clear the other frame in double-buffer modes
+	secondframe = (con_clearlines != oldclearlines);
+	if (secondframe)
+		secondframelines = oldclearlines;
+
+	// clear the message lines that go away, so use _oldclearlines_
+	bottomline = oldclearlines;
+	oldclearlines = con_clearlines;
+	if (chat_on)
+		if (bottomline < 8)
+			bottomline = 8;
+
+	if (automapactive || viewwindowx == 0) // hud msgs don't need to be cleared
+		return;
+
+	// software mode copies view border pattern & beveled edges from the backbuffer
+	if (rendermode == render_soft)
+	{
+		topline = 0;
+		for (y = topline, yoffset = y*vid.width; y < bottomline; y++, yoffset += vid.width)
+		{
+			if (y < viewwindowy || y >= viewwindowy + viewheight)
+				R_VideoErase(yoffset, vid.width); // erase entire line
+			else
+			{
+				R_VideoErase(yoffset, viewwindowx); // erase left border
+				// erase right border
+				R_VideoErase(yoffset + viewwindowx + viewwidth, viewwindowx);
+			}
+		}
+		con_hudupdate = false; // if it was set..
+	}
+#ifdef HWRENDER
+	else if (rendermode != render_none)
+	{
+		// refresh just what is needed from the view borders
+		HWR_DrawViewBorder(secondframelines);
+		con_hudupdate = secondframe;
+	}
 #endif
 }
 
-
 //======================================================================
-//                    CHAT MACROS COMMAND & VARS
+//                   IN-LEVEL MULTIPLAYER RANKINGS
 //======================================================================
 
-// better do HackChatmacros() because the strings are NULL !!
-
-consvar_t cv_chatmacro1 = {"_chatmacro1", NULL, CV_SAVE,NULL};
-consvar_t cv_chatmacro2 = {"_chatmacro2", NULL, CV_SAVE,NULL};
-consvar_t cv_chatmacro3 = {"_chatmacro3", NULL, CV_SAVE,NULL};
-consvar_t cv_chatmacro4 = {"_chatmacro4", NULL, CV_SAVE,NULL};
-consvar_t cv_chatmacro5 = {"_chatmacro5", NULL, CV_SAVE,NULL};
-consvar_t cv_chatmacro6 = {"_chatmacro6", NULL, CV_SAVE,NULL};
-consvar_t cv_chatmacro7 = {"_chatmacro7", NULL, CV_SAVE,NULL};
-consvar_t cv_chatmacro8 = {"_chatmacro8", NULL, CV_SAVE,NULL};
-consvar_t cv_chatmacro9 = {"_chatmacro9", NULL, CV_SAVE,NULL};
-consvar_t cv_chatmacro0 = {"_chatmacro0", NULL, CV_SAVE,NULL};
-
-
-// set the chatmacros original text, before config is executed
-// if a dehacked patch was loaded, it will set the hacked texts,
-// but the config.cfg will override it.
-//
-void HU_HackChatmacros (void)
+// count frags for each team
+int HU_CreateTeamScoresTbl(playersort_t *tab, int dmtotals[])
 {
-    int    i;
+	int i, j, scorelines, team;
 
-    // this is either the original text, or dehacked ones
-    cv_chatmacro0.defaultvalue = HUSTR_CHATMACRO0;
-    cv_chatmacro1.defaultvalue = HUSTR_CHATMACRO1;
-    cv_chatmacro2.defaultvalue = HUSTR_CHATMACRO2;
-    cv_chatmacro3.defaultvalue = HUSTR_CHATMACRO3;
-    cv_chatmacro4.defaultvalue = HUSTR_CHATMACRO4;
-    cv_chatmacro5.defaultvalue = HUSTR_CHATMACRO5;
-    cv_chatmacro6.defaultvalue = HUSTR_CHATMACRO6;
-    cv_chatmacro7.defaultvalue = HUSTR_CHATMACRO7;
-    cv_chatmacro8.defaultvalue = HUSTR_CHATMACRO8;
-    cv_chatmacro9.defaultvalue = HUSTR_CHATMACRO9;
+	scorelines = 0;
+	for (i = 0; i < MAXPLAYERS; i++)
+	{
+		if (playeringame[i])
+		{
+			if (cv_teamplay.value == 1)
+				team = players[i].skincolor;
+			else
+				team = players[i].skin;
 
-    // link chatmacros to cvars
-    chat_macros[0] = &cv_chatmacro0;
-    chat_macros[1] = &cv_chatmacro1;
-    chat_macros[2] = &cv_chatmacro2;
-    chat_macros[3] = &cv_chatmacro3;
-    chat_macros[4] = &cv_chatmacro4;
-    chat_macros[5] = &cv_chatmacro5;
-    chat_macros[6] = &cv_chatmacro6;
-    chat_macros[7] = &cv_chatmacro7;
-    chat_macros[8] = &cv_chatmacro8;
-    chat_macros[9] = &cv_chatmacro9;
+			for (j = 0; j < scorelines; j++)
+				if (tab[j].num == team)
+				{
+					// found team
+					tab[j].count += players[i].score;
+					if (dmtotals)
+						dmtotals[team] = tab[j].count;
+					break;
+				}
+			if (j == scorelines)
+			{
+				// team not found, so add it
+				tab[scorelines].count = players[i].score;
+				tab[scorelines].num = team;
+				tab[scorelines].color = players[i].skincolor;
+				tab[scorelines].name = team_names[team];
 
-    // register chatmacro vars ready for config.cfg
-    for (i=0;i<10;i++)
-       CV_RegisterVar (chat_macros[i]);
+				if (dmtotals)
+					dmtotals[team] = tab[scorelines].count;
+
+				scorelines++;
+			}
+		}
+	}
+	return scorelines;
+}
+
+//
+// HU_DrawTabRankings
+//
+void HU_DrawTabRankings(int x, int y, playersort_t *tab, int scorelines, int whiteplayer)
+{
+	int i;
+	byte *colormap;
+
+	for (i = 0; i < scorelines; i++)
+	{
+		V_DrawString(cv_teamplay.value ? x : x+24, y, (tab[i].num == whiteplayer && !cv_teamplay.value) ? V_YELLOWMAP : 0, tab[i].name);
+
+		if (!cv_teamplay.value)
+		{
+			if (tab[i].color == 0)
+			{
+				colormap = colormaps;
+				V_DrawSmallScaledPatch (x, y-4, 0, faceprefix[players[tab[i].num].skin]);
+			}
+			else
+			{
+				colormap = (byte *) translationtables[players[tab[i].num].skin] - 256 + (tab[i].color<<8);
+				V_DrawSmallMappedPatch (x, y-4, 0, faceprefix[players[tab[i].num].skin], colormap);
+			}
+		}
+
+		if (gametype == GT_CTF)
+		{
+			patch_t *p;
+
+			if (players[tab[i].num].gotflag & MF_REDFLAG) // Red
+			{
+				p = W_CachePatchName("RFLAGICO", PU_CACHE);
+				V_DrawSmallScaledPatch(x-32, y-4, 0, p);
+			}
+			else if (players[tab[i].num].gotflag & MF_BLUEFLAG) // Blue
+			{
+				p = W_CachePatchName("BFLAGICO", PU_CACHE);
+				V_DrawSmallScaledPatch(x-32, y-4, 0, p);
+			}
+		}
+
+		if (gametype == GT_RACE)
+		{
+			if (circuitmap)
+			{
+				if (players[tab[i].num].exiting)
+					V_DrawRightAlignedString(x+240, y, 0, va("%d:%02d.%02d", players[tab[i].num].realtime/(60*TICRATE), players[tab[i].num].realtime/TICRATE % 60, players[tab[i].num].realtime % TICRATE));
+				else
+					V_DrawRightAlignedString(x+240, y, 0, va("%d", tab[i].count));
+			}
+			else
+				V_DrawRightAlignedString(x+240, y, 0, va("%d:%02d.%02d", tab[i].count/(60*TICRATE), tab[i].count/TICRATE % 60, tab[i].count % TICRATE));
+		}
+		else
+			V_DrawRightAlignedString(x+240, y, 0, va("%d", tab[i].count));
+
+		y += 16;
+	}
 }
 
 
-//  chatmacro <0-9> "chat message"
 //
-void Command_Chatmacro_f (void)
+// HU_DrawRankings
+//
+static void HU_DrawRankings(void)
 {
-    int    i;
+	patch_t *p;
+	playersort_t tab[MAXPLAYERS];
+	int i, scorelines, whiteplayer;
 
-    if (COM_Argc()<2)
-    {
-        CONS_Printf ("chatmacro <0-9> : view chatmacro\n"
-                     "chatmacro <0-9> \"chat message\" : change chatmacro\n");
-        return;
-    }
+	// draw the ranking title panel
+/*	if (gametype != GT_CTF)
+	{
+		p = W_CachePatchName("RESULT", PU_CACHE);
+		V_DrawScaledPatch((BASEVIDWIDTH - p->width)/2, 5, 0, p);
+	}*/
 
-    i = atoi(COM_Argv(1)) % 10;
+	if (gametype == GT_CTF)
+	{
+		p = W_CachePatchName("BFLAGICO", PU_CACHE);
+		V_DrawSmallScaledPatch(128 - p->width/4, 4, 0, p);
 
-    if (COM_Argc()==2)
-    {
-        CONS_Printf("chatmacro %d is \"%s\"\n",i,chat_macros[i]->string);
-        return;
-    }
+		V_DrawCenteredString(128, 16, 0, va("%d", bluescore));
 
-    // change a chatmacro
-    CV_Set (chat_macros[i], COM_Argv(2));
+		p = W_CachePatchName("RFLAGICO", PU_CACHE);
+		V_DrawSmallScaledPatch(192 - p->width/4, 4, 0, p);
+
+		V_DrawCenteredString(192, 16, 0, va("%d", redscore));
+	}
+
+	if (gametype != GT_RACE)
+	{
+		if (cv_timelimit.value && timelimitintics > 0)
+		{
+			V_DrawCenteredString(64, 8, 0, "TIME LEFT");
+			V_DrawCenteredString(64, 16, 0, va("%d", (timelimitintics+1-leveltime)/TICRATE));
+		}
+
+		if (cv_pointlimit.value > 0)
+		{
+			V_DrawCenteredString(256, 8, 0, "POINT LIMIT");
+			V_DrawCenteredString(256, 16, 0, va("%d", cv_pointlimit.value));
+		}
+	}
+
+	// When you play, you quickly see your score because your name is displayed in white.
+	// When playing back a demo, you quickly see who's the view.
+	whiteplayer = demoplayback ? displayplayer : consoleplayer;
+
+	if (!cv_teamplay.value)
+	{
+		int j;
+		boolean completed[MAXPLAYERS];
+
+		scorelines = 0;
+		memset(completed, 0, sizeof (completed));
+		memset(tab, 0, sizeof (playersort_t)*MAXPLAYERS);
+
+		for (i = 0; i < MAXPLAYERS; i++)
+		{
+			tab[i].num = -1;
+			tab[i].name = 0;
+
+			if (gametype == GT_RACE && !circuitmap)
+				tab[i].count = MAXINT;
+		}
+
+		for (j = 0; j < MAXPLAYERS; j++)
+		{
+			if (!playeringame[j])
+				continue;
+
+			for (i = 0; i < MAXPLAYERS; i++)
+			{
+				if (playeringame[i])
+				{
+					if (gametype == GT_TAG)
+					{
+						if (players[i].tagcount >= tab[scorelines].count && completed[i] == false)
+						{
+							tab[scorelines].count = players[i].tagcount;
+							tab[scorelines].num = i;
+							tab[scorelines].color = players[i].skincolor;
+							tab[scorelines].name = player_names[i];
+						}
+					}
+					else if (gametype == GT_RACE)
+					{
+						if (circuitmap)
+						{
+							if (players[i].laps+1 >= tab[scorelines].count && completed[i] == false)
+							{
+								tab[scorelines].count = players[i].laps+1;
+								tab[scorelines].num = i;
+								tab[scorelines].color = players[i].skincolor;
+								tab[scorelines].name = player_names[i];
+							}
+						}
+						else
+						{
+							if (players[i].realtime <= tab[scorelines].count && completed[i] == false)
+							{
+								tab[scorelines].count = players[i].realtime;
+								tab[scorelines].num = i;
+								tab[scorelines].color = players[i].skincolor;
+								tab[scorelines].name = player_names[i];
+							}
+						}
+					}
+					else
+					{
+						if (players[i].score >= tab[scorelines].count && completed[i] == false)
+						{
+							tab[scorelines].count = players[i].score;
+							tab[scorelines].num = i;
+							tab[scorelines].color = players[i].skincolor;
+							tab[scorelines].name = player_names[i];
+						}
+					}
+				}
+			}
+			completed[tab[scorelines].num] = true;
+			scorelines++;
+		}
+
+		if (scorelines > 10)
+			scorelines = 10; //dont draw past bottom of screen, show the best only
+
+		HU_DrawTabRankings(40, 32, tab, scorelines, whiteplayer);
+	}
+	else
+	{
+		memset(tab, 0, sizeof (tab));
+
+		scorelines = HU_CreateTeamScoresTbl(tab, NULL);
+
+		if (scorelines > 10)
+			scorelines = 10; // only show 10 best teams
+
+		// and the team frag to the left
+		HU_DrawTabRankings(40, 32, tab, scorelines, whiteplayer);
+		//	cv_teamplay.value == 1 ? players[whiteplayer].skincolor : players[whiteplayer].skin);
+		// first param was "Teams"
+		// Graue 04-08-2004: only display team counts not individual counts
+		// there can be up to 16 teams by color (teamplay 1) or 32 by skin (teamplay 2)
+	}
+}
+
+static void HU_DrawCoopOverlay(void)
+{
+	if (!netgame && (!modifiedgame || savemoddata))
+	{
+		char emblemsfound[20];
+		int found = 0;
+		int i;
+
+		for (i = 0; i < MAXEMBLEMS; i++)
+		{
+			if (emblemlocations[i].collected)
+				found++;
+		}
+
+		sprintf(emblemsfound, "- %d/%d", found, numemblems);
+		V_DrawString(160, 96, 0, emblemsfound);
+		V_DrawScaledPatch(128, 96 - emblemicon->height/4, 0, emblemicon);
+	}
+
+	if (emeralds & EMERALD1)
+		V_DrawScaledPatch(64, 128, V_TRANSLUCENT, emerald1);
+	if (emeralds & EMERALD2)
+		V_DrawScaledPatch(96, 128, V_TRANSLUCENT, emerald2);
+	if (emeralds & EMERALD3)
+		V_DrawScaledPatch(128, 128, V_TRANSLUCENT, emerald3);
+	if (emeralds & EMERALD4)
+		V_DrawScaledPatch(160, 128, V_TRANSLUCENT, emerald4);
+	if (emeralds & EMERALD5)
+		V_DrawScaledPatch(192, 128, V_TRANSLUCENT, emerald5);
+	if (emeralds & EMERALD6)
+		V_DrawScaledPatch(224, 128, V_TRANSLUCENT, emerald6);
+	if (emeralds & EMERALD7)
+		V_DrawScaledPatch(256, 128, V_TRANSLUCENT, emerald7);
+	if (emeralds & EMERALD8)
+		V_DrawScaledPatch(160, 144, V_TRANSLUCENT, emerald8);
 }

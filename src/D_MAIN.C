@@ -1,10 +1,8 @@
 // Emacs style mode select   -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id: d_main.c,v 1.23 2000/08/10 14:50:19 ydario Exp $
-//
 // Copyright (C) 1993-1996 by id Software, Inc.
-// Portions Copyright (C) 1998-2000 by DooM Legacy Team.
+// Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -15,1697 +13,1502 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-//
-// $Log: d_main.c,v $
-// Revision 1.23  2000/08/10 14:50:19  ydario
-// OS/2 port
-//
-// Revision 1.22  2000/05/07 08:27:56  metzgermeister
-// no message
-//
-// Revision 1.21  2000/04/30 10:30:10  bpereira
-// no message
-//
-// Revision 1.20  2000/04/25 19:49:46  metzgermeister
-// support for automatic wad search
-//
-// Revision 1.19  2000/04/24 20:24:38  bpereira
-// no message
-//
-// Revision 1.18  2000/04/23 16:19:52  bpereira
-// no message
-//
-// Revision 1.17  2000/04/22 20:27:35  metzgermeister
-// support for immediate fullscreen switching
-//
-// Revision 1.16  2000/04/21 20:04:20  hurdler
-// fix a problem with my last SDL merge
-//
-// Revision 1.15  2000/04/19 15:21:02  hurdler
-// add SDL midi support
-//
-// Revision 1.14  2000/04/18 12:55:39  hurdler
-// join with Boris' code
-//
-// Revision 1.13  2000/04/16 18:38:07  bpereira
-// no message
-//
-// Revision 1.12  2000/04/07 23:10:15  metzgermeister
-// fullscreen support under X in Linux
-//
-// Revision 1.11  2000/04/06 20:40:22  hurdler
-// Mostly remove warnings under windows
-//
-// Revision 1.10  2000/04/05 15:47:46  stroggonmeth
-// Added hack for Dehacked lumps. Transparent sprites are now affected by colormaps.
-//
-// Revision 1.9  2000/04/04 00:32:45  stroggonmeth
-// Initial Boom compatability plus few misc changes all around.
-//
-// Revision 1.8  2000/03/29 19:39:48  bpereira
-// no message
-//
-// Revision 1.7  2000/03/28 16:18:41  linuxcub
-// Added a command to the Linux sound-server which sets a master volume.
-// Someone needs to check that this isn't too much of a performance drop
-// on slow machines. (Works for me).
-//
-// Added code to the main parts of doomlegacy which uses this command to
-// implement volume control for sound effects.
-//
-// Added code so the (really cool) cd music works for me. The volume didn't
-// work for me (with a Teac 532E drive): It always started at max (31) no-
-// matter what the setting in the config-file was. The added code "jiggles"
-// the volume-control, and now it works for me :-)
-// If this code is unacceptable, perhaps another solution is to periodically
-// compare the cd_volume.value with an actual value _read_ from the drive.
-// Ie. not trusting that calling the ioctl with the correct value actually
-// sets the hardware-volume to the requested value. Right now, the ioctl
-// is assumed to work perfectly, and the value in cd_volume.value is
-// compared periodically with cdvolume.
-//
-// Updated the spec file, so an updated RPM can easily be built, with
-// a minimum of editing. Where can I upload my pre-built (S)RPMS to ?
-//
-// Erling Jacobsen, linuxcub@email.dk
-//
-// Revision 1.6  2000/03/23 22:54:00  metzgermeister
-// added support for HOME/.legacy under Linux
-//
-// Revision 1.5  2000/03/06 17:33:36  hurdler
-// compiler warning removed
-//
-// Revision 1.4  2000/03/05 17:10:56  bpereira
-// no message
-//
-// Revision 1.3  2000/02/27 00:42:10  hurdler
-// fix CR+LF problem
-//
-//
-// DESCRIPTION:
-//      DOOM main program (D_DoomMain) and game loop (D_DoomLoop),
-//      plus functions to determine game mode (shareware, registered),
-//      parse command line parameters, configure game parameters (turbo),
-//      and call the startup functions.
-//
 //-----------------------------------------------------------------------------
+/// \file
+/// \brief SRB2 main program
+/// 
+///	SRB2 main program (D_SRB2Main) and game loop (D_SRB2Loop),
+///	plus functions to parse command line parameters, configure game
+///	parameters, and call the startup functions.
 
-#ifdef LINUX
+#ifdef UNIXLIKE
 #include <sys/stat.h>
 #include <sys/types.h>
 #endif
 
-#ifndef __WIN32__
-#include <unistd.h>             // for access
-#else
-#include <direct.h>
+#ifdef __GNUC__
+#include <unistd.h> // for getcwd
 #endif
-#include <fcntl.h>
 
-#ifdef __OS2__
-#include "I_os2.h"
+#if ((defined (_WIN32) && !defined (_WIN32_WCE)) || defined (_WIN64)) && !defined (_XBOX)
+#include <direct.h>
+#include <malloc.h>
+#endif
+#ifndef SDLIO
+#include <fcntl.h>
+#endif
+
+#if !defined (UNDER_CE)
+#include <time.h>
+#elif defined (_XBOX)
+#define NO_TIME
 #endif
 
 #include "doomdef.h"
-
-#include "command.h"
-#include "console.h"
-
-#include "doomstat.h"
-
 #include "am_map.h"
+#include "console.h"
 #include "d_net.h"
-#include "d_netcmd.h"
-#include "dehacked.h"
 #include "dstrings.h"
-
-#include "f_wipe.h"
 #include "f_finale.h"
-
 #include "g_game.h"
-#include "g_input.h"
-
 #include "hu_stuff.h"
-
 #include "i_sound.h"
 #include "i_system.h"
 #include "i_video.h"
-
 #include "m_argv.h"
 #include "m_menu.h"
 #include "m_misc.h"
-
 #include "p_setup.h"
-#include "p_fab.h"
-
 #include "r_main.h"
 #include "r_local.h"
-
 #include "s_sound.h"
 #include "st_stuff.h"
-
 #include "v_video.h"
-
-#include "wi_stuff.h"
 #include "w_wad.h"
-
 #include "z_zone.h"
 #include "d_main.h"
 #include "d_netfil.h"
+#include "m_cheat.h"
+#include "y_inter.h"
+#include "p_local.h" // chasecam
+#include "mserv.h" // cv_internetserver
 
-#include "time.h" // Tails 11-15-2001
+#ifdef _XBOX
+#include "sdl/SRB2XBOX/xboxhelp.h"
+#endif
 
 #ifdef HWRENDER
-#include "hardware/hw_main.h"   // 3D View Rendering
+#include "hardware/hw_main.h" // 3D View Rendering
 #endif
-#ifdef __WIN32__
-#include "win32/win_main.h"
+
+#ifdef _WINDOWS
+#include "win32/win_main.h" // I_DoStartupMouse
 #endif
+
+#include "hardware/hw3sound.h"
 
 //
-//  DEMO LOOP
+// DEMO LOOP
 //
-int             demosequence;
-int             pagetic;
-char            *pagename="TITLEPIC";
+//static int demosequence;
+static int pagetic = 0;
+static const char *pagename = "MAP1PIC";
+static char *startupwadfiles[MAX_WADFILES];
 
-//  PROTOS
-void D_PageDrawer (char* lumpname);
-void D_AdvanceDemo (void);
+boolean devparm = false; // started game with -devparm
+boolean xmasmode = false; // Xmas Mode
+boolean xmasoverride = false;
+boolean mariomode = false; // Mario Mode
+boolean eastermode = false; // Easter mode
 
-#ifdef LINUX
-void VID_PrepareModeList(void); // FIXME: very dirty; will use a proper include file
+boolean singletics = false; // timedemo
+
+#ifdef _XBOX
+boolean nomusic = true, nosound = true;
+boolean nofmod = true;
+#else
+boolean nomusic = false, nosound = false;
+boolean nofmod = false; // No fmod-based music
 #endif
 
-char*           startupwadfiles[MAX_WADFILES];
+// These variables are only true if
+// the respective sound system is initialized
+// and active, but no sounds/music should play.
+boolean music_disabled = false;
+boolean sound_disabled = false;
+boolean digital_disabled = false;
 
-boolean         devparm;        // started game with -devparm
-boolean         nomonsters;     // checkparm of -nomonsters
-boolean			xmasmode; // Xmas Mode Tails 12-02-2001
-boolean			mariomode; // Mario Mode Tails 12-18-2001
+boolean advancedemo;
+#ifdef DEBUGFILE
+int debugload = 0;
+#endif
 
-char*				parmskin; // Player skin defined from parms Tails 06-09-2001
-char*				ctfteam; // Player Preferred CTF Team defined from parms Tails 07-31-2001
-char*				flagtime; // CTF Flag time defined from parms Tails 07-31-2001
-char*				parmcolor; // Player color defined from parms Tails 06-09-2001
-char*				parmname; // Player name defined from parms Tails 06-09-2001
-
-boolean         singletics = false; // timedemo
-
-boolean         nomusic;    
-boolean         nosound;
-
-
-boolean         advancedemo;
-
-
-char            wadfile[1024];          // primary wad file
-char            mapdir[1024];           // directory of development maps
+#ifdef _arch_dreamcast
+char srb2home[256] = "/cd";
+char srb2path[256] = "/cd";
+#else
+char srb2home[256] = ".";
+char srb2path[256] = ".";
+#endif
+boolean usehome = true;
+const char *pandf = "%s" PATHSEP "%s";
 
 //
 // EVENT HANDLING
 //
 // Events are asynchronous inputs generally generated by the game user.
 // Events can be discarded if no responder claims them
-//
-event_t         events[MAXEVENTS];
-int             eventhead;
-int             eventtail;
+// referenced from i_system.c for I_GetKey()
 
+event_t events[MAXEVENTS];
+int eventhead, eventtail;
+
+boolean dedicated = false;
 
 //
 // D_PostEvent
 // Called by the I/O functions when input is detected
 //
-void D_PostEvent (const event_t* ev)
+void D_PostEvent(const event_t *ev)
 {
-    events[eventhead] = *ev;
-    eventhead = (++eventhead)&(MAXEVENTS-1);
+	events[eventhead] = *ev;
+	eventhead = (eventhead+1) & (MAXEVENTS-1);
 }
 // just for lock this function
-#ifdef PC_DOS
+#ifndef DOXYGEN
 void D_PostEvent_end(void) {};
 #endif
-
 
 //
 // D_ProcessEvents
 // Send all the events of the given timestamp down the responder chain
 //
-void D_ProcessEvents (void)
+void D_ProcessEvents(void)
 {
-    event_t*    ev;
+	event_t *ev;
 
-    //added:12-02-98: doing a W_CheckNumForName() is a bit clumsy here...
+	for (; eventtail != eventhead; eventtail = (eventtail+1) & (MAXEVENTS-1))
+	{
+		ev = &events[eventtail];
 
-    // IF STORE DEMO, DO NOT ACCEPT INPUT
-    //if ( ( gamemode == commercial )
-    //     && (W_CheckNumForName("map01")<0) )
-    //  return;
+		// Menu input
+		if (M_Responder(ev))
+			continue; // menu ate the event
 
-    for ( ; eventtail != eventhead ; eventtail = (++eventtail)&(MAXEVENTS-1) )
-    {
-        ev = &events[eventtail];
-        // Menu input
-        if (M_Responder (ev))
-            continue;              // menu ate the event
+		// console input
+		if (CON_Responder(ev))
+			continue; // ate the event
 
-        // console input
-        if (CON_Responder (ev))
-            continue;              // ate the event
-
-        G_Responder (ev);
-    }
+		G_Responder(ev);
+	}
 }
-
 
 //
 // D_Display
-//  draw current display, possibly wiping it from the previous
+// draw current display, possibly wiping it from the previous
 //
-
-#ifdef __WIN32__
-void I_DoStartupMouse (void);   //win_sys.c
-#endif
 
 // wipegamestate can be set to -1 to force a wipe on the next draw
 // added comment : there is a wipe eatch change of the gamestate
-gamestate_t  wipegamestate = GS_DEMOSCREEN;
-CV_PossibleValue_t screenslink_cons_t[]={{0,"None"},{wipe_ColorXForm+1,"Color"},{wipe_Melt+1,"Melt"},{0,NULL}};
-consvar_t cv_screenslink    = {"screenlink","Color", CV_SAVE,screenslink_cons_t};
+gamestate_t wipegamestate = GS_DEMOSCREEN;
 
-void D_Display (void)
+static void D_Display(void)
 {
-    static  boolean             viewactivestate = false;
-    static  boolean             menuactivestate = false;
-    static  boolean             fullscreen = false;
-    static  gamestate_t         oldgamestate = -1;
-    static  int                 borderdrawcount;
-    int                         nowtime;
-    int                         tics;
-    int                         wipestart;
-    int                         y;
-    boolean                     done;
-    boolean                     wipe;
-    boolean                     redrawsbar;
+	static boolean menuactivestate = false;
+	static gamestate_t oldgamestate = -1;
+	static int borderdrawcount;
+	tic_t nowtime, tics, wipestart, y;
+	boolean done, redrawsbar = false, viewactivestate = false;
+	static boolean wipe = false;
 
-    if (nodrawers)
-        return;                    // for comparative timing / profiling
+	if (dedicated)
+		return;
 
-    redrawsbar = false;
+	if (nodrawers)
+		return; // for comparative timing/profiling
 
-    //added:21-01-98: check for change of screen size (video mode)
-    if (setmodeneeded)
-    {
-        SCR_SetMode();  // change video mode
-    }
+	// check for change of screen size (video mode)
+	if (setmodeneeded && !wipe)
+		SCR_SetMode(); // change video mode
 
-    if (vid.recalc)
-    {
-        //added:26-01-98: NOTE! setsizeneeded is set by SCR_Recalc()
-        SCR_Recalc();
-    }
-
-    // change the view size if needed
-    if (setsizeneeded || scr_viewsize!=cv_viewsize.value)
-    {
-        R_ExecuteSetViewSize ();
-        oldgamestate = -1;                      // force background redraw
-        borderdrawcount = 3;
-    }
-
-    // save the current screen if about to wipe
-    if (gamestate != wipegamestate &&
-        rendermode == render_soft)
-    {
-        wipe = true;
-        wipe_StartScreen(0, 0, vid.width, vid.height);
-    }
-    else
-        wipe = false;
+	if (vid.recalc)
+		SCR_Recalc(); // NOTE! setsizeneeded is set by SCR_Recalc()
 
 
-    if (gamestate == GS_LEVEL && gametic)
-    {
-        HU_Erase();
-    }
+	// change the view size if needed
+	if (setsizeneeded)
+	{
+		R_ExecuteSetViewSize();
+		oldgamestate = -1; // force background redraw
+		borderdrawcount = 3;
+		redrawsbar = true;
+	}
 
-    // do buffered drawing
-    switch (gamestate)
-    {
-      case GS_LEVEL:
-        if (!gametic)
-            break;
-        if (automapactive)
-            AM_Drawer ();
-        if (wipe || ((viewheight != vid.height) && fullscreen) )
-            redrawsbar = true;
-        if (vid.recalc) //redraw (& recalc widgets) when vidmode change
-            redrawsbar = true;
-        if (menuactivestate)      // redraw stbar because menu fades down the
-            redrawsbar = true;    // screen
+	// save the current screen if about to wipe
+	if (gamestate != wipegamestate)
+	{
+		wipe = true;
 
-        fullscreen = (viewheight == vid.height);
-#ifdef HWRENDER 
-        if (rendermode==render_soft)
+		if (rendermode == render_soft)
+			F_WipeStartScreen();
+	}
+	else
+		wipe = false;
+
+	// draw buffered stuff to screen
+	// Used only by linux GGI version
+	I_UpdateNoBlit();
+
+	// Fade to black first
+	if (rendermode == render_soft)
+	{
+		if (wipe)
+		{
+			V_DrawFill(0, 0, vid.width, vid.height, 0);
+			F_WipeEndScreen(0, 0, vid.width, vid.height);
+
+			wipestart = I_GetTime() - 1;
+			y = wipestart + 2*TICRATE; // init a timeout
+			do
+			{
+				do
+				{
+					nowtime = I_GetTime();
+					tics = nowtime - wipestart;
+					if (!tics) I_Sleep();
+				} while (!tics);
+				wipestart = nowtime;
+				done = F_ScreenWipe(0, 0, vid.width, vid.height, tics);
+				I_OsPolling();
+				I_UpdateNoBlit();
+				if (gamestate != GS_TIMEATTACK)
+					M_Drawer(); // menu is drawn even on top of wipes
+				I_FinishUpdate(); // page flip or blit buffer
+			} while (!done && I_GetTime() < y);
+		}
+
+		F_WipeStartScreen();
+	}
+	else if (wipe && rendermode != render_none) // Delay the hardware modes as well
+	{
+		
+		wipestart = I_GetTime() - 1;
+		y = wipestart + 32; // init a timeout
+		do
+		{
+			do
+			{
+				nowtime = I_GetTime();
+				tics = nowtime - wipestart;
+				if (!tics) I_Sleep();
+			} while (!tics);
+
+			I_OsPolling();
+			I_UpdateNoBlit();
+			if (gamestate != GS_TIMEATTACK)
+				M_Drawer(); // menu is drawn even on top of wipes
+//			I_FinishUpdate(); // page flip or blit buffer
+		} while (I_GetTime() < y);
+	}
+
+	// do buffered drawing
+	switch (gamestate)
+	{
+		case GS_LEVEL:
+			if (!gametic)
+				break;
+			HU_Erase();
+			if (automapactive)
+				AM_Drawer();
+			if (wipe || menuactivestate || (rendermode != render_soft && rendermode != render_none) || vid.recalc)
+				redrawsbar = true;
+			break;
+
+		case GS_INTERMISSION:
+			Y_IntermissionDrawer();
+			HU_Erase();
+			HU_Drawer();
+			break;
+
+		case GS_TIMEATTACK:
+			break;
+
+		case GS_FINALE:
+			F_Drawer();
+			break;
+
+		case GS_INTRO:
+		case GS_INTRO2:
+			F_IntroDrawer();
+			break;
+
+		case GS_CUTSCENE:
+			F_CutsceneDrawer();
+			HU_Erase();
+			HU_Drawer();
+			break;
+
+		case GS_DEMOEND:
+			F_DemoEndDrawer();
+			break;
+
+		case GS_EVALUATION:
+			F_GameEvaluationDrawer();
+			break;
+
+		case GS_CREDITS:
+			F_CreditDrawer();
+			HU_Erase();
+			HU_Drawer();
+			break;
+
+		case GS_TITLESCREEN:
+			F_TitleScreenDrawer();
+			break;
+
+		case GS_DEMOSCREEN:
+			D_PageDrawer(pagename);
+		case GS_DEDICATEDSERVER:
+		case GS_WAITINGPLAYERS:
+		case GS_NULL:
+			break;
+	}
+
+	// Transitions for Introduction
+	if (gamestate == GS_INTRO && oldgamestate == GS_INTRO2)
+		wipe = true;
+	else if (gamestate == GS_INTRO2 && oldgamestate == GS_INTRO)
+		wipe = true;
+
+	// clean up border stuff
+	// see if the border needs to be initially drawn
+	if (gamestate == GS_LEVEL)
+	{
+		if (oldgamestate != GS_LEVEL)
+		{
+			viewactivestate = false; // view was not active
+			R_FillBackScreen(); // draw the pattern into the back screen
+		}
+
+		// see if the border needs to be updated to the screen
+		if (!automapactive && (scaledviewwidth != vid.width))
+		{
+			// the menu may draw over parts out of the view window,
+			// which are refreshed only when needed
+			if (menuactive || menuactivestate || !viewactivestate)
+				borderdrawcount = 3;
+
+			if (borderdrawcount)
+			{
+				R_DrawViewBorder(); // erase old menu stuff
+				borderdrawcount--;
+			}
+		}
+
+		// draw the view directly
+		if (!automapactive && !dedicated && cv_renderview.value)
+		{
+			if (players[displayplayer].mo)
+			{
+#ifdef HWRENDER
+				if (rendermode != render_soft)
+					HWR_RenderPlayerView(0, &players[displayplayer]);
+				else
 #endif
-            ST_Drawer (fullscreen, redrawsbar );
-        break;
+				if (rendermode != render_none)
+					R_RenderPlayerView(&players[displayplayer]);
+			}
 
-      case GS_INTERMISSION:
-        WI_Drawer ();
-        break;
-
-      case GS_FINALE:
-        F_Drawer ();
-        break;
-
-      case GS_DEDICATEDSERVER:
-      case GS_DEMOSCREEN:
-        D_PageDrawer (pagename);
-      case GS_WAITINGPLAYERS:
-      case GS_NULL:
-        break;
-    }
-
-    // draw buffered stuff to screen
-    // BP: Used only by linux GGI version
-    I_UpdateNoBlit ();
-
-    // draw the view directly
-    if (gamestate == GS_LEVEL)
-    {
-        if( !automapactive )
-        {
-#ifdef HWRENDER 
-            if ( rendermode != render_soft )
-                HWR_RenderPlayerView (0, &players[displayplayer]);
-            else //if (rendermode == render_soft)
+			// render the second screen
+			if (secondarydisplayplayer != consoleplayer && players[secondarydisplayplayer].mo)
+			{
+#ifdef HWRENDER
+				if (rendermode != render_soft)
+					HWR_RenderPlayerView(1, &players[secondarydisplayplayer]);
+				else
 #endif
-                R_RenderPlayerView (&players[displayplayer]);
+				if (rendermode != render_none)
+				{
+					viewwindowy = vid.height / 2;
+					memcpy(ylookup, ylookup2, viewheight*sizeof (ylookup[0]));
 
-            // added 16-6-98: render the second screen
-            if( secondarydisplayplayer != consoleplayer && players[secondarydisplayplayer].mo)
-            {
-#ifdef HWRENDER 
-                if ( rendermode != render_soft )
-                    HWR_RenderPlayerView (1, &players[secondarydisplayplayer]);
-                else 
+					R_RenderPlayerView(&players[secondarydisplayplayer]);
+
+					viewwindowy = 0;
+					memcpy(ylookup, ylookup1, viewheight*sizeof (ylookup[0]));
+				}
+			}
+		}
+
+		ST_Drawer(redrawsbar);
+
+		HU_Drawer();
+	}
+
+	// change gamma if needed
+	if (gamestate != oldgamestate && gamestate != GS_LEVEL)
+		V_SetPalette(0);
+
+	menuactivestate = menuactive;
+	oldgamestate = wipegamestate = gamestate;
+
+	// draw pause pic
+	if (paused && (!menuactive || netgame))
+	{
+		int py;
+		patch_t *patch;
+		if (automapactive)
+			py = 4;
+		else
+			py = viewwindowy + 4;
+		patch = W_CachePatchName("M_PAUSE", PU_CACHE);
+		V_DrawScaledPatch(viewwindowx + (BASEVIDWIDTH - patch->width)/2, py, 0, patch);
+	}
+
+	// vid size change is now finished if it was on...
+	vid.recalc = 0;
+
+	// FIXME: draw either console or menu, not the two
+	if (gamestate != GS_TIMEATTACK)
+		CON_Drawer();
+
+	M_Drawer(); // menu is drawn even on top of everything
+	NetUpdate(); // send out any new accumulation
+
+	// It's safe to end the game now.
+	if (G_GetExitGameFlag())
+	{
+		Command_ExitGame_f();
+		G_ClearExitGameFlag();
+	}
+
+	//
+	// normal update
+	//
+	if (!wipe)
+	{
+		if (cv_netstat.value)
+		{
+			char s[50];
+			Net_GetNetStat();
+			snprintf(s, sizeof s, "get %d b/s", getbps);
+			V_DrawString(BASEVIDWIDTH - V_StringWidth(s), BASEVIDHEIGHT-ST_HEIGHT-40, V_YELLOWMAP, s);
+			snprintf(s, sizeof s, "send %d b/s", sendbps);
+			V_DrawString(BASEVIDWIDTH - V_StringWidth(s), BASEVIDHEIGHT-ST_HEIGHT-30, V_YELLOWMAP, s);
+			snprintf(s, sizeof s, "GameMiss %.2f%%", gamelostpercent);
+			V_DrawString(BASEVIDWIDTH - V_StringWidth(s), BASEVIDHEIGHT-ST_HEIGHT-20, V_YELLOWMAP, s);
+			snprintf(s, sizeof s, "SysMiss %.2f%%", lostpercent);
+			V_DrawString(BASEVIDWIDTH-V_StringWidth(s), BASEVIDHEIGHT-ST_HEIGHT-10, V_YELLOWMAP, s);
+		}
+
+		I_FinishUpdate(); // page flip or blit buffer
+		return;
+	}
+
+	//
+	// wipe update
+	//
+
+	if (rendermode == render_soft)
+	{
+		F_WipeEndScreen(0, 0, vid.width, vid.height);
+
+		wipestart = I_GetTime () - 1;
+		y = wipestart + 2*TICRATE; // init a timeout
+		do
+		{
+			do
+			{
+				nowtime = I_GetTime();
+				tics = nowtime - wipestart;
+				if (!tics) I_Sleep();
+			} while (!tics);
+			wipestart = nowtime;
+			done = F_ScreenWipe(0, 0, vid.width, vid.height, tics);
+			I_OsPolling();
+			I_UpdateNoBlit();
+			if (gamestate != GS_TIMEATTACK)
+				M_Drawer(); // menu is drawn even on top of wipes
+			I_FinishUpdate(); // page flip or blit buffer
+		} while (!done && I_GetTime() < y);
+	}
+#ifdef HWRENDER
+	else if (rendermode != render_none) // Delay the hardware modes as well
+	{
+		
+		wipestart = I_GetTime() - 1;
+		y = wipestart + 32; // init a timeout
+		do
+		{
+			do
+			{
+				nowtime = I_GetTime();
+				tics = nowtime - wipestart;
+				if (!tics) I_Sleep();
+			} while (!tics);
+
+			I_OsPolling();
+			I_UpdateNoBlit();
+			if (gamestate != GS_TIMEATTACK)
+				M_Drawer(); // menu is drawn even on top of wipes
+//			I_FinishUpdate(); // page flip or blit buffer
+		} while (I_GetTime() < y);
+	}
 #endif
-                {
-                    //faB: Boris hack :P !!
-                    viewwindowy = vid.height/2;
-                    memcpy(ylookup,ylookup2,viewheight*sizeof(ylookup[0]));
-
-                    R_RenderPlayerView (&players[secondarydisplayplayer]);
-
-                    viewwindowy = 0;
-                    memcpy(ylookup,ylookup1,viewheight*sizeof(ylookup[0]));
-                }
-            }
-        }
-
-        // fullscreen with overlay
-        if (st_overlay && !automapactive &&
-            (playerdeadview || cv_splitscreen.value || !playerdeadview)) //Fab: full clear view when dead
-                 // yeah right fab! we want the stats even when he's dead! Tails
-        {
-            ST_overlayDrawer (0);
-            if(cv_splitscreen.value)
-            {
-                player_t *p;
-                extern player_t *plyr;
-                p=plyr;
-                plyr=&players[secondarydisplayplayer];
-                ST_overlayDrawer (1);
-                plyr=p;
-            }
-        }
-        HU_Drawer (); // Moved it after the overlayDrawer Tails 05-20-2001
-    }
-
-    // change gamma if needed
-    if ((scr_gamma!=cv_usegamma.value) ||
-        (gamestate != oldgamestate && gamestate != GS_LEVEL) )
-    {
-        scr_gamma = cv_usegamma.value;
-        V_SetPalette (W_CacheLumpName ("PLAYPAL",PU_CACHE));
-    }
-
-    // clean up border stuff
-    // see if the border needs to be initially drawn
-    if (gamestate == GS_LEVEL && oldgamestate != GS_LEVEL)
-    {
-        viewactivestate = false;        // view was not active
-        R_FillBackScreen ();    // draw the pattern into the back screen
-    }
-
-    // see if the border needs to be updated to the screen
-    if( gamestate==GS_LEVEL && !automapactive &&
-        (scaledviewwidth!=vid.width) )
-    {
-        // the menu may draw over parts out of the view window,
-        // which are refreshed only when needed
-        if (menuactive || menuactivestate || !viewactivestate)
-            borderdrawcount = 3;
-
-        if (borderdrawcount)
-        {
-            R_DrawViewBorder ();    // erase old menu stuff
-            borderdrawcount--;
-        }
-    }
-
-    menuactivestate = menuactive;
-    viewactivestate = viewactive;
-    oldgamestate = wipegamestate = gamestate;
-
-    // draw pause pic
-    if (paused && (!menuactive || netgame))
-    {
-        patch_t* patch;
-        if (automapactive)
-            y = 4;
-        else
-            y = viewwindowy+4;
-        patch = W_CachePatchName ("M_PAUSE", PU_CACHE);
-        V_DrawScaledPatch(viewwindowx+(BASEVIDWIDTH - patch->width)/2,
-                          y,0,patch);
-    }
-
-
-    //added:24-01-98:vid size change is now finished if it was on...
-    vid.recalc = 0;
-
-#ifdef HWRENDER 
-    // added by Hurdler and moved from win_vid.c (before menus)
-    // :in hardware mode, statusbar is drawn after playerview
-    // :but before drawing the menus so all the menus are visible
-    if ((rendermode!=render_soft) && (gamestate==GS_LEVEL))
-        ST_Drawer (viewheight==vid.height, 1);
-#endif
-
-    //FIXME: draw either console or menu, not the two
-    CON_Drawer ();
-
-    // menus go directly to the screen
-    M_Drawer ();          // menu is drawn even on top of everything
-    NetUpdate ();         // send out any new accumulation
-
-//
-// normal update
-//
-    if (!wipe)
-    {
-        if( cv_netstat.value )
-        {
-            char s[20];
-            Net_GetNetStat();
-            sprintf(s,"get %d b/s",getbps);
-            V_DrawStringWhite (BASEVIDWIDTH-V_StringWidth (s),BASEVIDHEIGHT-ST_HEIGHT-40,s);
-            sprintf(s,"send %d b/s",sendbps);
-            V_DrawStringWhite (BASEVIDWIDTH-V_StringWidth (s),BASEVIDHEIGHT-ST_HEIGHT-30,s);
-            sprintf(s,"GameMiss %.2f%%",gamelostpercent);
-            V_DrawStringWhite (BASEVIDWIDTH-V_StringWidth (s),BASEVIDHEIGHT-ST_HEIGHT-20,s);
-            sprintf(s,"SysMiss %.2f%%",lostpercent);
-            V_DrawStringWhite (BASEVIDWIDTH-V_StringWidth (s),BASEVIDHEIGHT-ST_HEIGHT-10,s);
-        }
-
-        //added:12-02-98: tilt view when marine dies... just for fun
-        if (gamestate == GS_LEVEL &&
-            cv_tiltview.value &&
-            players[displayplayer].playerstate==PST_DEAD )
-        {
-            V_DrawTiltView (screens[0]);
-        }
-#ifdef PERSPCORRECT
-        else if (gamestate == GS_LEVEL &&
-                 cv_perspcorr.value )
-        {
-            V_DrawPerspView (screens[0], players[displayplayer].aiming);
-        }
-#endif
-        else
-        {
-            //I_BeginProfile();
-            I_FinishUpdate ();              // page flip or blit buffer
-            //CONS_Printf ("last frame update took %d\n", I_EndProfile());
-        }
-        return;
-    }
-
-//
-// wipe update
-//
-    if(!cv_screenslink.value)
-        return;
-
-    wipe_EndScreen(0, 0, vid.width, vid.height);
-
-    wipestart = I_GetTime () - 1;
-    y=wipestart;
-    do
-    {
-        do
-        {
-            nowtime = I_GetTime ();
-            tics = nowtime - wipestart;
-        } while (!tics);
-        wipestart = nowtime;
-        done = wipe_ScreenWipe (cv_screenslink.value-1
-                                , 0, 0, vid.width, vid.height, tics);
-        I_StartTic ();
-        I_UpdateNoBlit ();
-        M_Drawer ();            // menu is drawn even on top of wipes
-        I_FinishUpdate ();      // page flip or blit buffer
-    } while (!done && I_GetTime()-y<2*TICRATE);
 }
 
-
-
 // =========================================================================
-//   D_DoomLoop
+// D_SRB2Loop
 // =========================================================================
 
-static  ULONG     oldentertics;
-static  ULONG     lastrendered;
-int p; // Tails 06-10-2001
-ULONG   rendergametic;
+tic_t rendergametic;
 boolean supdate;
 
-void D_DoomLoop (void)
+void D_SRB2Loop(void)
 {
-    int  entertic,realtics;
+	tic_t oldentertics = 0, entertic = 0, realtics = 0, rendertimeout = (tic_t)-1;
 
-    if (demorecording)
-        G_BeginRecording ();
+	if (demorecording)
+		G_BeginRecording();
 
-    // user settings
-    COM_BufAddText ("exec autoexec.cfg\n");
+	// user settings
+	if (dedicated)
+		COM_BufAddText(va("exec \"%s"PATHSEP"adedserv.cfg\"\n", srb2home));
+	else
+		COM_BufAddText(va("exec \"%s"PATHSEP"autoexec.cfg\" -noerror\n", srb2home));
 
-// Skin, name, and color stuff Tails 06-10-2001
-p = M_CheckParm ("-skin");
-    if (p && p < myargc-1)
-    {
-		parmskin = myargv[p+1];
-		COM_BufAddText("skin \"");
-		COM_BufAddText(parmskin);
-		COM_BufAddText("\"\n");
-    }
+	if (dedicated)
+		server = true;
 
-p = M_CheckParm ("-color");
-    if (p && p < myargc-1)
-    {
-		parmcolor = myargv[p+1];
-		COM_BufAddText("color \"");
-		COM_BufAddText(parmcolor);
-		COM_BufAddText("\"\n");
-    }
+	if (M_CheckParm("-voodoo")) // 256x256 Texture Limiter
+		COM_BufAddText("gr_voodoocompatibility on\n");
 
-p = M_CheckParm ("-flagtime");
-    if (p && p < myargc-1)
-    {
-		ctfteam = myargv[p+1];
-		COM_BufAddText("flagtime \"");
-		COM_BufAddText(flagtime);
-		COM_BufAddText("\"\n");
-    }
+	// Pushing of + parameters is now done back in D_SRB2Main, not here.
 
-p = M_CheckParm ("-name");
-    if (p && p < myargc-1)
-    {
-		parmname = myargv[p+1];
-		COM_BufAddText("name \"");
-		COM_BufAddText(parmname);
-		COM_BufAddText("\"\n");
-    }
-// Skin, name, and color stuff Tails 06-10-2001
+	// end of loading screen: CONS_Printf() will no more call FinishUpdate()
+	con_startup = false;
 
-    // end of loading screen: CONS_Printf() will no more call FinishUpdate()
-    con_startup = false;
+	CONS_Printf("I_StartupKeyboard...\n");
+	I_StartupKeyboard();
 
-#ifdef __WIN32__
-    if ( hWndMain!=NULL )
-    {
-        SetFocus(hWndMain);
-        ShowWindow(hWndMain, SW_SHOW);
-        UpdateWindow(hWndMain);
-    }
-#endif
-    //faB: make sure the app window has the focus or
-    //     DirectInput acquire keyboard won't work
-    CONS_Printf ("I_StartupKeyboard...\n");
-    I_StartupKeyboard ();
-
-#ifdef __WIN32__
-    CONS_Printf ("I_StartupMouse...\n");
-    I_DoStartupMouse ();
+#ifdef _WINDOWS
+	CONS_Printf("I_StartupMouse...\n");
+	I_DoStartupMouse();
 #endif
 
-    oldentertics = I_GetTime ();
+	oldentertics = I_GetTime();
 
-    // make sure to do a d_display to init mode _before_ load a level
-    SCR_SetMode();  // change video mode
-    SCR_Recalc();
+	// make sure to do a d_display to init mode _before_ load a level
+	SCR_SetMode(); // change video mode
+	SCR_Recalc();
 
-    while (1)
-    {
-        // get real tics
-        entertic = I_GetTime ();
-        realtics = entertic - oldentertics;
-        oldentertics = entertic;
-        
-        // frame syncronous IO operations
-        // UNUSED for the moment (18/12/98)
-        I_StartFrame ();
-        
-        // process tics (but maybe not if realtic==0)
-        TryRunTics (realtics);
-#ifdef CLIENTPREDICTION2
-        if(singletics || supdate)
+	for (;;)
+	{
+		// get real tics
+		entertic = I_GetTime();
+		realtics = entertic - oldentertics;
+		oldentertics = entertic;
+
+#ifdef DEBUGFILE
+		if (!realtics)
+			if (debugload)
+				debugload--;
+#endif
+
+		if (!realtics && !singletics)
+		{
+			I_Sleep();
+			continue;
+		}
+
+#ifdef HW3SOUND
+		HW3S_BeginFrameUpdate();
+#endif
+
+		// process tics (but maybe not if realtic == 0)
+		TryRunTics(realtics);
+
+		if (singletics || gametic > rendergametic)
+		{
+			rendergametic = gametic;
+			rendertimeout = entertic+TICRATE/17;
+
+			// Update display, next frame, with current state.
+			D_Display();
+			supdate = false;
+
+			if (moviemode)
+			{
+#ifdef HAVE_MNG
+				M_SaveMNG();
 #else
-        if(singletics || gametic>rendergametic)
+				COM_BufAddText("screenshot");
 #endif
-        {
-            rendergametic=gametic;
-            lastrendered=I_GetTime();
-            
-            //added:16-01-98:consoleplayer -> displayplayer (hear sounds from viewpoint)
-            S_UpdateSounds ();  // move positional sounds
-            // Update display, next frame, with current state.
-            D_Display ();
-            supdate=false;
-        }
-        else
-            if(lastrendered+2<I_GetTime()) // in case the server hang or netsplit
-                D_Display ();
-            
-        // Win32 exe uses DirectSound..
-#if !defined( __WIN32__) && !defined( __OS2__)
-        //
-        //Other implementations might need to update the sound here.
-        //
-#ifndef SNDSERV
-        // Sound mixing for the buffer is snychronous.
-        I_UpdateSound();
+			}
+		}
+		else if (rendertimeout < entertic) // in case the server hang or netsplit
+		{
+			// Lagless camera! Yay!
+			if (gamestate == GS_LEVEL && netgame)
+			{
+				if (cv_splitscreen.value && camera2.chase)
+					P_MoveChaseCamera(&players[secondarydisplayplayer], &camera2, true);
+				if (camera.chase)
+					P_MoveChaseCamera(&players[displayplayer], &camera, true);
+			}
+			D_Display();
+		}
+
+		// consoleplayer -> displayplayer (hear sounds from viewpoint)
+		S_UpdateSounds(); // move positional sounds
+
+		// check for media change, loop music..
+		I_UpdateCD();
+
+#ifdef HW3SOUND
+		HW3S_EndFrameUpdate();
 #endif
-        // Synchronous sound output is explicitly called.
-#ifndef SDL
-#ifndef SNDINTR
-        // Update sound output.
-        I_SubmitSound();
-#endif
-#endif
-#endif //__WIN32__
-        // check for media change, loop music..
-        I_UpdateCD ();
-#ifdef __OS2__
-        DosSleep( 0);
-#endif
-    }
+	}
 }
-
-
-// =========================================================================
-//   D_AdvanceDemo
-// =========================================================================
 
 //
 // D_PageTicker
 // Handles timing for warped projection
 //
-void D_PageTicker (void)
+void D_PageTicker(void)
 {
-    if (--pagetic < 0)
-        D_AdvanceDemo ();
+	if (--pagetic < 0)
+		D_AdvanceDemo();
 }
 
-
-
 //
-// D_PageDrawer : draw a patch supposed to fill the screen,
-//                fill the borders with a background pattern (a flat)
-//                if the patch doesn't fit all the screen.
+// D_PageDrawer: draw a patch supposed to fill the screen,
+//               fill the borders with a background pattern (a flat)
+//               if the patch doesn't fit all the screen.
 //
-void D_PageDrawer (char* lumpname)
+void D_PageDrawer(const char *lumpname)
 {
-    byte*   src;
-    byte*   dest;
-    int     x;
-    int     y;
+	byte *src;
+	byte *dest;
+	int x, y;
 
-    // software mode which uses generally lower resolutions doesn't look
-    // good when the pic is scaled, so it fills space aorund with a pattern,
-    // and the pic is only scaled to integer multiples (x2, x3...)
-    if (rendermode==render_soft)
-    {
-    if( (vid.width>BASEVIDWIDTH) || (vid.height>BASEVIDHEIGHT) )
-    {
-        src  = scr_borderpatch;
-        dest = screens[0];
+	// software mode which uses generally lower resolutions doesn't look
+	// good when the pic is scaled, so it fills space aorund with a pattern,
+	// and the pic is only scaled to integer multiples (x2, x3...)
+	lumpname = NULL;
+	if (rendermode == render_soft)
+	{
+		if ((vid.width > BASEVIDWIDTH) || (vid.height > BASEVIDHEIGHT))
+		{
+			src = scr_borderpatch;
+			dest = screens[0];
 
-        for (y=0; y<vid.height; y++)
-        {
-            for (x=0; x<vid.width/64; x++)
-            {
-                memcpy(dest, src+((y&63)<<6), 64);
-                dest += 64;
-            }
-            if (vid.width&63)
-            {
-                memcpy(dest, src+((y&63)<<6), vid.width&63);
-                dest   += (vid.width&63);
-            }
-        }
-    }
-    }
+			for (y = 0; y < vid.height; y++)
+			{
+				for (x = 0; x < vid.width/64; x++)
+				{
+					memcpy(dest, src+((y&63)<<6), 64);
+					dest += 64;
+				}
+				if (vid.width & 63)
+				{
+					memcpy(dest, src + ((y&63)<<6), vid.width&63);
+					dest += (vid.width&63);
+				}
+			}
+		}
+	}
 
-    V_DrawScaledPatch(0,0, 0, W_CachePatchName(lumpname, PU_CACHE) );
-
-    //added:08-01-98:if you wanna centre the pages it's here.
-    //          I think it's not so beautiful to have the pic centered,
-    //          so I leave it in the upper-left corner for now...
-    //V_DrawPatch (0,0, 0, W_CachePatchName(pagename, PU_CACHE));
+	// if you wanna centre the pages it's here.
+	// I think it's not so beautiful to have the pic centered,
+	// so I leave it in the upper-left corner for now...
+	//V_DrawPatch (0,0, 0, W_CachePatchName(pagename, PU_CACHE));
 }
-
 
 //
 // D_AdvanceDemo
 // Called after each demo or intro demosequence finishes
 //
-void D_AdvanceDemo (void)
+void D_AdvanceDemo(void)
 {
-    advancedemo = true;
-}
-
-
-//
-// This cycles through the demo sequences.
-// FIXME - version dependend demo numbers?
-//
-void D_DoAdvanceDemo (void)
-{
-    players[consoleplayer].playerstate = PST_LIVE;  // not reborn
-    advancedemo = false;
-    usergame = false;               // no save / end game here
-    gameaction = ga_nothing;
-	// Done lots of stuff here Tails
-    demosequence = (demosequence+1)%12;
-
-    switch (demosequence)
-    {
-      case 0:
-        pagetic = 200;
-        gamestate = GS_DEMOSCREEN;
-        pagename = "TITLEPIC";
-        break;
-	  case 1:
-        pagetic = 200;
-        gamestate = GS_DEMOSCREEN;
-        pagename = "CREDIT";
-	    break;
-    }
+	advancedemo = true;
 }
 
 // =========================================================================
-//   D_DoomMain
+// D_SRB2Main
 // =========================================================================
 
 //
 // D_StartTitle
 //
-void D_StartTitle (void)
+void D_StartTitle(void)
 {
-    gameaction = ga_nothing;
-    playerdeadview = false;
-    displayplayer = consoleplayer = statusbarplayer = 0;
-    demosequence = -1;
-    D_AdvanceDemo ();
-    CON_ToggleOff();
-}
+	if (netgame)
+		return;
 
+	gameaction = ga_nothing;
+	playerdeadview = false;
+	displayplayer = consoleplayer = 0;
+	//demosequence = -1;
+	gametype = GT_COOP;
+	paused = false;
+	advancedemo = false;
+	F_StartTitleScreen();
+	CON_ToggleOff();
+}
 
 //
 // D_AddFile
 //
-void D_AddFile (char *file)
+static void D_AddFile(const char *file)
 {
-    int     numwadfiles;
-    char    *newfile;
+	size_t pnumwadfiles;
+	char *newfile;
 
-    for (numwadfiles = 0 ; startupwadfiles[numwadfiles] ; numwadfiles++)
-        ;
+	for (pnumwadfiles = 0; startupwadfiles[pnumwadfiles]; pnumwadfiles++)
+		;
 
-    newfile = malloc (strlen(file)+1);
-    strcpy (newfile, file);
+	newfile = malloc(strlen(file) + 1);
+	if (!newfile)
+	{
+		I_Error("No more free memory to AddFile %s",file);
+	}
+	strcpy(newfile, file);
 
-    startupwadfiles[numwadfiles] = newfile;
+	startupwadfiles[pnumwadfiles] = newfile;
 }
 
+static inline void D_CleanFile(void)
+{
+	size_t pnumwadfiles;
+	for (pnumwadfiles = 0; startupwadfiles[pnumwadfiles]; pnumwadfiles++)
+	{
+		free(startupwadfiles[pnumwadfiles]);
+		startupwadfiles[pnumwadfiles] = NULL;
+	}
+}
 
-#ifdef __WIN32__
-#define R_OK    0                       //faB: win32 does not have R_OK in includes..
-#else
-#define _MAX_PATH   MAX_WADPATH         
+#ifndef _MAX_PATH
+#define _MAX_PATH MAX_WADPATH
 #endif
-
 
 // ==========================================================================
-// Identify the Doom version, and IWAD file to use.
-// Sets 'gamemode' to determine whether registered/commmercial features are
-// available (notable loading PWAD files).
+// Identify the SRB2 version, and IWAD file to use.
 // ==========================================================================
 
-// return gamemode for Doom or Ultimate Doom, use size to detect which one
-gamemode_t GetDoomVersion (char* wadfile)
+static void IdentifyVersion(void)
 {
-    struct stat sbuf;
-    // Fab: and if I patch my main wad and the size gets
-    // bigger ? uh?
-    // BP: main wad MUST not be patched !
-    stat (wadfile, &sbuf);
-    if (sbuf.st_size<12408292)
-        return registered;
-    else
-        return retail;      // Ultimate
-}
-
-void IdentifyVersion (void)
-{
-    char*       doom1wad;
-    char*       doomwad;
-    char*       doomuwad;
-    char*       doom2wad;
-    char*       plutoniawad;
-    char*       tntwad;
-
-//    char*       legacywad;
-
-    char        pathtemp[_MAX_PATH];
-    char        pathiwad[_MAX_PATH+16];
-
-    int         p,i;
-
-//Fab:25-04-98:unused now
-//    char*       doom2fwad;
-
-    char *doomwaddir;
-
-#ifdef LINUX
-    // change to the directory where 'doom3.wad' is found
-   I_LocateWad();
-#endif
-   // Disable Doomwaddir support Tails 03-25-2001
-//    doomwaddir = getenv("DOOMWADDIR");
-//    if (!doomwaddir)
-//    {
-        // get the current directory (possible problem on NT with "." as current dir)
-        if ( getcwd(pathtemp, _MAX_PATH) != NULL )
-            doomwaddir = pathtemp;
-        else
-            doomwaddir = ".";
-//    }
-
-    // Commercial.
-    doom2wad = malloc(strlen(doomwaddir)+1+9+1);
-    sprintf(doom2wad, "%s/%s", doomwaddir, text[DOOM2WAD_NUM]);
-
-    // Retail.
-    doomuwad = malloc(strlen(doomwaddir)+1+9+1);
-    sprintf(doomuwad, "%s/%s", doomwaddir, text[DOOMUWAD_NUM]);
-
-    // Registered.
-    doomwad = malloc(strlen(doomwaddir)+1+8+1);
-    sprintf(doomwad, "%s/%s", doomwaddir, text[DOOMWAD_NUM]);
-
-    // Shareware.
-    doom1wad = malloc(strlen(doomwaddir)+1+9+1);
-    sprintf(doom1wad, "%s/%s", doomwaddir, text[DOOM1WAD_NUM]);
-
-    // and... Doom LEGACY !!! :)
-//    legacywad = malloc(strlen(doomwaddir)+1+9+1);
-//    sprintf(legacywad, "%s/doom3.wad", doomwaddir);
-
-    // FinalDoom : Plutonia
-    plutoniawad = malloc(strlen(doomwaddir)+1+12+1);
-    sprintf(plutoniawad, "%s/plutonia.wad", doomwaddir);
-
-    // FinalDoom : Tnt Evilution
-    tntwad = malloc(strlen(doomwaddir)+1+7+1);
-    sprintf(tntwad, "%s/tnt.wad", doomwaddir);
-
-    /* French stuff.
-    doom2fwad = malloc(strlen(doomwaddir)+1+10+1);
-    sprintf(doom2fwad, "%s/doom2f.wad", doomwaddir);*/
-
-    // will be overwrite in case of -cdrom or linux home
-    sprintf(configfile, "%s/"CONFIGFILENAME, doomwaddir);
-
-    if (M_CheckParm ("-shdev"))
-    {
-        gamemode = shareware;
-        devparm = true;
-        D_AddFile (DEVDATA"doom1.wad");
-        D_AddFile (DEVMAPS"data_se/texture1.lmp");
-        D_AddFile (DEVMAPS"data_se/pnames.lmp");
-        strcpy (configfile,DEVDATA CONFIGFILENAME);
-    }
-    else
-    if (M_CheckParm ("-regdev"))
-    {
-        gamemode = registered;
-        devparm = true;
-        D_AddFile (DEVDATA"doom.wad");
-        D_AddFile (DEVMAPS"data_se/texture1.lmp");
-        D_AddFile (DEVMAPS"data_se/texture2.lmp");
-        D_AddFile (DEVMAPS"data_se/pnames.lmp");
-        strcpy (configfile,DEVDATA CONFIGFILENAME);
-        return;
-    }
-    else
-    if (M_CheckParm ("-comdev"))
-    {
-        gamemode = commercial;
-        devparm = true;
-        /* I don't bother
-        if(plutonia)
-            D_AddFile (DEVDATA"plutonia.wad");
-        else if(tnt)
-            D_AddFile (DEVDATA"tnt.wad");
-        else*/
-            D_AddFile (DEVDATA"doom2.wad");
-
-        D_AddFile (DEVMAPS"cdata/texture1.lmp");
-        D_AddFile (DEVMAPS"cdata/pnames.lmp");
-        strcpy (configfile,DEVDATA CONFIGFILENAME);
-        return;
-    }
-    else
-    // specify the name of the IWAD file to use, so we can have several IWAD's
-    // in the same directory, and/or have legacy.exe only once in a different location
-    if ( (p = M_CheckParm ("-iwad")) && p < myargc-1 )
-    {
-        sprintf (pathiwad, "%s/%s", doomwaddir, myargv[p+1]);
-        if( access (pathiwad,R_OK) ) 
-            I_Error("%s not found\n",pathiwad);
-        D_AddFile (pathiwad);
-
-        // point to start of filename only
-        for (i=strlen(pathiwad)-1; i>=0; i--)
-            if (pathiwad[i]=='\\' || pathiwad[i]=='/' || pathiwad[i]==':')
-                break;
-        i++;
-
-        // find gamemode
-        if (!stricmp("plutonia.wad",pathiwad+i))
-            gamemode = commercial;
-        else if (!stricmp("tnt.wad",pathiwad+i))
-            gamemode = commercial;
-        else if (!stricmp(text[DOOM2WAD_NUM] ,pathiwad+i))
-            gamemode = commercial;
-        else if (!stricmp(text[DOOMUWAD_NUM] ,pathiwad+i))
-            gamemode = retail;
-        else if (!stricmp(text[DOOMWAD_NUM] ,pathiwad+i))
-            gamemode = GetDoomVersion (pathiwad);
-        else if (!stricmp(text[DOOM1WAD_NUM] ,pathiwad+i))
-            gamemode = shareware;
-        else {
-            gamemode = commercial;
-        }
-    }
-    else
-    /*
-    if ( !access (doom2fwad,R_OK) )
-    {
-        gamemode = commercial;
-        // C'est ridicule!
-        // Let's handle languages in config files, okay?
-        language = french;
-        CONS_Printf("French version\n");
-        D_AddFile (doom2fwad);
-    }
-    else*/
-    if ( !access (doom2wad,R_OK) )
-    {
-        gamemode = commercial;
-        D_AddFile (doom2wad);
-    }
-    else
-    if ( !access (doomuwad,R_OK) )
-    {
-        gamemode = retail;
-        D_AddFile (doomuwad);
-    }
-    else
-    if ( !access (doomwad,R_OK) )
-    {
-        gamemode = GetDoomVersion (doomwad);
-        D_AddFile (doomwad);
-    }
-    else
-    if ( !access (doom1wad,R_OK) )
-    {
-        gamemode = shareware;
-        D_AddFile (doom1wad);
-    }
-    else
-    if ( !access (plutoniawad, R_OK ) )
-    {
-      gamemode = commercial;
-      D_AddFile (plutoniawad);
-    }
-    else
-    if ( !access ( tntwad, R_OK ) )
-    {
-      gamemode = commercial;
-      D_AddFile (tntwad);
-    }
-    else
-    {
-        I_Error ("Main WAD file not found!\n");
-        // unused code : I_ERROR never return
-        gamemode = indetermined;
-    }
-
-//    D_AddFile(legacywad);
-}
-
-
-/* ======================================================================== */
-// Just print the nice red titlebar like the original DOOM2 for DOS.
-/* ======================================================================== */
-#ifdef PC_DOS
-void D_Titlebar (char *title1, char *title2)
-{
-    // DOOM LEGACY banner
-    clrscr();
-    textattr((BLUE<<4)+WHITE);
-    clreol();
-    cputs(title1);
-
-    // standard doom/doom2 banner
-    textattr((RED<<4)+WHITE);
-    clreol();
-    gotoxy((80-strlen(title2))/2,2);
-    cputs(title2);
-    normvideo();
-    gotoxy(1,3);
-
-}
-#endif
-
-
-//added:11-01-98:
-//
-//  Center the title string, then add the date and time of compilation.
-//
-void D_MakeTitleString( char *s )
-{
-    char    temp[82];
-    char    *t;
-    char    *u;
-    int     i;
-
-    for(i=0,t=temp;i<82;i++) *t++=' ';
-
-    for(t=temp+(80-strlen(s))/2,u=s;*u!='\0';)
-        *t++ = *u++;
-
-    u=__DATE__;
-    for(t=temp+1,i=11;i--;)
-        *t++=*u++;
-    u=__TIME__;
-    for(t=temp+71,i=8;i--;)
-        *t++=*u++;
-
-    temp[80]='\0';
-    strcpy(s,temp);
-}
-
-void D_CheckWadVersion()
-{
-    int wadversion=0;
-    int lump;
-
-    // check main iwad using demo1 version 
-    lump = W_CheckNumForNameFirst("demo1");
-    // well no demo1, this is not a main wad file
-    if(lump == -1)
-        I_Error("%s is not a Main wad file (IWAD)\n"
-                "try with Doom.wad or Doom2.wad\n"
-                "\n"
-                "Use -nocheckwadversion to remove this check,\n"
-                "but this can cause Legacy to hang\n",wadfiles[0]->filename);
-    W_ReadLumpHeader (lump,&wadversion,1);
-    if( wadversion<109 )
-        I_Error("Your %s file is version %d.%d\n"
-                "Doom Legacy need version 1.9\n"
-                "Upgrade your version to 1.9 using IdSofware patch\n"
-                "\n"
-                "Use -nocheckwadversion to remove this check,\n"
-                "but this can cause Legacy to hang\n",wadfiles[0]->filename,wadversion/100,wadversion%100);
-    
-    // check version, of doom3.wad using version lump
-    lump=W_CheckNumForName("version");
-    if(lump==-1)
-        wadversion=0; // or less
-    else
-    {
-        char s[128];
-        int  l;
-        l=W_ReadLumpHeader (lump,&s,128);
-        wadversion=0;
-        if( l<128 )
-        {
-            s[l]='\0';
-            if( sscanf(s,"Doom Legacy WAD V%d.%d",&l,&wadversion)==2 )
-                wadversion+=l*100;
-        }
-    }
-    if(wadversion!=VERSION)
-        I_Error("Your Doom3.wad file is wrong version\n"
-                "Use the Doom3.wad comming from the same zip file of this exe\n"
-                "\n"
-                "Use -nocheckwadversion to remove this check,\n"
-                "but this can cause Legacy to hang\n",wadfiles[0]->filename,wadversion/100,wadversion%100);
-}
-
-
-//
-// D_DoomMain
-//
-void D_DoomMain (void)
-{
-    int     p;
-    char    file[256];
-    char    legacy[82];    //added:18-02-98: legacy title banner
-    char    title[82];    //added:11-01-98:moved, doesn't need to be global
-
-    int     startepisode;
-    int     startmap;
-    boolean autostart;
-	time_t t1; // Date-checker Tails 11-15-2001
-	struct tm *tptr; // Date-checker Tails 11-15-2001
-
-    // BP: set correct localtime so time comparison work !
-    D_NetFileInit();
-
-    //added:18-02-98:keep error messages until the final flush(stderr)
-    if (setvbuf(stderr,NULL,_IOFBF,1000))
-        CONS_Printf("setvbuf didnt work\n");
-
-    // get parameters from a response file (eg: doom3 @parms.txt)
-    M_FindResponseFile ();
-
-    // identify the main IWAD file to use
-    IdentifyVersion ();
-
-    setbuf (stdout, NULL);      // non-buffered output
-    modifiedgame = false;
-
-    devparm = M_CheckParm ("-debug"); // Tails 06-04-2000
-
-    // added 18-1-98
-    // load dehacked file
-    //befor any initialitation patch table and text
-    p = M_CheckParm ("-dehacked");
-    if (!p)
-        p = M_CheckParm ("-deh");  //Fab:02-08-98:like Boom & DosDoom
-    if(p!=0)
-    {
-        while (M_IsNextParm())
-            DEH_LoadDehackedFile (M_GetNextParm());
-    }
-
-    // search for a deh in -file parm....
-    if (M_CheckParm ("-file"))
-    {
-        while (M_IsNextParm())
-        {
-            char *s=M_GetNextParm();
-            if(stricmp(&s[strlen(s)-3],"deh")==0)
-                DEH_LoadDehackedFile (s);
-        }
-    }
-
-    nomonsters = M_CheckParm ("-noenemies");
-
-    //added:11-01-98:removed the repeated spaces in title strings,
-    //               because GCC doesn't expand the TABS from my text editor.
-    //  Now the string is centered in a larger one just before output,
-    //  and the date and time of compilation is added. (see below)
-    switch ( gamemode )
-    {
-      case retail    :strcpy (title,"The Ultimate DOOM Startup");  break;
-      case shareware :strcpy (title,"DOOM Shareware Startup");     break;
-      case registered:strcpy (title,"DOOM Registered Startup");    break;
-      case commercial:strcpy (title,"Sonic Robo Blast 2");      break; // Tails 03-26-2001
-/*FIXME
-      case pack_plut :strcpy (title,"DOOM 2: Plutonia Experiment");break;
-      case pack_tnt  :strcpy (title,"DOOM 2: TNT - Evilution");    break;
-*/
-      default        :strcpy (title,"Public DOOM");                break;
-    }
-
-    //added:11-01-98:center the string, add compilation time and date.
-    sprintf(legacy,"Sonic Robo Blast 2"); // Tails 03-26-2001
-    D_MakeTitleString(legacy);
-
-#ifdef PC_DOS
-    D_Titlebar(legacy,title);
+	char *srb2wad1, *srb2wad2;
+#ifdef _arch_dreamcast
+	char pathiwad[_MAX_PATH + 16] = "/cd";
 #else
-    CONS_Printf ("%s\n%s\n",legacy,title);
+	char pathiwad[_MAX_PATH + 16] = ".";
+#endif
+	const char *srb2waddir = NULL;
+
+#if defined (UNIXLIKE) || defined (SDL)
+	// change to the directory where 'srb2.srb' is found
+	srb2waddir = I_LocateWad();
 #endif
 
-#ifdef __OS2__
-      // set PM window title
-   snprintf( pmData->title, sizeof( pmData->title), 
-             "Doom LEGACY v%i.%i" VERSIONSTRING ": %s",
-             VERSION/100, VERSION%100, title);
+	// get the current directory (possible problem on NT with "." as current dir)
+	if (srb2waddir)
+	{
+		strncpy(srb2path,srb2waddir,256);
+	}
+	else
+	{
+#ifndef _WIN32_WCE
+		if (getcwd(srb2path, 256) != NULL)
+			srb2waddir = srb2path;
+		else
+#endif
+		{
+#ifdef _arch_dreamcast
+			srb2waddir = "/cd";
+#else
+			srb2waddir = ".";
+#endif
+		}
+	}
+
+#if defined (macintosh) && !defined (SDL)
+	// cwd is always "/" when app is dbl-clicked
+	if (!stricmp(srb2waddir, "/"))
+		srb2waddir = I_GetWadDir();
+#endif
+	// Commercial.
+	srb2wad1 = malloc(strlen(srb2waddir)+1+8+1);
+	srb2wad2 = malloc(strlen(srb2waddir)+1+8+1);
+	if (srb2wad1 == NULL && srb2wad2 == NULL)
+		I_Error("No more free memory to look in %s", srb2waddir);
+	if (srb2wad1 != NULL)
+		sprintf(srb2wad1, pandf, srb2waddir, text[SRB2WAD_NUM]);
+	if (srb2wad2 != NULL)
+		sprintf(srb2wad2, pandf, srb2waddir, "srb2.wad");
+
+	// will be overwritten in case of -cdrom or unix/win home
+	snprintf(configfile, sizeof configfile, "%s" PATHSEP CONFIGFILENAME, srb2waddir);
+
+	// specify the name of the IWAD file to use, so we can have several IWAD's
+	// in the same directory, and/or have srb2's executable only once in a different location
+	if (M_CheckParm("-iwad") && M_IsNextParm())
+	{
+		size_t i;
+		// big hack for fullpath wad, we should use wadpath instead in D_AddFile
+		char *s = M_GetNextParm();
+		if (s[0] == '/' || s[0] == '\\' || s[1] == ':')
+			snprintf(pathiwad, sizeof pathiwad, "%s", s);
+		else
+			snprintf(pathiwad, sizeof pathiwad, pandf, srb2waddir, s);
+
+		if (!FIL_ReadFileOK(pathiwad))
+			I_Error("%s not found\n", pathiwad);
+		D_AddFile(pathiwad);
+
+		// point to start of filename only
+		for (i = strlen(pathiwad) - 1; i != (size_t)-1; i--)
+			if (pathiwad[i] == '\\' || pathiwad[i] == '/' || pathiwad[i] == ':')
+				break;
+		i++;
+	}
+	else
+	{
+		if (srb2wad2 != NULL && FIL_ReadFileOK(srb2wad2))
+			D_AddFile(srb2wad2);
+		else if (srb2wad1 != NULL && FIL_ReadFileOK(srb2wad1))
+			D_AddFile(srb2wad1);
+		else
+			I_Error("SRB2.SRB/SRB2.WAD not found! Expected in %s, ss files: %s and %s\n", srb2waddir, srb2wad1, srb2wad2);
+	}
+	if (srb2wad1)
+		free(srb2wad1);
+	if (srb2wad2)
+		free(srb2wad2);
+
+	// if you change the ordering of this or add/remove a file, be sure to update the md5
+	// checking in D_SRB2Main
+
+	// Add the players
+	D_AddFile(va(pandf,srb2waddir,"sonic.plr")); //sonic.plr
+	D_AddFile(va(pandf,srb2waddir,"tails.plr")); //tails.plr
+	D_AddFile(va(pandf,srb2waddir,"knux.plr")); //knux.plr
+
+	// Add the weapons
+	D_AddFile(va(pandf,srb2waddir,"auto.wpn")); //auto.wpn
+	D_AddFile(va(pandf,srb2waddir,"bomb.wpn")); //bomb.wpn
+	D_AddFile(va(pandf,srb2waddir,"home.wpn")); //home.wpn
+	D_AddFile(va(pandf,srb2waddir,"rail.wpn")); //rail.wpn
+	D_AddFile(va(pandf,srb2waddir,"infn.wpn")); //infn.wpn
+
+	// Add... nights?
+	D_AddFile(va(pandf,srb2waddir,"drill.dta")); //drill.dta
+	D_AddFile(va(pandf,srb2waddir,"soar.dta")); //soar.dta
+
+#if !defined (SDL) || defined (HAVE_MIXER)
+	{
+#ifdef DC
+		const char *musicfile = "music_dc.dta";
+#else
+		const char *musicfile = "music.dta";
+#endif
+		// Don't forget the music!
+		if (W_VerifyNMUSlumps(va(pandf,srb2waddir,musicfile)))
+			D_AddFile(va(pandf,srb2waddir,musicfile));
+		else
+			I_Error("File %s has been modified with non-music lumps",musicfile);
+	}
 #endif
 
-    if (devparm)
-        CONS_Printf(D_DEVSTR);
+	// Temporary patchfile loading
+	//D_AddFile(va(pandf,srb2waddir,"srb2pat.wad"));//srb2pat.wad
 
-    // default savegame
-    strcpy(savegamename,text[NORM_SAVEI_NUM]);
+	if (xmasmode)
+		D_AddFile(va(pandf,srb2waddir,"3drend.dll"));//3drend.dll for XMAS!
+}
 
-    {
-        char *userhome,legacyhome[256];
-        if(M_CheckParm("-home") && M_IsNextParm())
-            userhome = M_GetNextParm();
-        else
-            userhome = getenv("HOME");
-#ifdef LINUX
-        if (!userhome)
-            I_Error("Please set $HOME to your home directory\n");
-#endif  
-        if(userhome)
-        {
-    // use user specific config file
-    sprintf(legacyhome, "%s/"DEFAULTDIR, userhome);
-    sprintf(configfile, "%s/"CONFIGFILENAME, legacyhome);
-            // can't use sprintf since there is %d in savegamename
-            strcatbf(savegamename,legacyhome,"/");
-            I_mkdir(legacyhome, 0700);
-        }
-    }                       
+/* ======================================================================== */
+// Just print the nice red titlebar like the original SRB2 for DOS.
+/* ======================================================================== */
+#ifdef PC_DOS
+static inline void D_Titlebar(char *title1, char *title2)
+{
+	// SRB2 banner
+	clrscr();
+	textattr((BLUE<<4)+WHITE);
+	clreol();
+	cputs(title1);
 
-    if (M_CheckParm("-cdrom"))
-    {
-        CONS_Printf(D_CDROM);
-        I_mkdir("c:\\doomdata",0);
-        strcpy (configfile,"c:/doomdata/"CONFIGFILENAME);
-        strcpy (savegamename,text[CDROM_SAVEI_NUM]);
-    }
+	// standard srb2 banner
+	textattr((RED<<4)+WHITE);
+	clreol();
+	gotoxy((80-strlen(title2))/2, 2);
+	cputs(title2);
+	normvideo();
+	gotoxy(1,3);
+}
+#endif
 
-    // add any files specified on the command line with -file wadfile
-    // to the wad list
-    //
-    // convenience hack to allow -wart e m to add a wad file
-    // prepend a tilde to the filename so wadfile will be reloadable
-    p = M_CheckParm ("-wart");
-    if (p)
-    {
-        myargv[p][4] = 'p';     // big hack, change to -warp
+//
+// Center the title string, then add the date and time of compilation.
+//
+static inline void D_MakeTitleString(char *s)
+{
+	char temp[82];
+	char *t;
+	const char *u;
+	int i;
 
-        // Map name handling.
-        switch (gamemode )
-        {
-          case shareware:
-          case retail:
-          case registered:
-            sprintf (file,"~"DEVMAPS"E%cM%c.wad",
-                     myargv[p+1][0], myargv[p+2][0]);
-            CONS_Printf("Warping to Episode %s, Map %s.\n",
-                   myargv[p+1],myargv[p+2]);
-            break;
+	for (i = 0, t = temp; i < 82; i++)
+		*t++=' ';
 
-          case commercial:
-          default:
-            p = atoi (myargv[p+1]);
-            if (p<10)
-              sprintf (file,"~"DEVMAPS"cdata/map0%i.wad", p);
-            else
-              sprintf (file,"~"DEVMAPS"cdata/map%i.wad", p);
-            break;
-        }
-        D_AddFile (file);
-    }
+	for (t = temp + (80-strlen(s))/2, u = s; *u != '\0' ;)
+		*t++ = *u++;
 
-// Do special stuff around Christmas time and New Years Tails 11-15-2001
-	if( (t1 = time( (time_t *) 0 )) != (time_t) -1 )
+	u = compdate;
+	for (t = temp + 1, i = 11; i-- ;)
+		*t++ = *u++;
+	u = comptime;
+	for (t = temp + 71, i = 8; i-- ;)
+		*t++ = *u++;
+
+	temp[80] = '\0';
+	strcpy(s, temp);
+}
+
+static inline void D_InitCutsceneInfo(void)
+{
+	int i,j;
+
+	for (i = 0; i < 128; i++)
+		for (j = 0; j < 128; j++)
+			cutscenes[i].scene[j].text = NULL;
+}
+
+static void D_TimeWad(void)
+{
+#ifndef NO_TIME
+	time_t t1; // Date-checker
+	struct tm* tptr; // Date-checker
+	// Do special stuff around Christmas time Tails 11-15-2001
+	t1 = time(NULL);
+	if (t1 != (time_t)-1)
 	{
 		tptr = localtime(&t1);
-		if(tptr->tm_mon < 1 && tptr->tm_mday == 1) // New Year's Day
+
+		if (tptr)
 		{
-			D_AddFile("menuitem.dll");
-			mariomode = true;
-		}
-		else if((tptr->tm_mon < 1 && tptr->tm_mday < 6) || (tptr->tm_mon == 11 && tptr->tm_mday > 24)) // Christmas to Epiphany
-		{
-			D_AddFile("3drend.dll");
-			xmasmode = true;
+			if ((tptr->tm_mon == 11 && tptr->tm_mday > 24))
+			{
+				if (!M_CheckParm("-noxmas")) // Christmas to New Years (by popular demand)
+				{
+					//D_AddFile("3drend.dll");
+					xmasmode = true;
+					xmasoverride = true;
+					modifiedgame = false;
+				}
+			}
+			else if (tptr->tm_mon == 3) // Easter changes every year, so just have it for all of April
+			{
+				if (tptr->tm_mday < 2)
+					introtoplay = 127; // ???
+
+				eastermode = true;
+				modifiedgame = false;
+			}
 		}
 	}
-
-    if (M_CheckParm ("-xmas"))
+#endif
+	if (!eastermode && M_CheckParm("-xmas"))
 	{
-		D_AddFile("3drend.dll");
+		//D_AddFile("3drend.dll");
 		xmasmode = true;
+		xmasoverride = true;
+		modifiedgame = false;
 	}
-
-    if (M_CheckParm ("-mario"))
+#ifdef NO_TIME
+	else if (M_CheckParm("-easter"))
 	{
-		D_AddFile("menuitem.dll");
-		mariomode = true;
+		eastermode = true; // Hunt for the eggs!
+		modifiedgame = false;
 	}
+#endif
+}
 
-    if (M_CheckParm ("-file"))
-    {
-        // the parms after p are wadfile/lump names,
-        // until end of parms or another - preceded parm
-        modifiedgame = true;            // homebrew levels
-        while (M_IsNextParm())
-        {
-            char *s=M_GetNextParm();
-            // deh file are loaded before
-            if(stricmp(&s[strlen(s)-3],"deh")!=0)
-                D_AddFile (s);
-        }
-    }
+//
+// D_SRB2Main
+//
+void D_SRB2Main(void)
+{
+	int p;
+	char srb2[82]; // srb2 title banner
+	char title[82];
 
+	int pstartmap = 1;
+	boolean autostart = false;
 
-    // get skill / episode / map from parms
-    gameskill = sk_medium;
-    startepisode = 1;
-    startmap = 1;
-    autostart = false;
-
-
-    p = M_CheckParm ("-skill");
-    if (p && p < myargc-1)
-    {
-        gameskill = myargv[p+1][0]-'1';
-            autostart = true;
-    }
-
-    p = M_CheckParm ("-episode");
-    if (p && p < myargc-1)
-    {
-        startepisode = myargv[p+1][0]-'0';
-        startmap = 1;
-        autostart = true;
-    }
-
-    p = M_CheckParm ("-warp");
-    if (p && p < myargc-1)
-    {
-        if (gamemode == commercial)
-            startmap = atoi (myargv[p+1]);
-        else
-        {
-            startepisode = myargv[p+1][0]-'0';
-            if (p < myargc-2 &&
-                myargv[p+2][0]>='0' &&
-                myargv[p+2][0]<='9' )
-                startmap = myargv[p+2][0]-'0';
-            else
-                startmap = 1;
-        }
-        autostart = true;
-    }
-
-    //BP: get 2 megs more for textures cache
-    if(M_CheckParm ("-opengl") || M_CheckParm ("-3dfx") || M_CheckParm ("-d3d") || M_CheckParm ("-minigl"))
-        mb_used+=2;
-
-    //added:11-02-98: TEMPORARY HACK to modify the base memory allocation
-    //                later we'll have to do a better memory handling,
-    //                with detection of available mem and w95 support.
-    p = M_CheckParm ("-mb");
-    if (p && p < myargc-1)
-    {
-        mb_used = atoi (myargv[p+1]);
-        CONS_Printf ("%d megabytes requested for Z_Init.\n", mb_used);
-    }
-
-    CONS_Printf (text[Z_INIT_NUM]);
-    Z_Init ();
-
-    CONS_Printf (text[W_INIT_NUM]);
-    // load wad, including the main wad file
-    if(!W_InitMultipleFiles (startupwadfiles))
-        CONS_Error("A WAD file was not found\n");
-
-    if(!M_CheckParm("-nocheckwadversion"))
-        D_CheckWadVersion();
-
-    //added:28-02-98: check for Ultimate doom.
-//    if ( (gamemode==registered) && (W_CheckNumForName("E4M1") > 0) )
-//        gamemode = retail;
-
-    // Check for -file in shareware
-    if (modifiedgame)
-    {
-        // These are the lumps that will be checked in IWAD,
-        // if any one is not present, execution will be aborted.
-        char name[23][8]=
-        {
-            "e2m1","e2m2","e2m3","e2m4","e2m5","e2m6","e2m7","e2m8","e2m9",
-            "e3m1","e3m3","e3m3","e3m4","e3m5","e3m6","e3m7","e3m8","e3m9",
-            "dphoof","bfgga0","heada1","cybra1","spida1d1"
-        };
-        int i;
-
-        if ( gamemode == shareware)
-            I_Error("\nYou cannot -file with the shareware "
-                    "version. Register!");
-
-        // Check for fake IWAD with right name,
-        // but w/o all the lumps of the registered version.
-        if (gamemode == registered)
-            for (i = 0;i < 23; i++)
-                if (W_CheckNumForName(name[i])<0)
-                    I_Error("\nThis is not the registered version.");
-    }
-
-    // If additonal PWAD files are used, print modified banner
-    if (modifiedgame)
-        CONS_Printf ( text[MODIFIED_NUM] );
-
-
-    // Check and print which version is executed.
-    switch ( gamemode )
-    {
-      case shareware:
-      case indetermined:
-        CONS_Printf (text[SHAREWARE_NUM]);
-        break;
-      case registered:
-      case retail:
-      case commercial:
-        CONS_Printf (text[COMERCIAL_NUM]);
-        break;
-      default:
-        // Ouch.
-        break;
-    }
-
-    //SoM: 4/4/2000: INIT DEHACKED LUMPS!
-    W_LoadDehackedLumps();
-
-   //---------------------------------------------------- READY SCREEN
-    //printf("\nI_StartupComm...");
-
-    CONS_Printf("I_StartupTimer...\n");
-    I_StartupTimer ();
-
-    // now initted automatically by use_mouse var code
-    //CONS_Printf("I_StartupMouse...\n");
-    //I_StartupMouse ();
-
-    //CONS_Printf ("I_StartupKeyboard...\n");
-    //I_StartupKeyboard (); // FIXME: this is a dummy, we can remove it!
-
-    // now initialised automatically by use_joystick var code
-    //CONS_Printf (text[I_INIT_NUM]);
-    //I_InitJoystick ();
-
-    CONS_Printf("I_StartupGraphics...\n");
-    I_StartupGraphics ();
-
-   //--------------------------------------------------------- CONSOLE
-    // setup loading screen
-    SCR_Startup ();
-
-    // we need the font of the console
-    CONS_Printf (text[HU_INIT_NUM]);
-    HU_Init ();
-
-    COM_Init ();
-    CON_Init ();
-
-    D_RegisterClientCommands ();
-    D_AddDeathmatchCommands ();
-    ST_AddCommands ();
-    R_RegisterEngineStuff ();
-    S_RegisterSoundStuff ();
-    CV_RegisterVar (&cv_screenslink);
-
-    //Fab:29-04-98: do some dirty chatmacros strings initialisation
-    HU_HackChatmacros ();
-  //--------------------------------------------------------- CONFIG.CFG
-    M_FirstLoadConfig(); // WARNING : this do a "COM_BufExecute()"
-
-#ifdef LINUX
-    VID_PrepareModeList(); // Regenerate Modelist according to cv_fullscreen
+	// keep error messages until the final flush(stderr)
+#if !defined (PC_DOS) && !defined (_WIN32_WCE)
+	if (setvbuf(stderr, NULL, _IOFBF, 1000))
+		CONS_Printf("setvbuf didnt work\n");
 #endif
 
-    // set user default mode or mode set at cmdline
-    SCR_CheckDefaultMode ();
+	// get parameters from a response file (eg: srb2 @parms.txt)
+	M_FindResponseFile();
 
-    wipegamestate = gamestate;
-  //------------------------------------------------ COMMAND LINE PARAMS
+	// MAINCFG is now taken care of where "OBJCTCFG" is handled
+	G_LoadGameSettings();
 
-    // Initialize CD-Audio
-    if (!M_CheckParm ("-nocd"))        I_InitCD ();
-    if (M_CheckParm ("-respawn"))      COM_BufAddText ("respawnmonsters 1\n");
-    if (M_CheckParm("-teamplay"))      COM_BufAddText ("teamplay 1\n");
-    if (M_CheckParm("-teamskin"))      COM_BufAddText ("teamplay 2\n");
-    if (M_CheckParm("-splitscreen"))   CV_SetValue(&cv_splitscreen,1);
-    if (M_CheckParm ("-altdeath"))     COM_BufAddText ("deathmatch 2\n");
-    else 
-    if (M_CheckParm ("-deathmatch"))   COM_BufAddText ("deathmatch 1\n");
+	// identify the main IWAD file to use
+	D_TimeWad();
+	IdentifyVersion();
 
-    if (M_CheckParm ("-fast"))         COM_BufAddText ("fastmonsters 1\n");
+#ifndef _WIN32_WCE
+	setbuf(stdout, NULL); // non-buffered output
+#endif
 
-    if (M_CheckParm ("-analog"))         COM_BufAddText ("analog 1\n"); // Tails
+	devparm = M_CheckParm("-debug");
 
-    if (M_CheckParm ("-timer"))
-    {
-        char *s=M_GetNextParm();
-        COM_BufAddText(va("timelimit %s\n",s ));
-//        CONS_Printf("Levels will end after %s minute(s).\n",s);
-    }
+	// for dedicated server
+#if !defined (_WINDOWS) //already check in win_main.c
+	dedicated = M_CheckParm("-dedicated") != 0;
+#endif
 
-    if (M_CheckParm ("-avg"))
-    {
-        COM_BufAddText("timelimit 20\n");
-        CONS_Printf(text[AUSTIN_NUM]);
-    }
+	strcpy(title, "Sonic Robo Blast 2");
+	strcpy(srb2, "Sonic Robo Blast 2");
+	D_MakeTitleString(srb2);
 
-	// Eliminated Turbo Tails 06-06-2001
-/*
-    // turbo option, is not meant to be saved in config, still
-    // supported at cmd-line for compatibility
-    if ( M_CheckParm ("-turbo") && M_IsNextParm())
-        COM_BufAddText (va("turbo %s\n",M_GetNextParm()));
-*/
-    // push all "+" parameter at the command buffer
-    M_PushSpecialParameters();
+#ifdef PC_DOS
+	D_Titlebar(srb2, title);
+#else
+	CONS_Printf("%s\n%s\n", srb2, title);
+#endif
 
-    CONS_Printf (text[M_INIT_NUM]);
-    M_Init ();
+#if defined (__OS2__) && !defined (SDL)
+	// set PM window title
+	snprintf(pmData->title, sizeof (pmData->title),
+		"Sonic Robo Blast 2" VERSIONSTRING ": %s",
+		title);
+#endif
 
-    CONS_Printf (text[R_INIT_NUM]);
-    R_Init ();
+	if (devparm)
+		CONS_Printf(D_DEVSTR);
 
-    //
-    // setting up sound
-    //
-    CONS_Printf (text[S_SETSOUND_NUM]);
-    nosound = M_CheckParm("-nosound");
-    nomusic = M_CheckParm("-nomusic"); // WARNING: DOS version initmusic in I_StartupSound
-    I_StartupSound ();
-    I_InitMusic ();  // setup music buffer for quick mus2mid
-    S_Init (cv_soundvolume.value, cv_musicvolume.value);
+	P_ClearMapHeaderInfo();
+	D_InitCutsceneInfo();
 
-    CONS_Printf (text[ST_INIT_NUM]);
-    ST_Init ();
+	// default savegame
+	strcpy(savegamename,text[NORM_SAVEI_NUM]);
 
-    // init all NETWORK
-    CONS_Printf (text[D_CHECKNET_NUM]);
-    D_CheckNetGame ();
+	{
+		const char *userhome = D_Home(); //Alam: path to home
 
-    // check for a driver that wants intermission stats
-    p = M_CheckParm ("-statcopy");
-    if (p && p<myargc-1)
-    {
-        I_Error("Sorry but statcopy isn't supported at this time\n");
-        /*
-        // for statistics driver
-        extern  void*   statcopy;
+		if (!userhome)
+		{
+#if defined (UNIXLIKE) && !defined (__CYGWIN__) && !defined (DC) && !defined (PSP)
+			I_Error("Please set $HOME to your home directory\n");
+#elif defined (_WIN32_WCE)
+			if (dedicated)
+				snprintf(configfile, sizeof configfile, "/Storage Card/SRB2DEMO/d"CONFIGFILENAME);
+			else
+				snprintf(configfile, sizeof configfile, "/Storage Card/SRB2DEMO/"CONFIGFILENAME);
+#else
+			if (dedicated)
+				snprintf(configfile, sizeof configfile, "d"CONFIGFILENAME);
+			else
+				snprintf(configfile, sizeof configfile, CONFIGFILENAME);
+#endif
+		}
+		else
+		{
+			// use user specific config file
+#ifdef DEFAULTDIR
+			snprintf(srb2home, sizeof srb2home, "%s" PATHSEP DEFAULTDIR, userhome);
+			snprintf(downloaddir, sizeof downloaddir, "%s" PATHSEP "DOWNLOAD", srb2home);
+			if (dedicated)
+				snprintf(configfile, sizeof configfile, "%s" PATHSEP "d"CONFIGFILENAME, srb2home);
+			else
+				snprintf(configfile, sizeof configfile, "%s" PATHSEP CONFIGFILENAME, srb2home);
 
-        statcopy = (void*)atoi(myargv[p+1]);
-        CONS_Printf (text[STATREG_NUM]);
-        */
-    }
+			// can't use sprintf since there is %u in savegamename
+			strcatbf(savegamename, srb2home, PATHSEP);
 
-    // start the apropriate game based on parms
-    p = M_CheckParm ("-record");
-    if (p && p < myargc-1)
-    {
-        G_RecordDemo (myargv[p+1]);
-        autostart = true;
-    }
+			I_mkdir(srb2home, 0700);
+#else
+			snprintf(srb2home, sizeof srb2home, "%s", userhome);
+			snprintf(downloaddir, sizeof downloaddir, "%s", userhome);
+			if (dedicated)
+				snprintf(configfile, sizeof configfile, "%s" PATHSEP "d"CONFIGFILENAME, userhome);
+			else
+				snprintf(configfile, sizeof configfile, "%s" PATHSEP CONFIGFILENAME, userhome);
 
+			// can't use sprintf since there is %u in savegamename
+			strcatbf(savegamename, userhome, PATHSEP);
+#endif
+		}
+#ifdef _arch_dreamcast
+	strcpy(downloaddir, "/ram"); // the dreamcast's TMP
+#endif
+	}
 
-    // demo doesn't need anymore to be added with D_AddFile()
-    p = M_CheckParm ("-playdemo");
-    if (!p)
-        p = M_CheckParm ("-timedemo");
-    if (p && M_IsNextParm())
-    {
-        char tmp[MAX_WADPATH];
-        // add .lmp to identify the EXTERNAL demo file
-        // it is NOT possible to play an internal demo using -playdemo,
-        // rather push a playdemo command.. to do.
+	if (M_CheckParm("-password") && M_IsNextParm())
+	{
+		char *pw = M_GetNextParm();
+		strncpy(adminpassword, pw, 8);
+		if (strlen(pw) < 8)
+		{
+			size_t z;
+			for (z = strlen(pw); z < 8; z++)
+				adminpassword[z] = 'a';
+		}
+	}
+	else
+	{
+		int z;
+		srand((unsigned)time(NULL));
+		for (z = 0; z < 8; z++)
+			adminpassword[z] = (char)(rand() & 127);
+	}
+	adminpassword[8] = '\0';
 
-        strcpy (tmp,M_GetNextParm());
-        // get spaced filename or directory
-        while(M_IsNextParm()) { strcat(tmp," ");strcat(tmp,M_GetNextParm()); }
-        FIL_DefaultExtension (tmp,".lmp");
+	// add any files specified on the command line with -file wadfile
+	// to the wad list
+	if (!(M_CheckParm("-connect")))
+	{
+		if (M_CheckParm("-file"))
+		{
+			// the parms after p are wadfile/lump names,
+			// until end of parms or another - preceded parm
+			while (M_IsNextParm())
+			{
+				char *s = M_GetNextParm();
 
-        CONS_Printf ("Playing demo %s.\n",tmp);
+				if (s) // Check for NULL?
+				{
+					if (!W_VerifyNMUSlumps(s))
+						modifiedgame = true;
+					D_AddFile(s);
+				}
+			}
+		}
+	}
 
-        if ( (p=M_CheckParm("-playdemo")) )
-        {
-            singledemo = true;              // quit after one demo
-            G_DeferedPlayDemo (tmp);
-        }
-        else
-            G_TimeDemo (tmp);
-        gamestate = wipegamestate = GS_NULL;
+	// load dehacked file
+	p = M_CheckParm("-objcfg");
+	if (p != 0)
+	{
+		while (M_IsNextParm())
+			D_AddFile(M_GetNextParm());
 
-        return;         
-    }
+		modifiedgame = true;
+	}
 
-    p = M_CheckParm ("-loadgame");
-    if (p && p < myargc-1)
-    {
-        G_LoadGame (atoi(myargv[p+1]));
-    }
-    else
-    {
-        if(dedicated && server)
-        {
-            pagename = "TITLEPIC";
-            gamestate = GS_DEDICATEDSERVER;
-        }
-        else
-            if (autostart || netgame)
-            {
-                //added:27-02-98: reset the current version number
-                G_Downgrade(VERSION);
-                gameaction = ga_nothing;
-                usergame = true;
-                if(server && !M_CheckParm("+map"))
-                   COM_BufAddText (va("map \"%s\"\n",G_BuildMapName(startepisode, startmap)));
-            }
-            else
-                D_StartTitle ();                // start up intro loop
+	// get skill / map from parms
 
-    }
+	if (M_CheckParm("-server") || dedicated)
+		netgame = server = true;
+
+	if (M_CheckParm("-skill") && M_IsNextParm())
+	{
+		if (modifiedgame || netgame)
+		{
+			gameskill = M_GetNextParm()[0]-'0';
+			autostart = true;
+		}
+	}
+
+	if (M_CheckParm("-warp") && M_IsNextParm())
+	{
+		if ((modifiedgame && !savemoddata) || netgame)
+		{
+			pstartmap = atoi(M_GetNextParm());
+			autostart = true;
+			savemoddata = false;
+		}
+	}
+
+	CONS_Printf(text[Z_INIT_NUM]);
+	Z_Init();
+
+	// adapt tables to SRB2's needs, including extra slots for dehacked file support
+	P_PatchInfoTables();
+
+	CONS_Printf(text[W_INIT_NUM]);
+
+	//---------------------------------------------------- READY TIME
+	// we need to check for dedicated before initialization of some subsystems
+	
+	CONS_Printf("I_StartupTimer...\n");
+	I_StartupTimer();
+
+	// Make backups of some SOCcable tables.
+	P_BackupTables();
+	
+	// load wad, including the main wad file
+	if (!W_InitMultipleFiles(startupwadfiles))
+		CONS_Error("A WAD file was not found or not valid\n");
+	D_CleanFile();
+
+	// Check MD5s of autoloaded files
+	W_VerifyFileMD5(0, "4d26f0d5ab5c5d7b4090367f95ea9f85"); // srb2.srb
+	W_VerifyFileMD5(1, "5b70614bd87bad9a9e11ea7190a108f7"); // sonic.plr
+	W_VerifyFileMD5(2, "e11f0ff56551ceca77d5859ee1f88a7d"); // tails.plr
+	W_VerifyFileMD5(3, "553d300a7af2382f9283007332a852f4"); // knux.plr
+	W_VerifyFileMD5(4, "260c573350ce0345617b88caffdbe88d"); // auto.wpn
+	W_VerifyFileMD5(5, "b69d4d6a7f6c1237087e20894e036121"); // bomb.wpn
+	W_VerifyFileMD5(6, "b10704b65ca11def64774105b02f38d0"); // home.wpn
+	W_VerifyFileMD5(7, "e00ca6ec8f9bfd0fdcac3c0cdd9d296d"); // rail.wpn
+	W_VerifyFileMD5(8, "075286244551bcd6eab3153af97f8d50"); // infn.wpn
+	W_VerifyFileMD5(9, "7d355827fa8f981482246d6c95f9bd48"); // drill.dta
+	W_VerifyFileMD5(10, "938cbc8141c316c911215ecb4072fade"); // soar.dta
+
+	// don't check music.dta because people like to modify it, and it doesn't matter if they do
+	// ...except it does if they slip maps in there, and that's what W_VerifyNMUSlumps is for.
+
+	// check 3drend.dll if needed
+	if (xmasmode)
+		W_VerifyFileMD5(12, "d2dc36f4442d22780f6ee32e7a61c800");
+
+	// Check and print which version is executed.
+	CONS_Printf(text[COMERCIAL_NUM]);
+
+	cht_Init();
+
+	//---------------------------------------------------- READY SCREEN
+	// we need to check for dedicated before initialization of some subsystems
+
+	CONS_Printf("I_StartupGraphics...\n");
+	I_StartupGraphics();
+
+	//--------------------------------------------------------- CONSOLE
+	// setup loading screen
+	SCR_Startup();
+
+	// we need the font of the console
+	CONS_Printf(text[HU_INIT_NUM]);
+	HU_Init();
+
+	COM_Init();
+	CON_Init();
+
+	D_RegisterServerCommands();
+	D_RegisterClientCommands(); // be sure that this is called before D_CheckNetGame
+	R_RegisterEngineStuff();
+	S_RegisterSoundStuff();
+
+	//--------------------------------------------------------- CONFIG.CFG
+	M_FirstLoadConfig(); // WARNING : this do a "COM_BufExecute()"
+
+	if (!M_CheckParm("-resetdata"))
+		G_LoadGameData();
+
+	if (gameskill >= sk_insane && !(grade & 128))
+		gameskill = sk_insane-1;
+
+#if defined (UNIXLIKE) || defined (SDL)
+	VID_PrepareModeList(); // Regenerate Modelist according to cv_fullscreen
+#endif
+
+	// set user default mode or mode set at cmdline
+	SCR_CheckDefaultMode();
+
+	wipegamestate = gamestate;
+
+	P_InitMapHeaders();
+
+	//------------------------------------------------ COMMAND LINE PARAMS
+
+	// Initialize CD-Audio
+	if (M_CheckParm("-usecd") && !dedicated)
+		I_InitCD();
+
+	if (M_CheckParm("-splitscreen"))
+		CV_SetValue(&cv_splitscreen, 1);
+
+	if (M_CheckParm("-nodownloading"))
+		COM_BufAddText("nodownloading 1\n");
+
+	CONS_Printf(text[M_INIT_NUM]);
+	M_Init();
+
+	CONS_Printf(text[R_INIT_NUM]);
+	R_Init();
+
+	// setting up sound
+	CONS_Printf(text[S_SETSOUND_NUM]);
+	if (M_CheckParm("-nosound"))
+		nosound = true;
+	if (M_CheckParm("-nomusic")) // combines -nomidimusic and -nodigmusic
+		nomusic = nofmod = true;
+	else
+	{
+		if (M_CheckParm("-nomidimusic"))
+			nomusic = true; ; // WARNING: DOS version initmusic in I_StartupSound
+		if (M_CheckParm("-nodigmusic"))
+			nofmod = true; // WARNING: DOS version initmusic in I_StartupSound
+	}
+	I_StartupSound();
+	I_InitMusic();
+	S_Init(cv_soundvolume.value, cv_digmusicvolume.value, cv_midimusicvolume.value);
+
+	CONS_Printf(text[ST_INIT_NUM]);
+	ST_Init();
+
+	if (M_CheckParm("-internetserver"))
+		CV_SetValue(&cv_internetserver, 1);
+
+	// init all NETWORK
+	CONS_Printf(text[D_CHECKNET_NUM]);
+	if (D_CheckNetGame())
+		autostart = true;
+
+	// check for a driver that wants intermission stats
+	// start the apropriate game based on parms
+	if (M_CheckParm("-record") && M_IsNextParm())
+	{
+		G_RecordDemo(M_GetNextParm());
+		autostart = true;
+	}
+
+	p = M_CheckParm("-timetic");
+	if (p)
+		CV_Set(&cv_timetic, "On");
+
+	if (!autostart)
+		M_PushSpecialParameters(); // push all "+" parameters at the command buffer
+
+	// demo doesn't need anymore to be added with D_AddFile()
+	p = M_CheckParm("-playdemo");
+	if (!p)
+		p = M_CheckParm("-timedemo");
+	if (p && M_IsNextParm())
+	{
+		char tmp[MAX_WADPATH];
+		// add .lmp to identify the EXTERNAL demo file
+		// it is NOT possible to play an internal demo using -playdemo,
+		// rather push a playdemo command.. to do.
+
+		strcpy(tmp, M_GetNextParm());
+		// get spaced filename or directory
+		while (M_IsNextParm())
+		{
+			strcat(tmp, " ");
+			strcat(tmp, M_GetNextParm());
+		}
+
+		FIL_DefaultExtension(tmp, ".lmp");
+
+		CONS_Printf("Playing demo %s.\n", tmp);
+
+		if (M_CheckParm("-playdemo"))
+		{
+			singledemo = true; // quit after one demo
+			G_DeferedPlayDemo(tmp);
+		}
+		else
+			G_TimeDemo(tmp);
+
+		gamestate = wipegamestate = GS_NULL;
+		return;
+	}
+
+	if (M_CheckParm("-loadgame") && M_IsNextParm())
+	{
+		G_LoadGame(atoi(M_GetNextParm()));
+		return;
+	}
+
+	if (autostart || netgame || M_CheckParm("+connect") || M_CheckParm("-connect"))
+	{
+		gameaction = ga_nothing;
+
+		CV_ClearChangedFlags();
+
+		// Do this here so if you run SRB2 with eg +timelimit 5, the time limit counts
+		// as having been modified for the first game.
+		M_PushSpecialParameters(); // push all "+" parameter at the command buffer
+
+		if (M_CheckParm("-gametype") && M_IsNextParm())
+		{
+			// from Command_Map_f
+			int j, newgametype = -1;
+			char *sgametype = M_GetNextParm();
+
+			for (j = 0; gametype_cons_t[j].strvalue; j++)
+				if (!strcasecmp(gametype_cons_t[j].strvalue, sgametype))
+				{
+					if (gametype_cons_t[j].value == GTF_TEAMMATCH)
+					{
+						newgametype = GT_MATCH;
+						CV_SetValue(&cv_teamplay, 1);
+					}
+					else if (gametype_cons_t[j].value == GTF_TIMEONLYRACE)
+					{
+						newgametype = GT_RACE;
+						CV_SetValue(&cv_racetype, 1);
+					}
+					else
+						newgametype = gametype_cons_t[j].value;
+
+					break;
+				}
+			if (!gametype_cons_t[j].strvalue) // reached end of the list with no match
+			{
+				j = atoi(sgametype); // assume they gave us a gametype number, which is okay too
+				if (j >= 0 && j < NUMGAMETYPES)
+					newgametype = j;
+			}
+
+			if (newgametype != -1)
+			{
+				j = gametype;
+				gametype = newgametype;
+				D_GameTypeChanged(j);
+			}
+		}
+
+		if (server && !M_CheckParm("+map") && !M_CheckParm("+connect")
+			&& !M_CheckParm("-connect"))
+		{
+			D_MapChange(pstartmap, gametype, gameskill, 1, 0, false, false);
+		}
+	}
+	else
+		F_StartIntro(); // Tails 03-03-2002
+
+	if (dedicated && server)
+	{
+		pagename = "TITLESKY";
+		levelstarttic = gametic;
+		gamestate = GS_LEVEL;
+		if (!P_SetupLevel(gamemap, gameskill, NULL))
+			I_Quit(); // fail so reset game stuff
+	}
+}
+
+const char *D_Home(void)
+{
+	char *userhome = NULL;
+
+#ifdef _arch_dreamcast
+	putenv("HOME=/vmu/a1");
+#endif
+
+	if (M_CheckParm("-home") && M_IsNextParm())
+		userhome = M_GetNextParm();
+	else
+	{
+#if !defined (UNIXLIKE) && !defined (__APPLE__)
+		if (FIL_FileOK(CONFIGFILENAME))
+			usehome = false; // Let's NOT use home (read/write rights not in place)
+		else
+#endif
+			userhome = I_GetEnv("HOME"); //Alam: my new HOME for srb2
+	}
+#if defined (_WIN32) || defined (_WIN64) //Alam: only Win32/Win64 have APPDATA and USERPROFILE
+	if (!userhome && usehome) //Alam: Still not?
+	{
+		char *testhome = NULL;
+		testhome = I_GetEnv("APPDATA");
+		if (testhome != NULL
+			&& (FIL_FileOK(va("%s" PATHSEP "%s" PATHSEP CONFIGFILENAME, testhome, DEFAULTDIR))))
+		{
+			userhome = testhome;
+		}
+	}
+#ifndef __CYGWIN__
+	if (!userhome && usehome) //Alam: All else fails?
+	{
+		char *testhome = NULL;
+		testhome = I_GetEnv("USERPROFILE");
+		if (testhome != NULL
+			&& (FIL_FileOK(va("%s" PATHSEP "%s" PATHSEP CONFIGFILENAME, testhome, DEFAULTDIR))))
+		{
+			userhome = testhome;
+		}
+	}
+#endif// !__CYGWIN__
+#endif// _WIN32/_WIN64
+	if (usehome) return userhome;
+	else return NULL;
 }

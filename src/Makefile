@@ -1,10 +1,9 @@
 #############################################################################
 #
-# $Id: makefile,v 1.27 2000/08/10 19:58:04 bpereira Exp $
-#     GNU Make makefile for DOS/LINUX version
-#				      of Doom LEGACY (legacy@frag.com)
+#     GNU Make makefile for SRB2
 #
 # Copyright (C) 1998-2000 by DooM Legacy Team.
+# Copyright (C) 2003-2004 by Sonic Team Jr.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -16,960 +15,566 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
 # GNU General Public License for more details.
 #
-# $Log: makefile,v $
-# Revision 1.27  2000/08/10 19:58:04  bpereira
-# no message
+#     -DPC_DOS    -> use DOS specific code (eg:textmode stuff)...
+#     -DLINUX     -> use for the GNU/Linux specific
+#     -D_WINDOWS  -> use for the Win32/DirectX specific
+#     -DSDL       -> use for the SDL interface
 #
-# Revision 1.26  2000/08/10 14:57:26  ydario
-# OS/2 port
+# Sets:
+#     Compile the DGJPP/DOS version with 'make WATTCP=1'
+#     Compile the DirectX/Mingw version with 'make MINGW=1'
+#     Compile the SDL/Mingw version with 'make MINGW=1 SDL=1'
+#     Compile the SDL/Linux version with 'make LINUX=1'
+#     Compile the SDL/Solaris version with 'make SOLARIS=1'
+#     Compile the SDL/FreeBSD version with 'gmake FREEBSD=1'
+#     Compile the SDL/Cygwin version with 'make CYGWIN32=1'
+#     Compile the SDL/other version try with 'make SDL=1'
 #
-# Revision 1.25  2000/08/03 17:57:42  bpereira
-# no message
-#
-# Revision 1.24  2000/07/01 09:23:49  bpereira
-# no message
-#
-# Revision 1.23  2000/05/07 08:27:57  metzgermeister
-# no message
-#
-# Revision 1.20  2000/04/25 19:53:12  metzgermeister
-# fixed the old tabs and spaces problem
-#
-# Revision 1.19  2000/04/24 20:24:38  bpereira
-# no message
-#
-# Revision 1.18  2000/04/22 20:26:01  metzgermeister
-# commandline compile options
-#
-# Revision 1.17  2000/04/21 08:23:47  emanne
-# To have SDL working.
-# Makefile: made the hiding by "@" optional. See the CC variable at
-# the begining. Sorry, but I like to see what's going on while building
-#
-# qmus2mid.h: force include of qmus2mid_sdl.h when needed.
-# s_sound.c: ??!
-# s_sound.h: with it.
-# (sorry for s_sound.* : I had problems with cvs...)
-#
-# Revision 1.16  2000/04/18 14:50:36  hurdler
-# no message
-#
-# Revision 1.15  2000/04/16 18:38:07  bpereira
-# no message
-#
-# Revision 1.14  2000/04/13 23:47:47  stroggonmeth
-# See logs
-#
-# Revision 1.13  2000/04/12 19:32:04  metzgermeister
-# added support for commandline OS switch
-#
-# Revision 1.12  2000/04/11 19:07:23  stroggonmeth
-# Finished my logs, fixed a crashing bug.
-#
-# Revision 1.11  2000/04/09 02:30:57  stroggonmeth
-# Fixed missing sprite def :\
-#
-# Revision 1.10  2000/04/08 17:29:24  stroggonmeth
-# no message
-#
-# Revision 1.9	2000/04/07 23:10:15  metzgermeister
-# fullscreen support under X in Linux
-#
-# Revision 1.8	2000/04/04 19:28:42  stroggonmeth
-# Global colormaps working. Added a new linedef type 272.
-#
-# Revision 1.7	2000/04/04 00:32:46  stroggonmeth
-# Initial Boom compatability plus few misc changes all around.
-#
-# Revision 1.6	2000/03/29 19:39:48  bpereira
-# no message
-#
-# Revision 1.5	2000/03/07 03:32:24  hurdler
-# fix linux compilation
-#
-# Revision 1.4	2000/03/05 17:17:03  bpereira
-# no message
-#
-# Revision 1.3	2000/03/04 23:27:08  hurdler
-# fix "missing operator" problem
-#
-# Revision 1.2	2000/02/27 00:42:10  hurdler
-# fix CR+LF problem
-#
-# Revision 1.1.1.1  2000/02/22 20:32:32  hurdler
-# Initial import into CVS (v1.29 pr3)
+# 'Targets':
+#     clean
+#       Remove all object files
+#     cleandep
+#       Remove depend.dep
+#     dll
+#       compile primary HW render DLL/SO
+#     all_dll
+#       compile all HW render and 3D sound DLLs for the set
+#     opengl_dll
+#       Pure Mingw only, compile OpenGL HW render DLL
+#     minigl_dll
+#       Pure Mingw only, compile MiniGL HW render DLL
+#     ds3d_dll
+#       Pure Mingw only, compile DirectX DirectSound HW sound DLL
+#     fmod_dll
+#       Pure Mingw only, compile FMOD HW sound DLL
+#     openal_dll
+#       Pure Mingw only, compile OpenAL HW sound DLL
+#     fmod_so
+#       Non-Mingw, compile FMOD HW sound SO
+#     openal_so
+#       Non-Mingw, compile OpenAL HW sound SO
 #
 #
-#     -DUSEASM -> use assembly routines instead of C ones, where possible.
-#     -DPC_DOS -> use dos specific code (eg:textmode stuff)...
-#     -DLINUX  -> use for the linux specific
-#     -D__OS2__  -> use for the OS/2 specific
-#     -DNORMALUNIX -> well unused at this moment
+# Addon:
+#     To Cross-Compile, CC=gcc-version make * CCBS=1 PREFIX=<dir>
+#     Compile with GCC 2.97 version, add 'GCC29=1'
+#     Compile with GCC 4.0x version, add 'GCC40=1'
+#     Compile with GCC 4.1x version, add 'GCC41=1'
+#     Compile a profile version, add 'PROFILEMODE=1'
+#     Compile a debug version, add 'DEBUGMODE=1'
+#     Compile with extra warnings, add 'WARNINGMODE=1'
+#     Compile without NASM's tmap.nas, add 'NOASM=1'
+#     Compile without 3D hardware support, add 'NOHW=1'
+#     Compile without 3D sound support, add 'NOHS=1'
+#     Compile with GDBstubs, add 'RDB=1'
+#     Compile without PNG, add 'NOPNG=1'
 #
-#     Compile the Linux version with 'make LINUX=1'
-#     Compile the OS/2 version with  'make OS2=1'
-#     Compile a debug/profile version with 'make LINUX=1 PROFILEMODE=1'
-#     Compile the SDL version with 'make LINUX=1 HAVE_MIXER=1'
+# Addon for SDL:
+#     To Cross-Compile, add 'SDL_CONFIG=/usr/*/bin/sdl-config'
+#     Compile without SDL_Mixer, add 'NOMIXER=1'
+#     Compile without BSD API, add 'NONET=1'
+#     Compile without IPX/SPX, add 'NOIPX=1'
+#     Compile Mingw/SDL with S_DS3S, add 'DS3D=1'
+#     Comple with S_FMOD3D, add 'FMOD=1' (WIP)
+#     Comple with S_OPENAL, add 'OPENAL=1' (WIP)
+#     To link with the whole SDL_Image lib to load Icons, add 'SDL_IMAGE=1' but it isn't not realy needed
+#     To link with SDLMain to hide console or make on a console-less binary, add 'SDLMAIN=1'
+#
 #
 #############################################################################
 
-# gcc or g++
-#CC=@gcc
-CC=gcc
+include makefile.cfg
 
-#if use PGCC or EGCS
-PGCC=1
-
-WFLAGS=-Wall # -W -Wno-unused -Wno-sign-compare
-
-#indicate platform and what interface use with
-# posible value for now : DJGPPDOS
-#			 LINUX
-ifndef OS2
-ifndef LINUX
-	DJGPPDOS=1
-endif
-endif
-
-
-#determine the interface directory (where you put all i_*.c)
-ifdef DJGPPDOS
-       INTERFACE=DJGPPDOS
-else
-       ifdef LINUX
-	     INTERFACE=linux_x
-       endif
-       ifdef OS2
-	     INTERFACE=os2
-       endif
+ifdef DUMMY
+NOPNG=1
+NOMNG=1
+NONET=1
+NOHW=1
+NOHS=1
+NOASM=1
+NOIPX=1
+EXENAME=srb2dummy
+OPTS += -DUNIXLIKE
+OBJS=$(OBJDIR)/i_video.o 
+LIBS=-lm
 endif
 
 ifdef DJGPPDOS
-	# subdirectory for objects
+include djgppdos/makefile.cfg
+endif
 
-    O=objs
-    BIN=bin
-
-	#use the x86 asm code
-	USEASM=1
-
-	# options
-	OPTS=-DPC_DOS
-
-	DEBUGLIBS=-lalleg -lbcd -lsocket
-    LIBS=-lalleg -lbcd -lsocket -s
-
-	SFLAGS=
-
-	OBJS=$(O)/i_video.o $(O)/vid_vesa.o
-
-	#somes SDL messup
-	qmus2mid_obj = $(O)/qmus2mid.o
-	qmus2mid_h   = qmus2mid.h
-
-	# name of the exefile
-	EXENAME=DOOM3.exe
-
-endif #ifdef DJGPPDOS
+ifdef MINGW
+include win32/makefile.cfg
+endif #ifdef MINGW
 
 ifdef LINUX
+UNIXLIKE=1
+endif
 
-	# subdirectory for objects
-	O=../objs
-	BIN=../bin
+ifdef SOLARIS
+UNIXLIKE=1
+endif
 
-	#use the x86 asm code
-	USEASM=1
+ifdef FREEBSD
+UNIXLIKE=1
+endif
 
-ifdef HAVE_MIXER
-	OPTS=-DNORMALUNIX -DLINUX -DHWRENDER -DDIRECTFULLSCREEN
-	SDL=1
+ifdef SDL
+include sdl/makefile.cfg
+endif #ifdef SDL
+
+ifdef NONET
+	OPTS += -DNONET
 else
-	OPTS=-DNORMALUNIX -DLINUX -DOLD_SOUND_DRIVER -DMUSSERV -DSNDSERV -DHWRENDER -DDIRECTFULLSCREEN
+ifdef NOIPX
+	OPTS += -DNOIPX
 endif
-	X=1
-
-ifndef SDL
-	qmus2mid_obj = $(O)/qmus2mid.o
-	qmus2mid_h   = qmus2mid.h
-endif
-	ifdef X
-
-		OPTS := $(OPTS) -DVID_X11 -DPOLL_POINTER -I.
-		LDFLAGS=-L/usr/X11R6/lib
-		LIBS=-lXext -lX11 -lm -ldl -lXxf86vm
-		# name of the exefile
-		EXENAME=llxdoom
-		SFLAGS=-g $(OPTS)
-		OBJS=$(O)/i_video_xshm.o $(O)/dosstr.o $(O)/searchp.o $(O)/endtxt.o \
-		 $(O)/hw_bsp.o $(O)/hw_draw.o $(O)/hw_light.o $(O)/hw_main.o \
-		 $(O)/hw_md2.o $(O)/hw_cache.o
-
-	else
-	    OPTS := $(OPTS) -DVID_GGI -I.
-	    LDFLAGS=
-	    LIBS=-lggi -lm
-	    # name of the exefile
-	    EXENAME=llggidoom
-	    SFLAGS=-g $(OPTS)
-	    OBJS=$(O)/i_video_ggi.o $(O)/dosstr.o $(O)/searchp.o $(O)/endtxt.o \
-		 $(O)/hw_bsp.o $(O)/hw_draw.o $(O)/hw_light.o $(O)/hw_main.o \
-		 $(O)/hw_md2.o $(O)/hw_cache.o
-
-	endif
-	ifdef SDL
-		qmus2mid_obj = $(O)/qmus2mid_sdl.o
-		qmus2mid_h   = qmus2mid_sdl.h
-		OPTS := $(OPTS) -DSDL -DVID_X11 -DPOLL_POINTER -I. -I/usr/local/include/SDL
-ifdef HAVE_MIXER
-	OPTS := $(OPTS) -DHAVE_MIXER
-endif
-		LDFLAGS=-L/usr/X11R6/lib -L/usr/local/lib
-		LIBS=-lXext -lX11 -lm -ldl -lXxf86vm -lSDL -lSDL_mixer -lpthread
-		DEBUGLIBS=$(LIBS)
-		# name of the exefile
-		EXENAME=lsdldoom
-	endif
-	SFLAGS=-g $(OPTS)
 endif
 
-ifdef OS2
-
-	# subdirectory for objects
-	O=objs
-	BIN=bin
-
-	#use the x86 asm code
-	NASM=nasm
-	USEASM=1
-	PROFILEMODE=1
-
-	# options
-	OPTS=-Zmt -D__OS2__ -I.. -I. -Ios2
-
-	DEBUGLIBS=-lmmpm2 -lsocket -g
-	LIBS= $(INTERFACE)/I_pm.def -lmmpm2 -lsocket -g
-
-	SFLAGS=-g $(OPTS)
-
-	OBJS=$(O)/i_video.o $(O)/i_dart.o $(O)/i_dive.o $(O)/I_pm.o \
-		$(O)/printf.o $(O)/I_pm.res
-
-	#somes SDL messup
-	qmus2mid_obj = $(O)/qmus2mid2.o
-	qmus2mid_h   = qmus2mid.h
-
-	# name of the exefile
-	EXENAME=Doom2.exe
-
-endif
-
-ifdef USEASM
-   OBJS:= $(OBJS) $(O)/tmap.o $(O)/vid_copy.o
-   OPTS:= $(OPTS) -DUSEASM
-endif
-
-ifdef PROFILEMODE
-
-	# build with profiling information
-	ifdef PGCC
-		CFLAGS = -g -pg $(OPTS)
-	else
-		CFLAGS = -g -pg -m486 -O3 -ffast-math $(OPTS)
-	endif
-	LDFLAGS = -g -pg -L/usr/X11R6/lib
+ifdef NOHW
+	OPTS += -DNOHW
 else
+ifndef DC
+	#Hurdler: not really supported and not tested recently
+	#OPTS += -DUSE_PALETTED_TEXTURE
+endif
+	OPTS += -DHWRENDER
+	OBJS += $(OBJDIR)/hw_bsp.o $(OBJDIR)/hw_draw.o $(OBJDIR)/hw_light.o \
+		 $(OBJDIR)/hw_main.o $(OBJDIR)/hw_md2.o $(OBJDIR)/hw_cache.o $(OBJDIR)/hw_trick.o
+endif
+
+ifdef NOHS
+	OPTS += -DNOHS
+else
+	OPTS += -DHW3SOUND
+	OBJS += $(OBJDIR)/hw3sound.o
+endif
+
+ifndef NONX86
+ifndef GCC29
+	M5=-march=pentium
+	M4=-march=i486
+else
+	M5=-mpentium
+	M4=-m486
+endif
+endif
+
+ifndef NOASM
+ifndef NONX86
+	OBJS += $(OBJDIR)/tmap.o $(OBJDIR)/tmap_mmx.o $(OBJDIR)/vid_copy.o
+	OPTS += -DUSEASM
+endif
+endif
+
+ifndef NOPNG
+OPTS := $(OPTS) -DHAVE_PNG
+ifndef NO_PNG_CONFIG
+PNG_CONFIG ?= libpng-config
+PNG_CFLAGS := $(shell $(PNG_CONFIG) --cflags)
+PNG_LDFLAGS := $(shell $(PNG_CONFIG) --libs)
+endif
+LIBS := $(PNG_LDFLAGS) $(LIBS)
+CFLAGS := $(PNG_CFLAGS) $(CFLAGS)
+
+ifndef NOMNG
+#OPTS := $(OPTS) -DHAVE_MNG
+#LIBS := -lmng $(LIBS)
+endif
+endif
+
+ifdef NOMD5
+	OPTS:= $(OPTS) -DNOMD5
+else
+	OBJS:= $(OBJDIR)/md5.o $(OBJS)
+endif
+
+ifdef FAKEDC
+	OPTS:= $(OPTS) -DDC
+endif
+
+	OPTS:= -ffloat-store $(OPTS)
+
+ifdef DEBUGMODE
+
+	# build with debugging information
+	WINDRESFLAGS = -D_DEBUG
+	CFLAGS += -g -O0 $(OPTS) -fno-exceptions $(M5) -DPARANOIA -DRANGECHECK $(WINDRESFLAGS)
+else
+
 
 	# build a normal optimised version
-	ifdef PGCC
-		CFLAGS = $(OPTS) -mpentium -O6 -ffast-math -fomit-frame-pointer
+	WINDRESFLAGS = -DNDEBUG
+	CFLAGS += $(OPTS) $(M5) -Os $(WINDRESFLAGS)
 		# -fgcse -fcse-follow-jumps -fcse-skip-blocks -frerun-cse-after-loop -ffunction-cse \
 		# -fexpensive-optimizations -fforce-mem -fstrength-reduce -fthread-jumps  \
 		# -fregmove -fschedule-insns -fschedule-insns2 -fmove-all-movables \
 		# -fcaller-saves -finline-functions -mieee-fp -mfp-ret-in-387 -m80387 -mhard-float -finline
-	else
-		CFLAGS = -m486 -O3 -ffast-math -fomit-frame-pointer $(OPTS)
-	endif
+	LIBS := -s $(LIBS)
+endif
+
+ifdef PROFILEMODE
+   # build with profiling information
+	CFLAGS := -pg $(CFLAGS)
+else
+ifndef DC
+	CFLAGS := -fomit-frame-pointer $(CFLAGS)
+endif
 endif
 
 # not too sophisticated dependency
+OBJS := $(i_main_o) \
+		$(OBJDIR)/comptime.o \
+		$(OBJDIR)/string.o \
+		$(OBJDIR)/d_main.o \
+		$(OBJDIR)/d_clisrv.o \
+		$(OBJDIR)/d_net.o    \
+		$(OBJDIR)/d_netfil.o \
+		$(OBJDIR)/dehacked.o \
+		$(OBJDIR)/dstrings.o \
+		$(OBJDIR)/z_zone.o   \
+		$(OBJDIR)/f_finale.o \
+		$(OBJDIR)/f_wipe.o   \
+		$(OBJDIR)/g_game.o   \
+		$(OBJDIR)/g_input.o  \
+		$(OBJDIR)/am_map.o   \
+		$(OBJDIR)/command.o  \
+		$(OBJDIR)/console.o  \
+		$(OBJDIR)/hu_stuff.o \
+		$(OBJDIR)/y_inter.o  \
+		$(OBJDIR)/st_stuff.o \
+		$(OBJDIR)/m_argv.o   \
+		$(OBJDIR)/m_bbox.o   \
+		$(OBJDIR)/m_cheat.o  \
+		$(OBJDIR)/m_fixed.o  \
+		$(OBJDIR)/m_menu.o   \
+		$(OBJDIR)/m_misc.o   \
+		$(OBJDIR)/m_random.o \
+		$(OBJDIR)/info.o     \
+		$(OBJDIR)/p_ceilng.o \
+		$(OBJDIR)/p_enemy.o  \
+		$(OBJDIR)/p_fab.o    \
+		$(OBJDIR)/p_floor.o  \
+		$(OBJDIR)/p_inter.o  \
+		$(OBJDIR)/p_lights.o \
+		$(OBJDIR)/p_map.o    \
+		$(OBJDIR)/p_maputl.o \
+		$(OBJDIR)/p_mobj.o   \
+		$(OBJDIR)/p_saveg.o  \
+		$(OBJDIR)/p_setup.o  \
+		$(OBJDIR)/p_sight.o  \
+		$(OBJDIR)/p_spec.o   \
+		$(OBJDIR)/p_telept.o \
+		$(OBJDIR)/p_tick.o   \
+		$(OBJDIR)/p_user.o   \
+		$(OBJDIR)/tables.o   \
+		$(OBJDIR)/r_bsp.o    \
+		$(OBJDIR)/r_data.o   \
+		$(OBJDIR)/r_draw.o   \
+		$(OBJDIR)/r_main.o   \
+		$(OBJDIR)/r_plane.o  \
+		$(OBJDIR)/r_segs.o   \
+		$(OBJDIR)/r_sky.o    \
+		$(OBJDIR)/r_splats.o \
+		$(OBJDIR)/r_things.o \
+		$(OBJDIR)/screen.o   \
+		$(OBJDIR)/v_video.o  \
+		$(OBJDIR)/s_sound.o  \
+		$(OBJDIR)/sounds.o   \
+		$(OBJDIR)/w_wad.o    \
+		$(OBJDIR)/filesrch.o \
+		$(OBJDIR)/mserv.o    \
+		$(OBJDIR)/i_tcp.o    \
+		$(i_cdmus_o)    \
+		$(i_net_o)      \
+		$(i_system_o)   \
+		$(i_sound_o)    \
+		$(OBJS)
+
+ifdef DJGPPDOS
+all:	 pre-build $(BIN)/$(EXENAME)
+endif
+
+ifdef XBOX
+all:	 pre-build $(BIN)/$(BINNAME)
+endif
+
+ifdef PSP
+all:	 pre-build $(BIN)/$(BINNAME) post-build
+endif
+
+ifndef PSP
+ifndef XBOX
+ifdef MINGW
+ifndef SDL
+all:	 pre-build $(BIN)/$(EXENAME) dll
+endif
+endif
+endif
+
 ifdef SDL
-OBJS :=  $(OBJS) $(O)/i_sound_sdl.o
-else
-OBJS :=  $(OBJS) $(O)/i_sound.o
+all:	 pre-build $(BIN)/$(EXENAME)
 endif
-# not too sophisticated dependency
-OBJS :=  $(OBJS) \
-		$(O)/dstrings.o  \
-		$(O)/i_cdmus.o	 \
-		$(O)/i_net.o	 \
-		$(O)/i_tcp.o	 \
-		$(O)/i_system.o  \
-		$(O)/tables.o	 \
-		$(O)/f_finale.o  \
-		$(O)/f_wipe.o	 \
-		$(O)/d_main.o	 \
-		$(O)/d_net.o	 \
-		$(O)/d_items.o	 \
-		$(O)/g_game.o	 \
-		$(O)/m_menu.o	 \
-		$(O)/m_misc.o	 \
-		$(O)/m_argv.o	 \
-		$(O)/m_bbox.o	 \
-		$(O)/m_fixed.o	 \
-		$(O)/m_swap.o	 \
-		$(O)/m_cheat.o	 \
-		$(O)/m_random.o  \
-		$(O)/am_map.o	 \
-		$(O)/p_ceilng.o  \
-		$(O)/p_doors.o	 \
-		$(O)/p_enemy.o	 \
-		$(O)/p_floor.o	 \
-	$(O)/p_genlin.o  \
-		$(O)/p_inter.o	 \
-		$(O)/p_lights.o  \
-		$(O)/p_map.o	 \
-		$(O)/p_maputl.o  \
-		$(O)/p_plats.o	 \
-		$(O)/p_pspr.o	 \
-		$(O)/p_setup.o	 \
-		$(O)/p_sight.o	 \
-		$(O)/p_spec.o	 \
-		$(O)/p_switch.o  \
-		$(O)/p_mobj.o	 \
-		$(O)/p_telept.o  \
-		$(O)/p_tick.o	 \
-		$(O)/p_saveg.o	 \
-		$(O)/p_user.o	 \
-		$(O)/r_bsp.o	 \
-		$(O)/r_data.o	 \
-		$(O)/r_draw.o	 \
-		$(O)/r_main.o	 \
-		$(O)/r_plane.o	 \
-		$(O)/r_segs.o	 \
-		$(O)/r_sky.o	 \
-		$(O)/r_things.o  \
-		$(O)/w_wad.o	 \
-		$(O)/wi_stuff.o  \
-		$(O)/v_video.o	 \
-		$(O)/st_lib.o	 \
-		$(O)/st_stuff.o  \
-		$(O)/hu_stuff.o  \
-		$(O)/s_sound.o	 \
-		$(O)/z_zone.o	 \
-		$(O)/info.o	 \
-		$(O)/sounds.o	 \
-		$(O)/p_fab.o	 \
-		$(O)/dehacked.o  \
-		$(qmus2mid_obj)  \
-		$(O)/g_input.o	 \
-		$(O)/screen.o	 \
-		$(O)/console.o	 \
-		$(O)/command.o	 \
-		$(O)/d_netcmd.o  \
-		$(O)/d_clisrv.o  \
-		$(O)/r_splats.o  \
-		$(O)/g_state.o	 \
-		$(O)/d_netfil.o
-ifdef LINUX
-all:	 $(BIN)/$(EXENAME) dll
-else
-all:	 $(BIN)/$(EXENAME)
 endif
+
+ifdef DUMMY
+all:	$(BIN)/$(EXENAME)
+endif
+
+cleandep:
+	$(REMOVE) $(OBJDIR)/depend.dep
+
+pre-build:
+	$(REMOVE) $(OBJDIR)/comptime.o
 
 clean:
-ifdef LINUX
-	rm -f *.o *~ *.flc
-	rm -f $(O)/*
-else
-	del $(O)\*.* >NUL
+	$(REMOVE) *~ *.flc
+	$(REMOVE) $(OBJDIR)/*.o
+
+ifdef MINGW
+	$(REMOVE) $(OBJDIR)/*.res
 endif
 
+ifdef CYGWIN32
+	$(REMOVE) $(OBJDIR)/*.res
+endif
+
+#make a big srb2.s that is the disasm of the exe (dos only ?)
 asm:
-	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -g $(O)/i_main.o \
-	-o $(O)/tmp.exe $(DEBUGLIBS)
-	objdump  -d $(O)/tmp.exe --no-show-raw-insn > doom3.s
-	del $(O)\tmp.exe
+	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -g $(OBJDIR)/i_main.o \
+	-o $(OBJDIR)/tmp.exe $(LIBS)
+	objdump  -d $(OBJDIR)/tmp.exe --no-show-raw-insn > srb2.s
+	$(REMOVE) $(OBJDIR)/tmp.exe
 
 # executable
 
-$(BIN)/$(EXENAME):	$(O) $(OBJS) $(O)/i_main.o
-	@echo Linking...
-	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(O)/i_main.o \
+$(BIN)/$(EXENAME): $(OBJS) $(OBJDIR)/d_netcmd.o
+	@mkdir -p $(BIN)
+	@echo Linking $(EXENAME)...
+	$(CC) $(LDFLAGS) $(OBJS) $(OBJDIR)/d_netcmd.o \
 	-o $(BIN)/$(EXENAME) $(LIBS)
 
-$(O):
-	@mkdir $(O)
+$(OBJDIR):
+	@mkdir -p $(OBJDIR)
 
+ifndef SDL
 #dll
-dll : $(O)/r_opengl.o $(O)/ogl_x11.o
-	$(CC) -mpentium -O6 -o $(BIN)/r_opengl.so -shared -nostartfiles $(O)/r_opengl.o $(O)/ogl_x11.o -L/usr/X11R6/lib -L/usr/local/lib -lGL -lX11 -lXext -lGLU -lm
-
-$(O)/r_opengl.o:	hardware/r_opengl/r_opengl.c hardware/r_opengl/r_opengl.h
-	$(CC) -mpentium -O6 -o $(O)/r_opengl.o	-DHWRENDER -DVID_X11 -DLINUX -DPOLL_POINTER -shared -nostartfiles -c hardware/r_opengl/r_opengl.c
-
-$(O)/ogl_x11.o:  hardware/r_opengl/ogl_x11.c hardware/r_opengl/r_opengl.h
-	$(CC) -mpentium -O6 -o $(O)/ogl_x11.o -DHWRENDER -DVID_X11 -DLINUX -DPOLL_POINTER -shared -nostartfiles -c hardware/r_opengl/ogl_x11.c
-
-
-#dependecy made by gcc itself ! (see makedep.mak for more)
-$(O)/dstrings.o: dstrings.c dstrings.h d_englsh.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/i_sound.o: $(INTERFACE)/i_sound.c doomdef.h \
- doomtype.h g_state.h m_swap.h doomstat.h doomdata.h d_player.h \
- d_items.h p_pspr.h m_fixed.h tables.h info.h d_think.h \
- p_mobj.h d_ticcmd.h d_clisrv.h d_netcmd.h command.h i_system.h \
- d_event.h i_sound.h sounds.h z_zone.h m_argv.h m_misc.h \
- w_wad.h s_sound.h $(qmus2mid_h)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/i_cdmus.o: $(INTERFACE)/i_cdmus.c doomdef.h \
- doomtype.h g_state.h m_swap.h	i_sound.h sounds.h command.h \
- i_system.h d_ticcmd.h d_event.h  s_sound.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/i_video.o: $(INTERFACE)/i_video.c doomdef.h \
- doomtype.h g_state.h m_swap.h i_system.h d_ticcmd.h d_event.h \
- v_video.h r_defs.h m_fixed.h d_think.h p_mobj.h tables.h \
- doomdata.h info.h screen.h command.h m_argv.h $(INTERFACE)/vid_vesa.h \
- i_video.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/i_net.o: $(INTERFACE)/i_net.c doomdef.h doomtype.h \
- g_state.h m_swap.h i_system.h d_ticcmd.h d_event.h d_net.h \
- m_argv.h doomstat.h doomdata.h d_player.h d_items.h p_pspr.h \
- m_fixed.h tables.h info.h d_think.h p_mobj.h d_clisrv.h \
- d_netcmd.h command.h z_zone.h i_net.h i_tcp.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/i_tcp.o: i_tcp.c doomdef.h doomtype.h g_state.h m_swap.h i_system.h \
- d_ticcmd.h d_event.h i_net.h d_net.h m_argv.h doomstat.h doomdata.h \
- d_player.h d_items.h p_pspr.h m_fixed.h tables.h info.h d_think.h \
- p_mobj.h d_clisrv.h d_netcmd.h command.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/i_system.o: $(INTERFACE)/i_system.c doomdef.h \
- doomtype.h g_state.h m_swap.h \
- m_misc.h w_wad.h i_video.h \
- i_sound.h sounds.h d_net.h \
- g_game.h doomstat.h doomdata.h \
- d_player.h d_items.h p_pspr.h \
- m_fixed.h tables.h info.h \
- d_think.h p_mobj.h d_ticcmd.h \
- d_clisrv.h d_netcmd.h command.h \
- d_event.h d_main.h m_argv.h \
- z_zone.h g_input.h \
- console.h i_system.h \
- i_joy.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/tables.o: tables.c tables.h m_fixed.h doomtype.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/f_finale.o: f_finale.c doomdef.h doomtype.h g_state.h m_swap.h \
- am_map.h d_event.h dstrings.h d_englsh.h d_main.h w_wad.h f_finale.h \
- g_game.h doomstat.h doomdata.h d_player.h d_items.h p_pspr.h \
- m_fixed.h tables.h info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h \
- d_netcmd.h command.h hu_stuff.h wi_stuff.h r_defs.h screen.h \
- r_local.h m_bbox.h r_main.h r_data.h r_state.h r_bsp.h r_segs.h \
- r_plane.h r_sky.h r_things.h sounds.h r_draw.h s_sound.h i_video.h \
- v_video.h z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/f_wipe.o: f_wipe.c doomdef.h doomtype.h g_state.h m_swap.h m_random.h \
- f_wipe.h i_system.h d_ticcmd.h d_event.h i_video.h v_video.h r_defs.h \
- m_fixed.h d_think.h p_mobj.h tables.h doomdata.h info.h screen.h \
- command.h z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/d_main.o: d_main.c doomdef.h doomtype.h g_state.h m_swap.h command.h \
- console.h d_event.h doomstat.h doomdata.h d_player.h d_items.h \
- p_pspr.h m_fixed.h tables.h info.h d_think.h p_mobj.h d_ticcmd.h \
- d_clisrv.h d_netcmd.h am_map.h d_net.h dehacked.h dstrings.h \
- d_englsh.h f_wipe.h f_finale.h g_game.h g_input.h keys.h hu_stuff.h \
- w_wad.h wi_stuff.h r_defs.h screen.h i_sound.h sounds.h i_system.h \
- i_video.h m_argv.h m_menu.h m_misc.h p_setup.h p_fab.h r_main.h \
- r_data.h r_state.h r_local.h m_bbox.h r_bsp.h r_segs.h r_plane.h \
- r_sky.h r_things.h r_draw.h s_sound.h st_stuff.h v_video.h z_zone.h \
- d_main.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/d_net.o: d_net.c doomdef.h doomtype.h g_state.h m_swap.h d_clisrv.h \
- d_ticcmd.h d_netcmd.h command.h g_game.h doomstat.h doomdata.h \
- d_player.h d_items.h p_pspr.h m_fixed.h tables.h info.h d_think.h \
- p_mobj.h d_event.h i_net.h i_system.h m_argv.h d_net.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/d_items.o: d_items.c info.h d_think.h d_items.h doomdef.h doomtype.h \
- g_state.h m_swap.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/g_game.o: g_game.c doomdef.h doomtype.h g_state.h m_swap.h command.h \
- console.h d_event.h dstrings.h d_englsh.h d_main.h w_wad.h d_net.h \
- d_netcmd.h f_finale.h p_setup.h doomdata.h p_saveg.h i_system.h \
- d_ticcmd.h wi_stuff.h d_player.h d_items.h p_pspr.h m_fixed.h \
- tables.h info.h d_think.h p_mobj.h am_map.h m_random.h p_local.h \
- m_bbox.h p_tick.h r_defs.h screen.h p_maputl.h p_spec.h r_data.h \
- r_state.h r_draw.h r_main.h r_sky.h s_sound.h sounds.h g_game.h \
- doomstat.h d_clisrv.h g_input.h keys.h p_fab.h m_cheat.h m_misc.h \
- m_menu.h m_argv.h hu_stuff.h st_stuff.h z_zone.h i_video.h p_inter.h \
- byteptr.h i_joy.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/m_menu.o: m_menu.c am_map.h d_event.h doomtype.h g_state.h doomdef.h \
- m_swap.h dstrings.h d_englsh.h d_main.h w_wad.h console.h r_local.h \
- tables.h m_fixed.h screen.h command.h m_bbox.h r_main.h d_player.h \
- d_items.h p_pspr.h info.h d_think.h p_mobj.h doomdata.h d_ticcmd.h \
- r_data.h r_defs.h r_state.h r_bsp.h r_segs.h r_plane.h r_sky.h \
- r_things.h sounds.h r_draw.h hu_stuff.h wi_stuff.h g_game.h \
- doomstat.h d_clisrv.h d_netcmd.h g_input.h keys.h m_argv.h s_sound.h \
- i_system.h m_menu.h v_video.h i_video.h z_zone.h p_local.h p_tick.h \
- p_maputl.h p_spec.h p_fab.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/m_misc.o: m_misc.c doomdef.h doomtype.h g_state.h m_swap.h g_game.h \
- doomstat.h doomdata.h d_player.h d_items.h p_pspr.h m_fixed.h \
- tables.h info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h d_netcmd.h \
- command.h d_event.h m_misc.h w_wad.h hu_stuff.h wi_stuff.h r_defs.h \
- screen.h v_video.h z_zone.h g_input.h keys.h i_video.h d_main.h \
- m_argv.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/m_argv.o: m_argv.c doomdef.h doomtype.h g_state.h m_swap.h command.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/m_bbox.o: m_bbox.c doomtype.h m_bbox.h m_fixed.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/m_fixed.o: m_fixed.c i_system.h d_ticcmd.h doomtype.h d_event.h \
- g_state.h m_fixed.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/m_swap.o: m_swap.c
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/m_cheat.o: m_cheat.c doomdef.h doomtype.h g_state.h m_swap.h \
- dstrings.h d_englsh.h am_map.h d_event.h m_cheat.h g_game.h \
- doomstat.h doomdata.h d_player.h d_items.h p_pspr.h m_fixed.h \
- tables.h info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h d_netcmd.h \
- command.h r_local.h screen.h m_bbox.h r_main.h r_data.h r_defs.h \
- r_state.h r_bsp.h r_segs.h r_plane.h r_sky.h r_things.h sounds.h \
- r_draw.h p_local.h p_tick.h p_maputl.h p_spec.h p_inter.h i_sound.h \
- s_sound.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/m_random.o: m_random.c doomdef.h doomtype.h g_state.h m_swap.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/am_map.o: am_map.c doomdef.h doomtype.h g_state.h m_swap.h doomstat.h \
- doomdata.h d_player.h d_items.h p_pspr.h m_fixed.h tables.h info.h \
- d_think.h p_mobj.h d_ticcmd.h d_clisrv.h d_netcmd.h command.h \
- g_game.h d_event.h am_map.h g_input.h keys.h m_cheat.h p_local.h \
- m_bbox.h p_tick.h r_defs.h screen.h p_maputl.h p_spec.h v_video.h \
- st_stuff.h i_system.h i_video.h r_state.h r_data.h dstrings.h \
- d_englsh.h w_wad.h z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_ceilng.o: p_ceilng.c doomdef.h doomtype.h g_state.h m_swap.h \
- p_local.h command.h d_player.h d_items.h p_pspr.h m_fixed.h tables.h \
- info.h d_think.h p_mobj.h doomdata.h d_ticcmd.h m_bbox.h p_tick.h \
- r_defs.h screen.h p_maputl.h p_spec.h r_state.h r_data.h s_sound.h \
- sounds.h z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_doors.o: p_doors.c doomdef.h doomtype.h g_state.h m_swap.h \
- dstrings.h d_englsh.h p_local.h command.h d_player.h d_items.h \
- p_pspr.h m_fixed.h tables.h info.h d_think.h p_mobj.h doomdata.h \
- d_ticcmd.h m_bbox.h p_tick.h r_defs.h screen.h p_maputl.h p_spec.h \
- r_state.h r_data.h s_sound.h sounds.h z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_enemy.o: p_enemy.c doomdef.h doomtype.h g_state.h m_swap.h g_game.h \
- doomstat.h doomdata.h d_player.h d_items.h p_pspr.h m_fixed.h \
- tables.h info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h d_netcmd.h \
- command.h d_event.h p_local.h m_bbox.h p_tick.h r_defs.h screen.h \
- p_maputl.h p_spec.h r_main.h r_data.h r_state.h s_sound.h sounds.h \
- m_random.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_floor.o: p_floor.c doomdef.h doomtype.h g_state.h m_swap.h p_local.h \
- command.h d_player.h d_items.h p_pspr.h m_fixed.h tables.h info.h \
- d_think.h p_mobj.h doomdata.h d_ticcmd.h m_bbox.h p_tick.h r_defs.h \
- screen.h p_maputl.h p_spec.h r_state.h r_data.h s_sound.h sounds.h \
- z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_genlin.o: p_genlin.c doomdef.h g_game.h p_local.h r_data.h m_random.h \
- m_random.h s_sound.h z_zone.h command.h d_player.h d_think.h m_fixed.h \
- m_bbox.h p_tick.h r_defs.h p_maputl.h p_mobj.h screen.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-
-$(O)/p_inter.o: p_inter.c doomdef.h doomtype.h g_state.h m_swap.h \
- i_system.h d_ticcmd.h d_event.h am_map.h dstrings.h d_englsh.h \
- g_game.h doomstat.h doomdata.h d_player.h d_items.h p_pspr.h \
- m_fixed.h tables.h info.h d_think.h p_mobj.h d_clisrv.h d_netcmd.h \
- command.h m_random.h p_local.h m_bbox.h p_tick.h r_defs.h screen.h \
- p_maputl.h p_spec.h p_inter.h s_sound.h sounds.h r_main.h r_data.h \
- r_state.h st_stuff.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_lights.o: p_lights.c doomdef.h doomtype.h g_state.h m_swap.h \
- p_local.h command.h d_player.h d_items.h p_pspr.h m_fixed.h tables.h \
- info.h d_think.h p_mobj.h doomdata.h d_ticcmd.h m_bbox.h p_tick.h \
- r_defs.h screen.h p_maputl.h p_spec.h r_state.h r_data.h z_zone.h \
- m_random.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_map.o: p_map.c doomdef.h doomtype.h g_state.h m_swap.h g_game.h \
- doomstat.h doomdata.h d_player.h d_items.h p_pspr.h m_fixed.h \
- tables.h info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h d_netcmd.h \
- command.h d_event.h m_bbox.h m_random.h p_local.h p_tick.h r_defs.h \
- screen.h p_maputl.h p_spec.h p_inter.h r_state.h r_data.h r_main.h \
- r_sky.h s_sound.h sounds.h r_splats.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_maputl.o: p_maputl.c p_local.h command.h doomtype.h d_player.h \
- d_items.h doomdef.h g_state.h m_swap.h p_pspr.h m_fixed.h tables.h \
- info.h d_think.h p_mobj.h doomdata.h d_ticcmd.h m_bbox.h p_tick.h \
- r_defs.h screen.h p_maputl.h p_spec.h r_main.h r_data.h r_state.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_plats.o: p_plats.c doomdef.h doomtype.h g_state.h m_swap.h p_local.h \
- command.h d_player.h d_items.h p_pspr.h m_fixed.h tables.h info.h \
- d_think.h p_mobj.h doomdata.h d_ticcmd.h m_bbox.h p_tick.h r_defs.h \
- screen.h p_maputl.h p_spec.h s_sound.h sounds.h r_state.h r_data.h \
- z_zone.h m_random.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_pspr.o: p_pspr.c doomdef.h doomtype.h g_state.h m_swap.h d_event.h \
- p_local.h command.h d_player.h d_items.h p_pspr.h m_fixed.h tables.h \
- info.h d_think.h p_mobj.h doomdata.h d_ticcmd.h m_bbox.h p_tick.h \
- r_defs.h screen.h p_maputl.h p_spec.h p_inter.h s_sound.h sounds.h \
- g_game.h doomstat.h d_clisrv.h d_netcmd.h g_input.h keys.h r_main.h \
- r_data.h r_state.h m_random.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_setup.o: p_setup.c doomdef.h doomtype.h g_state.h m_swap.h d_main.h \
- d_event.h w_wad.h g_game.h doomstat.h doomdata.h d_player.h d_items.h \
- p_pspr.h m_fixed.h tables.h info.h d_think.h p_mobj.h d_ticcmd.h \
- d_clisrv.h d_netcmd.h command.h p_local.h m_bbox.h p_tick.h r_defs.h \
- screen.h p_maputl.h p_spec.h p_setup.h i_sound.h sounds.h r_sky.h \
- r_data.h r_state.h r_things.h s_sound.h z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_sight.o: p_sight.c doomdef.h doomtype.h g_state.h m_swap.h p_local.h \
- command.h d_player.h d_items.h p_pspr.h m_fixed.h tables.h info.h \
- d_think.h p_mobj.h doomdata.h d_ticcmd.h m_bbox.h p_tick.h r_defs.h \
- screen.h p_maputl.h p_spec.h r_main.h r_data.h r_state.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_spec.o: p_spec.c doomdef.h doomtype.h g_state.h m_swap.h g_game.h \
- doomstat.h doomdata.h d_player.h d_items.h p_pspr.h m_fixed.h \
- tables.h info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h d_netcmd.h \
- command.h d_event.h p_local.h m_bbox.h p_tick.h r_defs.h screen.h \
- p_maputl.h p_spec.h p_setup.h r_data.h r_state.h m_random.h s_sound.h \
- sounds.h w_wad.h z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_switch.o: p_switch.c doomdef.h doomtype.h g_state.h m_swap.h \
- g_game.h doomstat.h doomdata.h d_player.h d_items.h p_pspr.h \
- m_fixed.h tables.h info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h \
- d_netcmd.h command.h d_event.h p_local.h m_bbox.h p_tick.h r_defs.h \
- screen.h p_maputl.h p_spec.h s_sound.h sounds.h r_main.h r_data.h \
- r_state.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_mobj.o: p_mobj.c doomdef.h doomtype.h g_state.h m_swap.h g_game.h \
- doomstat.h doomdata.h d_player.h d_items.h p_pspr.h m_fixed.h \
- tables.h info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h d_netcmd.h \
- command.h d_event.h g_input.h keys.h st_stuff.h hu_stuff.h w_wad.h \
- wi_stuff.h r_defs.h screen.h p_local.h m_bbox.h p_tick.h p_maputl.h \
- p_spec.h p_inter.h p_setup.h r_main.h r_data.h r_state.h r_things.h \
- sounds.h r_sky.h s_sound.h z_zone.h m_random.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_telept.o: p_telept.c doomdef.h doomtype.h g_state.h m_swap.h \
- g_game.h doomstat.h doomdata.h d_player.h d_items.h p_pspr.h \
- m_fixed.h tables.h info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h \
- d_netcmd.h command.h d_event.h p_local.h m_bbox.h p_tick.h r_defs.h \
- screen.h p_maputl.h p_spec.h r_state.h r_data.h s_sound.h sounds.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_tick.o: p_tick.c doomstat.h doomdata.h doomtype.h doomdef.h \
- g_state.h m_swap.h d_player.h d_items.h p_pspr.h m_fixed.h tables.h \
- info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h d_netcmd.h command.h \
- g_game.h d_event.h p_local.h m_bbox.h p_tick.h r_defs.h screen.h \
- p_maputl.h p_spec.h z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_saveg.o: p_saveg.c doomdef.h doomtype.h g_state.h m_swap.h g_game.h \
- doomstat.h doomdata.h d_player.h d_items.h p_pspr.h m_fixed.h \
- tables.h info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h d_netcmd.h \
- command.h d_event.h p_local.h m_bbox.h p_tick.h r_defs.h screen.h \
- p_maputl.h p_spec.h r_state.h r_data.h z_zone.h w_wad.h p_setup.h \
- byteptr.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/p_user.o: p_user.c doomdef.h doomtype.h g_state.h m_swap.h d_event.h \
- g_game.h doomstat.h doomdata.h d_player.h d_items.h p_pspr.h \
- m_fixed.h tables.h info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h \
- d_netcmd.h command.h p_local.h m_bbox.h p_tick.h r_defs.h screen.h \
- p_maputl.h p_spec.h r_main.h r_data.h r_state.h s_sound.h sounds.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/r_bsp.o: r_bsp.c doomdef.h doomtype.h g_state.h m_swap.h g_game.h \
- doomstat.h doomdata.h d_player.h d_items.h p_pspr.h m_fixed.h \
- tables.h info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h d_netcmd.h \
- command.h d_event.h r_local.h screen.h m_bbox.h r_main.h r_data.h \
- r_defs.h r_state.h r_bsp.h r_segs.h r_plane.h r_sky.h r_things.h \
- sounds.h r_draw.h r_splats.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/r_data.o: r_data.c doomdef.h doomtype.h g_state.h m_swap.h g_game.h \
- doomstat.h doomdata.h d_player.h d_items.h p_pspr.h m_fixed.h \
- tables.h info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h d_netcmd.h \
- command.h d_event.h i_video.h r_local.h screen.h m_bbox.h r_main.h \
- r_data.h r_defs.h r_state.h r_bsp.h r_segs.h r_plane.h r_sky.h \
- r_things.h sounds.h r_draw.h p_local.h p_tick.h p_maputl.h p_spec.h \
- w_wad.h z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/r_draw.o: r_draw.c doomdef.h doomtype.h g_state.h m_swap.h r_local.h \
- tables.h m_fixed.h screen.h command.h m_bbox.h r_main.h d_player.h \
- d_items.h p_pspr.h info.h d_think.h p_mobj.h doomdata.h d_ticcmd.h \
- r_data.h r_defs.h r_state.h r_bsp.h r_segs.h r_plane.h r_sky.h \
- r_things.h sounds.h r_draw.h st_stuff.h d_event.h i_video.h \
- v_video.h w_wad.h z_zone.h r_draw8.c r_draw16.c
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/r_main.o: r_main.c doomdef.h doomtype.h g_state.h m_swap.h g_game.h \
- doomstat.h doomdata.h d_player.h d_items.h p_pspr.h m_fixed.h \
- tables.h info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h d_netcmd.h \
- command.h d_event.h g_input.h keys.h r_local.h screen.h m_bbox.h \
- r_main.h r_data.h r_defs.h r_state.h r_bsp.h r_segs.h r_plane.h \
- r_sky.h r_things.h sounds.h r_draw.h r_splats.h st_stuff.h p_local.h \
- p_tick.h p_maputl.h p_spec.h i_video.h m_menu.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/r_plane.o: r_plane.c doomdef.h doomtype.h g_state.h m_swap.h console.h \
- d_event.h g_game.h doomstat.h doomdata.h d_player.h d_items.h \
- p_pspr.h m_fixed.h tables.h info.h d_think.h p_mobj.h d_ticcmd.h \
- d_clisrv.h d_netcmd.h command.h r_data.h r_defs.h screen.h r_state.h \
- r_local.h m_bbox.h r_main.h r_bsp.h r_segs.h r_plane.h r_sky.h \
- r_things.h sounds.h r_draw.h r_splats.h v_video.h w_wad.h \
- z_zone.h p_setup.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/r_segs.o: r_segs.c doomdef.h doomtype.h g_state.h m_swap.h r_local.h \
- tables.h m_fixed.h screen.h command.h m_bbox.h r_main.h d_player.h \
- d_items.h p_pspr.h info.h d_think.h p_mobj.h doomdata.h d_ticcmd.h \
- r_data.h r_defs.h r_state.h r_bsp.h r_segs.h r_plane.h r_sky.h \
- r_things.h sounds.h r_draw.h r_splats.h w_wad.h z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/r_sky.o: r_sky.c doomdef.h doomtype.h g_state.h m_swap.h r_sky.h \
- m_fixed.h r_local.h tables.h screen.h command.h m_bbox.h r_main.h \
- d_player.h d_items.h p_pspr.h info.h d_think.h p_mobj.h doomdata.h \
- d_ticcmd.h r_data.h r_defs.h r_state.h r_bsp.h r_segs.h r_plane.h \
- r_things.h sounds.h r_draw.h w_wad.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/r_things.o: r_things.c doomdef.h doomtype.h g_state.h m_swap.h \
- console.h d_event.h g_game.h doomstat.h doomdata.h d_player.h \
- d_items.h p_pspr.h m_fixed.h tables.h info.h d_think.h p_mobj.h \
- d_ticcmd.h d_clisrv.h d_netcmd.h command.h r_local.h screen.h \
- m_bbox.h r_main.h r_data.h r_defs.h r_state.h r_bsp.h r_segs.h \
- r_plane.h r_sky.h r_things.h sounds.h r_draw.h st_stuff.h w_wad.h \
- z_zone.h i_video.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/w_wad.o: w_wad.c doomdef.h doomtype.h g_state.h m_swap.h w_wad.h \
- z_zone.h i_video.h d_netfil.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/wi_stuff.o: wi_stuff.c doomdef.h doomtype.h g_state.h m_swap.h \
- wi_stuff.h d_player.h d_items.h p_pspr.h m_fixed.h tables.h info.h \
- d_think.h p_mobj.h doomdata.h d_ticcmd.h g_game.h doomstat.h \
- d_clisrv.h d_netcmd.h command.h d_event.h hu_stuff.h w_wad.h r_defs.h \
- screen.h m_random.h r_local.h m_bbox.h r_main.h r_data.h r_state.h \
- r_bsp.h r_segs.h r_plane.h r_sky.h r_things.h sounds.h r_draw.h \
- s_sound.h st_stuff.h i_video.h v_video.h z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/v_video.o: v_video.c doomdef.h doomtype.h g_state.h m_swap.h r_local.h \
- tables.h m_fixed.h screen.h command.h m_bbox.h r_main.h d_player.h \
- d_items.h p_pspr.h info.h d_think.h p_mobj.h doomdata.h d_ticcmd.h \
- r_data.h r_defs.h r_state.h r_bsp.h r_segs.h r_plane.h r_sky.h \
- r_things.h sounds.h r_draw.h v_video.h hu_stuff.h d_event.h w_wad.h \
- wi_stuff.h i_video.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/st_lib.o: st_lib.c doomdef.h doomtype.h g_state.h m_swap.h st_lib.h \
- r_defs.h m_fixed.h d_think.h p_mobj.h tables.h doomdata.h info.h \
- screen.h command.h w_wad.h st_stuff.h d_event.h d_player.h d_items.h \
- p_pspr.h d_ticcmd.h v_video.h z_zone.h i_video.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/st_stuff.o: st_stuff.c doomdef.h doomtype.h g_state.h m_swap.h \
- am_map.h d_event.h g_game.h doomstat.h doomdata.h d_player.h \
- d_items.h p_pspr.h m_fixed.h tables.h info.h d_think.h p_mobj.h \
- d_ticcmd.h d_clisrv.h d_netcmd.h command.h m_cheat.h r_local.h \
- screen.h m_bbox.h r_main.h r_data.h r_defs.h r_state.h r_bsp.h \
- r_segs.h r_plane.h r_sky.h r_things.h sounds.h r_draw.h p_local.h \
- p_tick.h p_maputl.h p_spec.h p_inter.h m_random.h st_stuff.h st_lib.h \
- w_wad.h i_video.h v_video.h keys.h z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/hu_stuff.o: hu_stuff.c doomdef.h doomtype.h g_state.h m_swap.h \
- hu_stuff.h d_event.h w_wad.h wi_stuff.h d_player.h d_items.h p_pspr.h \
- m_fixed.h tables.h info.h d_think.h p_mobj.h doomdata.h d_ticcmd.h \
- r_defs.h screen.h command.h d_netcmd.h d_clisrv.h g_game.h doomstat.h \
- g_input.h keys.h i_video.h dstrings.h d_englsh.h st_stuff.h r_local.h \
- m_bbox.h r_main.h r_data.h r_state.h r_bsp.h r_segs.h r_plane.h \
- r_sky.h r_things.h sounds.h r_draw.h v_video.h z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/s_sound.o: s_sound.c doomdef.h doomtype.h g_state.h m_swap.h command.h \
- g_game.h doomstat.h doomdata.h d_player.h d_items.h p_pspr.h \
- m_fixed.h tables.h info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h \
- d_netcmd.h d_event.h m_argv.h r_main.h r_data.h r_defs.h screen.h \
- r_state.h r_things.h sounds.h i_sound.h s_sound.h w_wad.h z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/z_zone.o: z_zone.c doomdef.h doomtype.h g_state.h m_swap.h z_zone.h \
- i_system.h d_ticcmd.h d_event.h command.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/info.o: info.c doomdef.h doomtype.h g_state.h m_swap.h sounds.h \
- m_fixed.h p_mobj.h tables.h d_think.h doomdata.h info.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/sounds.o: sounds.c doomtype.h sounds.h r_defs.h m_fixed.h d_think.h \
- p_mobj.h tables.h doomdata.h doomdef.h g_state.h m_swap.h info.h \
- screen.h command.h r_things.h z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/tmap.o: tmap.s asm_defs.inc
-	$(CC) $(OPTS) $(SFLAGS) -x assembler-with-cpp -c $< -o $@
-
-$(O)/p_fab.o: p_fab.c doomdef.h doomtype.h g_state.h m_swap.h g_game.h \
- doomstat.h doomdata.h d_player.h d_items.h p_pspr.h m_fixed.h \
- tables.h info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h d_netcmd.h \
- command.h d_event.h p_local.h m_bbox.h p_tick.h r_defs.h screen.h \
- p_maputl.h p_spec.h r_state.h r_data.h p_fab.h m_random.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/dehacked.o: dehacked.c doomdef.h doomtype.h g_state.h m_swap.h \
- command.h console.h d_event.h g_game.h doomstat.h doomdata.h \
- d_player.h d_items.h p_pspr.h m_fixed.h tables.h info.h d_think.h \
- p_mobj.h d_ticcmd.h d_clisrv.h d_netcmd.h sounds.h m_cheat.h \
- dstrings.h d_englsh.h m_argv.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/qmus2mid.o: qmus2mid.c doomdef.h doomtype.h g_state.h m_swap.h \
- i_system.h d_ticcmd.h d_event.h byteptr.h m_swap.h $(qmus2mid_h)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/qmus2mid_sdl.o: qmus2mid_sdl.c doomdef.h doomtype.h g_state.h m_swap.h \
- i_system.h d_ticcmd.h d_event.h byteptr.h m_swap.h $(qmus2mid_h)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/vid_copy.o: vid_copy.s asm_defs.inc
-	$(CC) $(OPTS) $(SFLAGS) -x assembler-with-cpp -c $< -o $@
-
-$(O)/vid_vesa.o: $(INTERFACE)/vid_vesa.c i_system.h \
- d_ticcmd.h doomtype.h d_event.h \
- g_state.h $(INTERFACE)/vid_vesa.h doomdef.h \
- m_swap.h screen.h command.h \
- st_stuff.h d_player.h d_items.h \
- p_pspr.h m_fixed.h tables.h \
- info.h d_think.h p_mobj.h \
- doomdata.h console.h i_video.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/g_input.o: g_input.c doomdef.h doomtype.h g_state.h m_swap.h g_input.h \
- d_event.h keys.h command.h hu_stuff.h w_wad.h wi_stuff.h d_player.h \
- d_items.h p_pspr.h m_fixed.h tables.h info.h d_think.h p_mobj.h \
- doomdata.h d_ticcmd.h r_defs.h screen.h d_net.h console.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/screen.o: screen.c doomdef.h doomtype.h g_state.h m_swap.h screen.h \
- command.h console.h d_event.h am_map.h i_system.h d_ticcmd.h \
- i_video.h r_local.h tables.h m_fixed.h m_bbox.h r_main.h d_player.h \
- d_items.h p_pspr.h info.h d_think.h p_mobj.h doomdata.h r_data.h \
- r_defs.h r_state.h r_bsp.h r_segs.h r_plane.h r_sky.h r_things.h \
- sounds.h r_draw.h m_argv.h v_video.h st_stuff.h hu_stuff.h w_wad.h \
- wi_stuff.h z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/console.o: console.c doomdef.h doomtype.h g_state.h m_swap.h console.h \
- d_event.h g_game.h doomstat.h doomdata.h d_player.h d_items.h \
- p_pspr.h m_fixed.h tables.h info.h d_think.h p_mobj.h d_ticcmd.h \
- d_clisrv.h d_netcmd.h command.h g_input.h keys.h hu_stuff.h w_wad.h \
- wi_stuff.h r_defs.h screen.h sounds.h st_stuff.h s_sound.h v_video.h \
- i_video.h z_zone.h i_system.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/command.o: command.c doomdef.h doomtype.h g_state.h m_swap.h \
- doomstat.h doomdata.h d_player.h d_items.h p_pspr.h m_fixed.h \
- tables.h info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h d_netcmd.h \
- command.h console.h d_event.h z_zone.h m_misc.h w_wad.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/d_netcmd.o: d_netcmd.c doomdef.h doomtype.h g_state.h m_swap.h \
- console.h d_event.h command.h d_netcmd.h d_clisrv.h d_ticcmd.h \
- i_system.h dstrings.h d_englsh.h g_game.h doomstat.h doomdata.h \
- d_player.h d_items.h p_pspr.h m_fixed.h tables.h info.h d_think.h \
- p_mobj.h hu_stuff.h w_wad.h wi_stuff.h r_defs.h screen.h g_input.h \
- keys.h m_menu.h r_local.h m_bbox.h r_main.h r_data.h r_state.h \
- r_bsp.h r_segs.h r_plane.h r_sky.h r_things.h sounds.h r_draw.h \
- p_inter.h p_setup.h s_sound.h m_misc.h am_map.h byteptr.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/d_clisrv.o: d_clisrv.c doomdef.h doomtype.h g_state.h m_swap.h \
- command.h i_net.h i_system.h d_ticcmd.h d_event.h d_net.h d_netcmd.h \
- d_clisrv.h d_main.h w_wad.h g_game.h doomstat.h doomdata.h d_player.h \
- d_items.h p_pspr.h m_fixed.h tables.h info.h d_think.h p_mobj.h \
- hu_stuff.h wi_stuff.h r_defs.h screen.h keys.h m_argv.h m_menu.h \
- console.h d_netfil.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/r_splats.o: r_splats.c r_draw.h r_defs.h m_fixed.h doomtype.h \
- d_think.h p_mobj.h tables.h doomdata.h doomdef.h g_state.h m_swap.h \
- info.h screen.h command.h r_main.h d_player.h d_items.h p_pspr.h \
- d_ticcmd.h r_data.h r_state.h r_plane.h r_splats.h w_wad.h z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/g_state.o: g_state.c g_state.h doomtype.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/d_netfil.o: d_netfil.c doomdef.h doomtype.h g_state.h m_swap.h \
- doomstat.h doomdata.h d_player.h d_items.h p_pspr.h m_fixed.h \
- tables.h info.h d_think.h p_mobj.h d_ticcmd.h d_clisrv.h d_netcmd.h \
- command.h g_game.h d_event.h i_net.h i_system.h m_argv.h d_net.h \
- d_netfil.h z_zone.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/i_main.o: $(INTERFACE)/i_main.c doomdef.h \
- doomtype.h g_state.h m_swap.h \
- m_argv.h d_main.h d_event.h \
- w_wad.h i_system.h d_ticcmd.h
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/%.o: %.c
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/%.o: $(INTERFACE)/%.c
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-$(O)/%.o: hardware/%.c
-	$(CC) $(CFLAGS) $(LDFLAGS) $(WFLAGS) -c $< -o $@
-
-ifdef OS2
-$(O)/%.res: os2/%.rc
-	rc.exe -i .\os2 -r $< $@
+dll : opengl_dll
+ifdef MINGW
+all_dll: opengl_dll minigl_dll ds3d_dll fmod_dll openal_dll
+opengl_dll : $(OBJDIR)/r_opengl.o $(OBJDIR)/ogl_win.o hardware/r_mingw.def
+	@echo Linking R_OpenGL.dll...
+	$(DLLWRAP) --def hardware/r_mingw.def $(OBJDIR)/r_opengl.o $(OBJDIR)/ogl_win.o -lopengl32 -lglu32 -lgdi32 -mwindows $(M5) $(CFLAGS) -DUSE_WGL_SWAP -DUSE_PALETTED_TEXTURE -o $(BIN)/r_opengl.dll
+
+minigl_dll: $(OBJDIR)/r_minigl.o hardware/r_mingw.def
+	@echo Linking R_MiniGL.dll...
+	$(DLLWRAP) --def hardware/r_mingw.def $(OBJDIR)/r_minigl.o -lopengl32 -lglu32 -lgdi32 -mwindows $(M5) $(CFLAGS) -DUSE_WGL_SWAP -o $(BIN)/r_minigl.dll
+
+ds3d_dll: $(OBJDIR)/s_ds3d.o hardware/s_mingw.def
+	@echo Linking S_DS3d.dll...
+	$(DLLWRAP) --def hardware/s_mingw.def $(OBJDIR)/s_ds3d.o -ldsound -luuid -mwindows $(M5) $(CFLAGS) -o $(BIN)/s_ds3d.dll
+
+fmod_dll: $(OBJDIR)/s_fmod.o hardware/s_mingw.def
+	@echo Linking S_FMOD.dll...
+	$(DLLWRAP) --def hardware/s_mingw.def $(OBJDIR)/s_fmod.o -lfmod -mwindows $(M5) $(CFLAGS) -o $(BIN)/s_fmod.dll
+
+openal_dll: $(OBJDIR)/s_openal.o hardware/s_mingw.def
+	@echo Linking S_OpenAL.dll...
+	$(DLLWRAP) --def hardware/s_mingw.def $(OBJDIR)/s_openal.o -lopenal32 -mwindows $(M5) $(CFLAGS) -o $(BIN)/s_openal.dll
+else
+all_dll: fmod_so openal_so
+
+fmod_so: $(OBJDIR)/s_fmod.o
+	@echo Linking S_FMOD.so...
+	$(CC) $(CFLAGS) -Os -o $(BIN)/s_fmod.so -shared -nostartfiles $(OBJDIR)/s_fmod.o -L. -lfmod -lm
+
+openal_so: $(OBJDIR)/s_openal.o
+	@echo Linking S_OpenAL.so...
+	$(CC) $(CFLAGS) -Os -o $(BIN)/s_openal.so -shared -nostartfiles $(OBJDIR)/s_openal.o -lopenal -lm
+
+endif
+
+else
+ifdef SDL
+ifdef MINGW
+$(OBJDIR)/r_opengl.o: hardware/r_opengl/r_opengl.c hardware/r_opengl/r_opengl.h \
+ doomdef.h doomtype.h g_state.h m_swap.h hardware/hw_drv.h screen.h \
+ command.h hardware/hw_data.h hardware/hw_glide.h hardware/hw_defs.h \
+ hardware/hw_md2.h hardware/hw_glob.h hardware/hw_main.h am_map.h \
+ d_event.h d_player.h p_pspr.h m_fixed.h tables.h info.h d_think.h \
+ p_mobj.h doomdata.h d_ticcmd.h r_defs.h hardware/hw_dll.h
+	$(CC) $(CFLAGS) $(WFLAGS) -c $< -o $@
+else
+$(OBJDIR)/r_opengl.o: hardware/r_opengl/r_opengl.c hardware/r_opengl/r_opengl.h \
+ doomdef.h doomtype.h g_state.h m_swap.h hardware/hw_drv.h screen.h \
+ command.h hardware/hw_data.h hardware/hw_glide.h hardware/hw_defs.h \
+ hardware/hw_md2.h hardware/hw_glob.h hardware/hw_main.h am_map.h \
+ d_event.h d_player.h p_pspr.h m_fixed.h tables.h info.h d_think.h \
+ p_mobj.h doomdata.h d_ticcmd.h r_defs.h hardware/hw_dll.h
+	$(CC) $(CFLAGS) $(WFLAGS) -I/usr/X11R6/include -c $< -o $@
+endif
+endif
+
+endif
+
+#dependecy made by gcc itself !
+$(OBJS):
+ifndef DUMMY
+-include $(OBJDIR)/depend.dep
+endif
+
+$(OBJDIR)/depend.dep:
+	@echo "Creating dependency file, depend.dep"
+	$(CC) $(CFLAGS) -MM *.c > $(OBJDIR)/depend.ped
+	$(CC) $(CFLAGS) -MM $(INTERFACE)/*.c >> $(OBJDIR)/depend.ped
+ifndef NOHW
+	$(CC) $(CFLAGS) -MM hardware/*.c >> $(OBJDIR)/depend.ped
+endif
+	@sed -e 's,\(.*\)\.o: ,$(subst /,\/,$(OBJDIR))\/&,g' < $(OBJDIR)/depend.ped > $(OBJDIR)/depend.dep
+	$(REMOVE) $(OBJDIR)/depend.ped
+	@echo "Created dependency file, depend.dep"
+
+ifdef DC
+$(OBJDIR)/v_video.o: v_video.c doomdef.h doomtype.h g_state.h m_swap.h r_local.h \
+  tables.h m_fixed.h screen.h command.h m_bbox.h r_main.h d_player.h \
+  p_pspr.h info.h d_think.h sounds.h p_mobj.h doomdata.h d_ticcmd.h \
+  r_data.h r_defs.h r_state.h r_bsp.h r_segs.h r_plane.h r_sky.h \
+  r_things.h r_draw.h v_video.h hu_stuff.h d_event.h w_wad.h console.h \
+  i_video.h z_zone.h doomstat.h d_clisrv.h d_netcmd.h
+	$(CC) $(CFLAGS) -fno-omit-frame-pointer $(WFLAGS) -c $< -o $@
+endif
+
+$(OBJDIR)/%.o: %.c
+	$(CC) $(CFLAGS) $(WFLAGS) -c $< -o $@
+
+$(OBJDIR)/%.o: $(INTERFACE)/%.c
+	$(CC) $(CFLAGS) $(WFLAGS) -c $< -o $@
+
+$(OBJDIR)/%.o: hardware/%.c
+	$(CC) $(CFLAGS) $(WFLAGS) -c $< -o $@
+
+$(OBJDIR)/%.o: %.nas
+	$(NASM) -o $@ -f $(NASMFORMAT) $<
+
+$(OBJDIR)/vid_copy.o: vid_copy.s asm_defs.inc
+	$(CC) $(OPTS) -x assembler-with-cpp -c $< -o $@
+
+$(OBJDIR)/%.o: %.s
+	$(CC) $(OPTS) -x assembler-with-cpp -c $< -o $@
+
+$(OBJDIR)/SRB2.res: win32/Srb2win.rc win32/afxres.h win32/resource.h
+	$(WINDRES) -i $< -O rc $(WINDRESFLAGS) --include-dir=win32 -o $@ -O coff
+
+ifdef DC
+$(OBJDIR)/romdisk.img:
+	$(KOS_GENROMFS) -f romdisk.img -d ../data -v
+
+$(OBJDIR)/romdisk.o: romdisk.img
+	$(KOS_BASE)/utils/bin2o/bin2o romdisk.img romdisk romdisk.o
+
+$(OBJDIR)/dchelp.o: $(INTERFACE)/SRB2DC/dchelp.c
+		$(CC) $(CFLAGS) $(WFLAGS) -c $< -o $@
+
+$(OBJDIR)/i_udp.o: $(INTERFACE)/SRB2DC/i_udp.c
+		$(CC) $(CFLAGS) $(WFLAGS) -c $< -o $@
+endif
+
+ifdef XBOX
+$(OBJDIR)/xboxhelp.o: $(INTERFACE)/SRB2XBOX/xboxhelp.c
+		$(CC) $(CFLAGS) $(WFLAGS) -c $< -o $@
+
+$(BIN)/$(BINNAME): $(BIN)/$(EXENAME)
+	$(CXBE) -OUT:"$@" -DUMPINFO:"$(BIN)/SRB2XBOX.cxbe"  -TITLE:"Sonic Robo Blast 2" $<
+endif
+
+ifdef MINGW
+ifndef SDL
+ifndef NOHW
+$(OBJDIR)/r_opengl.o: hardware/r_opengl/r_opengl.c hardware/r_opengl/r_opengl.h \
+ doomdef.h doomtype.h g_state.h m_swap.h hardware/hw_drv.h screen.h \
+ command.h hardware/hw_data.h hardware/hw_glide.h hardware/hw_defs.h \
+ hardware/hw_md2.h hardware/hw_glob.h hardware/hw_main.h am_map.h \
+ d_event.h d_player.h p_pspr.h m_fixed.h tables.h info.h d_think.h \
+ p_mobj.h doomdata.h d_ticcmd.h r_defs.h hardware/hw_dll.h
+	$(CC) $(CFLAGS) $(WFLAGS) -D_WINDOWS -mwindows -c $< -o $@
+
+$(OBJDIR)/ogl_win.o: hardware/r_opengl/ogl_win.c hardware/r_opengl/r_opengl.h \
+ doomdef.h doomtype.h g_state.h m_swap.h hardware/hw_drv.h screen.h \
+ command.h hardware/hw_data.h hardware/hw_glide.h hardware/hw_defs.h \
+ hardware/hw_md2.h hardware/hw_glob.h hardware/hw_main.h am_map.h \
+ d_event.h d_player.h p_pspr.h m_fixed.h tables.h info.h d_think.h \
+ p_mobj.h doomdata.h d_ticcmd.h r_defs.h hardware/hw_dll.h
+	$(CC) $(CFLAGS) $(WFLAGS) -D_WINDOWS -mwindows -c $< -o $@
+
+$(OBJDIR)/r_minigl.o: hardware/r_minigl/r_minigl.c hardware/r_opengl/r_opengl.h \
+ doomdef.h doomtype.h g_state.h m_swap.h hardware/hw_drv.h screen.h \
+ command.h hardware/hw_data.h hardware/hw_glide.h hardware/hw_defs.h \
+ hardware/hw_md2.h hardware/hw_glob.h hardware/hw_main.h am_map.h \
+ d_event.h d_player.h p_pspr.h m_fixed.h tables.h info.h d_think.h \
+ p_mobj.h doomdata.h d_ticcmd.h r_defs.h hardware/hw_dll.h
+	$(CC) $(CFLAGS) $(WFLAGS) -D_WINDOWS -mwindows -c $< -o $@
+endif
+
+ifndef NOHS
+$(OBJDIR)/s_ds3d.o: hardware/s_ds3d/s_ds3d.c hardware/hw3dsdrv.h \
+ hardware/hw_dll.h
+	$(CC) $(M5) -Os -o $(OBJDIR)/s_ds3d.o $(WFLAGS) -D_WINDOWS -mwindows -c hardware/s_ds3d/s_ds3d.c
+
+$(OBJDIR)/s_fmod.o: hardware/s_openal/s_openal.c hardware/hw3dsdrv.h \
+ hardware/hw_dll.h
+	$(CC) $(M5) -Os -o $(OBJDIR)/s_fmod.o $(WFLAGS) -D_WINDOWS -mwindows -c hardware/s_fmod/s_fmod.c
+
+$(OBJDIR)/s_openal.o: hardware/s_openal/s_openal.c hardware/hw3dsdrv.h \
+ hardware/hw_dll.h
+	$(CC) $(M5) -Os -o $(OBJDIR)/s_openal.o $(WFLAGS) -D_WINDOWS -mwindows -c hardware/s_openal/s_openal.c
+endif
+endif
+endif
+
+ifdef SDL
+ifdef STATICHS
+$(OBJDIR)/s_openal.o: hardware/s_openal/s_openal.c hardware/hw3dsdrv.h \
+ hardware/hw_dll.h
+	$(CC) $(CFLAGS) $(WFLAGS) -c $< -o $@
+
+$(OBJDIR)/s_fmod.o: hardware/s_fmod/s_fmod.c hardware/hw3dsdrv.h \
+ hardware/hw_dll.h
+	$(CC) $(CFLAGS) $(WFLAGS) -c $< -o $@
+
+ifdef MINGW
+$(OBJDIR)/s_ds3d.o: hardware/s_ds3d/s_ds3d.c hardware/hw3dsdrv.h \
+ hardware/hw_dll.h
+	$(CC) $(CFLAGS) $(WFLAGS) -c $< -o $@
+endif
+else
+
+$(OBJDIR)/s_fmod.o: hardware/s_fmod/s_fmod.c hardware/hw3dsdrv.h \
+ hardware/hw_dll.h
+	$(CC) $(M5) -Os -o $(OBJDIR)/s_fmod.o -DHW3SOUND -DUNIXLIKE -shared -nostartfiles -c hardware/s_fmod/s_fmod.c
+
+$(OBJDIR)/s_openal.o: hardware/s_openal/s_openal.c hardware/hw3dsdrv.h \
+ hardware/hw_dll.h
+	$(CC) $(M5) -Os -o $(OBJDIR)/s_openal.o -DHW3SOUND -DUNIXLIKE -shared -nostartfiles -c hardware/s_openal/s_openal.c
+endif
+
+ifndef NOFILTERS
+$(OBJDIR)/%.o: $(INTERFACE)/filter/%.c
+	@echo $< needs deps
+	$(CC) $(CFLAGS) $(WFLAGS) -c $< -o $@
+
+$(OBJDIR)/filters.o: $(INTERFACE)/filter/filters.c $(INTERFACE)/filter/filters.c \
+ $(INTERFACE)/filter/filters.h
+	$(CC) $(CFLAGS) $(WFLAGS) -c $< -o $@
+
+$(OBJDIR)/hq2x.o: $(INTERFACE)/filter/hq2x.c $(INTERFACE)/filter/hq2x.c \
+ $(INTERFACE)/filter/filters.h
+	$(CC) $(CFLAGS) $(WFLAGS) -c $< -o $@
+
+$(OBJDIR)/lq2x.o: $(INTERFACE)/filter/lq2x.c $(INTERFACE)/filter/lq2x.c \
+ $(INTERFACE)/filter/filters.h $(INTERFACE)/filter/interp.h \
+ $(INTERFACE)/filter/hq2x.h $(INTERFACE)/filter/lq2x.h
+	$(CC) $(CFLAGS) $(WFLAGS) -c $< -o $@
+endif
 endif
 
 #############################################################

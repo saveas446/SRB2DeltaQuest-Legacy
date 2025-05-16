@@ -1,8 +1,6 @@
 // Emacs style mode select   -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id: midstuff.h,v 1.2 2000/02/27 00:42:12 hurdler Exp $
-//
 // Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
@@ -14,24 +12,13 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-//
-// $Log: midstuff.h,v $
-// Revision 1.2  2000/02/27 00:42:12  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:33  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
-// DESCRIPTION:
-//      MIDI structures and definitions used by the MSTREAM sample
-//      application in converting a MID file to a MIDI stream for
-//      playback using the midiStream API.
-//      Inpired by DirectX5 SDK examples
-//
 //-----------------------------------------------------------------------------
-
+/// \file
+/// \brief MIDI structures and definitions
+///	used by the MSTREAM sample	application in
+///	converting a MID file to a MIDI stream for
+///	playback using the midiStream API.
+///	Inpired by DirectX5 SDK examples
 
 #ifndef __MIDSTUFF_H__
 #define __MIDSTUFF_H__
@@ -69,12 +56,12 @@
 // Macros for swapping hi/lo-endian data
 //
 #define WORDSWAP(w)     (((w) >> 8) | \
-                        (((w) << 8) & 0xFF00))
+						(((w) << 8) & 0xFF00))
 
 #define DWORDSWAP(dw)   (((dw) >> 24) |                 \
-                        (((dw) >> 8) & 0x0000FF00) |    \
-                        (((dw) << 8) & 0x00FF0000) |    \
-                        (((dw) << 24) & 0xFF000000))
+						(((dw) >> 8) & 0x0000FF00) |    \
+						(((dw) << 8) & 0x00FF0000) |    \
+						(((dw) << 24) & 0xFF000000))
 
 // In debug builds, TRACKERR will show us where the parser died
 //
@@ -87,7 +74,7 @@
 // that deal with both in-memory buffers and the file on disk
 
 #define FILEOFF DWORD
-                        
+						
 
 // These structures are stored in MIDI files; they need to be byte aligned.
 //
@@ -97,16 +84,16 @@
 //
 typedef struct
 {
-    DWORD       dwTag;                  // Type
-    DWORD       dwChunkLength;          // Length (hi-lo)
+	DWORD       dwTag;                  // Type
+	DWORD       dwChunkLength;          // Length (hi-lo)
 } MIDICHUNK;
 
 // Contents of MThd chunk.
 typedef struct
 {
-    WORD        wFormat;                // Format (hi-lo)
-    WORD        wTrackCount;            // # tracks (hi-lo)
-    WORD        wTimeDivision;          // Time division (hi-lo)
+	WORD        wFormat;                // Format (hi-lo)
+	WORD        wTrackCount;            // # tracks (hi-lo)
+	WORD        wTimeDivision;          // Time division (hi-lo)
 } MIDIFILEHDR;
 
 #pragma pack() // End of need for byte-aligned structures
@@ -117,10 +104,10 @@ typedef struct
 //
 typedef struct
 {
-    DWORD       tkEvent;        // Absolute time of event
-    BYTE        byShortData[4]; // Event type and parameters if channel msg
-    DWORD       dwEventLength;  // Length of data which follows if meta or sysex
-    LPBYTE      pLongData;      // -> Event data if applicable
+	DWORD       tkEvent;        // Absolute time of event
+	BYTE        byShortData[4]; // Event type and parameters if channel msg
+	DWORD       dwEventLength;  // Length of data which follows if meta or sysex
+	LPBYTE      pLongData;      // -> Event data if applicable
 } TEMPEVENT, *PTEMPEVENT;
 
 #define ITS_F_ENDOFTRK  0x00000001
@@ -129,19 +116,19 @@ typedef struct
 //
 typedef struct
 {
-    DWORD       fdwTrack;       // Track status
-    DWORD       dwTrackLength;  // Total bytes in track
-    DWORD       dwLeftInBuffer; // Bytes left unread in track buffer
-    LPBYTE      pTrackStart;    // -> start of track data buffer
-    LPBYTE      pTrackCurrent;  // -> next byte to read in buffer
-    DWORD       tkNextEventDue; // Absolute time of next event in track
-    BYTE        byRunningStatus;// Running status from last channel msg
+	DWORD       fdwTrack;       // Track status
+	DWORD       dwTrackLength;  // Total bytes in track
+	DWORD       dwLeftInBuffer; // Bytes left unread in track buffer
+	LPBYTE      pTrackStart;    // -> start of track data buffer
+	LPBYTE      pTrackCurrent;  // -> next byte to read in buffer
+	DWORD       tkNextEventDue; // Absolute time of next event in track
+	BYTE        byRunningStatus;// Running status from last channel msg
 
-    FILEOFF     foTrackStart;   // Start of track -- used for walking the file
-    FILEOFF     foNextReadStart;// File offset of next read from disk
-    DWORD       dwLeftOnDisk;   // Bytes left unread on disk
+	FILEOFF     foTrackStart;   // Start of track -- used for walking the file
+	FILEOFF     foNextReadStart;// File offset of next read from disk
+	DWORD       dwLeftOnDisk;   // Bytes left unread on disk
 #ifdef DEBUG
-    DWORD       nTrack;         // # of this track for debugging
+	DWORD       nTrack;         // # of this track for debugging
 #endif
 } INTRACKSTATE, *PINTRACKSTATE;
 
@@ -149,11 +136,11 @@ typedef struct
 //
 typedef struct
 {
-    DWORD       cbFileLength;           // Total bytes in file
-    DWORD       dwTimeDivision;         // Original time division
-    DWORD       dwFormat;               // Original format
-    DWORD       dwTrackCount;           // Track count (specifies pitsTracks size)
-    INTRACKSTATE *pitsTracks;           // -> array of tracks in this file
+	DWORD       cbFileLength;           // Total bytes in file
+	DWORD       dwTimeDivision;         // Original time division
+	DWORD       dwFormat;               // Original format
+	DWORD       dwTrackCount;           // Track count (specifies pitsTracks size)
+	INTRACKSTATE *pitsTracks;           // -> array of tracks in this file
 } INFILESTATE, *PINFILESTATE;
 
 #endif //__MIDSTUFF_H__

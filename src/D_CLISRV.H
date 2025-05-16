@@ -1,7 +1,5 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
-//
-// $Id: d_clisrv.h,v 1.7 2000/04/30 10:30:10 bpereira Exp $
 //
 // Copyright (C) 1998-2000 by DooM Legacy Team.
 //
@@ -14,253 +12,272 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-//
-// $Log: d_clisrv.h,v $
-// Revision 1.7  2000/04/30 10:30:10  bpereira
-// no message
-//
-// Revision 1.6  2000/04/24 20:24:38  bpereira
-// no message
-//
-// Revision 1.5  2000/04/19 10:56:51  hurdler
-// commited for exe release and tag only
-//
-// Revision 1.4  2000/04/16 18:38:06  bpereira
-// no message
-//
-// Revision 1.3  2000/04/06 20:32:26  hurdler
-// no message
-//
-// Revision 1.2  2000/02/27 00:42:10  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:32  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
-// DESCRIPTION:
-//      high level networking stuff
-//
 //-----------------------------------------------------------------------------
-
+/// \file
+/// \brief high level networking stuff
 
 #ifndef __D_CLISRV__
 #define __D_CLISRV__
 
 #include "d_ticcmd.h"
 #include "d_netcmd.h"
+#include "tables.h"
 
-//
+// more precise version number to compare in network
+#define SUBVERSION 004
+
 // Network play related stuff.
 // There is a data struct that stores network
 //  communication related stuff, and another
 //  one that defines the actual packets to
 //  be transmitted.
-//
 
 // Networking and tick handling related.
-#define BACKUPTICS            32
-#define DRONE               0x80    // bit set in consoleplayer
-
-#define MAXTEXTCMD           256
+#define BACKUPTICS 32
+#define MAXTEXTCMD 256
 //
 // Packet structure
 //
-typedef enum   {
-    NOTHING,      // to send a nop through network :)
-    SERVERCFG,    // server config used in start game (stay 1 for backward compatibility issue)
-                  // this is positive responce to CLIENTJOIN request
-    CLIENTCMD,    // ticcmd of the client
-    CLIENTMIS,    // same as above with but saying resend from
-    CLIENT2CMD,   // 2 cmd in the packed for splitscreen
-    CLIENT2MIS,   // same as above with but saying resend from
-    NODEKEEPALIVE,    // same but without ticcmd and consistancy
-    NODEKEEPALIVEMIS,
-    SERVERTICS,   // all cmd for the tic
-    SERVERREFUSE, // server refuse joiner (reson incide)
-    SERVERSHUTDOWN, // self explain
-    CLIENTQUIT,   // client close the connection
-	TIMEOUT, // Client times out Tails 03-30-2001
+typedef enum
+{
+	PT_NOTHING,       // To send a nop through the network. ^_~
+	PT_SERVERCFG,     // Server config used in start game
+	                  // (must stay 1 for backwards compatibility).
+	                  // This is a positive response to a CLIENTJOIN request.
+	PT_CLIENTCMD,     // Ticcmd of the client.
+	PT_CLIENTMIS,     // Same as above with but saying resend from.
+	PT_CLIENT2CMD,    // 2 cmds in the packet for splitscreen.
+	PT_CLIENT2MIS,    // Same as above with but saying resend from
+	PT_NODEKEEPALIVE, // Same but without ticcmd and consistancy
+	PT_NODEKEEPALIVEMIS,
+	PT_SERVERTICS,    // All cmds for the tic.
+	PT_SERVERREFUSE,  // Server refuses joiner (reason inside).
+	PT_SERVERSHUTDOWN,
+	PT_CLIENTQUIT,    // Client closes the connection.
 
-    ASKINFO,      // anyone can ask info to the server
-    SERVERINFO,   // send game & server info (gamespy)
-    REQUESTFILE,  // client request a file transfer
+	PT_ASKINFO,       // Anyone can ask info of the server.
+	PT_SERVERINFO,    // Send game & server info (gamespy).
+	PT_REQUESTFILE,   // Client requests a file transfer
 
-    CANFAIL,      // this is kind of priority, biger then CANFAIL the HSendPacket(,true,,) can return false
-                  // also this packet can't occupate all slotes
-    FILEFRAGMENT=CANFAIL, // a part of a file
-    TEXTCMD,      // extra text command from the client
-    TEXTCMD2,     // extra text command from the client (splitscreen)
-    CLIENTJOIN,   // client want to join used in start game
-    NUMPACKETTYPE
+	PT_CANFAIL,       // This is kind of a priority. Anything bigger than CANFAIL
+	                  // allows HSendPacket(,true,,) to return false.
+	                  // In addition, this packet can't occupy all the available slots.
+
+	PT_FILEFRAGMENT = PT_CANFAIL, // A part of a file.
+
+	PT_TEXTCMD,       // Extra text commands from the client.
+	PT_TEXTCMD2,      // Splitscreen text commands.
+	PT_CLIENTJOIN,    // Client wants to join; used in start game.
+	PT_NODETIMEOUT,   // Packet sent to self if the connection times out.
+	NUMPACKETTYPE
 } packettype_t;
 
-//#pragma pack(1)
-
 // client to server packet
-typedef struct {
-   byte        client_tic;
-   byte        resendfrom;
-   short       consistancy;
-   ticcmd_t    cmd;
+typedef struct
+{
+	byte client_tic;
+	byte resendfrom;
+	short consistancy;
+	ticcmd_t cmd;
 } clientcmd_pak;
 
 // splitscreen packet
-// WARNING : must have the same format of clientcmd_pak, for more easy use
-typedef struct {
-   byte        client_tic;
-   byte        resendfrom;
-   short       consistancy;
-   ticcmd_t    cmd;
-   ticcmd_t    cmd2;
+// WARNING: must have the same format of clientcmd_pak, for more easy use
+typedef struct
+{
+	byte client_tic;
+	byte resendfrom;
+	short consistancy;
+	ticcmd_t cmd, cmd2;
 } client2cmd_pak;
 
 // Server to client packet
-// this packet is too large !!!!!!!!!
-typedef struct {
-   byte        starttic;
-   byte        numtics;
-   byte        numplayers;
-   ticcmd_t    cmds[45]; // normaly [BACKUPTIC][MAXPLAYERS] but too large
-//   char        textcmds[BACKUPTICS][MAXTEXTCMD];
+// this packet is too large
+typedef struct
+{
+	byte starttic;
+	byte numtics;
+	byte numslots; // "Slots filled": Highest player number in use plus one.
+	ticcmd_t cmds[45]; // normally [BACKUPTIC][MAXPLAYERS] but too large
 } servertics_pak;
 
-typedef struct {
-   byte        version;    // exe from differant version don't work
-   ULONG       subversion; // contain build version and maybe crc
+#ifdef _MSC_VER
+#pragma warning(disable :  4200)
+#endif
 
-   // server lunch stuffs
-   byte        serverplayer;
-   byte        totalplayernum;
-   ULONG       gametic;
-   byte        clientnode;
-   byte        gamestate;
-   
-   ULONG       playerdetected; // playeringame vector in bit field
+typedef struct
+{
+	byte version; // different versions don't work
+	ULONG subversion; // contains build version
+
+	// server launch stuffs
+	byte serverplayer;
+	byte totalslotnum; // "Slots": highest player number in use plus one.
+	tic_t gametic;
+	byte clientnode;
+	byte gamestate;
+
+	ULONG playerdetected; // playeringame vector in bit field
+	byte gametype;
+	byte modifiedgame;
+	char adminplayer; // needs to be signed
+	byte netcvarstates[0];
 } serverconfig_pak;
 
-typedef struct {
-   byte        version;    // exe from differant version don't work
-   ULONG       subversion; // contain build version and maybe crc
-   byte        localplayers;
-   byte        mode;
+#ifdef _MSC_VER
+#pragma warning(default : 4200)
+#endif
+
+typedef struct
+{
+	byte version; // different versions don't work
+	ULONG subversion; // contains build version
+	byte localplayers;
+	byte mode;
 } clientconfig_pak;
 
-typedef struct {
-   char        fileid;
-   ULONG       position;
-   USHORT      size;
-   byte        data[100];  // size is variable using hardare_MAXPACKETLENGTH
+typedef struct
+{
+	char fileid;
+	ULONG position;
+	USHORT size;
+	byte data[100]; // size is variable using hardare_MAXPACKETLENGTH
 } filetx_pak;
 
-typedef struct {
-    byte       version;
-    ULONG      subversion;
-    byte       numberofplayer;
-    byte       maxplayer;
-    byte       deathmatch;
-	byte	   gametype; // Tails 03-13-2001
-    ULONG      time;
-    float      load;        // unused for the moment
-    char       mapname[8];
-    byte       fileneedednum;
-    byte       fileneeded[300];   // will fileed with writexxx (byteptr.h)
+#define MAXSERVERNAME 32
+typedef struct
+{
+	byte version;
+	ULONG subversion;
+	byte numberofplayer;
+	byte maxplayer;
+	byte gametype;
+	byte modifiedgame;
+	char adminplayer; // needs to be signed
+	tic_t time;
+	fixed_t load; // unused for the moment
+	char mapname[8];
+	char servername[MAXSERVERNAME];
+	byte fileneedednum;
+	byte fileneeded[4096]; // is filled with writexxx (byteptr.h)
 } serverinfo_pak;
 
-typedef struct {
-   byte        version;
-   ULONG       time;          // used for ping evaluation
+#define MAXSERVERLIST 32 // depends only on the display
+typedef struct
+{
+	serverinfo_pak info;
+	signed char node;
+} serverelem_t;
+
+extern serverelem_t serverlist[MAXSERVERLIST];
+extern unsigned int serverlistcount;
+extern int mapchangepending;
+
+typedef struct
+{
+	byte version;
+	tic_t time; // used for ping evaluation
 } askinfo_pak;
 
-typedef struct {
-    char       reason[255];
+typedef struct
+{
+	char reason[255];
 } serverrefuse_pak;
-
 
 //
 // Network packet data.
 //
 typedef struct
-{                
-    unsigned   checksum;
-    byte       ack;           // if not null the node ask a acknolegement
-                              // the receiver must to resend the ack
-    byte       ackreturn;     // the return of the ack number
+{
+	unsigned checksum;
+	byte ack; // if not null the node asks for acknowledgement, the receiver must resend the ack
+	byte ackreturn; // the return of the ack number
 
-    byte       packettype;
-    union  {   clientcmd_pak     clientpak;
-               client2cmd_pak    client2pak;
-               servertics_pak    serverpak;
-               serverconfig_pak  servercfg;
-               byte              textcmd[MAXTEXTCMD+1];
-               filetx_pak        filetxpak;
-               clientconfig_pak  clientcfg;
-               serverinfo_pak    serverinfo;
-               serverrefuse_pak  serverrefuse;
-               askinfo_pak       askinfo;
-           } u;
-
+	byte packettype;
+	byte reserved; // padding
+	union
+	{
+		clientcmd_pak clientpak;
+		client2cmd_pak client2pak;
+		servertics_pak serverpak;
+		serverconfig_pak servercfg;
+		byte textcmd[MAXTEXTCMD+1];
+		filetx_pak filetxpak;
+		clientconfig_pak clientcfg;
+		serverinfo_pak serverinfo;
+		serverrefuse_pak serverrefuse;
+		askinfo_pak askinfo;
+	} u;
 } doomdata_t;
 
-//#pragma pack()
-
 // points inside doomcom
-extern  doomdata_t*   netbuffer;        
+extern doomdata_t *netbuffer;
 
 extern consvar_t cv_playdemospeed;
 
-#define BASEPACKETSIZE ((int)&( ((doomdata_t *)0)->u))
-#define FILETXHEADER   ((int)((filetx_pak *)0)->data)
+#define BASEPACKETSIZE ((size_t)&(((doomdata_t *)0)->u))
+#define FILETXHEADER ((size_t)((filetx_pak *)0)->data)
+#define BASESERVERTICSSIZE ((size_t)&(((doomdata_t *)0)->u.serverpak.cmds[0]))
 
-extern boolean   dedicated;
-extern boolean   server;
-extern USHORT    software_MAXPACKETLENGHT;
-extern boolean   acceptnewnode;
-extern char      servernode;
-extern boolean   drone;
+#define KICK_MSG_GO_AWAY     1
+#define KICK_MSG_CON_FAIL    2
+#define KICK_MSG_PLAYER_QUIT 3
+#define KICK_MSG_TIMEOUT     4
+#define KICK_MSG_BANNED      5
 
-extern consvar_t cv_allownewplayer;
-extern consvar_t cv_maxplayers;
-extern boolean   notimecheck; // check file time through network ?  
+extern boolean server;
+extern boolean dedicated; // for dedicated server
+extern USHORT software_MAXPACKETLENGTH;
+extern boolean acceptnewnode;
+extern signed char servernode;
 
-// used in d_net, the only depandence
-int    ExpandTics (int low);
-void   D_ClientServerInit (void);
+void    Command_Ping_f(void);
+extern  tic_t  connectiontimeout;
+
+extern consvar_t cv_disallownewplayer, cv_allownewplayer, cv_maxplayers, cv_maxsend;
+
+// used in d_net, the only dependence
+tic_t ExpandTics(int low);
+void D_ClientServerInit(void);
 
 // initialise the other field
-void   RegisterNetXCmd(netxcmd_t id,void (*cmd_f) (char **p,int playernum));
-void   SendNetXCmd(byte id,void *param,int nparam);
-void   SendNetXCmd2(byte id,void *param,int nparam); // splitsreen player
+void RegisterNetXCmd(netxcmd_t id, void (*cmd_f)(char **p, int playernum));
+void SendNetXCmd(netxcmd_t id, void *param, size_t nparam);
+void SendNetXCmd2(netxcmd_t id, void *param, size_t nparam); // splitsreen player
 
 // Create any new ticcmds and broadcast to other players.
-void   NetUpdate (void);
-void   D_PredictPlayerPosition(void);
+void NetUpdate(void);
 
-boolean SV_AddWaitingPlayers(void);
-void    SV_StartSinglePlayerServer(void);
-boolean SV_SpawnServer( void );
-void    SV_SpawnPlayer(int playernum,mobj_t *mobj); 
-void    SV_StopServer( void );
-void    SV_ResetServer( void );
+void SV_StartSinglePlayerServer(void);
+boolean SV_SpawnServer(void);
+void SV_SpawnPlayer(int playernum, int x, int y, angle_t angle);
+void SV_StopServer(void);
+void SV_ResetServer(void);
 
-void CL_AddSplitscreenPlayer( void );
-void CL_RemoveSplitscreenPlayer( void );
-
+void CL_AddSplitscreenPlayer(void);
+void CL_RemoveSplitscreenPlayer(void);
+void CL_Reset(void);
+void CL_UpdateServerList(boolean internetsearch);
+// is there a game running
+boolean Playing(void);
 
 // Broadcasts special packets to other players
 //  to notify of game exit
-void   D_QuitNetGame (void);
+void D_QuitNetGame(void);
 
 //? how many ticks to run?
-void   TryRunTics (int realtic);
+void TryRunTics(tic_t realtic);
 
 // extra data for lmps
-boolean AddLmpExtradata(byte **demo_p,int playernum);
-void   ReadLmpExtraData(byte **demo_pointer,int playernum);
+boolean AddLmpExtradata(byte **demo_p, int playernum);
+void ReadLmpExtraData(byte **demo_pointer, int playernum);
 
 // translate a playername in a player number return -1 if not found and
 // print a error message in the console
-int    nametonum(char *name);
+char nametonum(const char *name);
+
+extern char adminpassword[9], motd[256];
+
+int D_NumPlayers(void);
 
 #endif

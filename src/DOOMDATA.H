@@ -1,10 +1,8 @@
 // Emacs style mode select   -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id: doomdata.h,v 1.3 2000/04/04 00:32:45 stroggonmeth Exp $
-//
 // Copyright (C) 1993-1996 by id Software, Inc.
-// Portions Copyright (C) 1998-2000 by DooM Legacy Team.
+// Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -15,25 +13,12 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-//
-// $Log: doomdata.h,v $
-// Revision 1.3  2000/04/04 00:32:45  stroggonmeth
-// Initial Boom compatability plus few misc changes all around.
-//
-// Revision 1.2  2000/02/27 00:42:10  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:32  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
-// DESCRIPTION:
-//      all external data is defined here
-//      most of the data is loaded into different structures at run time
-//      some internal structures shared by many modules are here
-//
 //-----------------------------------------------------------------------------
+/// \file
+/// \brief all external data is defined here
+/// 
+///	most of the data is loaded into different structures at run time
+///	some internal structures shared by many modules are here
 
 #ifndef __DOOMDATA__
 #define __DOOMDATA__
@@ -43,8 +28,6 @@
 
 // Some global defines, that configure the game.
 #include "doomdef.h"
-
-
 
 //
 // Map level types.
@@ -56,56 +39,62 @@
 // to provide a complete scene geometry description.
 enum
 {
-  ML_LABEL,             // A separator, name, ExMx or MAPxx
-  ML_THINGS,            // Monsters, items..
-  ML_LINEDEFS,          // LineDefs, from editing
-  ML_SIDEDEFS,          // SideDefs, from editing
-  ML_VERTEXES,          // Vertices, edited and BSP splits generated
-  ML_SEGS,              // LineSegs, from LineDefs split by BSP
-  ML_SSECTORS,          // SubSectors, list of LineSegs
-  ML_NODES,             // BSP nodes
-  ML_SECTORS,           // Sectors, from editing
-  ML_REJECT,            // LUT, sector-sector visibility        
-  ML_BLOCKMAP           // LUT, motion clipping, walls/grid element
+	ML_LABEL,    // A separator, name, MAPxx
+	ML_THINGS,   // Enemies, rings, monitors, scenery, etc.
+	ML_LINEDEFS, // Linedefs, from editing
+	ML_SIDEDEFS, // Sidedefs, from editing
+	ML_VERTEXES, // Vertices, edited and BSP splits generated
+	ML_SEGS,     // Linesegs, from linedefs split by BSP
+	ML_SSECTORS, // Subsectors, list of linesegs
+	ML_NODES,    // BSP nodes
+	ML_SECTORS,  // Sectors, from editing
+	ML_REJECT,    // LUT, sector-sector visibility
+	ML_BLOCKMAP,  // LUT, motion clipping, walls/grid element
 };
 
+// Skill flags.
+#define MTF_EASY 1
+#define MTF_NORMAL 2
+#define MTF_HARD 4
+
+// Deaf monsters/do not react to sound.
+#define MTF_AMBUSH 8
+
+// "Multi" flag with a few special uses
+#define MTF_MULTI 16
 
 // A single Vertex.
 typedef struct
 {
-  short         x;
-  short         y;
+	short x, y;
 } mapvertex_t;
 
+typedef struct
+{
+	int x, y;
+} dbgmapvertex_t;
 
 // A SideDef, defining the visual appearance of a wall,
 // by setting textures and offsets.
 typedef struct
 {
-  short         textureoffset;
-  short         rowoffset;
-  char          toptexture[8];
-  char          bottomtexture[8];
-  char          midtexture[8];
-  // Front sector, towards viewer.
-  short         sector;
+	short textureoffset, rowoffset;
+	char toptexture[8], bottomtexture[8], midtexture[8];
+	// Front sector, towards viewer.
+	short sector;
 } mapsidedef_t;
-
-
 
 // A LineDef, as used for editing, and as input
 // to the BSP builder.
 typedef struct
 {
-  short         v1;
-  short         v2;
-  short         flags;
-  short         special;
-  short         tag;
-  // sidenum[1] will be -1 if one sided
-  short         sidenum[2];             
+	short v1, v2;
+	short flags;
+	short special;
+	short tag;
+	// sidenum[1] will be -1 if one sided
+	short sidenum[2];
 } maplinedef_t;
-
 
 //
 // LineDef attributes.
@@ -117,8 +106,7 @@ typedef struct
 // Blocks monsters only.
 #define ML_BLOCKMONSTERS        2
 
-// Backside will not be present at all
-//  if not two sided.
+// Backside will not be present at all if not two sided.
 #define ML_TWOSIDED             4
 
 // If a texture is pegged, the texture will have
@@ -134,46 +122,61 @@ typedef struct
 #define ML_DONTPEGTOP           8
 
 // lower texture unpegged
-#define ML_DONTPEGBOTTOM        16      
+#define ML_DONTPEGBOTTOM       16
 
-// In AutoMap: don't map as two sided: IT'S A SECRET!
-#define ML_SECRET               32
+// Don't activate this special on Easy mode.
+#define ML_NOEASY              32
 
-// Sound rendering: don't let sound cross two of these.
-#define ML_SOUNDBLOCK           64
+// Don't let Knuckles climb on this line
+#define ML_NOCLIMB             64
 
-// Don't draw on the automap at all.
-#define ML_DONTDRAW             128
+// Don't activate this special on Normal mode.
+#define ML_NONORMAL           128
 
-// Set if already seen, thus drawn in automap.
-#define ML_MAPPED               256
+// Don't activate this special on Hard mode.
+#define ML_NOHARD             256
 
-//SoM: 3/29/2000: If flag is set, the player can use through it.
-#define ML_PASSUSE              512
+// Unused except for effects.
+#define ML_PASSUSE            512
+#define ML_ALLTRIGGER        1024
 
-//SoM: 4/1/2000: If flag is set, anything can trigger the line.
-#define ML_ALLTRIGGER           1024
+// New ones to disable lines for characters
+#define ML_NOSONIC           2048
+#define ML_NOTAILS           4096
+#define ML_NOKNUX            8192
 
-
+// Bounce off walls!
+#define ML_BOUNCY           16384
 
 // Sector definition, from editing.
 typedef struct
 {
-  short         floorheight;
-  short         ceilingheight;
-  char          floorpic[8];
-  char          ceilingpic[8];
-  short         lightlevel;
-  short         special;
-  short         tag;
+	short floorheight;
+	short ceilingheight;
+	char floorpic[8];
+	char ceilingpic[8];
+	short lightlevel;
+	short special;
+	short tag;
 } mapsector_t;
+
+typedef struct
+{
+	int floorheight;
+	int ceilingheight;
+	char floorpic[8];
+	char ceilingpic[8];
+	int lightlevel;
+	int special;
+	int tag;
+} dbgmapsector_t;
 
 // SubSector, as generated by BSP.
 typedef struct
 {
-  short         numsegs;
-  // Index of first one, segs are stored sequentially.
-  short         firstseg;       
+	short numsegs;
+	// Index of first one, segs are stored sequentially.
+	short firstseg;
 } mapsubsector_t;
 
 
@@ -181,55 +184,46 @@ typedef struct
 // using partition lines selected by BSP builder.
 typedef struct
 {
-  short         v1;
-  short         v2;
-  short         angle;          
-  short         linedef;
-  short         side;
-  short         offset;
+	short v1, v2;
+	short angle;
+	short linedef;
+	short side;
+	short offset;
 } mapseg_t;
-
-
 
 // BSP node structure.
 
 // Indicate a leaf.
-#define NF_SUBSECTOR    0x8000
+#define NF_SUBSECTOR 0x8000
 
 typedef struct
 {
-  // Partition line from (x,y) to x+dx,y+dy)
-  short         x;
-  short         y;
-  short         dx;
-  short         dy;
+	// Partition line from (x,y) to x+dx,y+dy)
+	short x, y;
+	short dx, dy;
 
-  // Bounding box for each child,
-  // clip against view frustum.
-  short         bbox[2][4];
+	// Bounding box for each child, clip against view frustum.
+	short bbox[2][4];
 
-  // If NF_SUBSECTOR its a subsector,
-  // else it's a node of another subtree.
-  unsigned short        children[2];
-
+	// If NF_SUBSECTOR it's a subsector, else it's a node of another subtree.
+	unsigned short children[2];
 } mapnode_t;
-
-
-
 
 // Thing definition, position, orientation and type,
 // plus skill/visibility flags and attributes.
 typedef struct
 {
-    short               x;
-    short               y;
-    short               angle;
-    short               type;
-    short               options;
+	short x, y;
+	short angle;
+	short type;
+	unsigned short options;
+	short z;
+	short oldnum; // 4001-4028 player starts
+	struct mobj_s *mobj;
 } mapthing_t;
 
+extern const char *Color_Names[MAXSKINCOLORS];
 
-extern char *Color_Names[MAXSKINCOLORS];
+#define NUMMAPS 1035
 
-
-#endif                  // __DOOMDATA__
+#endif // __DOOMDATA__

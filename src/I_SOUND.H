@@ -1,10 +1,8 @@
 // Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
-// $Id: i_sound.h,v 1.4 2000/04/19 15:21:02 hurdler Exp $
-//
 // Copyright (C) 1993-1996 by id Software, Inc.
-// Portions Copyright (C) 1998-2000 by DooM Legacy Team.
+// Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -15,128 +13,308 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-//
-// $Log: i_sound.h,v $
-// Revision 1.4  2000/04/19 15:21:02  hurdler
-// add SDL midi support
-//
-// Revision 1.3  2000/03/22 18:49:38  metzgermeister
-// added I_PauseCD() for Linux
-//
-// Revision 1.2  2000/02/27 00:42:10  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:32  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
-// DESCRIPTION:
-//      System interface, sound.
-//
 //-----------------------------------------------------------------------------
-
-#ifdef SDL
-#define I_StartupSound I_InitSound
-#include "i_sound_sdl.h"
-#else
+/// \file
+/// \brief System interface, sound, music and CD
 
 #ifndef __I_SOUND__
 #define __I_SOUND__
 
 #include "doomdef.h"
 #include "sounds.h"
+#include "command.h"
 
+/**	\brief Sound subsystem runing and waiting
+*/
+extern byte sound_started;
 
-void* I_GetSfx (sfxinfo_t*  sfx);
-void  I_FreeSfx (sfxinfo_t* sfx);
+/**	\brief info of samplerate
+*/
+extern consvar_t cv_samplerate;
+//extern consvar_t cv_rndsoundpitch;
 
+/**	\brief	The I_GetSfx function
 
-// Init at program start...
-void I_StartupSound();
+	\param	sfx	sfx to setup
 
-// ... update sound buffer and audio device at runtime...
-void I_UpdateSound(void);
-void I_SubmitSound(void);
+	\return	data for sfx
 
-// ... shut down and relase at program termination.
+	
+*/
+void *I_GetSfx(sfxinfo_t *sfx);
+
+/**	\brief	The I_FreeSfx function
+
+	\param	sfx	sfx to be freed up
+
+	\return	void
+
+	
+*/
+void I_FreeSfx(sfxinfo_t *sfx);
+
+/**	\brief Init at program start...
+*/
+void I_StartupSound(void);
+
+/**	\brief ... shut down and relase at program termination.
+*/
 void I_ShutdownSound(void);
-
 
 //
 //  SFX I/O
 //
 
-// Starts a sound in a particular sound channel.
-int
-I_StartSound
-( int           id,
-  int           vol,
-  int           sep,
-  int           pitch,
-  int           priority );
+/**	\brief	Starts a sound in a particular sound channel.
+	\param	id	sfxid
+	\param	vol	volume for sound
+	\param	sep	left-right balancle
+	\param	pitch	not used
+	\param	priority	not used
 
+	\return	sfx handle
 
-// Stops a sound channel.
+	
+*/
+int I_StartSound(int id, int vol, int sep, int pitch, int priority);
+
+/**	\brief	Stops a sound channel.
+
+	\param	handle	stop sfx handle
+
+	\return	void
+
+	
+*/
 void I_StopSound(int handle);
 
-// Called by S_*() functions
-//  to see if a channel is still playing.
-// Returns 0 if no longer playing, 1 if playing.
+/**	\brief	Called by S_*() functions to see if a channel is still playing.
+
+	\param	handle	sfx handle
+
+	\return	0 if no longer playing, 1 if playing.
+
+	
+*/
 int I_SoundIsPlaying(int handle);
 
-// Updates the volume, separation,
-//  and pitch of a sound channel.
-void
-I_UpdateSoundParams
-( int           handle,
-  int           vol,
-  int           sep,
-  int           pitch );
+/**	\brief	Updates the sfx handle
 
+	\param	handle	sfx handle
+	\param	vol	volume
+	\param	sep	separation
+	\param	pitch	ptich
+
+	\return	void
+
+	
+*/
+void I_UpdateSoundParams(int handle, int vol, int sep, int pitch);
+
+/**	\brief	The I_SetSfxVolume function
+
+	\param	volume	volume to set at
+
+	\return	void
+
+	
+*/
+void I_SetSfxVolume(int volume);
 
 //
 //  MUSIC I/O
 //
+/**	\brief Music subsystem runing and waiting
+*/
+extern byte music_started;
+
+/** \brief Init the music systems
+*/
 void I_InitMusic(void);
+
+/** \brief Shutdown the music systems
+*/
 void I_ShutdownMusic(void);
-// Volume.
-void I_SetMusicVolume(int volume);
-void I_SetSfxVolume(int volume);
-// PAUSE game handling.
+
+/**	\brief	PAUSE game handling.
+
+	\param	handle	song handle
+
+	\return	void
+
+	
+*/
 void I_PauseSong(int handle);
+
+/**	\brief	RESUME game handling
+
+	\param	handle	song handle
+
+	\return	void
+
+	
+*/
 void I_ResumeSong(int handle);
-// Registers a song handle to song data.
-int I_RegisterSong(void* data,int len);
-// Called by anything that wishes to start music.
-//  plays a song, and when the song is done,
-//  starts playing it again in an endless loop.
-// Horrible thing to do, considering.
-void
-I_PlaySong
-( int           handle,
-  int           looping );
-// Stops a song over 3 seconds.
+
+//
+//  MIDI I/O
+//
+
+/**	\brief MIDI subsystem runing and waiting
+*/
+extern byte midimusic_started;
+
+/**	\brief Startup the MIDI music system
+*/
+void I_InitMIDIMusic(void);
+
+/**	\brief Shutdown the MIDI music system
+*/
+void I_ShutdownMIDIMusic(void);
+
+/**	\brief	The I_SetMIDIMusicVolume function
+
+	\param	volume	volume to set at
+
+	\return	void
+
+	
+*/
+void I_SetMIDIMusicVolume(int volume);
+
+/**	\brief	Registers a song handle to song data.
+
+	\param	data	pointer to song data
+	\param	len	len of data
+
+	\return	song handle
+
+	\todo Remove this
+*/
+int I_RegisterSong(void *data, int len);
+
+/**	\brief	Called by anything that wishes to start music
+
+	\param	handle	Song handle
+	\param	looping	looping it if ture
+
+	\return	if true, it's playing the song
+
+	\todo pass music name, not handle
+*/
+boolean I_PlaySong(int handle, int looping);
+
+/**	\brief	Stops a song over 3 seconds
+
+	\param	handle	Song handle
+	\return	void
+
+	/todo drop handle
+*/
 void I_StopSong(int handle);
-// See above (register), then think backwards
+
+/**	\brief	See ::I_RegisterSong, then think backwards
+
+	\param	handle	song handle
+
+	\sa I_RegisterSong
+	\todo remove midi handle
+*/ 
 void I_UnRegisterSong(int handle);
 
-
-// i_cdmus.h : cd music interface
 //
-extern byte    cdaudio_started;
+//  DIGMUSIC I/O
+//
 
-void   I_InitCD (void);
-void   I_StopCD (void);
-#ifdef LINUX
-void   I_PauseCD (void);
-#endif
-void   I_ResumeCD (void);
-void   I_ShutdownCD (void);
-void   I_UpdateCD (void);
-void   I_PlayCD (int track, boolean looping);
-int    I_SetVolumeCD (int volume);  // return 0 on failure
+/**	\brief DigMusic subsystem runing and waiting
+*/
 
-#endif
+extern byte digmusic_started;
+
+/**	\brief Startup the music system
+*/
+void I_InitDigMusic(void);
+
+/**	\brief Shutdown the music system
+*/
+void I_ShutdownDigMusic(void);
+
+/**	\brief The I_StartDigSong function
+
+	\param	musicname	music lump name
+	\param	looping	if true, loop the song
+
+	\return	if true, song playing
+
+	
+*/
+boolean I_StartDigSong(const char *musicname, int looping);
+
+/**	\brief stop non-MIDI song
+*/
+void I_StopDigSong(void);
+
+/**	\brief The I_SetDigMusicVolume function
+
+	\param	volume	volume to set at
+
+	\return	void
+
+	
+*/
+void I_SetDigMusicVolume(int volume);
+
+//
+// CD MUSIC I/O
+//
+
+
+/**	\brief  cd music interface
+*/
+extern byte cdaudio_started;
+
+/**	\brief Startup the CD system
+*/
+void I_InitCD(void);
+
+/**	\brief Stop the CD playback
+*/
+void I_StopCD(void);
+
+/**	\brief Pause the CD playback
+*/
+void I_PauseCD(void);
+
+/**	\brief Resume the CD playback
+*/
+void I_ResumeCD(void);
+
+/**	\brief Shutdown the CD system
+*/
+void I_ShutdownCD(void);
+
+/**	\brief Update the CD info
+*/
+void I_UpdateCD(void);
+
+/**	\brief	The I_PlayCD function
+
+	\param	track	CD track number
+	\param	looping	if true, loop the track
+
+	\return	void
+
+	
+*/
+void I_PlayCD(int track, boolean looping);
+
+/**	\brief	The I_SetVolumeCD function
+
+	\param	volume	volume level to set at
+
+	\return	return 0 on failure
+	
+*/
+int I_SetVolumeCD(int volume);
 
 #endif

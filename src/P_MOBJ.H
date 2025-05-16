@@ -1,10 +1,8 @@
 // Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
-// $Id: p_mobj.h,v 1.4 2000/04/30 10:30:10 bpereira Exp $
-//
 // Copyright (C) 1993-1996 by id Software, Inc.
-// Portions Copyright (C) 1998-2000 by DooM Legacy Team.
+// Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -15,31 +13,12 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-//
-// $Log: p_mobj.h,v $
-// Revision 1.4  2000/04/30 10:30:10  bpereira
-// no message
-//
-// Revision 1.3  2000/04/04 00:32:47  stroggonmeth
-// Initial Boom compatability plus few misc changes all around.
-//
-// Revision 1.2  2000/02/27 00:42:10  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:32  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
-// DESCRIPTION:
-//      Map Objects, MObj, definition and handling.
-//
 //-----------------------------------------------------------------------------
-
+/// \file
+/// \brief Map Objects, MObj, definition and handling
 
 #ifndef __P_MOBJ__
 #define __P_MOBJ__
-
 
 // Basics.
 #include "tables.h"
@@ -48,16 +27,12 @@
 // We need the thinker_t stuff.
 #include "d_think.h"
 
-// We need the WAD data structure for Map things,
-// from the THINGS lump.
+// We need the WAD data structure for Map things, from the THINGS lump.
 #include "doomdata.h"
 
-// States are tied to finite states are
-//  tied to animation frames.
+// States are tied to finite states are tied to animation frames.
 // Needs precompiled tables/data structures.
 #include "info.h"
-
-
 
 //
 // NOTES: mobj_t
@@ -128,241 +103,298 @@
 //
 typedef enum
 {
-    // Call P_SpecialThing when touched.
-    MF_SPECIAL          = 0x0001,
-    // Blocks.
-    MF_SOLID            = 0x0002,
-    // Can be hit.
-    MF_SHOOTABLE        = 0x0004,
-    // Don't use the sector links (invisible but touchable).
-    MF_NOSECTOR         = 0x0008,
-    // Don't use the blocklinks (inert but displayable)
-    MF_NOBLOCKMAP       = 0x0010,
-
-    // Not to be activated by sound, deaf monster.
-    MF_AMBUSH           = 0x0020,
-    // Will try to attack right back.
-    MF_JUSTHIT          = 0x0040,
-    // Will take at least one step before attacking.
-    MF_JUSTATTACKED     = 0x0080,
-    // On level spawning (initial position),
-    //  hang from ceiling instead of stand on floor.
-    MF_SPAWNCEILING     = 0x0100,
-    // Don't apply gravity (every tic),
-    //  that is, object will float, keeping current height
-    //  or changing it actively.
-    MF_NOGRAVITY        = 0x0200,
-
-    // Movement flags.
-    // This allows jumps from high places.
-    MF_DROPOFF          = 0x0400,
-    // For players, will pick up items.
-    MF_PICKUP           = 0x0800,
-    // Player cheat. ???
-    MF_NOCLIP           = 0x1000,
-    // Player: keep info about sliding along walls.
-    MF_SLIDE            = 0x2000,
-    // Allow moves to any height, no gravity.
-    // For active floaters, e.g. cacodemons, pain elementals.
-    MF_FLOAT            = 0x4000,
-    // Don't cross lines
-    //   ??? or look at heights on teleport.
-    MF_TELEPORT         = 0x8000,
-    // Don't hit same species, explode on block.
-    // Player missiles as well as fireballs of various kinds.
-    MF_MISSILE          = 0x10000,
-    // Dropped by a demon, not level spawned.
-    // E.g. ammo clips dropped by dying former humans.
-    MF_DROPPED          = 0x20000,
-    // DOOM2: Use fuzzy draw (shadow demons or spectres),
-    //  temporary player invisibility powerup.
-    // LEGACY: no more for translucency, but still makes targeting harder
-    MF_SHADOW           = 0x40000,
-    // Flag: don't bleed when shot (use puff),
-    //  barrels and shootable furniture shall not bleed.
-    MF_NOBLOOD          = 0x80000,
-    // Don't stop moving halfway off a step,
-    //  that is, have dead bodies slide down all the way.
-    MF_CORPSE           = 0x100000,
-    // Floating to a height for a move, ???
-    //  don't auto float to target's height.
-    MF_INFLOAT          = 0x200000,
-
-    // On kill, count this enemy object
-    //  towards intermission kill total.
-    // Happy gathering.
-    MF_COUNTKILL        = 0x400000,
-
-    // On picking up, count this item object
-    //  towards intermission item total.
-    MF_COUNTITEM        = 0x800000,
-
-    // Special handling: skull in flight.
-    // Neither a cacodemon nor a missile.
-    MF_SKULLFLY         = 0x1000000,
-
-    // Don't spawn this object
-    //  in death match mode (e.g. key cards).
-    MF_NOTDMATCH        = 0x2000000,
-
-    // Player sprites in multiplayer modes are modified
-    //  using an internal color lookup table for re-indexing.
-    // If 0x4 0x8 or 0xc,
-    //  use a translation table for player colormaps
-    MF_TRANSLATION      = 0x3C000000,    // 0xc000000, original 4color
-
-    // Hmm ???.
-    MF_TRANSSHIFT       = 26,
-
-    // for chase camera, don't be blocked by things (parsial cliping)
-    MF_NOCLIPTHING      = 0x40000000
-
+	// Call P_TouchSpecialThing when touched.
+	MF_SPECIAL          = 0x0001,
+	// Blocks.
+	MF_SOLID            = 0x0002,
+	// Can be hit.
+	MF_SHOOTABLE        = 0x0004,
+	// Don't use the sector links (invisible but touchable).
+	MF_NOSECTOR         = 0x0008,
+	// Don't use the blocklinks (inert but displayable)
+	MF_NOBLOCKMAP       = 0x0010,
+	// Not to be activated by sound, deaf monster.
+	MF_AMBUSH           = 0x0020,
+	// You can push this object. It can activate switches and things by pushing it on top.
+	MF_PUSHABLE         = 0x0040,
+	// Object is a boss.
+	MF_BOSS             = 0x0080,
+	// On level spawning (initial position), hang from ceiling instead of stand on floor.
+	MF_SPAWNCEILING     = 0x0100,
+	// Don't apply gravity (every tic); object will float, keeping current height
+	//  or changing it actively.
+	MF_NOGRAVITY        = 0x0200,
+	// This object is an ambient sound.
+	MF_AMBIENT          = 0x0400,
+	// Slide this object when it hits a wall.
+	MF_SLIDEME          = 0x0800,
+	// Player cheat.
+	MF_NOCLIP           = 0x1000,
+	// This object does not adhere to regular flag/z properties for object placing.
+	MF_SPECIALFLAGS     = 0x2000,
+	// Allow moves to any height, no gravity. For active floaters.
+	MF_FLOAT            = 0x4000,
+	// Monitor powerup icon. These rise a bit.
+	MF_MONITORICON      = 0x8000,
+	// Don't hit same species, explode on block.
+	// Player missiles as well as fireballs of various kinds.
+	MF_MISSILE          = 0x10000,
+	// Item is a spring.
+	MF_SPRING           = 0x20000,
+	// Bounce off walls and things.
+	MF_BOUNCE           = 0x40000,
+	// Object uses a high-resolution sprite
+	MF_HIRES            = 0x80000,
+	// Item box
+	MF_MONITOR          = 0x100000,
+	// Don't run the thinker for this object.
+	MF_NOTHINK          = 0x200000,
+	// Fire object. Doesn't harm if you have fire shield.
+	MF_FIRE             = 0x400000,
+	// On picking up, count this item object towards intermission item total.
+	MF_COUNTITEM        = 0x800000,
+	// This mobj is an enemy!
+	MF_ENEMY            = 0x1000000,
+	// Scenery (uses scenery thinker).
+	MF_SCENERY          = 0x2000000,
+	// Player sprites in multiplayer modes are modified
+	//  using an internal color lookup table for re-indexing.
+	// If 0x4 0x8 or 0xc,
+	//  use a translation table for player colormaps
+	// 0xc000000, original 4color
+	MF_TRANSLATION      = 0x3c000000,
+	// Hmm ???.
+	MF_TRANSSHIFT       = 26,
+	// for chase camera, don't be blocked by things (partial clipping)
+	// (need comma at end of this for SOC editor)
+	MF_NOCLIPTHING      = 0x40000000,
+	// Run the action thinker on spawn.
+	MF_RUNSPAWNFUNC   = 0x80000000,
 } mobjflag_t;
 
-
-//
-//  New mobj extra flags
-//
-//added:28-02-98:
 typedef enum
 {
-    // The mobj stands on solid floor (not on another mobj or in air)
-    MF_ONGROUND          = 1,
-    // The mobj just hit the floor while falling, this is cleared on next frame
-    // (instant damage in lava/slime sectors to prevent jump cheat..)
-    MF_JUSTHITFLOOR      = 2,
-    // The mobj stands in a sector with water, and touches the surface
-    // this bit is set once and for all at the start of mobjthinker
-    MF_TOUCHWATER        = 4,
-    // The mobj stands in a sector with water, and his waist is BELOW the water surface
-    // (for player, allows swimming up/down)
-    MF_UNDERWATER        = 8,
-    // Set by P_MovePlayer() to disable gravity add in P_MobjThinker() ( for gameplay )
-    MF_SWIMMING          = 16,
-    // used for client prediction code, player can't be blocked in z by walls
-    // it is set temporarely when player follow the spirit
-    MF_NOZCHECKING       = 32,
-    // don't show it, is for player mobj only spirit is shown
-    MF_INVISIBLE         = 64
+	MF2_LOGRAV         =     0x00000001, // alternate gravity setting
+	MF2_AXIS           =     0x00000002, // It's a NiGHTS axis! (For faster checking)
+	MF2_DONTRESPAWN    =     0x00000004, // Don't respawn this object!
+	MF2_RINGORHOOP     =     0x00000008, // Ring or Hoop object
+	MF2_FRET           =     0x00000010, // Flashing from a previous hit
+	MF2_INFLOAT        =     0x00000020, // Floating to a height for a move, don't auto float to target's height.
+	MF2_DEBRIS         =     0x00000040, // Splash ring from explosion ring
+	MF2_NOTELEPORT     =     0x00000080, // does not teleport
+	MF2_NIGHTSPULL     =     0x00000100, // Attracted from a paraloop
+	MF2_JUSTATTACKED   =     0x00000200, // can be pushed by other moving mobjs
+	MF2_FIRING         =     0x00000400, // turret fire
+	MF2_ONMOBJ         =     0x00000800, // mobj is resting on top of another mobj
+	MF2_SKULLFLY       =     0x00001000, // Special handling: skull in flight.
+	MF2_CHAOSBOSS      =     0x00002000, // Boss has been spawned in chaos mode
+	MF2_BOSSNOTRAP     =     0x00004000, // No Egg Trap after boss
+	MF2_BOSSFLEE       =     0x00008000, // Boss is fleeing!
+	MF2_AUTOMATIC      =     0x00010000, // Thrown ring has automatic fire
+	MF2_RAILRING       =     0x00020000, // Thrown ring has rail capabilities
+	MF2_HOMING         =     0x00040000, // Thrown ring has homing capabilities
+	MF2_EXPLOSION      =     0x00080000, // Thrown ring has explosive properties
+	MF2_DONTDRAW       =     0X00100000, // Don't generate a vissprite
+	MF2_SLIDEPUSH      =     0x00200000, // MF_PUSHABLE that pushes continuously.
+	MF2_SHADOW         =     0x00400000, // Fuzzy draw, makes targeting harder.
+	MF2_STANDONME      =     0x00800000, // While not pushable, stand on me anyway.
+	MF2_SUPERFIRE      =     0x01000000, // Firing something with Super Sonic-stopping properties. Or, if mobj has MF_MISSILE, this is the actual fire from it.
+	MF2_CLASSICPUSH    =     0x02000000, // Drops straight down when object has negative Z.
+	MF2_NOCLIPHEIGHT   =     0x04000000, // Don't adjust z if below or above floorz/ceilingz
+} mobjflag2_t;
 
+//
+// Mobj extra flags
+//
+typedef enum
+{
+	// The mobj stands on solid floor (not on another mobj or in air)
+	MF_ONGROUND          = 1,
+	// The mobj just hit the floor while falling, this is cleared on next frame
+	// (instant damage in lava/slime sectors to prevent jump cheat..)
+	MF_JUSTHITFLOOR      = 2,
+	// The mobj stands in a sector with water, and touches the surface
+	// this bit is set once and for all at the start of mobjthinker
+	MF_TOUCHWATER        = 4,
+	// The mobj stands in a sector with water, and his waist is BELOW the water surface
+	// (for player, allows swimming up/down)
+	MF_UNDERWATER        = 8,
+	// used for ramp sectors
+	MF_JUSTSTEPPEDDOWN   = 16
 } mobjeflag_t;
 
-
-#if MAXSKINCOLOR > 16
-
-MAXSKINCOLOR have changed
-Change MF_TRANSLATION to take effect of the change
-
+#if MAXSKINCOLORS > 16
+"MAXSKINCOLORS has changed. Change MF_TRANSLATION to take effect of the change"
 #endif
 
 // Map Object definition.
 typedef struct mobj_s
 {
-    // List: thinker links.
-    thinker_t           thinker;
+	// List: thinker links.
+	thinker_t thinker;
 
-    // Info for drawing: position.
-    fixed_t             x;
-    fixed_t             y;
-    fixed_t             z;
+	// Info for drawing: position.
+	fixed_t x, y, z;
 
-    // More list: links in sector (if needed)
-    struct mobj_s*      snext;
-    struct mobj_s*      sprev;
+	// More list: links in sector (if needed)
+	struct mobj_s *snext;
+	struct mobj_s *sprev;
 
-    //More drawing info: to determine current sprite.
-    angle_t             angle;  // orientation
-    spritenum_t         sprite; // used to find patch_t and flip value
-    int                 frame;  // frame number, plus bits see p_pspr.h
+	// More drawing info: to determine current sprite.
+	angle_t angle;  // orientation
+	spritenum_t sprite; // used to find patch_t and flip value
+	int frame; // frame number, plus bits see p_pspr.h
 
-    //Fab:02-08-98
-    void*               skin;      // this one overrides 'sprite' when
-                                   // non NULL (currently hack for player
-                                   // bodies so they 'remember' the skin)
-                                   //
-                                   // secondary used when player die and
-                                   // play the die sound problem is he is
-                                   // already respawn and the corps play
-                                   // the sound !!! (he yeah it happens :\)
+	struct msecnode_s *touching_sectorlist; // a linked list of sectors where this object appears
 
-    // Interaction info, by BLOCKMAP.
-    // Links in blocks (if needed).
-    struct mobj_s*      bnext;
-    struct mobj_s*      bprev;
+	struct subsector_s *subsector; // Subsector the mobj resides in.
 
-    struct subsector_s* subsector;
+	// The closest interval over all contacted sectors (or things).
+	fixed_t floorz; // Nearest floor below.
+	fixed_t ceilingz; // Nearest ceiling above.
 
-    // The closest interval over all contacted Sectors (or Things).
-    fixed_t             floorz;
-    fixed_t             ceilingz;
+	// For movement checking.
+	fixed_t radius;
+	fixed_t height;
 
-    // For movement checking.
-    fixed_t             radius;
-    fixed_t             height;
+	// Momentums, used to update position.
+	fixed_t momx, momy, momz;
+	fixed_t pmomz; // If you're on a moving floor, its "momz" would be here
 
-    // Momentums, used to update position.
-    fixed_t             momx;
-    fixed_t             momy;
-    fixed_t             momz;
+	int tics; // state tic counter
+	state_t *state;
+	int flags; // flags from mobjinfo tables
 
-    // If == validcount, already checked.
-    //int                 validcount;
+	void *skin; // overrides 'sprite' when non-NULL (for player bodies to 'remember' the skin)
 
-    mobjtype_t          type;
-    mobjinfo_t*         info;   // &mobjinfo[mobj->type]
+	// Interaction info, by BLOCKMAP.
+	// Links in blocks (if needed).
+	struct mobj_s *bnext;
+	struct mobj_s *bprev;
 
-    int                 tics;   // state tic counter
-    state_t*            state;
-    int                 flags;
-    int                 eflags; //added:28-02-98: extra flags see above
-    int                 health;
+	// Additional pointers for NiGHTS hoops
+	struct mobj_s *hnext;
+	struct mobj_s *hprev;
+	
+	mobjtype_t type;
+	mobjinfo_t *info; // &mobjinfo[mobj->type]
 
-    // Movement direction, movement generation (zig-zagging).
-    int                 movedir;        // 0-7
-    int                 movecount;      // when 0, select a new dir
+	int eflags; // extra flags
+	int flags2; // MF2_ flags
+	int health; // for player this is rings + 1
 
-    // Thing being chased/attacked (or NULL),
-    // also the originator for missiles.
-    struct mobj_s*      target;
+	// Movement direction, movement generation (zig-zagging).
+	angle_t movedir; // 0-7; also used by Deton for up/down angle
+	int movecount; // when 0, select a new dir
 
-    // Reaction time: if non 0, don't attack yet.
-    // Used by player to freeze a bit after teleporting.
-    int                 reactiontime;
+	struct mobj_s *target; // Thing being chased/attacked (or NULL), and originator for missiles.
 
-    // If >0, the target will be chased
-    // no matter what (even if shot)
-    int                 threshold;
+	int reactiontime; // If not 0, don't attack yet.
 
-    // Additional info record for player avatars only.
-    // Only valid if type == MT_PLAYER
-    struct player_s*    player;
+	int threshold; // If >0, the target will be chased no matter what.
 
-    // Player number last looked for.
-    int                 lastlook;
+	// Additional info record for player avatars only.
+	// Only valid if type == MT_PLAYER
+	struct player_s *player;
 
-    // For nightmare and itemrespawn respawn.
-    mapthing_t          *spawnpoint;
+	int lastlook; // Player number last looked for.
 
-    // Thing being chased/attacked for tracers.
-    struct mobj_s*      tracer;
+	mapthing_t *spawnpoint; // Used for CTF flags, objectplace, and a handful other applications.
 
-    //SoM: Friction.
-    int friction;
-    int movefactor;
+	struct mobj_s *tracer; // Thing being chased/attacked for tracers.
 
-    // a linked list of sectors where this object appears
-    struct msecnode_s* touching_sectorlist;
+	int friction;
+	int movefactor;
 
-    // WARNING : new field are not automatically added to save game 
-    //SOM: Added fuse
-    int                 fuse;
-    int			waterz; // Water height Tails
+	int fuse; // Does something in P_MobjThinker on reaching 0.
+	int watertop; // top of the water FOF the mobj is in
+	int waterbottom; // bottom of the water FOF the mobj is in
+
+	int mobjnum; // A unique number for this mobj. Used for restoring pointers on save games.
+
+	// WARNING: New fields must be added separately to savegame.
 } mobj_t;
 
+//
+// For precipitation
+//
+// Sometimes this is casted to a mobj_t,
+// so please keep the start of the
+// structure the same.
+//
+typedef struct precipmobj_s
+{
+	// List: thinker links.
+	thinker_t thinker;
+
+	// Info for drawing: position.
+	fixed_t x, y, z;
+
+	// More list: links in sector (if needed)
+	struct precipmobj_s *snext;
+	struct precipmobj_s *sprev;
+
+	// More drawing info: to determine current sprite.
+	angle_t angle;  // orientation
+	spritenum_t sprite; // used to find patch_t and flip value
+	int frame; // frame number, plus bits see p_pspr.h
+
+	struct mprecipsecnode_s *touching_sectorlist; // a linked list of sectors where this object appears
+
+	struct subsector_s *subsector; // Subsector the mobj resides in.
+
+	// The closest interval over all contacted sectors (or things).
+	fixed_t floorz; // Nearest floor below.
+	fixed_t ceilingz; // Nearest ceiling above.
+
+	// For movement checking.
+	fixed_t radius; // Fixed at 2*FRACUNIT
+	fixed_t height; // Fixed at 4*FRACUNIT
+
+	// Momentums, used to update position.
+	fixed_t momx, momy, momz;
+	fixed_t invisible; // fixed_t so it uses the same spot as "pmomz."
+
+	int tics; // state tic counter
+	state_t *state;
+	int flags; // flags from mobjinfo tables
+} precipmobj_t;
+
+typedef struct actioncache_s
+{
+	struct actioncache_s *next;
+	struct actioncache_s *prev;
+	struct mobj_s *mobj;
+	int statenum;
+} actioncache_t;
+
+extern actioncache_t actioncachehead;
+
+void P_InitCachedActions(void);
+void P_RunCachedActions(void);
+void P_AddCachedAction(mobj_t *mobj, int statenum);
+
 // check mobj against water content, before movement code
-void P_MobjCheckWater (mobj_t* mobj);
+void P_MobjCheckWater(mobj_t *mobj);
 
-void P_SpawnMapThing (mapthing_t*    mthing);
-void P_SpawnPlayer (mapthing_t* mthing);
+void P_SpawnMapThing(mapthing_t *mthing);
+void P_SpawnPlayer(mapthing_t *mthing, int playernum);
+void P_SpawnStarpostPlayer(mobj_t *mobj, int playernum);
+void P_SpawnHoopsAndRings(mapthing_t *mthing);
+void P_SpawnHoopOfSomething(fixed_t x, fixed_t y, fixed_t z, fixed_t radius, int number, mobjtype_t type, angle_t rotangle);
+void P_SpawnPrecipitation(void);
+void P_SpawnParaloop(fixed_t x, fixed_t y, fixed_t z, fixed_t radius, int number, mobjtype_t type, angle_t rotangle);
+boolean P_SupermanLook4Players(mobj_t *actor);
+void P_DestroyRobots(void);
+void P_SnowThinker(precipmobj_t *mobj);
+void P_RainThinker(precipmobj_t *mobj);
+void P_NullPrecipThinker(precipmobj_t *mobj);
+void P_RemovePrecipMobj(precipmobj_t *mobj);
 
+void P_XYMovement(mobj_t *mo);
+
+#define MAXHUNTEMERALDS 64
+extern mapthing_t *huntemeralds[3][MAXHUNTEMERALDS];
+extern int numhuntemeralds[3];
+extern int numstarposts;
 #endif

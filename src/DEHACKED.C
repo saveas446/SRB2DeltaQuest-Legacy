@@ -1,8 +1,6 @@
 // Emacs style mode select   -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id: dehacked.c,v 1.4 2000/04/16 18:38:07 bpereira Exp $
-//
 // Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
@@ -14,69 +12,126 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-//
-// $Log: dehacked.c,v $
-// Revision 1.4  2000/04/16 18:38:07  bpereira
-// no message
-//
-// Revision 1.3  2000/04/05 15:47:46  stroggonmeth
-// Added hack for Dehacked lumps. Transparent sprites are now affected by colormaps.
-//
-// Revision 1.2  2000/02/27 00:42:10  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:32  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
-// DESCRIPTION:
-//      Load dehacked file and change table and text from the exe
-//
 //-----------------------------------------------------------------------------
-
+/// \file
+/// \brief Load dehacked file and change tables and text
 
 #include "doomdef.h"
-
-#include "command.h"
-#include "console.h"
-
 #include "g_game.h"
-
 #include "sounds.h"
 #include "info.h"
-
-#include "m_cheat.h"
 #include "d_think.h"
 #include "dstrings.h"
 #include "m_argv.h"
-#include "p_inter.h"
-
-//SoM: 4/4/2000: DEHACKED LUMPS
 #include "z_zone.h"
 #include "w_wad.h"
+#include "m_menu.h"
+#include "m_misc.h"
+#include "f_finale.h"
+#include "dehacked.h"
+#include "st_stuff.h"
+#include "i_system.h"
 
-static int deh_num_error=0;
+#ifdef HWRENDER
+#include "hardware/hw_light.h"
+#endif
 
-static void deh_error(char *first, ...)
+#if !defined (__MINGW32__) && !defined (__MINGW64__) && !defined (__CYGWIN__) && !defined (_MSC_VER)
+/** Converts a string to uppercase in-place.
+  * Replaces strupr() from the Microsoft C runtime.
+  *
+  * \param n String to uppercase.
+  * \return Pointer to the same string passed in, now in all caps.
+  * \author Alam Arias
+  */
+static char *strup1(char *n)
 {
-    va_list     argptr;
+	int i;
+	char *upr = n;
+	if (!n) return NULL;
+	for (i = 0; n[i]; i++)
+		upr[i] = toupper(n[i]);
+	return upr;
+}
+#undef strupr
+#define strupr(n) strup1(n)
+#endif
 
-    if (devparm)
-    {
-       va_start (argptr,first);
-       vprintf (first,argptr);
-       va_end (argptr);
+boolean deh_loaded = false;
+boolean modcredits = false; // Whether a mod creator's name will show in the credits.
 
-       CONS_Printf("Press ENTER\n");
-       getchar();
-    }
+#define MAXLINELEN 1024
 
-    deh_num_error++;
+// the code was first write for a file
+// converted to use memory with this functions
+typedef struct
+{
+	char *data;
+	char *curpos;
+	int size;
+} MYFILE;
+
+#define myfeof(a) (a->data + a->size <= a->curpos)
+
+static char *myfgets(char *buf, int bufsize, MYFILE *f)
+{
+	int i = 0;
+	if (myfeof(f))
+		return NULL;
+	// we need one byte for a null terminated string
+	bufsize--;
+	while (i < bufsize && !myfeof(f))
+	{
+		char c = *f->curpos++;
+		if (c != '\r')
+			buf[i++] = c;
+		if (c == '\n')
+			break;
+	}
+	buf[i] = '\0';
+
+	return buf;
+}
+
+static char *myhashfgets(char *buf, size_t bufsize, MYFILE *f)
+{
+	size_t i = 0;
+	if (myfeof(f))
+		return NULL;
+	// we need one byte for a null terminated string
+	bufsize--;
+	while (i < bufsize && !myfeof(f))
+	{
+		char c = *f->curpos++;
+		if (c != '\r')
+			buf[i++] = c;
+		if (c == '#')
+			break;
+	}
+	i++;
+	buf[i] = '\0';
+
+	return buf;
+}
+
+static int deh_num_warning = 0;
+
+FUNCPRINTF static void deh_warning(const char *first, ...)
+{
+	va_list argptr;
+	XBOXSTATIC char buf[1000];
+
+	va_start(argptr, first);
+	vsnprintf(buf, sizeof buf, first, argptr);
+	va_end(argptr);
+
+	CONS_Printf("%s\n", buf);
+
+	deh_num_warning++;
 }
 
 /* ======================================================================== */
-// Load a dehacked file format 6 I (BP) don't know other format
+// Load a dehacked file format
 /* ======================================================================== */
 /* a sample to see
                    Thing 1 (Player)       {           // MT_PLAYER
@@ -105,638 +160,1249 @@ int flags;         Bits = 3232              MF_SOLID|MF_SHOOTABLE|MF_DROPOFF|MF_
 int raisestate;    Respawn frame = 32       S_NULL          // raisestate
                                          }, */
 
-static int searchvalue(char *s)
+static int searchvalue(const char *s)
 {
-  while(s[0]!='=' && s[0]!='\0') s++;
-  if (s[0]=='=')
-    return atoi(&s[1]);
-  else
-  {
-    deh_error("No value find\n");
-    return 0;
-  }
+	while (s[0] != '=' && s[0])
+		s++;
+	if (s[0] == '=')
+		return atoi(&s[1]);
+	else
+	{
+		deh_warning("No value found\n");
+		return 0;
+	}
 }
 
-static void readthing(FILE *f,int num)
+#ifdef HWRENDER
+static float searchfvalue(const char *s)
 {
-  char s[200];
-  char *word;
-  int value;
-
-  do{
-    if(fgets(s,sizeof(s),f)!=NULL)
-    {
-      if(s[0]=='\n') break;
-      value=searchvalue(s);
-      // set the value in apropriet field
-      word=strtok(s," ");
-           if(!strcmp(word,"ID"))           mobjinfo[num].doomednum   =value;
-      else if(!strcmp(word,"Initial"))      mobjinfo[num].spawnstate  =value;
-      else if(!strcmp(word,"Hit"))          mobjinfo[num].spawnhealth =value;
-      else if(!strcmp(word,"First"))        mobjinfo[num].seestate    =value;
-      else if(!strcmp(word,"Alert"))        mobjinfo[num].seesound    =value;
-      else if(!strcmp(word,"Reaction"))     mobjinfo[num].reactiontime=value;
-      else if(!strcmp(word,"Attack"))       mobjinfo[num].attacksound =value;
-      else if(!strcmp(word,"Injury"))       mobjinfo[num].painstate   =value;
-      else if(!strcmp(word,"Pain"))
-           {
-             word=strtok(NULL," ");
-             if(!strcmp(word,"chance"))     mobjinfo[num].painchance  =value;
-             else if(!strcmp(word,"sound")) mobjinfo[num].painsound   =value;
-           }
-      else if(!strcmp(word,"Close"))        mobjinfo[num].meleestate  =value;
-      else if(!strcmp(word,"Far"))          mobjinfo[num].missilestate=value;
-      else if(!strcmp(word,"Death"))
-           {
-             word=strtok(NULL," ");
-             if(!strcmp(word,"frame"))      mobjinfo[num].deathstate  =value;
-             else if(!strcmp(word,"sound")) mobjinfo[num].deathsound  =value;
-           }
-      else if(!strcmp(word,"Exploding"))    mobjinfo[num].xdeathstate =value;
-      else if(!strcmp(word,"Speed"))        mobjinfo[num].speed       =value;
-      else if(!strcmp(word,"Width"))        mobjinfo[num].radius      =value;
-      else if(!strcmp(word,"Height"))       mobjinfo[num].height      =value;
-      else if(!strcmp(word,"Mass"))         mobjinfo[num].mass        =value;
-      else if(!strcmp(word,"Missile"))      mobjinfo[num].damage      =value;
-      else if(!strcmp(word,"Action"))       mobjinfo[num].activesound =value;
-      else if(!strcmp(word,"Bits"))         mobjinfo[num].flags       =value;
-      else if(!strcmp(word,"Respawn"))      mobjinfo[num].raisestate  =value;
-      else deh_error("Thing %d : unknow word '%s'\n",num,word);
-    }
-  } while(s[0]!='\n' && !feof(f)); //finish when the line is empty
+	while (s[0] != '=' && s[0])
+		s++;
+	if (s[0] == '=')
+		return (float)atof(&s[1]);
+	else
+	{
+		deh_warning("No value found\n");
+		return 0;
+	}
 }
+#endif
+
+/*
+// Edits an animated texture slot on the array
+// Tails 12-27-2003
+static void readAnimTex(MYFILE *f, int num)
+{
+	char s[MAXLINELEN];
+	char *word;
+	char *word2;
+	int i;
+
+	do {
+		if (myfgets(s, sizeof s, f) != NULL)
+		{
+			if (s[0] == '\n') break;
+
+			tmp = strchr(s, '#');
+			if (tmp)
+				*tmp = '\0';
+			// set the value in the appropriate field
+			word = strupr(strtok(s, " "));
+			word2 = strupr(strtok(NULL, " = "));
+			word2[strlen(word2)-1] = '\0';
+
+			i = atoi(word2);
+
+			if (!strcmp(word, "START"))
+				strncpy(harddefs[num].startname, word2, 8);
+			if (!strcmp(word, "END"))
+				strncpy(harddefs[num].endname, word2, 8);
+			else if (!strcmp(word, "SPEED"))	  harddefs[num].speed = i;
+			else if (!strcmp(word, "ISTEXTURE")) harddefs[num].istexture = i;
+
+			else deh_warning("readAnimTex %d: unknown word '%s'\n", num, word);
+		}
+	} while (s[0] != '\n' && !myfeof(f)); //finish when the line is empty
+}
+*/
+
+static boolean findFreeSlot(int *num)
+{
+	// Send the character select entry to a free slot.
+	while (*num < 15 && PlayerMenu[*num].status != IT_DISABLED)
+		*num = *num+1;
+
+	// No more free slots. :(
+	if (*num >= 15)
+		return false;
+
+	// Found one! ^_^
+	return true;
+}
+
+// Reads a player.
+// For modifying the character select screen
+static void readPlayer(MYFILE *f, int num)
+{
+	XBOXSTATIC char s[MAXLINELEN];
+	char *word;
+	char *word2;
+	int i;
+	boolean slotfound = false;
+
+	do
+	{
+		if (myfgets(s, sizeof (s), f))
+		{
+			if (s[0] == '\n')
+				break;
+
+			word = strupr(strtok(s, " "));
+
+			if (!strcmp(word, "PLAYERTEXT"))
+			{
+				char *playertext = NULL;
+
+				if (!slotfound && (slotfound = findFreeSlot(&num)) == false)
+					return;
+
+				for (i = 0; i < MAXLINELEN-3; i++)
+				{
+					if (s[i] == '=')
+					{
+						playertext = &s[i+2];
+						break;
+					}
+				}
+				if (playertext == NULL)
+					continue;
+
+				strcpy(description[num].info, playertext);
+				strcat(description[num].info, myhashfgets(playertext, sizeof (description[num].info), f));
+
+				// For some reason, cutting the string did not work above. Most likely due to strcpy or strcat...
+				// It works down here, though.
+				{
+					int numlines = 0;
+					for (i = 0; i < MAXLINELEN-1; i++)
+					{
+						if (numlines < 7 && description[num].info[i] == '\n')
+							numlines++;
+
+						if (numlines >= 7 || description[num].info[i] == '\0' || description[num].info[i] == '#')
+							break;
+					}
+				}
+					description[num].info[strlen(description[num].info)-1] = '\0';
+					description[num].info[i] = '\0';
+					continue;
+			}
+
+			word2 = strupr(strtok(NULL, " = "));
+			word2[strlen(word2)-1] = '\0';
+			i = atoi(word2);
+
+			if (!strcmp(word, "PLAYERNAME"))
+			{
+				if (!slotfound && (slotfound = findFreeSlot(&num)) == false)
+					return;
+				strncpy(description[num].text, word2, 63);
+				PlayerMenu[num].text = description[num].text;
+			}
+			else if (!strcmp(word, "MENUPOSITION"))
+				; // NO SCREWING UP MY MENU, FOOL!
+			else if (!strcmp(word, "PICNAME"))
+			{
+				if (!slotfound && (slotfound = findFreeSlot(&num)) == false)
+					return;
+				strncpy(&description[num].picname[0], word2, 9);
+			}
+			else if (!strcmp(word, "STATUS"))
+			{
+				// Limit the status to only IT_DISABLED and IT_CALL|IT_STRING
+				if (i != IT_STRING)
+					i = IT_DISABLED;
+				else
+					i = IT_STRING;
+
+				/*
+					You MAY disable previous entrys if you so desire...
+					But try to enable something that's already enabled and you will be sent to a free slot.
+
+					Because of this, you are allowed to edit any previous entrys you like, but only if you
+					signal that you are purposely doing so by disabling and then reenabling the slot.
+				*/
+				if (i != IT_DISABLED && !slotfound && (slotfound = findFreeSlot(&num)) == false)
+					return;
+
+				PlayerMenu[num].status = (short)i;
+			}
+			else if (!strcmp(word, "SKINNAME"))
+			{
+				// Send to free slot.			{
+				if (!slotfound && (slotfound = findFreeSlot(&num)) == false)
+					return;
+				strcpy(description[num].skinname, word2);
+			}
+			else
+				deh_warning("readPlayer %d: unknown word '%s'\n", num, word);
+		}
+	} while (!myfeof(f)); // finish when the line is empty
+}
+
+static void readthing(MYFILE *f, int num)
+{
+	XBOXSTATIC char s[MAXLINELEN];
+	char *word;
+	char *tmp;
+	int value;
+
+	do
+	{
+		if (myfgets(s, sizeof (s), f))
+		{
+			if (s[0] == '\n')
+				break;
+
+			tmp = strchr(s, '#');
+			if (tmp)
+				*tmp = '\0';
+
+			value = searchvalue(s);
+
+			word = strupr(strtok(s, " "));
+			if (!strcmp(word, "MAPTHINGNUM"))       mobjinfo[num].doomednum = value;
+			else if (!strcmp(word, "SPAWNSTATE"))   mobjinfo[num].spawnstate = value;
+			else if (!strcmp(word, "SPAWNHEALTH"))  mobjinfo[num].spawnhealth = value;
+			else if (!strcmp(word, "SEESTATE"))     mobjinfo[num].seestate = value;
+			else if (!strcmp(word, "SEESOUND"))     mobjinfo[num].seesound = value;
+			else if (!strcmp(word, "REACTIONTIME")) mobjinfo[num].reactiontime = value;
+			else if (!strcmp(word, "ATTACKSOUND"))  mobjinfo[num].attacksound = value;
+			else if (!strcmp(word, "PAINSTATE"))    mobjinfo[num].painstate = value;
+			else if (!strcmp(word, "PAINCHANCE"))   mobjinfo[num].painchance = value;
+			else if (!strcmp(word, "PAINSOUND"))    mobjinfo[num].painsound = value;
+			else if (!strcmp(word, "MELEESTATE"))   mobjinfo[num].meleestate = value;
+			else if (!strcmp(word, "MISSILESTATE")) mobjinfo[num].missilestate = value;
+			else if (!strcmp(word, "DEATHSTATE"))   mobjinfo[num].deathstate = value;
+			else if (!strcmp(word, "DEATHSOUND"))   mobjinfo[num].deathsound = value;
+			else if (!strcmp(word, "XDEATHSTATE"))  mobjinfo[num].xdeathstate = value;
+			else if (!strcmp(word, "SPEED"))        mobjinfo[num].speed = value;
+			else if (!strcmp(word, "RADIUS"))       mobjinfo[num].radius = value;
+			else if (!strcmp(word, "HEIGHT"))       mobjinfo[num].height = value;
+			else if (!strcmp(word, "MASS"))         mobjinfo[num].mass = value;
+			else if (!strcmp(word, "DAMAGE"))       mobjinfo[num].damage = value;
+			else if (!strcmp(word, "ACTIVESOUND"))  mobjinfo[num].activesound = value;
+			else if (!strcmp(word, "FLAGS"))        mobjinfo[num].flags = value;
+			else if (!strcmp(word, "RAISESTATE"))   mobjinfo[num].raisestate = value;
+			else
+				deh_warning("Thing %d: unknown word '%s'\n", num, word);
+		}
+	} while (!myfeof(f)); // finish when the line is empty
+}
+
+#ifdef HWRENDER
+static void readlight(MYFILE *f, int num)
+{
+	XBOXSTATIC char s[MAXLINELEN];
+	char *word;
+	char *tmp;
+	int value;
+	float fvalue;
+
+	do
+	{
+		if (myfgets(s, sizeof (s), f))
+		{
+			if (s[0] == '\n')
+				break;
+
+			tmp = strchr(s, '#');
+			if (tmp)
+				*tmp = '\0';
+
+			fvalue = searchfvalue(s);
+			value = searchvalue(s);
+
+			word = strupr(strtok(s, " "));
+			if (!strcmp(word, "TYPE"))               lspr[num].type = (USHORT)value;
+			else if (!strcmp(word, "OFFSETX"))       lspr[num].light_xoffset = fvalue;
+			else if (!strcmp(word, "OFFSETY"))       lspr[num].light_yoffset = fvalue;
+			else if (!strcmp(word, "CORONACOLOR"))   lspr[num].corona_color = value;
+			else if (!strcmp(word, "CORONARADIUS"))  lspr[num].corona_radius = fvalue;
+			else if (!strcmp(word, "DYNAMICCOLOR"))  lspr[num].dynamic_color = value;
+			else if (!strcmp(word, "DYNAMICRADIUS"))
+			{
+				lspr[num].dynamic_radius = fvalue;
+
+				/// \note Update the sqrradius! unnecessary?
+				lspr[num].dynamic_sqrradius = fvalue * fvalue;
+			}
+			else
+				deh_warning("Light %d: unknown word '%s'\n", num, word);
+		}
+	} while (!myfeof(f)); // finish when the line is empty
+}
+
+static void readspritelight(MYFILE *f, int num)
+{
+	XBOXSTATIC char s[MAXLINELEN];
+	char *word;
+	char *tmp;
+	int value;
+
+	do
+	{
+		if (myfgets(s, sizeof (s), f))
+		{
+			if (s[0] == '\n')
+				break;
+
+			tmp = strchr(s, '#');
+			if (tmp)
+				*tmp = '\0';
+
+			value = searchvalue(s);
+
+			word = strupr(strtok(s, " "));
+			if (!strcmp(word, "LIGHTTYPE")) t_lspr[num] = &lspr[value];
+			else
+				deh_warning("Sprite %d: unknown word '%s'\n", num, word);
+		}
+	} while (!myfeof(f)); // finish when the line is empty
+}
+#endif // HWRENDER
+
+static void readlevelheader(MYFILE *f, int num)
+{
+	XBOXSTATIC char s[MAXLINELEN];
+	char *word;
+	char *word2;
+	char *tmp;
+	int i;
+
+	do
+	{
+		if (myfgets(s, sizeof (s), f))
+		{
+			if (s[0] == '\n')
+				break;
+
+			// First remove trailing newline, if there is one
+			tmp = strchr(s, '\n');
+			if (tmp)
+				*tmp = '\0';
+
+			tmp = strchr(s, '#');
+			if (tmp)
+				*tmp = '\0';
+
+			// Get the part before the " = "
+			tmp = strchr(s, '=');
+			*(tmp-1) = '\0';
+			word = strupr(s);
+
+			// Now get the part after
+			tmp += 2;
+			word2 = strupr(tmp);
+
+			i = atoi(word2); // used for numerical settings
+
+			if (!strcmp(word, "LEVELNAME"))        strncpy(mapheaderinfo[num-1].lvlttl, word2, 33);
+			else if (!strcmp(word, "INTERSCREEN")) strncpy(mapheaderinfo[num-1].interscreen, word2, 8);
+			else if (!strcmp(word, "ACT"))
+			{
+				if (i >= 0 && i < 20) // 0 for no act number, TTL1 through TTL19
+			                                              mapheaderinfo[num-1].actnum = (byte)i;
+				else
+					deh_warning("Level header %d: invalid act number %d\n", num, i);
+			}
+			else if (!strcmp(word, "NOZONE"))              mapheaderinfo[num-1].nozone = i;
+			else if (!strcmp(word, "TYPEOFLEVEL"))         mapheaderinfo[num-1].typeoflevel = (short)i;
+			else if (!strcmp(word, "NEXTLEVEL"))           mapheaderinfo[num-1].nextlevel = (short)i;
+			else if (!strcmp(word, "MUSICSLOT"))           mapheaderinfo[num-1].musicslot = (short)i;
+			else if (!strcmp(word, "FORCECHARACTER"))      mapheaderinfo[num-1].forcecharacter = (byte)i;
+			else if (!strcmp(word, "WEATHER"))             mapheaderinfo[num-1].weather = (byte)i;
+			else if (!strcmp(word, "SKYNUM"))              mapheaderinfo[num-1].skynum = (short)i;
+			else if (!strcmp(word, "SCRIPTNAME"))  strncpy(mapheaderinfo[num-1].scriptname, word2, 192);
+			else if (!strcmp(word, "SCRIPTISLUMP"))        mapheaderinfo[num-1].scriptislump = i;
+			else if (!strcmp(word, "PRECUTSCENENUM"))      mapheaderinfo[num-1].precutscenenum = (byte)i;
+			else if (!strcmp(word, "CUTSCENENUM"))         mapheaderinfo[num-1].cutscenenum = (byte)i;
+			else if (!strcmp(word, "COUNTDOWN"))           mapheaderinfo[num-1].countdown = (short)i;
+			else if (!strcmp(word, "HIDDEN"))              mapheaderinfo[num-1].hideinmenu = i;
+			else if (!strcmp(word, "NOSSMUSIC"))           mapheaderinfo[num-1].nossmusic = i;
+			else if (!strcmp(word, "NORELOAD"))            mapheaderinfo[num-1].noreload = i;
+			else if (!strcmp(word, "TIMEATTACK"))          mapheaderinfo[num-1].timeattack = i;
+			else if (!strcmp(word, "LEVELSELECT"))         mapheaderinfo[num-1].levelselect = i;
+			else if (!strcmp(word, "RUNSOC"))      strncpy(mapheaderinfo[num-1].runsoc, word2, 64);
+			else
+				deh_warning("Level header %d: unknown word '%s'\n", num, word);
+		}
+	} while (!myfeof(f)); // finish when the line is empty
+}
+
+static void readcutscenescene(MYFILE *f, int num, int scenenum)
+{
+	XBOXSTATIC char s[MAXLINELEN] = "";
+	char *word;
+	char *word2;
+	int i;
+	unsigned short usi;
+
+	do
+	{
+		if (myfgets(s, sizeof (s), f))
+		{
+			if (s[0] == '\n')
+				break;
+
+			word = strupr(strtok(s, " "));
+
+			if (!strcmp(word, "SCENETEXT"))
+			{
+				char *scenetext = NULL;
+				XBOXSTATIC char buffer[4096] = "";
+				for (i = 0; i < MAXLINELEN; i++)
+				{
+					if (s[i] == '=')
+					{
+						scenetext = &s[i+2];
+						break;
+					}
+				}
+				for (i = 0; i < MAXLINELEN; i++)
+				{
+					if (s[i] == '\0')
+					{
+						s[i] = '\n';
+						s[i+1] = '\0';
+						break;
+					}
+				}
+
+				strcpy(buffer, scenetext);
+
+				strcat(buffer,
+					myhashfgets(scenetext, sizeof (buffer)
+					- strlen(buffer) - 1, f));
+
+				// A cutscene overwriting another one...
+				if (cutscenes[num].scene[scenenum].text != NULL)
+					Z_Free(cutscenes[num].scene[scenenum].text);
+
+				cutscenes[num].scene[scenenum].text = Z_StrDup(buffer);
+
+				continue;
+			}
+
+			word2 = strupr(strtok(NULL, " = "));
+			word2[strlen(word2)-1] = '\0';
+			i = atoi(word2);
+			usi = (unsigned short)i;
+
+			if (!strcmp(word, "NUMBEROFPICS"))          cutscenes[num].scene[scenenum].numpics = (byte)i;
+			else if (!strcmp(word, "PIC1NAME")) strncpy(cutscenes[num].scene[scenenum].picname[0], word2, 8);
+			else if (!strcmp(word, "PIC2NAME")) strncpy(cutscenes[num].scene[scenenum].picname[1], word2, 8);
+			else if (!strcmp(word, "PIC3NAME")) strncpy(cutscenes[num].scene[scenenum].picname[2], word2, 8);
+			else if (!strcmp(word, "PIC4NAME")) strncpy(cutscenes[num].scene[scenenum].picname[3], word2, 8);
+			else if (!strcmp(word, "PIC5NAME")) strncpy(cutscenes[num].scene[scenenum].picname[4], word2, 8);
+			else if (!strcmp(word, "PIC6NAME")) strncpy(cutscenes[num].scene[scenenum].picname[5], word2, 8);
+			else if (!strcmp(word, "PIC7NAME")) strncpy(cutscenes[num].scene[scenenum].picname[6], word2, 8);
+			else if (!strcmp(word, "PIC8NAME")) strncpy(cutscenes[num].scene[scenenum].picname[7], word2, 8);
+			else if (!strcmp(word, "PIC1HIRES"))        cutscenes[num].scene[scenenum].pichires[0] = i;
+			else if (!strcmp(word, "PIC2HIRES"))        cutscenes[num].scene[scenenum].pichires[1] = i;
+			else if (!strcmp(word, "PIC3HIRES"))        cutscenes[num].scene[scenenum].pichires[2] = i;
+			else if (!strcmp(word, "PIC4HIRES"))        cutscenes[num].scene[scenenum].pichires[3] = i;
+			else if (!strcmp(word, "PIC5HIRES"))        cutscenes[num].scene[scenenum].pichires[4] = i;
+			else if (!strcmp(word, "PIC6HIRES"))        cutscenes[num].scene[scenenum].pichires[5] = i;
+			else if (!strcmp(word, "PIC7HIRES"))        cutscenes[num].scene[scenenum].pichires[6] = i;
+			else if (!strcmp(word, "PIC8HIRES"))        cutscenes[num].scene[scenenum].pichires[7] = i;
+			else if (!strcmp(word, "PIC1DURATION"))     cutscenes[num].scene[scenenum].picduration[0] = usi;
+			else if (!strcmp(word, "PIC2DURATION"))     cutscenes[num].scene[scenenum].picduration[1] = usi;
+			else if (!strcmp(word, "PIC3DURATION"))     cutscenes[num].scene[scenenum].picduration[2] = usi;
+			else if (!strcmp(word, "PIC4DURATION"))     cutscenes[num].scene[scenenum].picduration[3] = usi;
+			else if (!strcmp(word, "PIC5DURATION"))     cutscenes[num].scene[scenenum].picduration[4] = usi;
+			else if (!strcmp(word, "PIC6DURATION"))     cutscenes[num].scene[scenenum].picduration[5] = usi;
+			else if (!strcmp(word, "PIC7DURATION"))     cutscenes[num].scene[scenenum].picduration[6] = usi;
+			else if (!strcmp(word, "PIC8DURATION"))     cutscenes[num].scene[scenenum].picduration[7] = usi;
+			else if (!strcmp(word, "PIC1XCOORD"))       cutscenes[num].scene[scenenum].xcoord[0] = usi;
+			else if (!strcmp(word, "PIC2XCOORD"))       cutscenes[num].scene[scenenum].xcoord[1] = usi;
+			else if (!strcmp(word, "PIC3XCOORD"))       cutscenes[num].scene[scenenum].xcoord[2] = usi;
+			else if (!strcmp(word, "PIC4XCOORD"))       cutscenes[num].scene[scenenum].xcoord[3] = usi;
+			else if (!strcmp(word, "PIC5XCOORD"))       cutscenes[num].scene[scenenum].xcoord[4] = usi;
+			else if (!strcmp(word, "PIC6XCOORD"))       cutscenes[num].scene[scenenum].xcoord[5] = usi;
+			else if (!strcmp(word, "PIC7XCOORD"))       cutscenes[num].scene[scenenum].xcoord[6] = usi;
+			else if (!strcmp(word, "PIC8XCOORD"))       cutscenes[num].scene[scenenum].xcoord[7] = usi;
+			else if (!strcmp(word, "PIC1YCOORD"))       cutscenes[num].scene[scenenum].ycoord[0] = usi;
+			else if (!strcmp(word, "PIC2YCOORD"))       cutscenes[num].scene[scenenum].ycoord[1] = usi;
+			else if (!strcmp(word, "PIC3YCOORD"))       cutscenes[num].scene[scenenum].ycoord[2] = usi;
+			else if (!strcmp(word, "PIC4YCOORD"))       cutscenes[num].scene[scenenum].ycoord[3] = usi;
+			else if (!strcmp(word, "PIC5YCOORD"))       cutscenes[num].scene[scenenum].ycoord[4] = usi;
+			else if (!strcmp(word, "PIC6YCOORD"))       cutscenes[num].scene[scenenum].ycoord[5] = usi;
+			else if (!strcmp(word, "PIC7YCOORD"))       cutscenes[num].scene[scenenum].ycoord[6] = usi;
+			else if (!strcmp(word, "PIC8YCOORD"))       cutscenes[num].scene[scenenum].ycoord[7] = usi;
+			else if (!strcmp(word, "MUSICSLOT"))        cutscenes[num].scene[scenenum].musicslot = (short)i;
+			else if (!strcmp(word, "TEXTXPOS"))         cutscenes[num].scene[scenenum].textxpos = usi;
+			else if (!strcmp(word, "TEXTYPOS"))         cutscenes[num].scene[scenenum].textypos = usi;
+			else
+				deh_warning("CutSceneScene %d: unknown word '%s'\n", num, word);
+		}
+	} while (!myfeof(f)); // finish when the line is empty
+}
+
+static void readcutscene(MYFILE *f, int num)
+{
+	XBOXSTATIC char s[MAXLINELEN];
+	char *word;
+	char *word2;
+	char *tmp;
+	int value;
+
+	do
+	{
+		if (myfgets(s, sizeof (s), f))
+		{
+			if (s[0] == '\n')
+				break;
+
+			tmp = strchr(s, '#');
+			if (tmp)
+				*tmp = '\0';
+
+			word = strupr(strtok(s, " "));
+			word2 = strtok(NULL, " ");
+			if (word2)
+				value = atoi(word2);
+			else
+			{
+				deh_warning("No value for token %s", word);
+				continue;
+			}
+
+			if (!strcmp(word, "NUMSCENES")) cutscenes[num].numscenes = value;
+			else if (!strcmp(word, "SCENE"))
+			{
+				if (value >= 1 && value <= 128)
+					readcutscenescene(f, num, value - 1);
+				else
+					deh_warning("Scene number %d out of range\n", value);
+			}
+			else
+				deh_warning("Cutscene %d: unknown word '%s', Scene <num> expected.\n", num, word);
+		}
+	} while (!myfeof(f)); // finish when the line is empty
+}
+
+static void readunlockable(MYFILE *f, int num)
+{
+	XBOXSTATIC char s[MAXLINELEN];
+	char *word;
+	char *word2;
+	char *tmp;
+	int i;
+
+	customsecretinfo[num].neededemblems =
+	customsecretinfo[num].neededtime =
+	customsecretinfo[num].neededgrade = 0;
+
+	do
+	{
+		if (myfgets(s, sizeof (s), f))
+		{
+			if (s[0] == '\n')
+				break;
+
+			// First remove trailing newline, if there is one
+			tmp = strchr(s, '\n');
+			if (tmp)
+				*tmp = '\0';
+
+			tmp = strchr(s, '#');
+			if (tmp)
+				*tmp = '\0';
+
+			// Get the part before the " = "
+			tmp = strchr(s, '=');
+			*(tmp-1) = '\0';
+			word = strupr(s);
+
+			// Now get the part after
+			tmp += 2;
+			word2 = strupr(tmp);
+
+			i = atoi(word2); // used for numerical settings
+
+			if (!strcmp(word, "NAME"))               strncpy(customsecretinfo[num].name, word2, 33);
+			else if (!strcmp(word, "OBJECTIVE"))     strncpy(customsecretinfo[num].objective, word2, 33);
+			else if (!strcmp(word, "NEEDEDGRADE"))   customsecretinfo[num].neededgrade = i;
+			else if (!strcmp(word, "NEEDEDEMBLEMS")) customsecretinfo[num].neededemblems = i;
+			else if (!strcmp(word, "NEEDEDTIME"))    customsecretinfo[num].neededtime = i;
+			else if (!strcmp(word, "TYPE"))          customsecretinfo[num].type = i;
+			else if (!strcmp(word, "VAR"))           customsecretinfo[num].variable = i;
+			else
+				deh_warning("Unlockable %d: unknown word '%s'\n", num+1, word);
+		}
+	} while (!myfeof(f)); // finish when the line is empty
+}
+
+static void readhuditem(MYFILE *f, int num)
+{
+	XBOXSTATIC char s[MAXLINELEN];
+	char *word;
+	char *word2;
+	char *tmp;
+	int i;
+
+	do
+	{
+		if (myfgets(s, sizeof (s), f))
+		{
+			if (s[0] == '\n')
+				break;
+
+			// First remove trailing newline, if there is one
+			tmp = strchr(s, '\n');
+			if (tmp)
+				*tmp = '\0';
+
+			tmp = strchr(s, '#');
+			if (tmp)
+				*tmp = '\0';
+
+			// Get the part before the " = "
+			tmp = strchr(s, '=');
+			*(tmp-1) = '\0';
+			word = strupr(s);
+
+			// Now get the part after
+			tmp += 2;
+			word2 = strupr(tmp);
+
+			i = atoi(word2); // used for numerical settings
+
+			if (!strcmp(word, "X"))              hudinfo[num].x = i;
+			else if (!strcmp(word, "Y"))         hudinfo[num].y = i;
+			else
+				deh_warning("Level header %d: unknown word '%s'\n", num, word);
+		}
+	} while (!myfeof(f)); // finish when the line is empty
+}
+
 /*
 Sprite number = 10
 Sprite subnumber = 32968
 Duration = 200
 Next frame = 200
 */
-static void readframe(FILE* f,int num)
-{
-  char s[200];
-  char *word1,*word2;
-  int value;
-  do{
-    if(fgets(s,sizeof(s),f)!=NULL)
-    {
-      if(s[0]=='\n') break;
-      value=searchvalue(s);
-      // set the value in apropriet field
-      word1=strtok(s," ");
-      word2=strtok(NULL," ");
 
-      if(!strcmp(word1,"Sprite"))
-      {
-             if(!strcmp(word2,"number"))     states[num].sprite   =value;
-        else if(!strcmp(word2,"subnumber"))  states[num].frame    =value;
-      }
-      else if(!strcmp(word1,"Duration"))     states[num].tics     =value;
-      else if(!strcmp(word1,"Next"))         states[num].nextstate=value;
-      else deh_error("Frame %d : unknow word '%s'\n",num,word1);
-    }
-  } while(s[0]!='\n' && !feof(f));
+/** Action pointer for reading actions from Dehacked lumps.
+  */
+typedef struct
+{
+	actionf_t action; ///< Function pointer corresponding to the actual action.
+	const char *name; ///< Name of the action in ALL CAPS.
+} actionpointer_t;
+
+/** Array mapping action names to action functions.
+  * Names must be in ALL CAPS for case insensitive comparisons.
+  */
+static actionpointer_t actionpointers[] =
+{
+	{{A_Explode},              "A_EXPLODE"},
+	{{A_Pain},                 "A_PAIN"},
+	{{A_Fall},                 "A_FALL"},
+	{{A_MonitorPop},           "A_MONITORPOP"},
+	{{A_Look},                 "A_LOOK"},
+	{{A_Chase},                "A_CHASE"},
+	{{A_FaceTarget},           "A_FACETARGET"},
+	{{A_Scream},               "A_SCREAM"},
+	{{A_BossDeath},            "A_BOSSDEATH"},
+	{{A_CustomPower},          "A_CUSTOMPOWER"},
+	{{A_RingShield},           "A_RINGSHIELD"},
+	{{A_RingBox},              "A_RINGBOX"},
+	{{A_Invincibility},        "A_INVINCIBILITY"},
+	{{A_SuperSneakers},        "A_SUPERSNEAKERS"},
+	{{A_BunnyHop},             "A_BUNNYHOP"},
+	{{A_BubbleSpawn},          "A_BUBBLESPAWN"},
+	{{A_BubbleRise},           "A_BUBBLERISE"},
+	{{A_BubbleCheck},          "A_BUBBLECHECK"},
+	{{A_ExtraLife},            "A_EXTRALIFE"},
+	{{A_BombShield},           "A_BOMBSHIELD"},
+	{{A_JumpShield},           "A_JUMPSHIELD"},
+	{{A_WaterShield},          "A_WATERSHIELD"},
+	{{A_FireShield},           "A_FIRESHIELD"},
+	{{A_ScoreRise},            "A_SCORERISE"},
+	{{A_AttractChase},         "A_ATTRACTCHASE"},
+	{{A_DropMine},             "A_DROPMINE"},
+	{{A_FishJump},             "A_FISHJUMP"},
+	{{A_SignPlayer},           "A_SIGNPLAYER"},
+	{{A_ThrownRing},           "A_THROWNRING"},
+	{{A_SetSolidSteam},        "A_SETSOLIDSTEAM"},
+	{{A_UnsetSolidSteam},      "A_UNSETSOLIDSTEAM"},
+	{{A_JetChase},             "A_JETCHASE"},
+	{{A_JetbThink},            "A_JETBTHINK"},
+	{{A_JetgThink},            "A_JETGTHINK"},
+	{{A_JetgShoot},            "A_JETGSHOOT"},
+	{{A_ShootBullet},          "A_SHOOTBULLET"},
+	{{A_MouseThink},           "A_MOUSETHINK"},
+	{{A_DetonChase},           "A_DETONCHASE"},
+	{{A_CapeChase},            "A_CAPECHASE"},
+	{{A_RotateSpikeBall},      "A_ROTATESPIKEBALL"},
+	{{A_SnowBall},             "A_SNOWBALL"},
+	{{A_CrawlaCommanderThink}, "A_CRAWLACOMMANDERTHINK"},
+	{{A_SmokeTrailer},         "A_SMOKETRAILER"},
+	{{A_RingExplode},          "A_RINGEXPLODE"},
+	{{A_MixUp},                "A_MIXUP"},
+	{{A_BossScream},           "A_BOSSSCREAM"},
+	{{A_Invinciblerize},       "A_INVINCIBLERIZE"},
+	{{A_DeInvinciblerize},     "A_DEINVINCIBLERIZE"},
+	{{A_Boss2PogoSFX},         "A_BOSS2POGOSFX"},
+	{{A_BossJetFume},          "A_BOSSJETFUME"},
+	{{A_EggmanBox},            "A_EGGMANBOX"},
+	{{A_TurretFire},           "A_TURRETFIRE"},
+	{{A_SuperTurretFire},      "A_SUPERTURRETFIRE"},
+	{{A_TurretStop},           "A_TURRETSTOP"},
+	{{A_SkimChase},            "A_SKIMCHASE"},
+	{{A_PumaJump},             "A_PUMAJUMP"},
+	{{A_1upThinker},           "A_1UPTHINKER"},
+	{{A_SkullAttack},          "A_SKULLATTACK"},
+	{{A_FireShot},             "A_CYBERATTACK"},
+	{{A_FireShot},             "A_FIRESHOT"},
+	{{A_SuperFireShot},        "A_SUPERFIRESHOT"},
+	{{A_SparkFollow},          "A_SPARKFOLLOW"},
+	{{A_BuzzFly},              "A_BUZZFLY"},
+	{{A_SetReactionTime},      "A_SETREACTIONTIME"},
+	{{A_LinedefExecute},       "A_LINEDEFEXECUTE"},
+	{{A_PlaySeeSound},         "A_PLAYSEESOUND"},
+	{{A_PlayAttackSound},      "A_PLAYATTACKSOUND"},
+	{{A_PlayActiveSound},      "A_PLAYACTIVESOUND"},
+	{{A_SpawnObjectAbsolute},  "A_SPAWNOBJECTABSOLUTE"},
+	{{A_SpawnObjectRelative},  "A_SPAWNOBJECTRELATIVE"},
+	{{A_ChangeAngleRelative},  "A_CHANGEANGLERELATIVE"},
+	{{A_ChangeAngleAbsolute},  "A_CHANGEANGLEABSOLUTE"},
+	{{A_PlaySound},            "A_PLAYSOUND"},
+	{{A_FindTarget},           "A_FINDTARGET"},
+	{{A_FindTracer},           "A_FINDTRACER"},
+	{{A_SetTics},              "A_SETTICS"},
+	{{A_ChangeColorRelative},  "A_CHANGECOLORRELATIVE"},
+	{{A_ChangeColorAbsolute},  "A_CHANGECOLORABSOLUTE"},
+	{{A_MoveRelative},         "A_MOVERELATIVE"},
+	{{A_MoveAbsolute},         "A_MOVEABSOLUTE"},
+	{{A_SetTargetsTarget},     "A_SETTARGETSTARGET"},
+	{{A_SetObjectFlags},       "A_SETOBJECTFLAGS"},
+	{{A_SetObjectFlags2},      "A_SETOBJECTFLAGS2"},
+	{{A_RandomState},          "A_RANDOMSTATE"},
+	{{A_RandomStateRange},     "A_RANDOMSTATERANGE"},
+	{{A_DualAction},           "A_DUALACTION"},
+
+	{{NULL},                   "NONE"},
+
+	// This NULL entry must be the last in the list
+	{{NULL},                   NULL},
+};
+
+static void readframe(MYFILE *f, int num)
+{
+	XBOXSTATIC char s[MAXLINELEN];
+	char *word1;
+	char *word2;
+	char *tmp;
+	int i, j;
+
+	do
+	{
+		if (myfgets(s, sizeof (s), f))
+		{
+			if (s[0] == '\n')
+				break;
+
+			tmp = strchr(s, '#');
+			if (tmp)
+				*tmp = '\0';
+
+			for (j = 0; s[j] != '\n'; j++)
+			{
+				if (s[j] == '=')
+				{
+					j += 2;
+					j = atoi(&s[j]);
+					break;
+				}
+			}
+			word1 = strupr(strtok(s, " "));
+			word2 = strupr(strtok(NULL, " = "));
+			word2[strlen(word2)-1] = '\0';
+			i = atoi(word2);
+
+			if (!strcmp(word1, "SPRITENUMBER"))         states[num].sprite = i;
+			else if (!strcmp(word1, "SPRITESUBNUMBER")) states[num].frame = i;
+			else if (!strcmp(word1, "DURATION"))        states[num].tics = i;
+			else if (!strcmp(word1, "NEXT"))            states[num].nextstate = i;
+			else if (!strcmp(word1, "VAR1"))            states[num].var1 = i;
+			else if (!strcmp(word1, "VAR2"))            states[num].var2 = i;
+			else if (!strcmp(word1, "ACTION"))
+			{
+				unsigned int z;
+				boolean found = false;
+				XBOXSTATIC char actiontocompare[32];
+
+				strncpy(actiontocompare, word2, 31);
+
+				for (z = 0; z < 32; z++)
+				{
+					if (actiontocompare[z] == '\n' || actiontocompare[z] == '\r')
+					{
+						actiontocompare[z] = '\0';
+						break;
+					}
+				}
+
+				z = 0;
+				while (actionpointers[z].name)
+				{
+					if (!strcmp(strupr(actiontocompare), actionpointers[z].name))
+					{
+						states[num].action = actionpointers[z].action;
+						states[num].action.acv = actionpointers[z].action.acv; // assign
+						states[num].action.acp1 = actionpointers[z].action.acp1;
+						found = true;
+						break;
+					}
+					z++;
+				}
+
+				if (!found)
+					deh_warning("Unknown action %s\n", actiontocompare);
+			}
+			else
+				deh_warning("Frame %d: unknown word '%s'\n", num, word1);
+		}
+	} while (!myfeof(f));
 }
 
-static void readsound(FILE* f,int num,char *savesfxnames[])
+static void readsound(MYFILE *f, int num, const char *savesfxnames[])
 {
-  char s[200];
-  char *word;
-  int value;
+	XBOXSTATIC char s[MAXLINELEN];
+	char *word;
+	char *tmp;
+	int value;
 
-  do{
-    if(fgets(s,sizeof(s),f)!=NULL)
-    {
-      if(s[0]=='\n') break;
-      value=searchvalue(s);
-      word=strtok(s," ");
-           if(!strcmp(word,"Offset"))   {
-                                          value-=150360;
-                                          if(value<=64) value/=8;
-                                          else if(value<=260) value=(value+4)/8;
-                                          else value=(value+8)/8;
-                                          if(value>=-1 && value<sfx_freeslot0-1)
-                                              S_sfx[num].name=savesfxnames[value+1];
-                                          else
-                                              deh_error("Sound %d : offset out of bound\n",num);
-                                        }
-      else if(!strcmp(word,"Zero/One")) S_sfx[num].singularity=value;
-      else if(!strcmp(word,"Value"))    S_sfx[num].priority   =value;
-      else deh_error("Sound %d : unknow word '%s'\n",num,word);
-    }
-  } while(s[0]!='\n' && !feof(f));
+	do
+	{
+		if (myfgets(s, sizeof (s), f))
+		{
+			if (s[0] == '\n')
+				break;
+
+			tmp = strchr(s, '#');
+			if (tmp)
+				*tmp = '\0';
+
+			value = searchvalue(s);
+			word = strupr(strtok(s, " "));
+/*			if (!strcmp(word, "OFFSET"))
+			{
+				value -= 150360;
+				if (value <= 64)
+					value /= 8;
+				else if (value <= 260)
+					value = (value+4)/8;
+				else
+					value = (value+8)/8;
+				if (value >= -1 && value < sfx_freeslot0 - 1)
+					S_sfx[num].name = savesfxnames[value+1];
+				else
+					deh_warning("Sound %d: offset out of bounds\n", num);
+			}
+			else */if (!strcmp(word, "SINGULAR")) S_sfx[num].singularity = value;
+			else if (!strcmp(word, "PRIORITY"))    S_sfx[num].priority = value;
+			else if (!strcmp(word, "FLAGS"))    S_sfx[num].pitch = value;
+			else
+				deh_warning("Sound %d : unknown word '%s'\n",num,word);
+		}
+	} while (!myfeof(f));
+	savesfxnames = NULL;
 }
 
-static void readtext(FILE* f,int len1,int len2,char *savesfxname[],char *savesprnames[])
+/** Checks if a game data file name for a mod is good.
+ * "Good" means that it contains only alphanumerics, _, and -;
+ * ends in ".dat"; has at least one character before the ".dat";
+ * and is not "gamedata.dat" (tested case-insensitively).
+ *
+ * Assumption: that gamedata.dat is the only .dat file that will
+ * ever be treated specially by the game.
+ *
+ * Note: Check for the tail ".dat" case-insensitively since at
+ * present, we get passed the filename in all uppercase.
+ *
+ * \param s Filename string to check.
+ * \return True if the filename is good.
+ * \sa readmaincfg()
+ * \author Graue <graue@oceanbase.org>
+ */
+static boolean GoodDataFileName(const char *s)
 {
-  char s[2000];
-  int i;
+	const char *p;
+	const char *tail = ".dat";
 
-  // it is hard to change all the text in doom
-  // here i implement only vital things
-  // yes text change somes tables like music, sound and sprite name
-  if(len1+len2 > 2000)
-  {
-      deh_error("Text too big\n");
-      return;
-  }
+	for (p = s; *p != '\0'; p++)
+		if (!isalnum(*p) && *p != '_' && *p != '-' && *p != '.')
+			return false;
 
-  if(fread(s,len1+len2,1,f))
-  {
-    s[len1+len2]='\0';
-    // sound table
-    for(i=0;i<sfx_freeslot0;i++)
-      if(!strncmp(savesfxname[i],s,len1))
-      {
-        strncpy(S_sfx[i].name,&(s[len1]),len2);
-        S_sfx[i].name[len2]='\0';
-        return;
-      }
-    // sprite table
-    for(i=0;i<NUMSPRITES;i++)
-      if(!strncmp(savesprnames[i],s,len1))
-      {
-        strncpy(sprnames[i],&(s[len1]),len2);
-        sprnames[i][len2]='\0';
-        return;
-      }
-    // music table
-    for(i=1;i<NUMMUSIC;i++)
-      if(!strncmp(S_music[i].name,s,len1))
-      {
-        strncpy(S_music[i].name,&(s[len1]),len2);
-        S_music[i].name[len2]='\0';
-        return;
-      }
-    // text table
-    for(i=0;i<SPECIALDEHACKED;i++)
-    {
-      if(!strncmp(text[i],s,len1) && strlen(text[i])==(unsigned)len1)
-      {
-        if(strlen(text[i])<(unsigned)len2)         // incresse size of the text
-        {
-           text[i]=(char *)malloc(len2+1);
-           if(text[i]==NULL)
-               I_Error("ReadText : No More free Mem");
-        }
+	p = s + strlen(s) - strlen(tail);
+	if (p <= s) return false; // too short
+	if (stricmp(p, tail) != 0) return false; // doesn't end in .dat
+	if (stricmp(s, "gamedata.dat") == 0) return false;
 
-        strncpy(text[i],&(s[len1]),len2);
-        text[i][len2]='\0';
-        return;
-      }
-    }
-
-    // special text : text changed in Legacy but with dehacked support
-    for(i=SPECIALDEHACKED;i<NUMTEXT;i++)
-    {
-       int temp = strlen(text[i]);
-
-       if(len1>temp && strstr(s,text[i]))
-       {
-           char *t;
-
-           // remove space for center the text
-           t=&s[len1+len2-1];
-           while(t[0]==' ') { t[0]='\0'; t--; }
-           // skip the space
-           while(s[len1]==' ') len1++;
-
-           // remove version string identifier
-           t=strstr(&(s[len1]),"v%i.%i");
-           if(!t) {
-              t=strstr(&(s[len1]),"%i.%i");
-              if(!t) {
-                 t=strstr(&(s[len1]),"%i");
-                 if(!t) {
-                      t=s+len1+strlen(&(s[len1]));
-                 }
-              }
-           }
-           t[0]='\0';
-           len2=strlen(&s[len1]);
-
-           if(strlen(text[i])<(unsigned)len2)         // incresse size of the text
-           {
-              text[i]=(char *)malloc(len2+1);
-              if(text[i]==NULL)
-                  I_Error("ReadText : No More free Mem");
-           }
-
-           strncpy(text[i],&(s[len1]),len2);
-           text[i][len2]='\0';
-           return;
-       }
-    }
-
-    s[len1]='\0';
-    deh_error("Text not changed :%s\n",s);
-  }
-}
-/*
-Ammo type = 2
-Deselect frame = 11
-Select frame = 12
-Bobbing frame = 13
-Shooting frame = 17
-Firing frame = 10
-*/
-static void readweapon(FILE *f,int num)
-{
-  char s[200];
-  char *word;
-  int value;
-  do{
-    if(fgets(s,sizeof(s),f)!=NULL)
-    {
-      if(s[0]=='\n') break;
-      value=searchvalue(s);
-      word=strtok(s," ");
-
-           if(!strcmp(word,"Ammo"))       weaponinfo[num].ammo      =value;
-      else if(!strcmp(word,"Deselect"))   weaponinfo[num].upstate   =value;
-      else if(!strcmp(word,"Select"))     weaponinfo[num].downstate =value;
-      else if(!strcmp(word,"Bobbing"))    weaponinfo[num].readystate=value;
-      else if(!strcmp(word,"Shooting"))   weaponinfo[num].atkstate  =value;
-      else if(!strcmp(word,"Firing"))     weaponinfo[num].flashstate=value;
-      else deh_error("Weapon %d : unknow word '%s'\n",num,word);
-    }
-  } while(s[0]!='\n' && !feof(f));
-}
-/*
-Max ammo = 400
-Per ammo = 40
-*/
-
-extern int clipammo[];
-
-static void readammo(FILE *f,int num)
-{
-  char s[200];
-  char *word;
-  int value;
-  do{
-    if(fgets(s,sizeof(s),f)!=NULL)
-    {
-      if(s[0]=='\n') break;
-      value=searchvalue(s);
-      word=strtok(s," ");
-
-           if(!strcmp(word,"Max"))  maxammo[num] =value;
-      else if(!strcmp(word,"Per"))  clipammo[num]=value;
-      else deh_error("Ammo %d : unknow word '%s'\n",num,word);
-    }
-  } while(s[0]!='\n' && !feof(f));
-}
-// i don't like that but do you see a other way ?
-extern int idfa_armor;
-extern int idfa_armor_class;
-extern int idkfa_armor;
-extern int idkfa_armor_class;
-extern int god_health;
-extern int initial_health;
-extern int initial_bullets;
-extern int MAXHEALTH;
-extern int max_armor;
-extern int green_armor_class;
-extern int blue_armor_class;
-extern int maxsoul;
-extern int soul_health;
-extern int mega_health;
-
-
-static void readmisc(FILE *f)
-{
-  char s[200];
-  char *word,*word2;
-  int value;
-  do{
-    if(fgets(s,sizeof(s),f)!=NULL)
-    {
-      if(s[0]=='\n') break;
-      value=searchvalue(s);
-      word=strtok(s," ");
-      word2=strtok(NULL," ");
-
-      if(!strcmp(word,"Initial"))
-      {
-         if(!strcmp(word2,"Health"))          initial_health=value;
-         else if(!strcmp(word2,"Bullets"))    initial_bullets=value;
-      }
-      else if(!strcmp(word,"Max"))
-      {
-         if(!strcmp(word2,"Health"))          MAXHEALTH=value;
-         else if(!strcmp(word2,"Armor"))      max_armor=value;
-         else if(!strcmp(word2,"Soulsphere")) maxsoul=value;
-      }
-      else if(!strcmp(word,"Green"))         green_armor_class=value;
-      else if(!strcmp(word,"Blue"))          blue_armor_class=value;
-      else if(!strcmp(word,"Soulsphere"))    soul_health=value;
-      else if(!strcmp(word,"Megasphere"))    mega_health=value;
-      else if(!strcmp(word,"God"))           god_health=value;
-      else if(!strcmp(word,"IDFA"))
-      {
-         word2=strtok(NULL," ");
-         if(!strcmp(word2,"="))               idfa_armor=value;
-         else if(!strcmp(word2,"Class"))      idfa_armor_class=value;
-      }
-      else if(!strcmp(word,"IDKFA"))
-      {
-         word2=strtok(NULL," ");
-         if(!strcmp(word2,"="))               idkfa_armor=value;
-         else if(!strcmp(word2,"Class"))      idkfa_armor_class=value;
-      }
-      else if(!strcmp(word,"BFG"))            weaponinfo[wp_bfg].ammopershoot = value;
-      else if(!strcmp(word,"Monsters"))      {} // i don't found where is implemented
-      else deh_error("Misc : unknow word '%s'\n",word);
-    }
-  } while(s[0]!='\n' && !feof(f));
+	return true;
 }
 
-extern char cheat_mus_seq[];
-extern char cheat_choppers_seq[];
-extern char cheat_god_seq[];
-extern char cheat_ammo_seq[];
-extern char cheat_ammonokey_seq[];
-extern char cheat_noclip_seq[];
-extern char cheat_commercial_noclip_seq[];
-extern char cheat_powerup_seq[7][10];
-extern char cheat_clev_seq[];
-extern char cheat_mypos_seq[];
-extern char cheat_amap_seq[];
-
-static void change_cheat_code(char *cheatseq,char* newcheat)
+static void readmaincfg(MYFILE *f)
 {
-  unsigned char *i,*j;
+	XBOXSTATIC char s[MAXLINELEN];
+	char *word;
+	char *word2;
+	char *tmp;
+	int value;
 
-  // encript data
-  for(i=newcheat;i[0]!='\0';i++)
-      i[0]=SCRAMBLE(i[0]);
+	do
+	{
+		if (myfgets(s, sizeof (s), f))
+		{
+			if (s[0] == '\n')
+				break;
 
-  for(i=cheatseq,j=newcheat;j[0]!='\0' && j[0]!=0xff;i++,j++)
-      if(i[0]==1 || i[0]==0xff) // no more place in the cheat
-      {
-         deh_error("Cheat to long\n");
-         return;
-      }
-      else
-         i[0]=j[0];
+			// First remove trailing newline, if there is one
+			tmp = strchr(s, '\n');
+			if (tmp)
+				*tmp = '\0';
 
-  // newcheatseq < oldcheat
-  j=i;
-  // search special cheat with 100
-  for(;i[0]!=0xff;i++)
-      if(i[0]==1)
-      {
-         *j++=1;
-         *j++=0;
-         *j++=0;
-         break;
-      }
-  *j=0xff;
+			tmp = strchr(s, '#');
+			if (tmp)
+				*tmp = '\0';
 
-  return;
+			// Get the part before the " = "
+			tmp = strchr(s, '=');
+			*(tmp-1) = '\0';
+			word = strupr(s);
+
+			// Now get the part after
+			tmp += 2;
+			word2 = strupr(tmp);
+
+			value = atoi(word2); // used for numerical settings
+
+			if (!strcmp(word, "SSTAGE_START"))
+			{
+				sstage_start = value;
+				sstage_end = sstage_start+6;
+			}
+			else if (!strcmp(word, "EXECCFG"))
+				COM_BufAddText(va("exec %s\n", word2));
+			else if (!strcmp(word, "SPSTAGE_START"))   spstage_start = value;
+			else if (!strcmp(word, "RACESTAGE_START")) racestage_start = value;
+			else if (!strcmp(word, "INVULNTICS"))      invulntics = value;
+			else if (!strcmp(word, "SNEAKERTICS"))     sneakertics = value;
+			else if (!strcmp(word, "FLASHINGTICS"))    flashingtics = value;
+			else if (!strcmp(word, "TAILSFLYTICS"))    tailsflytics = value;
+			else if (!strcmp(word, "UNDERWATERTICS"))  underwatertics = value;
+			else if (!strcmp(word, "SPACETIMETICS"))   spacetimetics = value;
+			else if (!strcmp(word, "EXTRALIFETICS"))   extralifetics = value;
+			else if (!strcmp(word, "PARALOOPTICS"))    paralooptics = value;
+			else if (!strcmp(word, "HELPERTICS"))      helpertics = value;
+			else if (!strcmp(word, "GAMEOVERTICS"))    gameovertics = value;
+			else if (!strcmp(word, "INTROTOPLAY"))     introtoplay = (byte)value;
+			else if (!strcmp(word, "LOOPTITLE"))       looptitle = value;
+			else if (!strcmp(word, "TITLESCROLLSPEED"))titlescrollspeed = value;
+			else if (!strcmp(word, "CREDITSCUTSCENE")) creditscutscene = (byte)value;
+			else if (!strcmp(word, "DISABLESPEEDADJUST")) disableSpeedAdjust = (byte)value;
+			else if (!strcmp(word, "GAMEDATA"))
+			{
+				// Check the data filename so that mods
+				// can't write arbitrary files.
+				if (!GoodDataFileName(word2))
+					I_Error("Maincfg: bad data file name '%s'\n", word2);
+
+				G_SaveGameData();
+				strncpy(gamedatafilename, word2, 64);
+				strlwr(gamedatafilename);
+				savemoddata = true;
+
+				// Also save a time attack folder
+				strncpy(timeattackfolder, gamedatafilename, strlen(gamedatafilename)-4); // Strip off the extension
+
+				G_LoadGameData();
+			}
+			else if (!strcmp(word, "NUMEMBLEMS"))
+			{
+				numemblems = value+2;
+				if (numemblems > MAXEMBLEMS-2)
+					I_Error("Sorry, a maximum of %d emblems is allowed.\n", MAXEMBLEMS-2);
+			}
+			else if (!strcmp(word, "RESETDATA"))
+				P_ResetData(value);
+			else
+				deh_warning("Maincfg: unknown word '%s'\n", word);
+		}
+	} while (!myfeof(f));
 }
 
-static void readcheat(FILE *f)
+static void reademblemdata(MYFILE *f, int num)
 {
-  char s[200];
-  char *word,*word2;
-  char *value;
+	XBOXSTATIC char s[MAXLINELEN];
+	char *word;
+	char *word2;
+	char *tmp;
+	int value;
 
-  do{
-    if(fgets(s,sizeof(s),f)!=NULL)
-    {
-      if(s[0]=='\n') break;
-      strtok(s,"=");
-      value=strtok(NULL," \n");         // skip the space
-      strtok(NULL," \n");              // finish the string
-      word=strtok(s," ");
+	do
+	{
+		if (myfgets(s, sizeof (s), f))
+		{
+			if (s[0] == '\n')
+				break;
 
-      if(!strcmp(word     ,"Change"))        change_cheat_code(cheat_mus_seq,value);
-      else if(!strcmp(word,"Chainsaw"))      change_cheat_code(cheat_choppers_seq,value);
-      else if(!strcmp(word,"God"))           change_cheat_code(cheat_god_seq,value);
-      else if(!strcmp(word,"Ammo"))
-           {
-             word2=strtok(NULL," ");
+			tmp = strchr(s, '#');
+			if (tmp)
+				*tmp = '\0';
 
-             if(word2 && !strcmp(word2,"&")) change_cheat_code(cheat_ammo_seq,value);
-             else                            change_cheat_code(cheat_ammonokey_seq,value);
-           }
-      else if(!strcmp(word,"No"))
-           {
-             word2=strtok(NULL," ");
-             if(word2)
-                word2=strtok(NULL," ");
+			value = searchvalue(s);
+			word = strupr(strtok(s, " "));
+			word2 = strupr(strtok(NULL, " "));
 
-             if(word2 && !strcmp(word2,"1")) change_cheat_code(cheat_noclip_seq,value);
-             else                            change_cheat_code(cheat_commercial_noclip_seq,value);
-
-           }
-      else if(!strcmp(word,"Invincibility")) change_cheat_code(cheat_powerup_seq[0],value);
-      else if(!strcmp(word,"Berserk"))       change_cheat_code(cheat_powerup_seq[1],value);
-      else if(!strcmp(word,"Invisibility"))  change_cheat_code(cheat_powerup_seq[2],value);
-      else if(!strcmp(word,"Radiation"))     change_cheat_code(cheat_powerup_seq[3],value);
-      else if(!strcmp(word,"Auto-map"))      change_cheat_code(cheat_powerup_seq[4],value);
-      else if(!strcmp(word,"Lite-Amp"))      change_cheat_code(cheat_powerup_seq[5],value);
-      else if(!strcmp(word,"BEHOLD"))        change_cheat_code(cheat_powerup_seq[6],value);
-      else if(!strcmp(word,"Level"))         change_cheat_code(cheat_clev_seq,value);
-      else if(!strcmp(word,"Player"))        change_cheat_code(cheat_mypos_seq,value);
-      else if(!strcmp(word,"Map"))           change_cheat_code(cheat_amap_seq,value);
-      else deh_error("Cheat : unknow word '%s'\n",word);
-    }
-  } while(s[0]!='\n' && !feof(f));
+			if (!strcmp(word, "X"))				emblemlocations[num-1].x = (short)value;
+			else if (!strcmp(word, "Y"))			emblemlocations[num-1].y = (short)value;
+			else if (!strcmp(word, "Z"))			emblemlocations[num-1].z = (short)value;
+			else if (!strcmp(word, "PLAYERNUM"))	emblemlocations[num-1].player = (byte)value;
+			else if (!strcmp(word, "MAPNUM"))    emblemlocations[num-1].level = (short)value;
+			else
+				deh_warning("Emblem: unknown word '%s'\n", word);
+		}
+	} while (!myfeof(f));
 }
 
-
-void DEH_LoadDehackedFile(char *filename)
+static void DEH_LoadDehackedFile(MYFILE *f)
 {
-  FILE*      f;
-  char       s[1000];
-  char       *word,*word2;
-  int        i;
-  // do a copy of this for cross references probleme
-  actionf_t  saveactions[NUMSTATES];
-  char       *savesprnames[NUMSPRITES];
-  char       *savesfxnames[NUMSFX];
+	XBOXSTATIC char s[1000];
+	char *word;
+	char *word2;
+	int i;
+	// do a copy of this for cross references probleme
+	XBOXSTATIC actionf_t saveactions[NUMSTATES];
+	XBOXSTATIC const char *savesprnames[NUMSPRITES];
+	XBOXSTATIC const char *savesfxnames[NUMSFX];
 
-  f=fopen(filename,"rt");
-  if(f==0)
-  {
-      //should do I_Error, but is too soon
-    CONS_Printf("Dehacked file '%s' not found\nPress ENTER to continu\n",filename);
-    getchar();
-    return;
-  }
-  else
-  {
-    CONS_Printf("Loading Dehacked file %s\n",filename);
-  }
+	deh_num_warning = 0;
+	// save values for cross reference
+	for (i = 0; i < NUMSTATES; i++)
+		saveactions[i] = states[i].action;
+	for (i = 0; i < NUMSPRITES; i++)
+		savesprnames[i] = sprnames[i];
+	for (i = 0; i < NUMSFX; i++)
+		savesfxnames[i] = S_sfx[i].name;
 
-  // save value for cross reference
-  for(i=0;i<NUMSTATES;i++)
-      saveactions[i]=states[i].action;
-  for(i=0;i<NUMSPRITES;i++)
-      savesprnames[i]=sprnames[i];
-  for(i=0;i<NUMSFX;i++)
-      savesfxnames[i]=S_sfx[i].name;
+	// it doesn't test the version of SRB2 and version of dehacked file
+	while (!myfeof(f))
+	{
+		XBOXSTATIC char origpos[32];
+		int size = 0;
+		char *traverse;
 
-  // it don't test the version of doom
-  // and version of dehacked file
-  while(!feof(f))
-  {
-    fgets(s,sizeof(s),f);
-    if(s[0]=='\n' || s[0]=='#')
-      continue;
-    word=strtok(s," ");
-    if(word!=NULL)
-    {
-      if((word2=strtok(NULL," "))!=NULL)
-      {
-        i=atoi(word2);
+		myfgets(s, sizeof (s), f);
+		if (s[0] == '\n' || s[0] == '#')
+			continue;
 
-        if(!strcmp(word,"Thing"))
-        {
-          i--; // begin at 0 not 1;
-          if(i<NUMMOBJTYPES && i>=0)
-            readthing(f,i);
-          else
-            deh_error("Thing %d don't exist\n",i);
-        }
-        else if(!strcmp(word,"Frame"))
-             {
-               if(i<NUMSTATES && i>=0)
-                  readframe(f,i);
-               else
-                  deh_error("Frame %d don't exist\n",i);
-             }
-        else if(!strcmp(word,"Pointer"))
-             {
-               word=strtok(NULL," "); // get frame
-               if((word=strtok(NULL,")"))!=NULL)
-               {
-                 i=atoi(word);
-                 if(i<NUMSTATES && i>=0)
-                 {
-                   if(fgets(s,sizeof(s),f)!=NULL)
-                     states[i].action=saveactions[searchvalue(s)];
-                 }
-                 else
-                    deh_error("Pointer : Frame %d don't exist\n",i);
-               }
-               else
-                   deh_error("pointer (Frame %d) : missing ')'\n",i);
-             }
-        else if(!strcmp(word,"Sound"))
-             {
-               if(i<NUMSFX && i>=0)
-                   readsound(f,i,savesfxnames);
-               else
-                   deh_error("Sound %d don't exist\n");
-             }
-        else if(!strcmp(word,"Sprite"))
-             {
-               if(i<NUMSPRITES && i>=0)
-               {
-                 if(fgets(s,sizeof(s),f)!=NULL)
-                 {
-                   int k;
-                   k=(searchvalue(s)-151328)/8;
-                   if(k>=0 && k<NUMSPRITES)
-                       sprnames[i]=savesprnames[k];
-                   else
-                       deh_error("Sprite %i : offset out of bound\n",i);
-                 }
-               }
-               else
-                  deh_error("Sprite %d don't exist\n",i);
-             }
-        else if(!strcmp(word,"Text"))
-             {
-               int j;
+		traverse = s;
 
-               if((word=strtok(NULL," "))!=NULL)
-               {
-                 j=atoi(word);
-                 readtext(f,i,j,savesfxnames,savesprnames);
-               }
-               else
-                   deh_error("Text : missing second number\n");
+		while (traverse[0] != '\n')
+		{
+			traverse++;
+			size++;
+		}
 
-             }
-        else if(!strcmp(word,"Weapon"))
-             {
-               if(i<NUMWEAPONS && i>=0)
-                   readweapon(f,i);
-               else
-                   deh_error("Weapon %d don't exist\n",i);
-             }
-        else if(!strcmp(word,"Ammo"))
-             {
-               if(i<NUMAMMO && i>=0)
-                   readammo(f,i);
-               else
-                   deh_error("Ammo %d don't exist\n",i);
-             }
-        else if(!strcmp(word,"Misc"))
-               readmisc(f);
-        else if(!strcmp(word,"Cheat"))
-               readcheat(f);
-        else if(!strcmp(word,"Doom"))
-             {
-               if(searchvalue(strtok(NULL,"\n"))!=19)
-                  deh_error("Warning : patch from a different doom version (%d), only verion 1.9 is supported\n");
-             }
-        else if(!strcmp(word,"Patch"))
-             {
-               word=strtok(NULL," ");
-               if(word && !strcmp(word,"format"))
-               {
-                  if(searchvalue(strtok(NULL,"\n"))!=6)
-                     deh_error("Warning : Patch format not supported");
-               }
-             }
-        else deh_error("Unknow word : %s\n",word);
-      }
-      else
-          deh_error("missing argument for '%s'\n",word);
-    }
-    else
-        deh_error("No word in this line:\n%s\n",s);
+		strncpy(origpos, s, size);
+		origpos[size] = '\0';
 
-  } // end while
-  if (deh_num_error>0)
-  {
-      CONS_Printf("%d warning(s) in the dehacked file\n",deh_num_error);
-      if (devparm)
-          getchar();
-  }
-  fclose(f);
+		word = strupr(strtok(s, " "));
+		if (word)
+		{
+			char *p = strtok(NULL, " ");
+			if (p) word2 = strupr(p);
+			else word2 = NULL;
+			if (word2)
+			{
+				i = atoi(word2);
+
+				if (!strcmp(word, "THING"))
+				{
+					if (i < NUMMOBJTYPES && i >= 0)
+						readthing(f, i);
+					else
+						deh_warning("Thing %d doesn't exist\n", i);
+				}
+				else if (!strcmp(word, "MODBY"))
+				{
+					const int mod = 18;
+					strcpy(credits[mod].fakenames[0], origpos+6);
+					strcpy(credits[mod].realnames[0], origpos+6);
+					credits[mod].numnames = 1;
+					strcpy(&credits[mod].header[0], "Modification By\n");
+					modcredits = true;
+				}
+/*				else if (!strcmp(word, "ANIMTEX"))
+				{
+					readAnimTex(f, i);
+				}*/
+				else if (!strcmp(word, "CHARACTER"))
+				{
+					if (i < 15)
+						readPlayer(f, i);
+					else
+						deh_warning("Character %d out of range\n", i);
+				}
+				else if (!strcmp(word, "LIGHT"))
+				{
+#ifdef HWRENDER
+					if (i > 0 && i < NUMLIGHTS)
+						readlight(f, i);
+					else
+						deh_warning("Light number %d out of range\n", i);
+#endif
+				}
+				else if (!strcmp(word, "SPRITE"))
+				{
+#ifdef HWRENDER
+					if (i < NUMSPRITES && i >= 0)
+						readspritelight(f, i);
+					else
+						deh_warning("Sprite number %d out of range\n", i);
+#endif
+				}
+				else if (!strcmp(word, "LEVEL"))
+				{
+					if (i > 0 && i <= NUMMAPS)
+						readlevelheader(f, i);
+					else
+						deh_warning("Level number %d out of range\n", i);
+				}
+				else if (!strcmp(word, "CUTSCENE"))
+				{
+					if (i > 0 && i < 129)
+						readcutscene(f, i - 1);
+					else
+						deh_warning("Cutscene number %d out of range\n", i);
+				}
+				else if (!strcmp(word, "UNLOCKABLE"))
+				{
+					if (i > 0 && i < 16)
+						readunlockable(f, i - 1);
+					else
+						deh_warning("Unlockable number %d out of range\n", i);
+				}
+				else if (!strcmp(word, "FRAME"))
+				{
+					if (i < NUMSTATES && i >= 0)
+						readframe(f, i);
+					else
+						deh_warning("Frame %d doesn't exist\n", i);
+				}
+/*				else if (!strcmp(word, "POINTER"))
+				{
+					word = strtok(NULL, " "); // get frame
+					word = strtok(NULL, ")");
+					if (word)
+					{
+						i = atoi(word);
+						if (i < NUMSTATES && i >= 0)
+						{
+							if (myfgets(s, sizeof (s), f))
+								states[i].action = saveactions[searchvalue(s)];
+						}
+						else
+							deh_warning("Pointer: Frame %d doesn't exist\n", i);
+					}
+					else
+						deh_warning("pointer (Frame %d) : missing ')'\n", i);
+				}*/
+				else if (!strcmp(word, "SOUND"))
+				{
+					if (i < NUMSFX && i >= 0)
+						readsound(f, i, savesfxnames);
+					else
+						deh_warning("Sound %d doesn't exist\n", i);
+				}
+/*				else if (!strcmp(word, "SPRITE"))
+				{
+					if (i < NUMSPRITES && i >= 0)
+					{
+						if (myfgets(s, sizeof (s), f))
+						{
+							int k;
+							k = (searchvalue(s) - 151328)/8;
+							if (k >= 0 && k < NUMSPRITES)
+								sprnames[i] = savesprnames[k];
+							else
+								deh_warning("Sprite %d: offset out of bound\n", i);
+						}
+					}
+					else
+						deh_warning("Sprite %d doesn't exist\n",i);
+				}*/
+				else if (!strcmp(word, "HUDITEM"))
+				{
+					if (i >= 0 && i < NUMHUDITEMS)
+						readhuditem(f, i);
+					else
+						deh_warning("HUD item number %d out of range\n", i);
+				}
+				else if (!strcmp(word, "EMBLEM"))
+				{
+					if (i > 0 && i <= MAXEMBLEMS)
+						reademblemdata(f, i);
+					else
+						deh_warning("HUD item number %d out of range\n", i);
+				}
+				else if (!strcmp(word, "MAINCFG"))
+					readmaincfg(f);
+				else if (!strcmp(word, "SRB2"))
+				{
+					int ver = searchvalue(strtok(NULL, "\n"));
+					if (ver != 109)
+						deh_warning("Warning: patch from a different SRB2 version (%d), "
+							"only version 1.09 is supported\n", ver);
+				}
+				else
+					deh_warning("Unknown word: %s\n", word);
+			}
+			else
+				deh_warning("missing argument for '%s'\n", word);
+		}
+		else
+			deh_warning("No word in this line:\n%s\n", s);
+	} // end while
+	if (deh_num_warning)
+	{
+		CONS_Printf("%d warning%s in the SOC lump\n", deh_num_warning,
+			deh_num_warning == 1 ? "" : "s");
+		if (devparm)
+			while (!I_GetKey())
+				I_OsPolling();
+	}
+
+	deh_loaded = true;
 }
 
-
-//SoM: 4/4/2000: Loads a DeHackEd lump from a wad file, saves it to a temp
-//file and calls LoadDehackedFile. I don't know how well this method will
-//work on Linux or Win32 but it works fine in Dos..
+// read dehacked lump in a wad (there is special trick for for deh
+// file that are converted to wad in w_wad.c)
 void DEH_LoadDehackedLump(int lump)
 {
-  char  *buff;
-  int   lumpsize = W_LumpLength(lump);
-  FILE  *f;
+	MYFILE f;
 
-  buff = Z_Malloc(lumpsize + 1, PU_STATIC, 0);
-  memset(buff, 0, lumpsize + 1);
-  W_ReadLump(lump, buff);
+	f.size = W_LumpLength(lump);
+	f.data = Z_Malloc(f.size + 1, PU_STATIC, NULL);
+	W_ReadLump(lump, f.data);
+	f.curpos = f.data;
+	f.data[f.size] = 0;
 
-    //Linux does not support the binary file mode.
-#ifdef LINUX
-  if((f = fopen("temp$$$$.deh", "w")) == 0)
-#else
-  if((f = fopen("temp$$$$.deh", "wb")) == 0)
-#endif
-    I_Error("LoadDehackedLump: Could not open temp$$$$.deh\n");
-
-  fwrite(buff, 1, lumpsize + 1, f);
-  fclose(f);
-    DEH_LoadDehackedFile("temp$$$$.deh");
-  remove("temp$$$$.deh");
-  Z_Free(buff);
+	DEH_LoadDehackedFile(&f);
+	Z_Free(f.data);
 }

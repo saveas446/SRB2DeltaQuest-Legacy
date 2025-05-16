@@ -1,10 +1,8 @@
 // Emacs style mode select   -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id: hu_stuff.h,v 1.2 2000/02/27 00:42:10 hurdler Exp $
-//
 // Copyright (C) 1993-1996 by id Software, Inc.
-// Portions Copyright (C) 1998-2000 by DooM Legacy Team.
+// Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -15,90 +13,93 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-//
-// $Log: hu_stuff.h,v $
-// Revision 1.2  2000/02/27 00:42:10  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:32  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
-// DESCRIPTION:  
-//      Head up display
-//
 //-----------------------------------------------------------------------------
+/// \file
+/// \brief Heads up display
 
 #ifndef __HU_STUFF_H__
 #define __HU_STUFF_H__
 
-
 #include "d_event.h"
 #include "w_wad.h"
-#include "wi_stuff.h"
 #include "r_defs.h"
 
 //------------------------------------
 //           heads up font
 //------------------------------------
-#define HU_FONTSTART    '!'     // the first font characters
-#define HU_FONTEND      '_'     // the last font characters
+#define HU_FONTSTART '!' // the first font character
+#define HU_REALFONTEND '_' // the last font character
+#define HU_FONTEND '~'
 
-#define HU_FONTSIZE     (HU_FONTEND - HU_FONTSTART + 1)
+#define HU_REALFONTSIZE (HU_REALFONTEND - HU_FONTSTART + 1)
+#define HU_FONTSIZE (HU_FONTEND - HU_FONTSTART + 1)
 
+// Level title font
+#define LT_FONTSTART '\'' // the first font characters
+#define LT_REALFONTSTART 'A'
+#define LT_FONTEND 'Z' // the last font characters
+#define LT_FONTSIZE (LT_FONTEND - LT_FONTSTART + 1)
+#define LT_REALFONTSIZE (LT_FONTEND - LT_REALFONTSTART + 1)
 
-#define HU_CROSSHAIRS   3       // maximum 9 see HU_Init();
+#define CRED_FONTSTART 'A' // the first font character
+#define CRED_FONTEND 'Z' // the last font character
+#define CRED_FONTSIZE (CRED_FONTEND - CRED_FONTSTART + 1)
 
-extern char*   shiftxform;   // french/english translation shift table
+#define HU_CROSSHAIRS 3 // maximum of 9 - see HU_Init();
 
-extern char    english_shiftxform[];
-extern char    french_shiftxform[];
+extern char *shiftxform; // english translation shift table
+extern char english_shiftxform[];
+
+extern char cechotext[1024];
+extern tic_t cechotimer;
+extern tic_t cechoduration;
+extern int cechoflags;
+
+//------------------------------------
+//        sorted player lines
+//------------------------------------
+
+typedef struct
+{
+	int count;
+	int num;
+	int color;
+	const char *name;
+} playersort_t;
 
 //------------------------------------
 //           chat stuff
 //------------------------------------
-#define HU_BROADCAST    5       // first char in chat message
+#define HU_MAXMSGLEN 80
 
-#define HU_MAXMSGLEN    80
+extern patch_t *hu_font[HU_FONTSIZE];
+extern patch_t *lt_font[LT_FONTSIZE];
+extern patch_t *cred_font[CRED_FONTSIZE];
+extern patch_t *emerald1, *emerald2, *emerald3, *emerald4,
+	*emerald5, *emerald6, *emerald7, *emerald8;
 
-extern patch_t*       hu_font[HU_FONTSIZE];
+// set true when entering a chat message
+extern boolean chat_on;
 
-//set true by hu_ when entering a chat message
-extern boolean chat_on; 
-
-// P_DeathThink set this true to show scores while dead, in dmatch
-extern boolean hu_showscores;
+// P_DeathThink sets this true to show scores while dead, in multiplayer
 extern boolean playerdeadview;
 
-
 // init heads up data at game startup.
-void    HU_Init(void);
+void HU_Init(void);
 
 // reset heads up when consoleplayer respawns.
-void    HU_Start(void);
+void HU_Start(void);
 
-//
-boolean HU_Responder(event_t* ev);
+boolean HU_Responder(event_t *ev);
 
-//
-void    HU_Ticker(void);
-void    HU_Drawer(void);
-char    HU_dequeueChatChar(void);
-void    HU_Erase(void);
+void HU_Ticker(void);
+void HU_Drawer(void);
+char HU_dequeueChatChar(void);
+void HU_Erase(void);
+void HU_clearChatChars(void);
+void HU_DrawTabRankings(int x, int y, playersort_t *tab, int scorelines, int whiteplayer);
 
-// used by console input
-char ForeignTranslation(unsigned char ch);
-
-// set chatmacros cvars point the original or dehacked texts, before
-// config.cfg is executed !!
-void HU_HackChatmacros (void);
-
-// chatmacro <0-9> "message" console command
-void Command_Chatmacro_f (void);
-
-int HU_CreateTeamFragTbl(fragsort_t *fragtab,
-                         int dmtotals[],
-                         int fragtbl[MAXPLAYERS][MAXPLAYERS]);
+int HU_CreateTeamScoresTbl(playersort_t *tab, int dmtotals[]);
+void TeamPlay_OnChange(void);
 
 #endif

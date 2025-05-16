@@ -1,8 +1,6 @@
 // Emacs style mode select   -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id: hw_glide.h,v 1.2 2000/02/27 00:42:11 hurdler Exp $
-//
 // Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
@@ -14,22 +12,10 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-//
-// $Log: hw_glide.h,v $
-// Revision 1.2  2000/02/27 00:42:11  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:33  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
-// DESCRIPTION:
-//      Declaration needed by Glide renderer
-//      !!! To be replaced by our own def in the future !!!
-//
 //-----------------------------------------------------------------------------
-
+/// \file
+/// \brief  Declaration needed by Glide renderer
+///	!!! To be replaced by our own def in the future !!!
 
 #ifndef _GLIDE_H_
 #define _GLIDE_H_
@@ -69,13 +55,15 @@ typedef FxI32 GrTextureFormat_t;
 #define GR_TEXFMT_ARGB_4444             0xc
 #define GR_TEXFMT_ALPHA_INTENSITY_88    0xd
 #define GR_TEXFMT_AP_88                 0xe /* 8-bit alpha 8-bit palette */
+#define GR_RGBA                         0x6 // 32 bit RGBA !
 
-typedef struct {
-    GrLOD_t           smallLodLog2;
-    GrLOD_t           largeLodLog2;
-    GrAspectRatio_t   aspectRatioLog2;
-    GrTextureFormat_t format;
-    void              *data;
+typedef struct
+{
+	GrLOD_t           smallLodLog2;
+	GrLOD_t           largeLodLog2;
+	GrAspectRatio_t   aspectRatioLog2;
+	GrTextureFormat_t format;
+	void              *data;
 } GrTexInfo;
 
 #endif // __GLIDE_H__ (defined in <glide.h>)

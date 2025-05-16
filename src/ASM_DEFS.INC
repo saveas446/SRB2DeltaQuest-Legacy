@@ -1,8 +1,6 @@
 // Emacs style mode select   -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id: asm_defs.inc,v 1.2 2000/02/27 00:42:10 hurdler Exp $
-//
 // Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
@@ -15,32 +13,25 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-//
-// $Log: asm_defs.inc,v $
-// Revision 1.2  2000/02/27 00:42:10  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:33  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
-// DESCRIPTION:
-//      must match the C structures !!!
-//
 //-----------------------------------------------------------------------------
-
+/// \file
+/// \brief must match the C structures
 
 #ifndef __ASM_DEFS__
 #define __ASM_DEFS__
 
- // this makes variables more noticable,
+// this makes variables more noticable,
 // and make the label match with C code
 
 // Linux, unlike DOS, has no "_" 19990119 by Kin
+// and nasm needs .data code segs under linux 20010210 by metzgermeister
+// FIXME: nasm ignores these settings, so I put the macros into the makefile
 #ifdef LINUX
 #define C(label) label
+#define CODE_SEG .data
 #else
 #define C(label) _##label
+#define CODE_SEG .text
 #endif
 
 /* This is a more readable way to access the arguments passed from C code   */
@@ -55,6 +46,5 @@
 #define ARG7      32(%ebp)
 #define ARG8      36(%ebp)
 #define ARG9      40(%ebp)      //(c)tm ... Allegro by Shawn Hargreaves.
-
 
 #endif

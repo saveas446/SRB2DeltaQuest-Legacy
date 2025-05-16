@@ -1,8 +1,6 @@
 // Emacs style mode select   -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id: mid2strm.h,v 1.2 2000/02/27 00:42:12 hurdler Exp $
-//
 // Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
@@ -14,22 +12,12 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-//
-// $Log: mid2strm.h,v $
-// Revision 1.2  2000/02/27 00:42:12  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:33  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
-// DESCRIPTION:
-//      Midi 2 Stream
-//
 //-----------------------------------------------------------------------------
+/// \file
+/// \brief Midi 2 Stream
 
-
+//#define WIN32_LEAN_AND_MEAN
+#define RPC_NO_WINDOWS_H
 #include <windows.h>
 #include <windowsx.h>
 #include <mmsystem.h>
@@ -92,15 +80,15 @@
 
 typedef struct
 {
-    LONG               fdwTrack;               // Track status
-    LONG               iTrackLen;              // Total UBYTEs in track
-    LONG               iBytesLeft;             // Bytes left unread in track
-    unsigned char*     pTrackData;             // -> start of track data
-    unsigned char*     pTrackPointer;          // -> next UBYTE to read
-    DWORD              tkNextEventDue;         // Absolute time of next event in track
-    BYTE               bRunningStatus;         // Running status from last channel msg
+	LONG               fdwTrack;               // Track status
+	LONG               iTrackLen;              // Total UBYTEs in track
+	LONG               iBytesLeft;             // Bytes left unread in track
+	unsigned char *    pTrackData;             // -> start of track data
+	unsigned char *    pTrackPointer;          // -> next UBYTE to read
+	DWORD              tkNextEventDue;         // Absolute time of next event in track
+	BYTE               bRunningStatus;         // Running status from last channel msg
 #ifdef DEBUGMIDISTREAM
-    LONG               nTrack;                 // # of this track for debugging
+	LONG               nTrack;                 // # of this track for debugging
 #endif
 } INTRACKSTATE, *PINTRACKSTATE;
 
@@ -109,35 +97,36 @@ typedef struct
 //
 typedef struct
 {
-    int                FileSize;               // Total UBYTEs in file
-    unsigned char*     pFile;                  // -> entire file in memory
-    int                iBytesLeft;             // Bytes left unread
-    unsigned char*     pFilePointer;           // -> next UBYTE to read
-    
-    int                dwTimeDivision;         // Original time division
-    int                dwFormat;               // Original format
-    unsigned long      nTracks;                // Track count (specifies pTracks size)
-    //faB: made it static
-    INTRACKSTATE       pTracks[MAX_MIDI_IN_TRACKS];   // -> array of tracks in this file
+	int                FileSize;               // Total UBYTEs in file
+	unsigned char *    pFile;                  // -> entire file in memory
+	int                iBytesLeft;             // Bytes left unread
+	unsigned char *    pFilePointer;           // -> next UBYTE to read
+	
+	int                dwTimeDivision;         // Original time division
+	int                dwFormat;               // Original format
+	unsigned long      nTracks;                // Track count (specifies pTracks size)
+	//faB: made it static
+	INTRACKSTATE       pTracks[MAX_MIDI_IN_TRACKS];   // -> array of tracks in this file
 } INFILESTATE;
 
 // This is shared between the mid2strm.c conversion module,
 // and the midi playback code in win_snd.c
 typedef struct _ConvertInfo
 {
-    MIDIHDR     mhBuffer;               // Standard Windows stream buffer header
-    DWORD       dwStartOffset;      // Start offset from mhStreamBuffer.lpStart
-    DWORD       dwMaxLength;        // Max length to convert on this pass
+	MIDIHDR     mhBuffer;               // Standard Windows stream buffer header
+	DWORD       dwStartOffset;      // Start offset from mhStreamBuffer.lpStart
+	DWORD       dwMaxLength;        // Max length to convert on this pass
 
-    DWORD       dwBytesRecorded;    // Used internally by the mid2strm.c module
-    DWORD       tkStart;                // Used internally by the mid2strm.c module
-    BOOL        bTimesUp;               // Used internally by the mid2strm.c module
+	DWORD       dwBytesRecorded;    // Used internally by the mid2strm.c module
+	DWORD       tkStart;                // Used internally by the mid2strm.c module
+	BOOL        bTimesUp;               // Used internally by the mid2strm.c module
 } CONVERTINFO, *LPCONVERTINFO;
 
 // mid2strm.c
 extern  INFILESTATE      ifs;
 extern  DWORD   dwProgressBytes;
+extern  BOOL    bMidiLooped;
 
-void    Mid2StreamConverterCleanup (void);
-BOOL    Mid2StreamConverterInit( unsigned char* pMidiData, ULONG iMidiSize );
-int     Mid2StreamConvertToBuffer( DWORD dwFlags, LPCONVERTINFO lpciInfo );
+void    Mid2StreamConverterCleanup (VOID);
+BOOL    Mid2StreamConverterInit(unsigned char *pMidiData, ULONG iMidiSize);
+int     Mid2StreamConvertToBuffer(DWORD dwFlags, LPCONVERTINFO lpciInfo);

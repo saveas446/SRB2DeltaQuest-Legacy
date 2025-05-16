@@ -1,10 +1,8 @@
 // Emacs style mode select   -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id: g_game.c,v 1.15 2000/08/10 14:08:48 hurdler Exp $
-//
 // Copyright (C) 1993-1996 by id Software, Inc.
-// Portions Copyright (C) 1998-2000 by DooM Legacy Team.
+// Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -15,349 +13,595 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-//
-// $Log: g_game.c,v $
-// Revision 1.15  2000/08/10 14:08:48  hurdler
-// no message
-//
-// Revision 1.14  2000/04/30 10:30:10  bpereira
-// no message
-//
-// Revision 1.13  2000/04/23 16:19:52  bpereira
-// no message
-//
-// Revision 1.12  2000/04/19 10:56:51  hurdler
-// commited for exe release and tag only
-//
-// Revision 1.11  2000/04/16 18:38:07  bpereira
-// no message
-//
-// Revision 1.10  2000/04/11 19:07:23  stroggonmeth
-// Finished my logs, fixed a crashing bug.
-//
-// Revision 1.9  2000/04/07 23:11:17  metzgermeister
-// added mouse move
-//
-// Revision 1.8  2000/04/06 20:40:22  hurdler
-// Mostly remove warnings under windows
-//
-// Revision 1.7  2000/04/04 00:32:45  stroggonmeth
-// Initial Boom compatability plus few misc changes all around.
-//
-// Revision 1.6  2000/03/29 19:39:48  bpereira
-// no message
-//
-// Revision 1.5  2000/03/23 22:54:00  metzgermeister
-// added support for HOME/.legacy under Linux
-//
-// Revision 1.4  2000/02/27 16:30:28  hurdler
-// dead player bug fix + add allowmlook <yes|no>
-//
-// Revision 1.3  2000/02/27 00:42:10  hurdler
-// fix CR+LF problem
-//
-// Revision 1.2  2000/02/26 00:28:42  hurdler
-// Mostly bug fix (see borislog.txt 23-2-2000, 24-2-2000)
-//
-//
-// DESCRIPTION:
-//      game loop functions, events handling
-//
 //-----------------------------------------------------------------------------
-
+/// \file
+/// \brief game loop functions, events handling
 
 #include "doomdef.h"
-#include "command.h"
 #include "console.h"
 #include "dstrings.h"
-
 #include "d_main.h"
-#include "d_net.h"
-#include "d_netcmd.h"
 #include "f_finale.h"
 #include "p_setup.h"
 #include "p_saveg.h"
-
 #include "i_system.h"
-
-#include "wi_stuff.h"
 #include "am_map.h"
 #include "m_random.h"
 #include "p_local.h"
-#include "p_tick.h"
-
-// SKY handling - still the wrong place.
-#include "r_data.h"
 #include "r_draw.h"
 #include "r_main.h"
-#include "r_sky.h"
-
 #include "s_sound.h"
-
 #include "g_game.h"
-#include "g_state.h"
-#include "g_input.h"
-
-//added:16-01-98:quick hack test of rocket trails
-#include "p_fab.h"
 #include "m_cheat.h"
 #include "m_misc.h"
 #include "m_menu.h"
 #include "m_argv.h"
-
 #include "hu_stuff.h"
-
 #include "st_stuff.h"
-
-#include "keys.h"
-#include "w_wad.h"
 #include "z_zone.h"
-
 #include "i_video.h"
-#include "p_inter.h"
 #include "byteptr.h"
-
 #include "i_joy.h"
+#include "r_things.h"
+#include "y_inter.h"
+#include "v_video.h"
 
-// added 8-3-98 increse savegame size from 0x2c000 (180kb) to 512*1024
-#define SAVEGAMESIZE    (512*1024)
-#define SAVESTRINGSIZE  24
+gameaction_t gameaction;
+gamestate_t gamestate = GS_NULL;
+skill_t gameskill  = sk_medium;
 
+JoyType_t Joystick;
+JoyType_t Joystick2;
 
-boolean G_CheckDemoStatus (void);
-void    G_ReadDemoTiccmd (ticcmd_t* cmd,int playernum);
-void    G_WriteDemoTiccmd (ticcmd_t* cmd,int playernum);
-void    G_InitNew (skill_t skill, char* mapname, boolean resetplayer);
+// increase savegame size from 0x2c000 (180kb) to 512*1024
+#define SAVEGAMESIZE (512*1024)
+#define SAVESTRINGSIZE 24
 
-void    G_DoLoadLevel (void);
-void    G_DoCompleted (void);
-void    G_DoVictory (void);
-void    G_DoWorldDone (void);
+char gamedatafilename[64] = "gamedata.dat";
+char timeattackfolder[64] = "main";
 
+static void G_ReadDemoTiccmd(ticcmd_t *cmd, int playernum);
+static void G_WriteDemoTiccmd(ticcmd_t *cmd, int playernum);
+static void G_DoWorldDone(void);
 
-// demoversion the 'dynamic' version number, this should be == game VERSION
-// when playing back demos, 'demoversion' receives the version number of the
-// demo. At each change to the game play, demoversion is compared to
-// the game version, if it's older, the changes are not done, and the older
-// code is used for compatibility.
-//
-byte            demoversion=VERSION;
+short gamemap = 1;
+short mapmusic;
+short maptol;
+int globalweather = 0;
+int curWeather = PRECIP_NONE;
 
-//boolean         respawnmonsters;
+boolean modifiedgame; // Set if homebrew PWAD stuff has been added.
+boolean savemoddata = false;
+boolean paused;
+boolean timeattacking = false;
+boolean disableSpeedAdjust = false;
+boolean imcontinuing = false;
 
-byte            gameepisode;
-byte            gamemap;
-char            gamemapname[MAX_WADPATH];      // an external wad filename
+boolean timingdemo; // if true, exit with report on completion
+boolean nodrawers; // for comparative timing purposes
+boolean noblit; // for comparative timing purposes
+static tic_t demostarttime; // for comparative timing purposes
 
+boolean netgame; // only true if packets are broadcast
+boolean multiplayer;
+boolean playeringame[MAXPLAYERS];
+boolean addedtogame;
+player_t players[MAXPLAYERS];
 
-gamemode_t      gamemode = indetermined;       // Game Mode - identify IWAD as shareware, retail etc.
-gamemission_t   gamemission = doom;
-language_t      language = english;            // Language.
-boolean         modifiedgame;                  // Set if homebrew PWAD stuff has been added.
+int consoleplayer; // player taking events and displaying
+int displayplayer; // view being displayed
+int secondarydisplayplayer; // for splitscreen
 
+tic_t gametic;
+tic_t levelstarttic; // gametic at level start
+int totalitems, totalrings; // for intermission
+int lastmap; // last level you were at (returning from special stages)
+tic_t timeinmap; // Ticker for time spent in level (used for levelcard display)
 
-boolean         paused;
-boolean         usergame;               // ok to save / end game
+int spstage_start;
+int sstage_start;
+int sstage_end;
+int racestage_start;
 
-boolean         timingdemo;             // if true, exit with report on completion
-boolean         nodrawers;              // for comparative timing purposes
-boolean         noblit;                 // for comparative timing purposes
-ULONG           demostarttime;              // for comparative timing purposes
+boolean looptitle = false;
 
-boolean         viewactive;
+tic_t countdowntimer = 0;
+boolean countdowntimeup = false;
 
-boolean         netgame;                // only true if packets are broadcast
-boolean         multiplayer;
-boolean         playeringame[MAXPLAYERS];
-player_t        players[MAXPLAYERS];
+cutscene_t cutscenes[128];
 
-byte            consoleplayer;          // player taking events and displaying
-byte            displayplayer;          // view being displayed
-byte            secondarydisplayplayer; // for splitscreen
-byte            statusbarplayer;        // player who's statusbar is displayed
-                                        // (for spying with F12)
+int nextmapoverride, nextmapgametype;
+boolean skipstats;
 
-ULONG           gametic;
-ULONG           levelstarttic;          // gametic at level start
-int             totalkills, totalitems, totalsecret, totalrings;    // for intermission Tails 08-11-2001
+// Original flag spawn locations
+mapthing_t *rflagpoint;
+mapthing_t *bflagpoint;
 
-char            demoname[32];
-boolean         demorecording;
-boolean         demoplayback;
-byte*           demobuffer;
-byte*           demo_p;
-byte*           demoend;
-boolean         singledemo;             // quit after playing a demo from cmdline
-boolean         precache = true;        // if true, load all graphics at start
+boolean twodlevel;
 
-wbstartstruct_t wminfo;                 // parms for world map / intermission
+// Map Header Information
+mapheader_t mapheaderinfo[NUMMAPS];
 
-byte*           savebuffer;
+static boolean exitgame = false;
 
-void ShowMessage_OnChange(void);
-//void AllowTurbo_OnChange(void);
-void Analog_OnChange(void); // Analog Test Tails 06-11-2001
+unsigned short emeralds;
+int token; // Number of tokens collected in a level
+int tokenlist; // List of tokens collected
+int tokenbits; // Used for setting token bits
+int sstimer; // Time allotted in the special stage
 
-CV_PossibleValue_t showmessages_cons_t[]={{0,"Off"},{1,"On"},{2,"Not All"},{0,NULL}};
-CV_PossibleValue_t crosshair_cons_t[]   ={{0,"Off"},{1,"Cross"},{2,"Angle"},{3,"Point"},{0,NULL}};
+char lvltable[LEVELARRAYSIZE+3][64];
 
-consvar_t cv_crosshair      = {"crosshair"   ,"0",CV_SAVE,crosshair_cons_t};
-consvar_t cv_autorun        = {"autorun"     ,"1",CV_SAVE,CV_OnOff};// Tails 04-22-2000
-consvar_t cv_invertmouse    = {"invertmouse" ,"0",CV_SAVE,CV_OnOff};
-consvar_t cv_alwaysfreelook = {"alwaysmlook" ,"0",CV_SAVE,CV_OnOff};
-consvar_t cv_invertmouse2   = {"invertmouse2","0",CV_SAVE,CV_OnOff};
-consvar_t cv_alwaysfreelook2= {"alwaysmlook2","0",CV_SAVE,CV_OnOff};
-consvar_t cv_showmessages   = {"showmessages","1",CV_SAVE | CV_CALL | CV_NOINIT,showmessages_cons_t,ShowMessage_OnChange};
-//consvar_t cv_allowturbo     = {"allowturbo"  ,"0",CV_NETVAR | CV_CALL, CV_YesNo, AllowTurbo_OnChange};
-consvar_t cv_mousemove      = {"mousemove"   ,"1",CV_SAVE,CV_OnOff};
-consvar_t cv_mousemove2     = {"mousemove2"  ,"1",CV_SAVE,CV_OnOff};
-consvar_t cv_analog			= {"analog"		 ,"0",CV_NETVAR | CV_CALL,CV_OnOff, Analog_OnChange}; // Analog Test Tails 06-10-2001
+tic_t totalplaytime;
+int foundeggs = 0;
+int numemblems = 20;
+boolean gamedataloaded = 0;
 
-
-#if MAXPLAYERS>32
-#error please update "player_name" table using the new value for MAXPLAYERS
-#endif
-#if MAXPLAYERNAME!=21
-#error please update "player_name" table using the new value for MAXPLAYERNAME
-#endif
-// changed to 2d array 19990220 by Kin
-char    player_names[MAXPLAYERS][MAXPLAYERNAME] =
+// Mystic's funky SA ripoff emblem idea
+emblem_t emblemlocations[MAXEMBLEMS] =
 {
-    // THESE SHOULD BE AT LEAST MAXPLAYERNAME CHARS
-    "Player 1\0a123456789a\0",
-    "Player 2\0a123456789a\0",
-    "Player 3\0a123456789a\0",
-    "Player 4\0a123456789a\0",
-    "Player 5\0a123456789a\0",        // added 14-1-98 for support 8 players
-    "Player 6\0a123456789a\0",        // added 14-1-98 for support 8 players
-    "Player 7\0a123456789a\0",        // added 14-1-98 for support 8 players
-    "Player 8\0a123456789a\0",        // added 14-1-98 for support 8 players
-    "Player 9\0a123456789a\0",
-    "Player 10\0123456789a\0",
-    "Player 11\0123456789a\0",
-    "Player 12\0123456789a\0",
-    "Player 13\0123456789a\0",
-    "Player 14\0123456789a\0",
-    "Player 15\0123456789a\0",
-    "Player 16\0123456789a\0",
-    "Player 17\0123456789a\0",
-    "Player 18\0123456789a\0",
-    "Player 19\0123456789a\0",
-    "Player 20\0123456789a\0",
-    "Player 21\0123456789a\0",
-    "Player 22\0123456789a\0",
-    "Player 23\0123456789a\0",
-    "Player 24\0123456789a\0",
-    "Player 25\0123456789a\0",
-    "Player 26\0123456789a\0",
-    "Player 27\0123456789a\0",
-    "Player 28\0123456789a\0",
-    "Player 29\0123456789a\0",
-    "Player 30\0123456789a\0",
-    "Player 31\0123456789a\0",
-    "Player 32\0123456789a\0"
+	{  1566,  4352,  608, 0, 1, 0}, // GFZ1 Sonic
+	{  2079, -1284,  768, 1, 1, 0}, // GFZ1 Tails
+	{  1270,  5597,  960, 2, 1, 0}, // GFZ1 Knuckles
+	{ -5560, -2865, 2816, 0, 2, 0}, // GFZ2 Sonic
+	{    29,  -589, 3840, 1, 2, 0}, // GFZ2 Tails
+	{ -3872,  4203, 3072, 2, 2, 0}, // GFZ2 Knuckles
+	{ -985, -12193, 2172, 0, 4, 0}, // THZ1 Sonic
+	{  4272, -5720, 3700, 1, 4, 0}, // THZ1 Tails
+	{ 14318, -9281, 4040, 2, 4, 0}, // THZ1 Knuckles
+	{-13402,  3822, 1312, 0, 5, 0}, // THZ2 Sonic
+	{  4674,  3917, 2300, 1, 5, 0}, // THZ2 Tails
+	{ -1330, -3505, 2432, 2, 5, 0}, // THZ2 Knuckles
+	{  2848, -4094, 3800, 0, 7, 0}, // CEZ1 Sonic
+	{ -5936,   322, 2900, 1, 7, 0}, // CEZ1 Tails
+	{   -17,  1169,  912, 2, 7, 0}, // CEZ1 Knuckles
+	{ -3264,  -544, 1080, 0, 8, 0}, // CEZ2 Sonic
+	{  4777,  4725,  460, 1, 8, 0}, // CEZ2 Tails
+	{  2186, -2447,  212, 2, 8, 0} // CEZ2 Knuckles
 };
 
-char *team_names[MAXPLAYERS] =
+// Easter Eggs - Literally!
+emblem_t egglocations[NUMEGGS] =
 {
-    "Team 1\0890123456789bc\0",
-    "Team 2\0890123456789bc\0",
-    "Team 3\0890123456789bc\0",
-    "Team 4\0890123456789bc\0",
-    "Team 5\0890123456789bc\0",
-    "Team 6\0890123456789bc\0",
-    "Team 7\0890123456789bc\0",
-    "Team 8\0890123456789bc\0",
-    "Team 9\0890123456789bc\0",
-    "Team 10\090123456789bc\0",
-    "Team 11\090123456789bc\0",
-    "Team 12\090123456789bc\0",      // the other name hare not used because no colors
-    "Team 13\090123456789bc\0",      // but who know ?
-    "Team 14\090123456789bc\0",
-    "Team 15\090123456789bc\0",
-    "Team 16\090123456789bc\0",
-    "Team 17\090123456789bc\0",
-    "Team 18\090123456789bc\0",
-    "Team 19\090123456789bc\0",
-    "Team 20\090123456789bc\0",
-    "Team 21\090123456789bc\0",
-    "Team 22\090123456789bc\0",
-    "Team 23\090123456789bc\0",
-    "Team 24\090123456789bc\0",
-    "Team 25\090123456789bc\0",
-    "Team 26\090123456789bc\0",
-    "Team 27\090123456789bc\0",
-    "Team 28\090123456789bc\0",
-    "Team 29\090123456789bc\0",
-    "Team 30\090123456789bc\0",
-    "Team 31\090123456789bc\0",
-    "Team 32\090123456789bc\0"
+	{  -472,   2041,  103, 0, 1, 0},
+	{  3201,   6794,  103, 0, 1, 0},
+	{  6300,   4544, 1536, 0, 2, 0},
+	{  2803,  -6232, 1300, 0, 2, 0},
+	{ -1072, -10618, 2172, 0, 4, 0},
+	{  2158,  -1378, 2468, 0, 4, 0},
+	{-10057,   5274, 1280, 0, 5, 0},
+	{   374,  -1373, 1024, 0, 5, 0},
+	{  3322,   5459,  624, 0, 7, 0},
+	{ -5441,   3907, 1088, 0, 7, 0},
+	{  4784,  -2816,  408, 0, 8, 0},
+	{ -3877,  -2077,  601, 0, 8, 0}
 };
 
+// Time attack data for levels
+timeattack_t timedata[NUMMAPS];
+boolean mapvisited[NUMMAPS];
 
-#define   BODYQUESIZE     32
+int bluescore, redscore; // CTF team scores
 
-mobj_t*   bodyque[BODYQUESIZE];
-int       bodyqueslot;
+// Elminates unnecessary searching.
+boolean CheckForBustableBlocks;
+boolean CheckForBouncySector;
+boolean CheckForQuicksand;
+boolean CheckForMarioBlocks;
+boolean CheckForFloatBob;
 
-void*     statcopy;                      // for statistics driver
+// Powerup durations
+tic_t invulntics = 20*TICRATE;
+tic_t sneakertics = 20*TICRATE;
+int flashingtics = 3*TICRATE;
+tic_t tailsflytics = 8*TICRATE;
+int underwatertics = 30*TICRATE;
+tic_t spacetimetics = 11*TICRATE;
+tic_t extralifetics = 4*TICRATE;
+tic_t paralooptics = 20*TICRATE;
+tic_t helpertics = 20*TICRATE;
 
-void ShowMessage_OnChange(void)
+int gameovertics = 45*TICRATE;
+
+byte introtoplay;
+byte creditscutscene;
+
+// Emerald locations
+mobj_t *hunt1;
+mobj_t *hunt2;
+mobj_t *hunt3;
+
+int countdown, countdown2; // for racing
+
+fixed_t gravity;
+
+// Grading
+int grade;
+int timesbeaten;
+
+static char demoname[32];
+boolean demorecording;
+boolean demoplayback;
+static byte *demobuffer = NULL;
+static byte *demo_p;
+static byte *demoend;
+boolean singledemo; // quit after playing a demo from cmdline
+
+boolean precache = true; // if true, load all graphics at start
+
+int prevmap, nextmap;
+
+static byte *savebuffer;
+
+static void ShowMessage_OnChange(void);
+
+// Analog Control
+static void UserAnalog_OnChange(void);
+static void UserAnalog2_OnChange(void);
+static void Analog_OnChange(void);
+static void Analog2_OnChange(void);
+
+static CV_PossibleValue_t showmessages_cons_t[] = {{0, "Off"}, {1, "On"}, {0, NULL}};
+static CV_PossibleValue_t crosshair_cons_t[] = {{0, "Off"}, {1, "Cross"}, {2, "Angle"}, {3, "Point"}, {0, NULL}};
+static CV_PossibleValue_t joyaxis_t[] = { {0, "None"}, {1, "X-Axis"}, {2, "Y-Axis"}, {-1, "X-Axis-"}, {-2, "Y-Axis-"},
+#ifdef _arch_dreamcast
+{3, "R-Trig"}, {4, "L-Trig"}, {-3, "R-Trig-"}, {-4, "L-Trig-"},
+{5, "Alt X-Axis"}, {6, "Alt Y-Axis"}, {-5, "Alt X-Axis-"}, {-6, "Alt Y-Axis-"},
+{7, "Triggers"}, {-7,"Triggers-"},
+#elif defined (_XBOX)
+{3, "Alt X-Axis"}, {4, "Alt Y-Axis"}, {-3, "Alt X-Axis-"}, {-4, "Alt Y-Axis-"},
+#else
+#if JOYAXISSET > 1
+ {3, "Z-Axis"}, {4, "X-Rudder"}, {-3, "Z-Axis-"}, {-4, "X-Rudder-"},
+#endif
+#if JOYAXISSET > 2
+ {5, "Y-Rudder"}, {6, "Z-Rudder"}, {-5, "Y-Rudder-"}, {-6, "Z-Rudder-"},
+#endif
+#if JOYAXISSET > 3
+ {7, "U-Axis"}, {8, "V-Axis"}, {-7, "U-Axis-"}, {-8, "V-Axis-"},
+#endif
+#endif
+ {0, NULL}};
+#if JOYAXISSET > 4
+"More Axis Sets"
+#endif
+
+consvar_t cv_crosshair = {"crosshair", "Cross", CV_SAVE, crosshair_cons_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_crosshair2 = {"crosshair2", "Cross", CV_SAVE, crosshair_cons_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_invertmouse = {"invertmouse", "Off", CV_SAVE, CV_OnOff, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_alwaysfreelook = {"alwaysmlook", "Off", CV_SAVE, CV_OnOff, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_invertmouse2 = {"invertmouse2", "Off", CV_SAVE, CV_OnOff, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_alwaysfreelook2 = {"alwaysmlook2", "Off", CV_SAVE, CV_OnOff, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_showmessages = {"showmessages", "On", CV_SAVE|CV_CALL|CV_NOINIT, showmessages_cons_t, ShowMessage_OnChange, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_mousemove = {"mousemove", "On", CV_SAVE, CV_OnOff, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_mousemove2 = {"mousemove2", "On", CV_SAVE, CV_OnOff, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_analog = {"analog", "Off", CV_CALL, CV_OnOff, Analog_OnChange, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_analog2 = {"analog2", "Off", CV_CALL, CV_OnOff, Analog2_OnChange, 0, NULL, NULL, 0, 0, NULL};
+#ifdef DC
+consvar_t cv_useranalog = {"useranalog", "On", CV_SAVE|CV_CALL, CV_OnOff, UserAnalog_OnChange, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_useranalog2 = {"useranalog2", "On", CV_SAVE|CV_CALL, CV_OnOff, UserAnalog2_OnChange, 0, NULL, NULL, 0, 0, NULL};
+#else
+consvar_t cv_useranalog = {"useranalog", "Off", CV_SAVE|CV_CALL, CV_OnOff, UserAnalog_OnChange, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_useranalog2 = {"useranalog2", "Off", CV_SAVE|CV_CALL, CV_OnOff, UserAnalog2_OnChange, 0, NULL, NULL, 0, 0, NULL};
+#endif
+
+typedef enum
 {
-    if (!cv_showmessages.value)
-        CONS_Printf("%s\n",MSGOFF);
-    else
-        CONS_Printf("%s\n",MSGON);
+	AXISNONE = 0,
+	AXISTURN,
+	AXISMOVE,
+	AXISLOOK,
+	AXISSTRAFE,
+} axis_input_e;
+
+consvar_t cv_turnaxis = {"joyaxis_turn", "X-Axis", CV_SAVE, joyaxis_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+#ifdef _PSP_
+consvar_t cv_moveaxis = {"joyaxis_move", "None", CV_SAVE, joyaxis_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+#else
+consvar_t cv_moveaxis = {"joyaxis_move", "Y-Axis", CV_SAVE, joyaxis_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+#endif
+#ifdef _arch_dreamcast
+consvar_t cv_sideaxis = {"joyaxis_side", "Triggers", CV_SAVE, joyaxis_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+#elif defined (_XBOX)
+consvar_t cv_sideaxis = {"joyaxis_side", "Alt X-Axis", CV_SAVE, joyaxis_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_lookaxis = {"joyaxis_look", "Alt Y-Axis", CV_SAVE, joyaxis_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+#elif defined (_PSP_)
+consvar_t cv_sideaxis = {"joyaxis_side", "None", CV_SAVE, joyaxis_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+#else
+consvar_t cv_sideaxis = {"joyaxis_side", "Z-Axis", CV_SAVE, joyaxis_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+#endif
+#ifndef _XBOX
+#ifdef _PSP_
+consvar_t cv_lookaxis = {"joyaxis_look", "Y-Axis", CV_SAVE, joyaxis_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+#else
+consvar_t cv_lookaxis = {"joyaxis_look", "None", CV_SAVE, joyaxis_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+#endif
+#endif
+consvar_t cv_turnaxis2 = {"joyaxis2_turn", "X-Axis", CV_SAVE, joyaxis_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_moveaxis2 = {"joyaxis2_move", "Y-Axis", CV_SAVE, joyaxis_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+#ifdef _arch_dreamcast
+consvar_t cv_sideaxis2 = {"joyaxis2_side", "Triggers", CV_SAVE, joyaxis_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+#elif defined (_XBOX)
+consvar_t cv_sideaxis2 = {"joyaxis2_side", "Alt X-Axis", CV_SAVE, joyaxis_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_lookaxis2 = {"joyaxis2_look", "Alt Y-Axis", CV_SAVE, joyaxis_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+#elif defined (_PSP)
+consvar_t cv_sideaxis2 = {"joyaxis2_side", "None", CV_SAVE, joyaxis_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+#else
+consvar_t cv_sideaxis2 = {"joyaxis2_side", "Z-Axis", CV_SAVE, joyaxis_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+#endif
+#ifndef _XBOX
+consvar_t cv_lookaxis2 = {"joyaxis2_look", "None", CV_SAVE, joyaxis_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+#endif
+
+
+#if MAXPLAYERS > 32
+#error "please update player_name table using the new value for MAXPLAYERS"
+#endif
+
+char player_names[MAXPLAYERS][MAXPLAYERNAME+1] =
+{
+	"Player 1",
+	"Player 2",
+	"Player 3",
+	"Player 4",
+	"Player 5",
+	"Player 6",
+	"Player 7",
+	"Player 8",
+	"Player 9",
+	"Player 10",
+	"Player 11",
+	"Player 12",
+	"Player 13",
+	"Player 14",
+	"Player 15",
+	"Player 16",
+	"Player 17",
+	"Player 18",
+	"Player 19",
+	"Player 20",
+	"Player 21",
+	"Player 22",
+	"Player 23",
+	"Player 24",
+	"Player 25",
+	"Player 26",
+	"Player 27",
+	"Player 28",
+	"Player 29",
+	"Player 30",
+	"Player 31",
+	"Player 32"
+};
+
+char team_names[MAXPLAYERS][MAXPLAYERNAME+1] =
+{
+	"Team 1",
+	"Team 2",
+	"Team 3",
+	"Team 4",
+	"Team 5",
+	"Team 6",
+	"Team 7",
+	"Team 8",
+	"Team 9",
+	"Team 10",
+	"Team 11",
+	"Team 12",
+	"Team 13",
+	"Team 14",
+	"Team 15",
+	"Team 16",
+	"Team 17", // teams from here on cannot be used for teams by color,
+	"Team 18", // but theoretically you can have 32 teams by skin
+	"Team 19",
+	"Team 20",
+	"Team 21",
+	"Team 22",
+	"Team 23",
+	"Team 24",
+	"Team 25",
+	"Team 26",
+	"Team 27",
+	"Team 28",
+	"Team 29",
+	"Team 30",
+	"Team 31",
+	"Team 32",
+};
+
+static void ShowMessage_OnChange(void)
+{
+	if (!cv_showmessages.value)
+		CONS_Printf("%s\n", MSGOFF);
+	else
+		CONS_Printf("%s\n", MSGON);
 }
 
-
-//  Build an original game map name from episode and map number,
-//  based on the game mode (doom1, doom2...)
-//
-char* G_BuildMapName (int episode, int map)
+/** Builds an original game map name from a map number.
+  * The complexity is due to MAPA0-MAPZZ.
+  *
+  * \param map Map number.
+  * \return Pointer to a static buffer containing the desired map name.
+  * \sa M_MapNumber
+  */
+const char *G_BuildMapName(int map)
 {
-    static char  mapname[9];    // internal map name (wad resource name)
+	static char mapname[9] = "MAPXX"; // internal map name (wad resource name)
 
-    if (gamemode==commercial)
-        strcpy (mapname, va("MAP%#02d",map));
-    else
-    {
-        mapname[0] = 'E';
-        mapname[1] = '0' + episode;
-        mapname[2] = 'M';
-        mapname[3] = '0' + map;
-        mapname[4] = 0;
-    }
-    return mapname;
+	I_Assert(map > 0);
+	I_Assert(map <= NUMMAPS);
+
+	if (map < 100)
+		sprintf(&mapname[3], "%.2d", map);
+	else
+	{
+		mapname[3] = (char)('A' + (char)((map - 100) / 36));
+		if ((map - 100) % 36 < 10)
+			mapname[4] = (char)('0' + (char)((map - 100) % 36));
+		else
+			mapname[4] = (char)('A' + (char)((map - 100) % 36) - 10);
+		mapname[5] = '\0';
+	}
+
+	return mapname;
 }
 
-
-//
-//  Clip the console player mouse aiming to the current view,
-//  also returns a signed char for the player ticcmd if needed.
-//  Used whenever the player view pitch is changed manually
-//
-//added:22-02-98:
-//changed:3-3-98: do a angle limitation now
-short G_ClipAimingPitch (int* aiming)
+/** Clips the console player's mouse aiming to the current view.
+  * Used whenever the player view is changed manually.
+  *
+  * \param aiming Pointer to the vertical angle to clip.
+  * \return Short version of the clipped angle for building a ticcmd.
+  */
+short G_ClipAimingPitch(int *aiming)
 {
-    int limitangle;
+	int limitangle;
 
-    //note: the current software mode implementation doesn't have true perspective
-    if ( rendermode == render_soft )
-		        limitangle = ANG45 + (ANG45/2); // Tails 10-31-99 Some viewing fun, but not too far down...
-//        limitangle = 732<<ANGLETOFINESHIFT;
-    else
-        limitangle = ANG90 - 1;
+	// note: the current software mode implementation doesn't have true perspective
+	if (rendermode == render_soft)
+		limitangle = ANG45 + (ANG45/2); // Some viewing fun, but not too far down...
+	else
+		limitangle = ANG90 - 1;
 
-    if (*aiming > limitangle )
-        *aiming = limitangle;
-    else
-    if (*aiming < -limitangle)
-        *aiming = -limitangle;
+	if (*aiming > limitangle)
+		*aiming = limitangle;
+	else if (*aiming < -limitangle)
+		*aiming = -limitangle;
 
-    return (*aiming)>>16;
+	return (short)((*aiming)>>16);
+}
+
+static int JoyAxis(axis_input_e axissel)
+{
+	int retaxis = 0;
+	int axisval = 0;
+	boolean flp = false;
+
+	//find what axis to get
+	switch (axissel)
+	{
+		case AXISTURN:
+			axisval = cv_turnaxis.value;
+			break;
+		case AXISMOVE:
+			axisval = cv_moveaxis.value;
+			break;
+		case AXISLOOK:
+			axisval = cv_lookaxis.value;
+			break;
+		case AXISSTRAFE:
+			axisval = cv_sideaxis.value;
+			break;
+		case AXISNONE:
+			return retaxis;
+			break;
+	}
+
+	if (axisval < 0) //odd -axises
+	{
+		axisval = -axisval;
+		flp = true;
+	}
+#ifdef _arch_dreamcast
+	if (axisval == 7) // special case
+	{
+		retaxis = joyxmove[1] - joyymove[1];
+		goto skipDC;
+	}
+	else
+#endif
+	if (axisval > JOYAXISSET*2 || axisval == 0) //not there in array or None
+		return retaxis;
+
+	if (axisval%2)
+	{
+		axisval /= 2;
+		retaxis = joyxmove[axisval];
+	}
+	else
+	{
+		axisval--;
+		axisval /= 2;
+		retaxis = joyymove[axisval];
+	}
+
+#ifdef _arch_dreamcast
+	skipDC:
+#endif
+
+	if (retaxis < (-JOYAXISRANGE))
+		retaxis = -JOYAXISRANGE;
+	if (retaxis > (+JOYAXISRANGE))
+		retaxis = +JOYAXISRANGE;
+	if (flp) retaxis = -retaxis; //flip it around
+	return retaxis;
+}
+
+static int Joy2Axis(axis_input_e axissel)
+{
+	int retaxis = 0;
+	int axisval = 0;
+	boolean flp = false;
+
+	//find what axis to get
+	switch (axissel)
+	{
+		case AXISTURN:
+			axisval = cv_turnaxis2.value;
+			break;
+		case AXISMOVE:
+			axisval = cv_moveaxis2.value;
+			break;
+		case AXISLOOK:
+			axisval = cv_lookaxis2.value;
+			break;
+		case AXISSTRAFE:
+			axisval = cv_sideaxis2.value;
+			break;
+		case AXISNONE:
+			return retaxis;
+			break;
+	}
+
+
+	if (axisval < 0) //odd -axises
+	{
+		axisval = -axisval;
+		flp = true;
+	}
+#ifdef _arch_dreamcast
+	if (axisval == 7) // special case
+	{
+		retaxis = joy2xmove[1] - joy2ymove[1];
+		goto skipDC;
+	}
+	else
+#endif
+	if (axisval > JOYAXISSET*2 || axisval == 0) //not there in array or None
+		return retaxis;
+
+	if (axisval%2)
+	{
+		axisval /= 2;
+		retaxis = joy2xmove[axisval];
+	}
+	else
+	{
+		axisval--;
+		axisval /= 2;
+		retaxis = joy2ymove[axisval];
+	}
+
+#ifdef _arch_dreamcast
+	skipDC:
+#endif
+
+	if (retaxis < (-JOYAXISRANGE))
+		retaxis = -JOYAXISRANGE;
+	if (retaxis > (+JOYAXISRANGE))
+		retaxis = +JOYAXISRANGE;
+	if (flp) retaxis = -retaxis; //flip it around
+	return retaxis;
 }
 
 
@@ -369,907 +613,896 @@ short G_ClipAimingPitch (int* aiming)
 //
 // set secondaryplayer true to build player 2's ticcmd in splitscreen mode
 //
-int     localaiming,localaiming2;
-angle_t localangle,localangle2;
+int localaiming, localaiming2;
+angle_t localangle, localangle2;
 
-//added:06-02-98: mouseaiming (looking up/down with the mouse or keyboard)
-#define KB_LOOKSPEED    (1<<25)
-#define MAXPLMOVE       (forwardmove[1])
-//#define TURBOTHRESHOLD  0x32
-#define SLOWTURNTICS    6
+// mouseaiming (looking up/down with the mouse or keyboard)
+#define KB_LOOKSPEED (1<<25)
+#define MAXPLMOVE (forwardmove[1])
+#define SLOWTURNTICS (6*NEWTICRATERATIO)
 
-static fixed_t forwardmove[2] = {25, 50};
-static fixed_t sidemove[2]    = {25, 50}; // faster! Tails 09-08-2001
-static fixed_t angleturn[3]   = {640, 1280, 320};        // + slow turn
+static fixed_t forwardmove[2] = {25/NEWTICRATERATIO, 50/NEWTICRATERATIO};
+static fixed_t sidemove[2] = {25/NEWTICRATERATIO, 50/NEWTICRATERATIO}; // faster!
+static fixed_t angleturn[3] = {640/NEWTICRATERATIO, 1280/NEWTICRATERATIO, 320/NEWTICRATERATIO}; // + slow turn
 
-
-// for change this table change also nextweapon func in g_game and P_PlayerThink
-char extraweapons[8]={wp_chainsaw,-1,wp_supershotgun,-1,-1,-1,-1,-1};
-byte nextweaponorder[NUMWEAPONS]={wp_fist,wp_chainsaw,wp_pistol,
-     wp_shotgun,wp_supershotgun,wp_chaingun,wp_missile,wp_plasma,wp_bfg};
-
-byte NextWeapon(player_t *player,int step)
+void G_BuildTiccmd(ticcmd_t *cmd, int realtics)
 {
-    byte   w;
-    int    i;
-    for (i=0;i<NUMWEAPONS;i++)
-        if( player->readyweapon == nextweaponorder[i] )
-        {
-            i = (i+NUMWEAPONS+step)%NUMWEAPONS;
-            break;
-        }
-    for (;nextweaponorder[i]!=player->readyweapon; i=(i+NUMWEAPONS+step)%NUMWEAPONS)
-    {
-        w = nextweaponorder[i];
-        
-        // skip super shotgun for non-Doom2
-        if (gamemode!=commercial && w==wp_supershotgun)
-            continue;
+	boolean strafe;
+	int tspeed, forward, side, axis;
+	const int speed = 1;
+	ticcmd_t *base;
+	// these ones used for multiple conditions
+	boolean turnleft, turnright, mouseaiming, analogjoystickmove, gamepadjoystickmove;
 
-        // skip plasma-bfg in sharware
-        if (gamemode==shareware && (w==wp_plasma || w==wp_bfg))
-            continue;
+	static int turnheld; // for accelerative turning
+	static boolean keyboard_look; // true if lookup/down using keyboard
 
-        if ( player->weaponowned[w] &&
-             player->ammo[weaponinfo[w].ammo] >= weaponinfo[w].ammopershoot )
-        {
-			// Weapon fart Tails
-//            if(w==wp_chainsaw)
-//                return (BT_CHANGE | BT_EXTRAWEAPON | (wp_fist<<BT_WEAPONSHIFT));
-//            if(w==wp_supershotgun)
-//                return (BT_CHANGE | BT_EXTRAWEAPON | (wp_shotgun<<BT_WEAPONSHIFT));
-//            return (BT_CHANGE | (w<<BT_WEAPONSHIFT));
-        }
-    }
-    return 0;
-}
+	base = I_BaseTiccmd(); // empty, or external driver
+	memcpy(cmd, base, sizeof (*cmd));
 
+	// a little clumsy, but then the g_input.c became a lot simpler!
+	strafe = gamekeydown[gamecontrol[gc_strafe][0]] ||
+		gamekeydown[gamecontrol[gc_strafe][1]];
 
-void G_BuildTiccmd (ticcmd_t* cmd, int realtics)
-{
-    int         i;
-    boolean     strafe;
-    int         speed;
-    int         tspeed;
-    int         forward;
-    int         side;
-//	int			cammove; // Tails 06-20-2001
-    ticcmd_t*   base;
-    //added:14-02-98: these ones used for multiple conditions
-    boolean     turnleft,turnright,mouseaiming;
+	turnright = gamekeydown[gamecontrol[gc_turnright][0]]
+		|| gamekeydown[gamecontrol[gc_turnright][1]];
+	turnleft = gamekeydown[gamecontrol[gc_turnleft][0]]
+		|| gamekeydown[gamecontrol[gc_turnleft][1]];
+	mouseaiming = (gamekeydown[gamecontrol[gc_mouseaiming][0]]
+		|| gamekeydown[gamecontrol[gc_mouseaiming][1]]) ^ cv_alwaysfreelook.value;
+	analogjoystickmove = cv_usejoystick.value && !Joystick.bGamepadStyle;
+	gamepadjoystickmove = cv_usejoystick.value && Joystick.bGamepadStyle;
 
-    static int  turnheld;               // for accelerative turning
-    static boolean  keyboard_look;      // true if lookup/down using keyboard
-
-    base = I_BaseTiccmd ();             // empty, or external driver
-    memcpy (cmd,base,sizeof(*cmd));
-
-    // a little clumsy, but then the g_input.c became a lot simpler!
-    strafe = gamekeydown[gamecontrol[gc_strafe][0]] ||
-             gamekeydown[gamecontrol[gc_strafe][1]];
-    speed  = (gamekeydown[gamecontrol[gc_speed][0]] ||
-             gamekeydown[gamecontrol[gc_speed][1]]) ^
-             cv_autorun.value;
-
-    turnright = gamekeydown[gamecontrol[gc_turnright][0]]
-              ||gamekeydown[gamecontrol[gc_turnright][1]];
-    turnleft  = gamekeydown[gamecontrol[gc_turnleft][0]]
-              ||gamekeydown[gamecontrol[gc_turnleft][1]];
-    mouseaiming = (gamekeydown[gamecontrol[gc_mouseaiming][0]]
-                ||gamekeydown[gamecontrol[gc_mouseaiming][1]])
-                ^ cv_alwaysfreelook.value;
-
-    if( !cv_splitscreen.value && Joystick.bGamepadStyle)
-    {
-        turnright = turnright || (joyxmove > 0);
-        turnleft  = turnleft  || (joyxmove < 0);
-    }
-    forward = side = 0;//cammove = 0; // Tails 06-20-2001
-
-    // use two stage accelerative turning
-    // on the keyboard and joystick
-    if (turnleft || turnright)
-        turnheld += realtics;
-    else
-        turnheld = 0;
-
-    if (turnheld < SLOWTURNTICS)
-        tspeed = 2;             // slow turn
-    else
-        tspeed = speed;
-
-    // let movement keys cancel each other out
-	if(cv_analog.value) // Analog Test Tails 06-10-2001
+	axis = JoyAxis(AXISTURN);
+	if (gamepadjoystickmove && axis != 0)
 	{
-        if (turnright)
+		turnright = turnright || (axis > 0);
+		turnleft = turnleft || (axis < 0);
+	}
+	forward = side = 0;
+
+	// use two stage accelerative turning
+	// on the keyboard and joystick
+	if (turnleft || turnright)
+		turnheld += realtics;
+	else
+		turnheld = 0;
+
+	if (turnheld < SLOWTURNTICS)
+		tspeed = 2; // slow turn
+	else
+		tspeed = speed;
+
+	// let movement keys cancel each other out
+	if (cv_analog.value) // Analog
+	{
+		if (turnright)
+			cmd->angleturn = (short)(cmd->angleturn - angleturn[tspeed]);
+		if (turnleft)
+			cmd->angleturn = (short)(cmd->angleturn + angleturn[tspeed]);
+	}
+	if (strafe || cv_analog.value || twodlevel || players[consoleplayer].climbing
+		|| players[consoleplayer].nightsmode) // Analog
+	{
+		if (turnright)
+			side += sidemove[speed];
+		if (turnleft)
+			side -= sidemove[speed];
+
+		if (analogjoystickmove && axis != 0)
 		{
-			cmd->angleturn -= angleturn[tspeed];
-		}
-        if (turnleft)
-		{
-			cmd->angleturn += angleturn[tspeed];
+			// JOYAXISRANGE is supposed to be 1023 (divide by 1024)
+			side += ((axis * sidemove[1]) >> 10);
 		}
 	}
-    if (strafe || cv_analog.value) // Analog Test Tails 06-10-2001
-    {
-        if (turnright)
+	else
+	{
+		if (turnright)
+			cmd->angleturn = (short)(cmd->angleturn - angleturn[tspeed]);
+		else if (turnleft)
+			cmd->angleturn = (short)(cmd->angleturn + angleturn[tspeed]);
+
+		if (analogjoystickmove && axis != 0)
 		{
-            side += sidemove[speed];
+			// JOYAXISRANGE should be 1023 (divide by 1024)
+			cmd->angleturn = (short)(cmd->angleturn - ((axis * angleturn[1]) >> 10)); // ANALOG!
 		}
-        if (turnleft)
-		{
-            side -= sidemove[speed];
-		}
+	}
 
-        if (!Joystick.bGamepadStyle && !cv_splitscreen.value)
-        {
-            //faB: JOYAXISRANGE is supposed to be 1023 ( divide by 1024 )
-            side += ( (joyxmove * sidemove[1]) >> 10 );
-        }
-    }
-    else
-    {
-        if ( turnright )
-            cmd->angleturn -= angleturn[tspeed];
-        else
-        if ( turnleft  )
-            cmd->angleturn += angleturn[tspeed];
-        if ( joyxmove && !Joystick.bGamepadStyle && !cv_splitscreen.value) {
-            //faB: JOYAXISRANGE should be 1023 ( divide by 1024 )
-            cmd->angleturn -= ( (joyxmove * angleturn[1]) >> 10 );        // ANALOG!
-            //CONS_Printf ("joyxmove %d  angleturn %d\n", joyxmove, cmd->angleturn);
-        }
+	axis = JoyAxis(AXISSTRAFE);
+	if (gamepadjoystickmove && axis != 0)
+	{
+		if (axis < 0)
+			side += sidemove[speed];
+		else if (axis > 0)
+			side -= sidemove[speed];
+	}
+	else if (analogjoystickmove && axis != 0)
+	{
+		// JOYAXISRANGE is supposed to be 1023 (divide by 1024)
+			side += ((axis * sidemove[1]) >> 10);
+	}
 
-    }
+	// forward with key or button
+	axis = JoyAxis(AXISMOVE);
+	if (gamekeydown[gamecontrol[gc_forward][0]] ||
+		gamekeydown[gamecontrol[gc_forward][1]] ||
+		(gamepadjoystickmove && axis < 0))
+	{
+		forward += forwardmove[speed];
+	}
+	if (gamekeydown[gamecontrol[gc_backward][0]] ||
+		gamekeydown[gamecontrol[gc_backward][1]] ||
+		(gamepadjoystickmove && axis > 0))
+	{
+		forward -= forwardmove[speed];
+	}
 
-    //added:07-02-98: forward with key or button
-    if (gamekeydown[gamecontrol[gc_forward][0]] ||
-        gamekeydown[gamecontrol[gc_forward][1]] ||
-        ( joyymove < 0 && Joystick.bGamepadStyle && !cv_splitscreen.value) )
-    {
-        forward += forwardmove[speed];
-    }
-    if (gamekeydown[gamecontrol[gc_backward][0]] ||
-        gamekeydown[gamecontrol[gc_backward][1]] ||
-        ( joyymove > 0 && Joystick.bGamepadStyle && !cv_splitscreen.value) )
-    {
-        forward -= forwardmove[speed];
-    }
+	if (analogjoystickmove && axis != 0)
+		forward -= ((axis * forwardmove[1]) >> 10); // ANALOG!
 
-    if ( joyymove && !Joystick.bGamepadStyle && !cv_splitscreen.value) {
-        forward -= ( (joyymove * forwardmove[1]) >> 10 );               // ANALOG!
-    }
+	// some people strafe left & right with mouse buttons
+	if (gamekeydown[gamecontrol[gc_straferight][0]] ||
+		gamekeydown[gamecontrol[gc_straferight][1]])
+	{
+		side += sidemove[speed];
+	}
+	if (gamekeydown[gamecontrol[gc_strafeleft][0]] ||
+		gamekeydown[gamecontrol[gc_strafeleft][1]])
+	{
+		side -= sidemove[speed];
+	}
 
+	// fire with any button/key
+	if (gamekeydown[gamecontrol[gc_fire][0]] ||
+		gamekeydown[gamecontrol[gc_fire][1]])
+		cmd->buttons |= BT_ATTACK;
 
-    //added:07-02-98: some people strafe left & right with mouse buttons
-    if (gamekeydown[gamecontrol[gc_straferight][0]] ||
-        gamekeydown[gamecontrol[gc_straferight][1]])
-        side += sidemove[speed];
-    if (gamekeydown[gamecontrol[gc_strafeleft][0]] ||
-        gamekeydown[gamecontrol[gc_strafeleft][1]])
-        side -= sidemove[speed];
+	// fire normal with any button/key
+	if (gamekeydown[gamecontrol[gc_firenormal][0]] ||
+		gamekeydown[gamecontrol[gc_firenormal][1]])
+		cmd->buttons |= BT_FIRENORMAL;
 
-    //added:07-02-98: fire with any button/key
-    if (gamekeydown[gamecontrol[gc_fire][0]] ||
-        gamekeydown[gamecontrol[gc_fire][1]])
-        cmd->buttons |= BT_ATTACK;
+	if (gamekeydown[gamecontrol[gc_lightdash][0]] ||
+		gamekeydown[gamecontrol[gc_lightdash][1]])
+		cmd->buttons |= BT_LIGHTDASH;
 
-    //added:07-02-98: use with any button/key
-    if (gamekeydown[gamecontrol[gc_use][0]] ||
-        gamekeydown[gamecontrol[gc_use][1]])
-        cmd->buttons |= BT_USE;
+	// use with any button/key
+	if (gamekeydown[gamecontrol[gc_use][0]] ||
+		gamekeydown[gamecontrol[gc_use][1]])
+		cmd->buttons |= BT_USE;
 
-    //added:22-02-98: jump button
-    if (cv_allowjump.value && (gamekeydown[gamecontrol[gc_jump][0]] ||
-                               gamekeydown[gamecontrol[gc_jump][1]]))
-        cmd->buttons |= BT_JUMP;
+	// Taunts
+	if (gamekeydown[gamecontrol[gc_taunt][0]] ||
+		gamekeydown[gamecontrol[gc_taunt][1]])
+		cmd->buttons |= BT_TAUNT;
 
+	// Camera Controls
+	if (gamekeydown[gamecontrol[gc_camleft][0]] ||
+		gamekeydown[gamecontrol[gc_camleft][1]])
+		cmd->buttons |= BT_CAMLEFT;
 
-    //added:07-02-98: any key / button can trigger a weapon
-    // chainsaw overrides
-    if (gamekeydown[gamecontrol[gc_nextweapon][0]] ||
-        gamekeydown[gamecontrol[gc_nextweapon][1]])
-        cmd->buttons |= NextWeapon(&players[consoleplayer],1);
-    else
-    if (gamekeydown[gamecontrol[gc_prevweapon][0]] ||
-        gamekeydown[gamecontrol[gc_prevweapon][1]])
-        cmd->buttons |= NextWeapon(&players[consoleplayer],-1);
-    else
-    for (i=gc_weapon1; i<gc_weapon1+NUMWEAPONS-1; i++)
-        if (gamekeydown[gamecontrol[i][0]] ||
-            gamekeydown[gamecontrol[i][1]])
-        {
-			// Weapon fart Tails
-//            cmd->buttons |= BT_CHANGE | BT_EXTRAWEAPON; // extra by default
-//            cmd->buttons |= (i-gc_weapon1)<<BT_WEAPONSHIFT;
-            // already have extraweapon in hand switch to the normal one
-//            if( players[consoleplayer].readyweapon==extraweapons[i-gc_weapon1] )
-//                cmd->buttons &= ~BT_EXTRAWEAPON;
-            break;
-        }
-/*
-// Camera controls Tails 06-20-2001
-    if (gamekeydown[gamecontrol[gc_camleft][0]] ||
-        gamekeydown[gamecontrol[gc_camleft][1]])
-    {
-        cammove++;
-    }
+	if (gamekeydown[gamecontrol[gc_camright][0]] ||
+		gamekeydown[gamecontrol[gc_camright][1]])
+		cmd->buttons |= BT_CAMRIGHT;
 
-    if (gamekeydown[gamecontrol[gc_camright][0]] ||
-        gamekeydown[gamecontrol[gc_camright][1]])
-    {
-        cammove--;
-    }
-// Camera controls Tails 06-20-2001
-*/
-    // mouse look stuff (mouse look is not the same as mouse aim)
-    if (mouseaiming)
-    {
-        keyboard_look = false;
+	if (gamekeydown[gamecontrol[gc_camreset][0]] ||
+		gamekeydown[gamecontrol[gc_camreset][1]])
+	{
+		if (cv_chasecam.value)
+			P_ResetCamera(&players[displayplayer], &camera);
+	}
 
-        // looking up/down
-        if (cv_invertmouse.value)
-            localaiming -= mlooky<<19;
-        else
-            localaiming += mlooky<<19;
-    }
-    else
-      // spring back if not using keyboard neither mouselookin'
-        if (!keyboard_look )
-             localaiming = 0;
+	// jump button
+	if (gamekeydown[gamecontrol[gc_jump][0]] ||
+		gamekeydown[gamecontrol[gc_jump][1]])
+		cmd->buttons |= BT_JUMP;
 
-    if (gamekeydown[gamecontrol[gc_lookup][0]] ||
-        gamekeydown[gamecontrol[gc_lookup][1]])
-    {
-        localaiming += KB_LOOKSPEED;
-        keyboard_look = true;
-    }
-    else
-    if (gamekeydown[gamecontrol[gc_lookdown][0]] ||
-        gamekeydown[gamecontrol[gc_lookdown][1]])
-    {
-        localaiming -= KB_LOOKSPEED;
-        keyboard_look = true;
-    }
-    else
-    if (gamekeydown[gamecontrol[gc_centerview][0]] ||
-        gamekeydown[gamecontrol[gc_centerview][1]])
-        localaiming = 0;
+	// mouse look stuff (mouse look is not the same as mouse aim)
+	if (mouseaiming)
+	{
+		keyboard_look = false;
 
-    //26/02/2000: added by Hurdler: accept no mlook for network games
-    if (!cv_allowmlook.value)
-        localaiming = 0;
+		// looking up/down
+		if (cv_invertmouse.value)
+			localaiming -= mlooky<<19;
+		else
+			localaiming += mlooky<<19;
+	}
 
-    cmd->aiming = G_ClipAimingPitch (&localaiming);
+	axis = JoyAxis(AXISLOOK);
+	if (analogjoystickmove && axis != 0 && cv_lookaxis.value != 0)
+		localaiming += axis<<16;
 
-    if (!mouseaiming && cv_mousemove.value)
-        forward += mousey;
+	// spring back if not using keyboard neither mouselookin'
+	if (!keyboard_look && cv_lookaxis.value == 0 && !mouseaiming)
+		localaiming = 0;
 
-    if (strafe || cv_analog.value) // Analog for mouse Tails 06-20-2001
-        side += mousex*2;
-    else
-        cmd->angleturn -= mousex*8;
+	if (gamekeydown[gamecontrol[gc_lookup][0]] ||
+		gamekeydown[gamecontrol[gc_lookup][1]] ||
+		(gamepadjoystickmove && axis < 0))
+	{
+		localaiming += KB_LOOKSPEED;
+		keyboard_look = true;
+	}
+	else if (gamekeydown[gamecontrol[gc_lookdown][0]] ||
+		gamekeydown[gamecontrol[gc_lookdown][1]] ||
+		(gamepadjoystickmove && axis > 0))
+	{
+		localaiming -= KB_LOOKSPEED;
+		keyboard_look = true;
+	}
+	else if (gamekeydown[gamecontrol[gc_centerview][0]] ||
+		gamekeydown[gamecontrol[gc_centerview][1]])
+		localaiming = 0;
 
-    mousex = mousey = mlooky = 0;
+	// accept no mlook for network games
+	if (!cv_allowmlook.value)
+		localaiming = 0;
 
-    if (forward > MAXPLMOVE)
-        forward = MAXPLMOVE;
-    else if (forward < -MAXPLMOVE)
-        forward = -MAXPLMOVE;
-    if (side > MAXPLMOVE)
-        side = MAXPLMOVE;
-    else if (side < -MAXPLMOVE)
-        side = -MAXPLMOVE;
+	cmd->aiming = G_ClipAimingPitch(&localaiming);
 
-    cmd->forwardmove += forward;
-    cmd->sidemove += side;
-//	cmd->cammove += cammove; // Tails 06-20-2001
-#ifdef ABSOLUTEANGLE
-    localangle += (cmd->angleturn<<16);
-    cmd->angleturn = localangle >> 16;
-#endif
+	if (!mouseaiming && cv_mousemove.value)
+		forward += mousey;
 
-#ifdef CLIENTPREDICTION2
-    if(players[consoleplayer].spirit)
-    {
-        extern boolean supdate;
-        player_t *p=&players[consoleplayer];
-        int    savedflags=p->mo->flags;
+	if (strafe || cv_analog.value) // Analog for mouse
+		side += mousex*2;
+	else
+		cmd->angleturn = (short)(cmd->angleturn - (mousex*8));
 
-        p->mo->flags &= ~(MF_SOLID|MF_SHOOTABLE); // put player temporarily in noclip (spirit must travers it)
-        p->spirit->flags|=MF_SOLID;
-        for(i=0;i<realtics;i++)
-        {
-            P_MoveSpirit(p,cmd);
-            P_MobjThinker(p->spirit);
-        }
-        p->mo->flags = savedflags;
-        p->spirit->flags&=~MF_SOLID;
-        P_CalcHeight (p);
-        cmd->x=p->spirit->x;
-        cmd->y=p->spirit->y;
-        supdate=true;
-    }
-    else
-    if(players[consoleplayer].mo)
-    {
-        cmd->x=players[consoleplayer].mo->x;
-        cmd->y=players[consoleplayer].mo->y;
-    }
-#endif
-    cmd->angleturn |= TICCMD_RECEIVED;
+	mousex = mousey = mlooky = 0;
+
+	if (forward > MAXPLMOVE)
+		forward = MAXPLMOVE;
+	else if (forward < -MAXPLMOVE)
+		forward = -MAXPLMOVE;
+	if (side > MAXPLMOVE)
+		side = MAXPLMOVE;
+	else if (side < -MAXPLMOVE)
+		side = -MAXPLMOVE;
+
+	cmd->forwardmove = (signed char)(cmd->forwardmove + forward);
+	cmd->sidemove = (signed char)(cmd->sidemove+ side);
+
+	localangle += (cmd->angleturn<<16);
+	cmd->angleturn = (short)(localangle >> 16);
 }
 
 // like the g_buildticcmd 1 but using mouse2, gamcontrolbis, ...
-void G_BuildTiccmd2 (ticcmd_t* cmd, int realtics)
+void G_BuildTiccmd2(ticcmd_t *cmd, int realtics)
 {
-    int         i;
-    boolean     strafe;
-    int         speed;
-    int         tspeed;
-    int         forward;
-    int         side;
-//	int			cammove; // Tails 06-20-2001
-    ticcmd_t*   base;
-    //added:14-02-98: these ones used for multiple conditions
-    boolean     turnleft,turnright,mouseaiming;
+	boolean strafe;
+	int tspeed, forward, side, axis;
+	const int speed = 1;
+	ticcmd_t *base;
+	// these ones used for multiple conditions
+	boolean turnleft, turnright, mouseaiming, analogjoystickmove, gamepadjoystickmove;
 
-    static int  turnheld;               // for accelerative turning
-    static boolean  keyboard_look;      // true if lookup/down using keyboard
+	static int turnheld; // for accelerative turning
+	static boolean keyboard_look; // true if lookup/down using keyboard
 
-    base = I_BaseTiccmd ();             // empty, or external driver
-    memcpy (cmd,base,sizeof(*cmd));
+	base = I_BaseTiccmd2(); // empty, or external driver
+	memcpy(cmd, base, sizeof (*cmd));
 
-    // a little clumsy, but then the g_input.c became a lot simpler!
-    strafe = gamekeydown[gamecontrolbis[gc_strafe][0]] ||
-             gamekeydown[gamecontrolbis[gc_strafe][1]];
-    speed  = (gamekeydown[gamecontrolbis[gc_speed][0]] ||
-             gamekeydown[gamecontrolbis[gc_speed][1]])
-             ^ cv_autorun.value;
+	// a little clumsy, but then the g_input.c became a lot simpler!
+	strafe = gamekeydown[gamecontrolbis[gc_strafe][0]] ||
+		gamekeydown[gamecontrolbis[gc_strafe][1]];
 
-    turnright = gamekeydown[gamecontrolbis[gc_turnright][0]]
-              ||gamekeydown[gamecontrolbis[gc_turnright][1]];
-    turnleft  = gamekeydown[gamecontrolbis[gc_turnleft][0]]
-              ||gamekeydown[gamecontrolbis[gc_turnleft][1]];
+	turnright = gamekeydown[gamecontrolbis[gc_turnright][0]]
+		|| gamekeydown[gamecontrolbis[gc_turnright][1]];
+	turnleft = gamekeydown[gamecontrolbis[gc_turnleft][0]]
+		|| gamekeydown[gamecontrolbis[gc_turnleft][1]];
 
-    mouseaiming = (gamekeydown[gamecontrolbis[gc_mouseaiming][0]]
-                ||gamekeydown[gamecontrolbis[gc_mouseaiming][1]])
-                ^ cv_alwaysfreelook2.value;
+	mouseaiming = (gamekeydown[gamecontrolbis[gc_mouseaiming][0]]
+		|| gamekeydown[gamecontrolbis[gc_mouseaiming][1]]) ^ cv_alwaysfreelook2.value;
+	analogjoystickmove = cv_usejoystick2.value && !Joystick2.bGamepadStyle;
+	gamepadjoystickmove = cv_usejoystick2.value && Joystick2.bGamepadStyle;
 
-    if(Joystick.bGamepadStyle)
-    {
-        turnright = turnright || joyxmove > 0;
-        turnleft  = turnleft  || joyxmove < 0;
-    }
-
-    forward = side = 0;//cammove = 0; // Tails 06-20-2001
-
-    // use two stage accelerative turning
-    // on the keyboard and joystick
-    if (turnleft || turnright)
-        turnheld += realtics;
-    else
-        turnheld = 0;
-
-    if (turnheld < SLOWTURNTICS)
-        tspeed = 2;             // slow turn
-    else
-        tspeed = speed;
-
-    // let movement keys cancel each other out
-	if(cv_analog.value) // Analog Test Tails 06-10-2001
+	axis = Joy2Axis(AXISTURN);
+	if (gamepadjoystickmove && axis != 0)
 	{
-        if (turnright)
+		turnright = turnright || (axis > 0);
+		turnleft = turnleft || (axis < 0);
+	}
+
+	forward = side = 0;
+
+	// use two stage accelerative turning
+	// on the keyboard and joystick
+	if (turnleft || turnright)
+		turnheld += realtics;
+	else
+		turnheld = 0;
+
+	if (turnheld < SLOWTURNTICS)
+		tspeed = 2; // slow turn
+	else
+		tspeed = speed;
+
+	// let movement keys cancel each other out
+	if (cv_analog2.value) // Analog
+	{
+		if (turnright)
+			cmd->angleturn = (short)(cmd->angleturn - angleturn[tspeed]);
+		if (turnleft)
+			cmd->angleturn = (short)(cmd->angleturn + angleturn[tspeed]);
+	}
+
+	if (strafe || cv_analog2.value || twodlevel || players[secondarydisplayplayer].climbing
+		|| players[secondarydisplayplayer].nightsmode) // Analog
+	{
+		if (turnright)
+			side += sidemove[speed];
+		if (turnleft)
+			side -= sidemove[speed];
+
+		if (analogjoystickmove && axis != 0)
 		{
-			cmd->angleturn -= angleturn[tspeed];
+			// JOYAXISRANGE is supposed to be 1023 (divide by 1024)
+			side += ((axis * sidemove[1]) >> 10);
 		}
-        if (turnleft)
+	}
+	else
+	{
+		if (turnright)
+			cmd->angleturn = (short)(cmd->angleturn - angleturn[tspeed]);
+		if (turnleft)
+			cmd->angleturn = (short)(cmd->angleturn + angleturn[tspeed]);
+
+		if (analogjoystickmove && axis != 0)
 		{
-			cmd->angleturn += angleturn[tspeed];
+			// JOYAXISRANGE should be 1023 (divide by 1024)
+			cmd->angleturn = (short)(cmd->angleturn - ((axis * angleturn[1]) >> 10)); // ANALOG!
 		}
 	}
 
-    if (strafe || cv_analog.value) // Analog Test Tails 06-10-2001
-    {
-        if (turnright)
-		{
-            side += sidemove[speed];
-		}
-        if (turnleft)
-		{
-            side -= sidemove[speed];
-		}
+	axis = Joy2Axis(AXISSTRAFE);
+	if (gamepadjoystickmove && axis != 0)
+	{
+		if (axis < 0)
+			side += sidemove[speed];
+		else if (axis > 0)
+			side -= sidemove[speed];
+	}
+	else if (analogjoystickmove && axis != 0)
+	{
+		// JOYAXISRANGE is supposed to be 1023 (divide by 1024)
+			side += ((axis * sidemove[1]) >> 10);
+	}
 
-        if (!Joystick.bGamepadStyle)
-        {
-            //faB: JOYAXISRANGE is supposed to be 1023 ( divide by 1024 )
-            side += ( (joyxmove * sidemove[1]) >> 10 );
-        }
-    }
-    else
-    {
-        if (turnright )
-            cmd->angleturn -= angleturn[tspeed];
-        if (turnleft  )
-            cmd->angleturn += angleturn[tspeed];
+	// forward with key or button
+	axis = Joy2Axis(AXISMOVE);
+	if (gamekeydown[gamecontrolbis[gc_forward][0]] ||
+		gamekeydown[gamecontrolbis[gc_forward][1]] ||
+		(gamepadjoystickmove && axis < 0))
+	{
+		forward += forwardmove[speed];
+	}
 
-        if ( joyxmove && !Joystick.bGamepadStyle )
-        {
-            //faB: JOYAXISRANGE should be 1023 ( divide by 1024 )
-            cmd->angleturn -= ( (joyxmove * angleturn[1]) >> 10 );        // ANALOG!
-            //CONS_Printf ("joyxmove %d  angleturn %d\n", joyxmove, cmd->angleturn);
-        }
-    }
+	if (gamekeydown[gamecontrolbis[gc_backward][0]] ||
+		gamekeydown[gamecontrolbis[gc_backward][1]] ||
+		(gamepadjoystickmove && axis > 0))
+	{
+		forward -= forwardmove[speed];
+	}
 
-    //added:07-02-98: forward with key or button
-    if (gamekeydown[gamecontrolbis[gc_forward][0]] ||
-        gamekeydown[gamecontrolbis[gc_forward][1]] ||
-        (joyymove < 0 && Joystick.bGamepadStyle))
-    {
-        forward += forwardmove[speed];
-    }
+	if (analogjoystickmove && axis != 0)
+		forward -= ((axis * forwardmove[1]) >> 10); // ANALOG!
 
-    if (gamekeydown[gamecontrolbis[gc_backward][0]] ||
-        gamekeydown[gamecontrolbis[gc_backward][1]] ||
-        (joyymove > 0 && Joystick.bGamepadStyle))
-    {
-        forward -= forwardmove[speed];
-    }
+	// some people strafe left & right with mouse buttons
+	if (gamekeydown[gamecontrolbis[gc_straferight][0]] ||
+		gamekeydown[gamecontrolbis[gc_straferight][1]])
+		side += sidemove[speed];
+	if (gamekeydown[gamecontrolbis[gc_strafeleft][0]] ||
+		gamekeydown[gamecontrolbis[gc_strafeleft][1]])
+		side -= sidemove[speed];
 
-    if ( joyymove && !Joystick.bGamepadStyle ) {
-        forward -= ( (joyymove * forwardmove[1]) >> 10 ); // ANALOG!
-    }
+	// fire with any button/key
+	if (gamekeydown[gamecontrolbis[gc_fire][0]] ||
+		gamekeydown[gamecontrolbis[gc_fire][1]])
+		cmd->buttons |= BT_ATTACK;
 
-    //added:07-02-98: some people strafe left & right with mouse buttons
-    if (gamekeydown[gamecontrolbis[gc_straferight][0]] ||
-        gamekeydown[gamecontrolbis[gc_straferight][1]])
-        side += sidemove[speed];
-    if (gamekeydown[gamecontrolbis[gc_strafeleft][0]] ||
-        gamekeydown[gamecontrolbis[gc_strafeleft][1]])
-        side -= sidemove[speed];
+	// fire normal with any button/key
+	if (gamekeydown[gamecontrolbis[gc_firenormal][0]] ||
+		gamekeydown[gamecontrolbis[gc_firenormal][1]])
+		cmd->buttons |= BT_FIRENORMAL;
 
-    //added:07-02-98: fire with any button/key
-    if (gamekeydown[gamecontrolbis[gc_fire][0]] ||
-        gamekeydown[gamecontrolbis[gc_fire][1]])
-        cmd->buttons |= BT_ATTACK;
+	if (gamekeydown[gamecontrolbis[gc_lightdash][0]] ||
+		gamekeydown[gamecontrolbis[gc_lightdash][1]])
+		cmd->buttons |= BT_LIGHTDASH;
 
-    //added:07-02-98: use with any button/key
-    if (gamekeydown[gamecontrolbis[gc_use][0]] ||
-        gamekeydown[gamecontrolbis[gc_use][1]])
-        cmd->buttons |= BT_USE;
+	// use with any button/key
+	if (gamekeydown[gamecontrolbis[gc_use][0]] ||
+		gamekeydown[gamecontrolbis[gc_use][1]])
+		cmd->buttons |= BT_USE;
 
-    //added:22-02-98: jump button
-    if (cv_allowjump.value && (gamekeydown[gamecontrolbis[gc_jump][0]] ||
-                               gamekeydown[gamecontrolbis[gc_jump][1]]))
-        cmd->buttons |= BT_JUMP;
+	// Taunts
+	if (gamekeydown[gamecontrolbis[gc_taunt][0]] ||
+		gamekeydown[gamecontrolbis[gc_taunt][1]])
+		cmd->buttons |= BT_TAUNT;
 
+	// Camera Controls
+	if (gamekeydown[gamecontrolbis[gc_camleft][0]] ||
+		gamekeydown[gamecontrolbis[gc_camleft][1]])
+		cmd->buttons |= BT_CAMLEFT;
 
-    //added:07-02-98: any key / button can trigger a weapon
-    // chainsaw overrides
-    if (gamekeydown[gamecontrolbis[gc_nextweapon][0]] ||
-        gamekeydown[gamecontrolbis[gc_nextweapon][1]])
-        cmd->buttons |= NextWeapon(&players[secondarydisplayplayer],1);
-    else
-    if (gamekeydown[gamecontrolbis[gc_prevweapon][0]] ||
-        gamekeydown[gamecontrolbis[gc_prevweapon][1]])
-        cmd->buttons |= NextWeapon(&players[secondarydisplayplayer],-1);
-    else
-    for (i=gc_weapon1; i<gc_weapon1+NUMWEAPONS-1; i++)
-        if (gamekeydown[gamecontrolbis[i][0]] ||
-            gamekeydown[gamecontrolbis[i][1]])
-        {
-			// Weapon fart Tails
-//            cmd->buttons |= BT_CHANGE | BT_EXTRAWEAPON; // extra by default
-//            cmd->buttons |= (i-gc_weapon1)<<BT_WEAPONSHIFT;
-            // already have extraweapon in hand switch to the normal one
-//            if( players[secondarydisplayplayer].readyweapon==extraweapons[i-gc_weapon1] )
-//                cmd->buttons &= ~BT_EXTRAWEAPON;
-            break;
-        }
-/*
-// Camera controls Tails 06-20-2001
-    if (gamekeydown[gamecontrolbis[gc_camleft][0]] ||
-        gamekeydown[gamecontrolbis[gc_camleft][1]])
-    {
-        cammove++;
-    }
+	if (gamekeydown[gamecontrolbis[gc_camright][0]] ||
+		gamekeydown[gamecontrolbis[gc_camright][1]])
+		cmd->buttons |= BT_CAMRIGHT;
 
-    if (gamekeydown[gamecontrolbis[gc_camright][0]] ||
-        gamekeydown[gamecontrolbis[gc_camright][1]])
-    {
-        cammove--;
-    }
-// Camera controls Tails 06-20-2001
-*/
-    // mouse look stuff (mouse look is not the same as mouse aim)
-    if (mouseaiming)
-    {
-        keyboard_look = false;
+	if (gamekeydown[gamecontrolbis[gc_camreset][0]] ||
+		gamekeydown[gamecontrolbis[gc_camreset][1]])
+	{
+		if (cv_chasecam2.value)
+			P_ResetCamera(&players[secondarydisplayplayer], &camera2);
+	}
 
-        // looking up/down
-        if (cv_invertmouse2.value)
-            localaiming2 -= mlook2y<<19;
-        else
-            localaiming2 += mlook2y<<19;
-    }
-    else
-      // spring back if not using keyboard neither mouselookin'
-        if (!keyboard_look )
-             localaiming2 = 0;
+	// jump button
+	if (gamekeydown[gamecontrolbis[gc_jump][0]] ||
+		gamekeydown[gamecontrolbis[gc_jump][1]])
+		cmd->buttons |= BT_JUMP;
 
-    if (gamekeydown[gamecontrolbis[gc_lookup][0]] ||
-        gamekeydown[gamecontrolbis[gc_lookup][1]])
-    {
-        localaiming2 += KB_LOOKSPEED;
-    }
-    else
-    if (gamekeydown[gamecontrolbis[gc_lookdown][0]] ||
-        gamekeydown[gamecontrolbis[gc_lookdown][1]])
-    {
-        localaiming2 -= KB_LOOKSPEED;
-    }
-    else
-    if (gamekeydown[gamecontrolbis[gc_centerview][0]] ||
-        gamekeydown[gamecontrolbis[gc_centerview][1]])
-        localaiming2 = 0;
+	// mouse look stuff (mouse look is not the same as mouse aim)
+	if (mouseaiming)
+	{
+		keyboard_look = false;
 
-    //26/02/2000: added by Hurdler: accept no mlook for network games
-    if (!cv_allowmlook.value)
-        localaiming2 = 0;
+		// looking up/down
+		if (cv_invertmouse2.value)
+			localaiming2 -= mlook2y<<19;
+		else
+			localaiming2 += mlook2y<<19;
+	}
 
-    // look up max (viewheight/2) look down min -(viewheight/2)
-    cmd->aiming = G_ClipAimingPitch (&localaiming2);;
+	axis = Joy2Axis(AXISLOOK);
+	if (analogjoystickmove && cv_lookaxis2.value != 0 && axis != 0)
+		localaiming += axis<<16;
 
-    if (!mouseaiming && cv_mousemove2.value)
-        forward += mouse2y;
+	// spring back if not using keyboard neither mouselookin'
+	if (!keyboard_look && cv_lookaxis2.value == 0 && !mouseaiming)
+		localaiming2 = 0;
 
-    if (strafe || cv_analog.value) // Analog for mouse Tails 06-20-2001
-        side += mouse2x*2;
-    else
-        cmd->angleturn -= mouse2x*8;
+	if (gamekeydown[gamecontrolbis[gc_lookup][0]] ||
+		gamekeydown[gamecontrolbis[gc_lookup][1]] ||
+		(gamepadjoystickmove && axis < 0))
+	{
+		localaiming2 += KB_LOOKSPEED;
+		keyboard_look = true;
+	}
+	else if (gamekeydown[gamecontrolbis[gc_lookdown][0]] ||
+		gamekeydown[gamecontrolbis[gc_lookdown][1]] ||
+		(gamepadjoystickmove && axis > 0))
+	{
+		localaiming2 -= KB_LOOKSPEED;
+		keyboard_look = true;
+	}
+	else if (gamekeydown[gamecontrolbis[gc_centerview][0]] ||
+		gamekeydown[gamecontrolbis[gc_centerview][1]])
+		localaiming2 = 0;
 
-    mouse2x = mouse2y = mlook2y = 0;
+	// accept no mlook for network games
+	if (!cv_allowmlook.value)
+		localaiming2 = 0;
 
-    if (forward > MAXPLMOVE)
-        forward = MAXPLMOVE;
-    else if (forward < -MAXPLMOVE)
-        forward = -MAXPLMOVE;
-    if (side > MAXPLMOVE)
-        side = MAXPLMOVE;
-    else if (side < -MAXPLMOVE)
-        side = -MAXPLMOVE;
+	// look up max (viewheight/2) look down min -(viewheight/2)
+	cmd->aiming = G_ClipAimingPitch(&localaiming2);
 
-    cmd->forwardmove += forward;
-    cmd->sidemove += side;
-//	cmd->cammove += cammove; // Tails 06-20-2001
+	if (!mouseaiming && cv_mousemove2.value)
+		forward += mouse2y;
 
-#ifdef ABSOLUTEANGLE
-    localangle2 += (cmd->angleturn<<16);
-    cmd->angleturn = localangle2 >> 16;
-#endif
+	if (strafe || cv_analog2.value) // Analog for mouse
+		side = side + mouse2x*2;
+	else
+		cmd->angleturn = (short)(cmd->angleturn - (mouse2x*8));
+
+	mouse2x = mouse2y = mlook2y = 0;
+
+	if (forward > MAXPLMOVE)
+		forward = MAXPLMOVE;
+	else if (forward < -MAXPLMOVE)
+		forward = -MAXPLMOVE;
+	if (side > MAXPLMOVE)
+		side = MAXPLMOVE;
+	else if (side < -MAXPLMOVE)
+		side = -MAXPLMOVE;
+
+	cmd->forwardmove = (signed char)(cmd->forwardmove + forward);
+	cmd->sidemove = (signed char)(cmd->sidemove + side);
+
+	localangle2 += (cmd->angleturn<<16);
+	cmd->angleturn = (short)(localangle2 >> 16);
 }
 
-// Tails
-//static fixed_t  originalforwardmove[2] = {0x19, 0x32};
-//static fixed_t  originalsidemove[2] = {0x18, 0x28};
-/*
-void AllowTurbo_OnChange(void)
+// User has designated that they want
+// analog ON, so tell the game to stop
+// fudging with it.
+static void UserAnalog_OnChange(void)
 {
-    if(!cv_allowturbo.value && netgame)
-    {
-        // like turbo 100
-        forwardmove[0] = originalforwardmove[0];
-        forwardmove[1] = originalforwardmove[1];
-        sidemove[0] = originalsidemove[0];
-        sidemove[1] = originalsidemove[1];
-    }
-}*/
-void Analog_OnChange(void) // Analog Test Tails 06-11-2001
+	if (cv_useranalog.value)
+		CV_SetValue(&cv_analog, 1);
+	else
+		CV_SetValue(&cv_analog, 0);
+}
+
+static void UserAnalog2_OnChange(void)
 {
-	if(leveltime > 1)
+	if (cv_useranalog2.value)
+		CV_SetValue(&cv_analog2, 1);
+	else
+		CV_SetValue(&cv_analog2, 0);
+}
+
+static void Analog_OnChange(void)
+{
+	if (!cv_cam_dist.string)
+		return;
+	if (leveltime > 1)
 		CV_SetValue(&cv_cam_dist, 128);
-    if(multiplayer || netgame)
+
+	if (netgame)
 		cv_analog.value = 0;
-	else if(cv_analog.value)
+	else if (cv_analog.value)
 		CV_SetValue(&cv_cam_dist, 192);
-}// Analog Test Tails 06-11-2001
-
-//  turbo <10-255>
-//
-/*
-void Command_Turbo_f (void)
-{
-    int     scale = 200;
-
-    if(!cv_allowturbo.value && netgame)
-    {
-        CONS_Printf("This server don't allow turbo\n");
-        return;
-    }
-
-    if (COM_Argc()!=2)
-    {
-        CONS_Printf("turbo <10-255> : set turbo");
-        return;
-    }
-
-    scale = atoi (COM_Argv(1));
-
-    if (scale < 10)
-        scale = 10;
-    if (scale > 255)
-        scale = 255;
-
-    CONS_Printf ("turbo scale: %i%%\n",scale);
-
-    forwardmove[0] = originalforwardmove[0]*scale/100;
-    forwardmove[1] = originalforwardmove[1]*scale/100;
-    sidemove[0] = originalsidemove[0]*scale/100;
-    sidemove[1] = originalsidemove[1]*scale/100;
 }
-*/
 
+static void Analog2_OnChange(void)
+{
+	if (!cv_cam2_dist.string)
+		return;
+	if (leveltime > 1)
+		CV_SetValue(&cv_cam2_dist, 128);
+
+	if (netgame)
+		cv_analog2.value = 0;
+	else if (cv_analog2.value)
+		CV_SetValue(&cv_cam2_dist, 192);
+}
 
 //
 // G_DoLoadLevel
 //
-void G_DoLoadLevel (void)
+void G_DoLoadLevel(boolean resetplayer)
 {
-    int             i;
+	int i;
 
-    levelstarttic = gametic;        // for time calculation
+	levelstarttic = gametic; // for time calculation
 
-    if (wipegamestate == GS_LEVEL)
-        wipegamestate = -1;             // force a wipe
+	if (wipegamestate == GS_LEVEL)
+		wipegamestate = -1; // force a wipe
 
-    gamestate = GS_LEVEL;
-    for (i=0 ; i<MAXPLAYERS ; i++)
-    {
-        if (playeringame[i] && players[i].playerstate == PST_DEAD)
-            players[i].playerstate = PST_REBORN;
-        memset (players[i].frags,0,sizeof(players[i].frags));
-        players[i].addfrags = 0;
-    }
+	if (gamestate == GS_INTERMISSION)
+		Y_EndIntermission();
+	gamestate = GS_LEVEL;
+	for (i = 0; i < MAXPLAYERS; i++)
+	{
+		if (resetplayer || (playeringame[i] && players[i].playerstate == PST_DEAD))
+			players[i].playerstate = PST_REBORN;
+	}
 
-    if (!P_SetupLevel (gameepisode, gamemap, gameskill, gamemapname[0] ? gamemapname:NULL) )
-        return;
+	if (!P_SetupLevel(gamemap, gameskill, NULL))
+	{
+		// fail so reset game stuff
+		Command_ExitGame_f();
+		return;
+	}
 
-    //BOT_InitLevelBots ();
+	if (!resetplayer)
+		P_FindEmerald();
 
-    displayplayer = consoleplayer;          // view the guy you are playing
-    if(!cv_splitscreen.value)
-        secondarydisplayplayer = consoleplayer;
+	displayplayer = consoleplayer; // view the guy you are playing
+	if (!cv_splitscreen.value)
+		secondarydisplayplayer = consoleplayer;
 
-    gameaction = ga_nothing;
+	gameaction = ga_nothing;
 #ifdef PARANOIA
-    Z_CheckHeap (-2);
+	Z_CheckHeap(-2);
 #endif
 
-//    if (camera.chase)
-//        P_ResetCamera (&players[displayplayer]);
-// Tails
-	if (camera.chase)
+	if (cv_chasecam.value)
+		P_ResetCamera(&players[displayplayer], &camera);
+	if (cv_chasecam2.value && cv_splitscreen.value)
+		P_ResetCamera(&players[secondarydisplayplayer], &camera2);
+
+	// clear cmd building stuff
+	memset(gamekeydown, 0, sizeof (gamekeydown));
+	for (i = 0;i < JOYAXISSET; i++)
 	{
-//        camera.mo = NULL;
-		camera.chase = 0;
-		P_ResetCamera (&players[displayplayer]);
+		joyxmove[i] = joyymove[i] = 0;
+		joy2xmove[i] = joy2ymove[i] = 0;
 	}
-// Tails
-    // clear cmd building stuff
-    memset (gamekeydown, 0, sizeof(gamekeydown));
-    joyxmove = joyymove = 0;
-    mousex = mousey = 0;
+	mousex = mousey = 0;
+	mouse2x = mouse2y = 0;
 
-    // clear hud messages remains (usually from game startup)
-    CON_ClearHUD ();
+	// clear hud messages remains (usually from game startup)
+	CON_ClearHUD();
 
+	if (!(cv_debug || devparm || modifiedgame) && !(multiplayer || netgame))
+		SetSavedSkin(0, players[0].skin, players[0].prefcolor);
 }
 
 //
 // G_Responder
-//  Get info needed to make ticcmd_ts for the players.
+// Get info needed to make ticcmd_ts for the players.
 //
-boolean G_Responder (event_t* ev)
+boolean G_Responder(event_t *ev)
 {
-    // allow spy mode changes even during the demo
-
-    if (gamestate == GS_LEVEL && ev->type == ev_keydown
-        && ev->data1 == KEY_F12 && (singledemo || !cv_deathmatch.value) ) // Tails 03-13-2001
-    {
-
-		if(cv_gametype.value == 1 || cv_gametype.value == 3 || cv_gametype.value == 4)
+	// allow spy mode changes even during the demo
+	if (gamestate == GS_LEVEL && ev->type == ev_keydown && ev->data1 == KEY_F12)
+	{
+		if (!cv_debug && gametype != GT_COOP && gametype != GT_RACE && gametype != GT_CTF)
+		{
 			displayplayer = consoleplayer;
+		}
 		else
 		{
-        // spy mode
-        do
-        {
-            displayplayer++;
-            if (displayplayer == MAXPLAYERS)
-                displayplayer = 0;
-        } while (!playeringame[displayplayer] && displayplayer != consoleplayer);
+			// spy mode
+			while (true)
+			{
+				displayplayer++;
+				if (displayplayer == MAXPLAYERS)
+					displayplayer = 0;
 
-        //added:16-01-98:change statusbar also if playingback demo
-        if( singledemo )
-            ST_changeDemoView ();
+				if (displayplayer != consoleplayer && (!playeringame[displayplayer]
+					|| (cv_splitscreen.value && displayplayer == secondarydisplayplayer)))
+					continue;
+				
+				if (gametype == GT_CTF && players[consoleplayer].ctfteam
+					&& players[displayplayer].ctfteam != players[consoleplayer].ctfteam)
+					continue;
 
-        //added:11-04-98: tell who's the view
-        CONS_Printf("Viewpoint : %s\n", player_names[displayplayer]);
+				break;
+			}
 
-        return true;
+			// change statusbar also if playing back demo
+			if (singledemo)
+				ST_changeDemoView();
+
+			// tell who's the view
+			CONS_Printf("Viewpoint: %s\n", player_names[displayplayer]);
+
+			return true;
 		}
-    }
+	}
 
-#ifdef __WIN32_OLDSTUFF__
-    // console of 3dfx version on/off
-    if (rendermode==render_glide &&
-        ev->type==ev_keydown &&
-        ev->data1=='g')
-        glide_console ^= 1;
-#endif
+	// any other key pops up menu if in demos
+	if (gameaction == ga_nothing && !singledemo &&
+		(demoplayback || gamestate == GS_DEMOSCREEN || gamestate == GS_TITLESCREEN))
+	{
+		if (ev->type == ev_keydown && ev->data1 != 301)
+		{
+			if (timeattacking)
+			{
+				G_CheckDemoStatus();
+				timeattacking = true;
+			}
+			M_StartControlPanel();
+			return true;
+		}
+		return false;
+	}
 
-    // any other key pops up menu if in demos
-    if (gameaction == ga_nothing && !singledemo &&
-        (demoplayback || gamestate == GS_DEMOSCREEN) )
-    {
-        if (ev->type == ev_keydown)
-        {
-            M_StartControlPanel ();
-            return true;
-        }
-        return false;
-    }
+	if (gamestate == GS_LEVEL)
+	{
+		if (!multiplayer)
+			if (cht_Responder(ev))
+				return true;
+		if (HU_Responder(ev))
+			return true; // chat ate the event
+		if (AM_Responder(ev))
+			return true; // automap ate it
+		// map the event (key/mouse/joy) to a gamecontrol
+	}
 
-    if (gamestate == GS_LEVEL)
-    {
-#if 0
-        if (devparm && ev->type == ev_keydown && ev->data1 == ';')
-        {
-            // added Boris : test different player colors
-            players[consoleplayer].skincolor = (players[consoleplayer].skincolor+1) %MAXSKINCOLORS;
-            players[consoleplayer].mo->flags |= (players[consoleplayer].skincolor)<<MF_TRANSSHIFT;
-            G_DeathMatchSpawnPlayer (0);
-            return true;
-        }
-#endif
-        if(!multiplayer)
-           cht_Responder (ev); // never eat
-        if (HU_Responder (ev))
-            return true;        // chat ate the event
-        if (ST_Responder (ev))
-            return true;        // status window ate it
-        if (AM_Responder (ev))
-            return true;        // automap ate it
-        //added:07-02-98: map the event (key/mouse/joy) to a gamecontrol
-    }
+	else if (gamestate == GS_FINALE)
+	{
+		if (F_Responder(ev))
+			return true; // finale ate the event
+	}
 
-    if (gamestate == GS_FINALE)
-    {
-        if (F_Responder (ev))
-            return true;        // finale ate the event
-    }
+	// Intro
+	else if (gamestate == GS_INTRO || gamestate == GS_INTRO2)
+	{
+		if (F_IntroResponder(ev))
+		{
+			D_StartTitle();
+			return true;
+		}
+	}
+	else if (gamestate == GS_CUTSCENE)
+	{
+		if (HU_Responder(ev))
+			return true; // chat ate the event
 
-    // update keys current state
-    G_MapEventsToControls (ev);
+		if (F_CutsceneResponder(ev))
+		{
+			D_StartTitle();
+			return true;
+		}
+	}
 
-    switch (ev->type)
-    {
-      case ev_keydown:
-        if (ev->data1 == KEY_PAUSE)
-        {
-            COM_BufAddText("pause\n");
-            return true;
-        }
-        return true;
+	else if (gamestate == GS_CREDITS)
+	{
+		if (HU_Responder(ev))
+			return true; // chat ate the event
 
-      case ev_keyup:
-        return false;   // always let key up events filter down
+		if (F_CreditResponder(ev))
+		{
+			F_StartGameEvaluation();
+			return true;
+		}
+	}
 
-      case ev_mouse:
-        return true;    // eat events
+	// Demo End
+	else if (gamestate == GS_DEMOEND || gamestate == GS_EVALUATION || gamestate == GS_CREDITS)
+		return true;
 
-      case ev_joystick:
-        return true;    // eat events
+	else if (gamestate == GS_INTERMISSION)
+		if (HU_Responder(ev))
+			return true; // chat ate the event
 
-      default:
-        break;
-    }
+	// update keys current state
+	G_MapEventsToControls(ev);
 
-    return false;
+	switch (ev->type)
+	{
+		case ev_keydown:
+			if (ev->data1 == KEY_PAUSE)
+			{
+				// don't let busy scripts prevent pausing
+				char buf = (char)(!paused);
+
+				if (cv_pause.value == 1 || server || (adminplayer == consoleplayer))
+				{
+					if (!(gamestate == GS_LEVEL || gamestate == GS_INTERMISSION))
+					{
+						CONS_Printf("You can only pause while in a level or intermission.\n");
+						return true;
+					}
+
+					SendNetXCmd(XD_PAUSE, &buf, 1);
+				}
+				else
+					CONS_Printf("Only the server can pause the game.\n");
+				return true;
+			}
+			return true;
+
+		case ev_keyup:
+			return false; // always let key up events filter down
+
+		case ev_mouse:
+			return true; // eat events
+
+		case ev_joystick:
+			return true; // eat events
+
+		case ev_joystick2:
+			return true; // eat events
+
+
+		default:
+			break;
+	}
+
+	return false;
 }
-
 
 //
 // G_Ticker
 // Make ticcmd_ts for the players.
 //
-void G_Ticker (void)
+void G_Ticker(void)
 {
-    ULONG       i;
-    int         buf;
-    ticcmd_t*   cmd;
+	ULONG i;
+	int buf;
+	ticcmd_t *cmd;
 
-    // do player reborns if needed
-    if( gamestate == GS_LEVEL )
-    {
-    for (i=0 ; i<MAXPLAYERS ; i++)
-        if (playeringame[i] && players[i].playerstate == PST_REBORN)
-            G_DoReborn (i);
-    }
+	// do player reborns if needed
+	if (gamestate == GS_LEVEL)
+	{
+		for (i = 0; i < MAXPLAYERS; i++)
+		{
+			if (playeringame[i])
+			{
+				if (players[i].playerstate == PST_REBORN)
+				{
+					G_DoReborn(i);
+				}
+			}
+		}
+	}
 
-    // do things to change the game state
-    while (gameaction != ga_nothing)
-        switch (gameaction)
-        {
-          case ga_completed :  G_DoCompleted ();        break;
-          case ga_worlddone :  G_DoWorldDone ();        break;
-            case ga_nothing   :  break;
-            default : I_Error("gameaction = %d\n", gameaction);
-    }
+	// do things to change the game state
+	while (gameaction != ga_nothing)
+		switch (gameaction)
+		{
+			case ga_completed : G_DoCompleted(); break;
+			case ga_worlddone : G_DoWorldDone(); break;
+			case ga_nothing : break;
+			default : I_Error("gameaction = %d\n", gameaction);
+		}
 
-    buf = (gametic/ticdup)%BACKUPTICS;
+	buf = gametic % BACKUPTICS;
 
-    // read/write demo and check turbo cheat
-    for (i=0 ; i<MAXPLAYERS ; i++)
-    {
-        // BP: i==0 for playback of demos 1.29 now new players is added with xcmd
-        if (playeringame[i] || i==0)
-        {
-            cmd = &players[i].cmd;
+	// read/write demo and check turbo cheat
+	for (i = 0; i < MAXPLAYERS; i++)
+	{
+		// BP: i == 0 for playback of demos 1.29 now new players is added with xcmd
+		if ((playeringame[i] || i == 0) /*&& !dedicated*/)
 
-            if (demoplayback)
-                G_ReadDemoTiccmd (cmd,i);
-            else
-                memcpy (cmd, &netcmds[buf][i], sizeof(ticcmd_t));
+		{
+			cmd = &players[i].cmd;
 
-            if (demorecording)
-                G_WriteDemoTiccmd (cmd,i);
+			if (demoplayback)
+				G_ReadDemoTiccmd(cmd, i);
+			else
+				memcpy(cmd, &netcmds[buf][i], sizeof (ticcmd_t));
 
-            // check for turbo cheats // Don't bother Tails 09-06-2001
-/*
-            if (cmd->forwardmove > TURBOTHRESHOLD
-                && !(gametic&31) && ((gametic>>5)&3) == i )
-            {
-                static char turbomessage[80];
-                sprintf (turbomessage, "%s is turbo!",player_names[i]);
-                players[consoleplayer].message = turbomessage;
-            }
-*/
-        }
-    }
+			if (demorecording)
+				G_WriteDemoTiccmd(cmd, i);
+		}
+	}
 
-    // do main actions
-    switch (gamestate)
-    {
-      case GS_LEVEL:
-        //IO_Color(0,255,0,0);
-        P_Ticker ();             // tic the game
-        //IO_Color(0,0,255,0);
-        ST_Ticker ();
-        AM_Ticker ();
-        HU_Ticker ();
-        break;
+	// do main actions
+	switch (gamestate)
+	{
+		case GS_LEVEL:
+			P_Ticker(); // tic the game
+			ST_Ticker();
+			AM_Ticker();
+			HU_Ticker();
+			break;
 
-      case GS_INTERMISSION:
-        WI_Ticker ();
-        break;
+		case GS_INTERMISSION:
+			Y_Ticker();
+			HU_Ticker();
+			break;
 
-      case GS_FINALE:
-        F_Ticker ();
-        break;
+		case GS_TIMEATTACK:
+			break;
 
-      case GS_DEMOSCREEN:
-        D_PageTicker ();
-        break;
+		case GS_FINALE:
+			F_Ticker();
+			break;
 
-      case GS_WAITINGPLAYERS:
-      case GS_DEDICATEDSERVER:
-      case GS_NULL:
-      // do nothing
-        break;
-    }
+		case GS_INTRO:
+		case GS_INTRO2:
+			F_IntroTicker();
+			break;
+
+		case GS_CUTSCENE:
+			F_CutsceneTicker();
+			HU_Ticker();
+			break;
+
+		case GS_DEMOEND:
+			F_DemoEndTicker();
+			break;
+
+		case GS_EVALUATION:
+			F_GameEvaluationTicker();
+			break;
+
+		case GS_CREDITS:
+			F_CreditTicker();
+			HU_Ticker();
+			break;
+
+		case GS_TITLESCREEN:
+			F_TitleScreenTicker();
+			break;
+
+		case GS_DEMOSCREEN:
+			D_PageTicker();
+			break;
+
+		case GS_WAITINGPLAYERS:
+			F_TitleScreenTicker(); // Fixes title sky stopping
+		case GS_DEDICATEDSERVER:
+		case GS_NULL:
+			break; // do nothing
+	}
 }
-
 
 //
 // PLAYER STRUCTURE FUNCTIONS
@@ -1277,191 +1510,212 @@ void G_Ticker (void)
 //
 
 //
-// G_InitPlayer
-// Called at the start.
-// Called by the game initialization functions.
-//
-/* BP:UNUSED !
-void G_InitPlayer (int player)
-{
-    player_t*   p;
-
-    // set up the saved info
-    p = &players[player];
-
-    // clear everything else to defaults
-    G_PlayerReborn (player);
-}
-*/
-
-
-//
 // G_PlayerFinishLevel
-//  Can when a player completes a level.
+// Called when a player completes a level.
 //
-void G_PlayerFinishLevel (int player)
+static inline void G_PlayerFinishLevel(int player)
 {
-    player_t*   p;
+	player_t *p;
 
-    p = &players[player];
+	p = &players[player];
 
-    memset (p->powers, 0, sizeof (p->powers));
-    p->cards = 0;
-    p->mo->flags &= ~MF_SHADOW;         // cancel invisibility
-    p->extralight = 0;                  // cancel gun flashes
-    p->fixedcolormap = 0;               // cancel ir gogles
-    p->damagecount = 0;                 // no palette changes
-    p->bonuscount = 0;
-//	if(!cv_gametype.value) // Tails 03-14-2001
-//	p->score = (p->timebonus + p->ringbonus + p->score); // Tails 03-12-2000
+	memset(p->powers, 0, sizeof (p->powers));
 
-    //added:16-02-98: hmm.. I should reset the aiming stuff between each
-    //                level and each life... maybe that sould be done
-    //                somewhere else.
-    //p->aiming = 0;
+	p->mo->flags2 &= ~MF2_SHADOW; // cancel invisibility
+	p->bonuscount = 0;
+	p->starpostangle = 0;
+	p->starposttime = 0;
+	p->starpostx = 0;
+	p->starposty = 0;
+	p->starpostz = 0;
+	p->starpostnum = 0;
+	p->starpostbit = 0;
 
+	if (rendermode == render_soft)
+		V_SetPaletteLump("PLAYPAL"); // Reset the palette
 }
-
-
-// added 2-2-98 for hacking with dehacked patch
-//SOM: Sonic starts with one health
-int initial_health=1; //MAXHEALTH;
-int initial_bullets=0; // Tails 10-24-99
-
-void VerifFavoritWeapon (player_t *player);
 
 //
 // G_PlayerReborn
-// Called after a player dies
-// almost everything is cleared and initialized
+// Called after a player dies. Almost everything is cleared and initialized.
 //
-void G_PlayerReborn (int player)
+void G_PlayerReborn(int player)
 {
-    player_t*   p;
-    int         i;
-    USHORT      frags[MAXPLAYERS];
-	int         score; // Score Tails 03-09-2000
-    int         killcount;
-    int         itemcount;
-    int         secretcount;
-	int         lives; // Lives Tails 03-11-2000
-	int			continues; // Tails
-    int         emerald1;
-    int         emerald2;
-    int         emerald3;
-    int         emerald4; // Emeralds Tails 04-11-2000
-    int         emerald5;
-    int         emerald6;
-    int         emerald7;
-	int			xtralife;
-	int			xtralife2;
-	int			charability; // Tails
-	int			charspeed; // Tails
-	int			tagit; // Tails 05-08-2001
-	int			lastmap; // Tails 08-11-2001
-	int			sstimer; // Tails 08-11-2001
-	int			token; // Tails 08-12-2001
-	int			tagcount; // Tails 08-17-2001
-    USHORT      addfrags;
+	player_t *p;
+	int score;
+	int lives;
+	int continues;
+	int xtralife;
+	int charability;
+	int normalspeed;
+	int runspeed;
+	int thrustfactor;
+	int accelstart;
+	int acceleration;
+	int charflags;
+	int slingitem;
+	int thokitem;
+	int spinitem;
+	int waterskip;
+	int actionspd;
+	int mindash;
+	int maxdash;
+	int supercolor;
+	int starttrans;
+	int endtrans;
+	int prefcolor;
+	int tagit;
+	int ctfteam;
+	int tagcount;
+	int starposttime;
+	int starpostx;
+	int starposty;
+	int starpostz;
+	int starpostnum;
+	int starpostangle;
+	unsigned int starpostbit;
+	int jumpfactor;
+	int boxindex;
+	int exiting;
+	int numboxes;
+	int laps;
+	int totalring;
+	int dbginfo;
+	boolean timeover;
+	byte mare;
 
-    //from Boris
-    int         skincolor;
-    char        favoritweapon[NUMWEAPONS];
-    boolean     originalweaponswitch;
-    boolean     autoaim;
-    int         skin;                           //Fab: keep same skin
-#ifdef CLIENTPREDICTION2
-    mobj_t      *spirit;
-#endif
+	int skincolor;
+	int skin;
+	boolean autoaim;
 
-    memcpy (frags,players[player].frags,sizeof(frags));
-	score = players[player].score; // Score Tails 03-09-2000
-    addfrags = players[player].addfrags;
-    killcount = players[player].killcount;
-    itemcount = players[player].itemcount;
-    secretcount = players[player].secretcount;
-    lives       = players[player].lives; // Tails 03-11-2000
-    continues   = players[player].continues; // Tails
-    emerald1 = players[player].emerald1; // Tails 04-11-2000
-    emerald2 = players[player].emerald2; // Tails 04-11-2000
-    emerald3 = players[player].emerald3; // Tails 04-11-2000
-    emerald4 = players[player].emerald4; // Tails 04-11-2000
-    emerald5 = players[player].emerald5; // Tails 04-11-2000
-    emerald6 = players[player].emerald6; // Tails 04-11-2000
-    emerald7 = players[player].emerald7; // Tails 04-11-2000
+	score = players[player].score;
+	lives = players[player].lives;
+	continues = players[player].continues;
+	timeover = players[player].timeover;
 	xtralife = players[player].xtralife;
-	xtralife2 = players[player].xtralife2;
-	tagit = players[player].tagit; // Tails 05-08-2001
-	lastmap = players[player].lastmap; // Tails 08-11-2001
-	token = players[player].token; // Tails 08-12-2001
-	sstimer = players[player].sstimer; // Tails 08-11-2001
-	tagcount = players[player].tagcount; // Tails 08-17-2001
+	tagit = players[player].tagit;
+	ctfteam = players[player].ctfteam;
+	tagcount = players[player].tagcount;
+	exiting = players[player].exiting;
 
-    //from Boris
-    skincolor = players[player].skincolor;
-    originalweaponswitch = players[player].originalweaponswitch;
-    memcpy (favoritweapon,players[player].favoritweapon,NUMWEAPONS);
-    autoaim   = players[player].autoaim_toggle;
-    skin = players[player].skin;
-	charability = players[player].charability; // Tails
-	charspeed = players[player].charspeed; // Tails
-#ifdef CLIENTPREDICTION2
-    spirit = players[player].spirit;
-#endif
-    p = &players[player];
-    memset (p, 0, sizeof(*p));
+	numboxes = players[player].numboxes;
+	laps = players[player].laps;
+	totalring = players[player].totalring;
+	dbginfo = players[player].dbginfo;
 
-    memcpy (players[player].frags, frags, sizeof(players[player].frags));
-	players[player].score     = score; // Score Tails 03-09-2000
-    players[player].addfrags=addfrags;
-    players[player].killcount = killcount;
-    players[player].itemcount = itemcount;
-    players[player].secretcount = secretcount;
-	players[player].lives = lives; // Tails 03-11-2000
-	players[player].continues = continues; // Tails
-    players[player].emerald1 = emerald1; // Tails 04-11-2000
-    players[player].emerald2 = emerald2; // Tails 04-11-2000
-    players[player].emerald3 = emerald3; // Tails 04-11-2000
-    players[player].emerald4 = emerald4; // Tails 04-11-2000
-    players[player].emerald5 = emerald5; // Tails 04-11-2000
-    players[player].emerald6 = emerald6; // Tails 04-11-2000
-    players[player].emerald7 = emerald7; // Tails 04-11-2000
+	skincolor = players[player].skincolor;
+	skin = players[player].skin;
+	autoaim = players[player].autoaim_toggle;
+	charability = players[player].charability;
+	normalspeed = players[player].normalspeed;
+	runspeed = players[player].runspeed;
+	thrustfactor = players[player].thrustfactor;
+	accelstart = players[player].accelstart;
+	acceleration = players[player].acceleration;
+	charflags = players[player].charflags;
+	supercolor = players[player].supercolor;
+	starttrans = players[player].starttranscolor;
+	endtrans = players[player].endtranscolor;
+	prefcolor = players[player].prefcolor;
+
+	starposttime = players[player].starposttime;
+	starpostx = players[player].starpostx;
+	starposty = players[player].starposty;
+	starpostz = players[player].starpostz;
+	starpostnum = players[player].starpostnum;
+	starpostangle = players[player].starpostangle;
+	starpostbit = players[player].starpostbit;
+	jumpfactor = players[player].jumpfactor;
+	boxindex = players[player].boxindex;
+	slingitem = players[player].slingitem;
+	thokitem = players[player].thokitem;
+	spinitem = players[player].spinitem;
+	waterskip = players[player].waterskip;
+	actionspd = players[player].actionspd;
+	mindash = players[player].mindash;
+	maxdash = players[player].maxdash;
+
+	mare = players[player].mare;
+
+	p = &players[player];
+	memset(p, 0, sizeof (*p));
+
+	players[player].score = score;
+	players[player].lives = lives;
+	players[player].continues = continues;
+	players[player].timeover = timeover;
 	players[player].xtralife = xtralife;
-	players[player].xtralife2 = xtralife2;
-	players[player].tagit = tagit; // Tails 05-08-2001
-	players[player].lastmap = lastmap; // Tails 08-11-2001
-	players[player].token = token; // Tails 08-12-2001
-	players[player].sstimer = sstimer; // Tails 08-11-2001
-	players[player].tagcount = tagcount; // Tails 08-17-2001
+	players[player].tagit = tagit;
+	players[player].ctfteam = ctfteam;
+	players[player].tagcount = tagcount;
 
-    // save player config truth reborn
-    players[player].skincolor = skincolor;
-    players[player].originalweaponswitch = originalweaponswitch;
-    memcpy (players[player].favoritweapon,favoritweapon,NUMWEAPONS);
-    players[player].autoaim_toggle = autoaim;
-    players[player].skin = skin;
-	players[player].charability = charability; // Tails
-	players[player].charspeed = charspeed; // Tails
-#ifdef CLIENTPREDICTION2
-    players[player].spirit = spirit;
-#endif
+	// save player config truth reborn
+	players[player].skincolor = skincolor;
+	players[player].skin = skin;
+	players[player].autoaim_toggle = autoaim;
+	players[player].charability = charability;
+	players[player].normalspeed = normalspeed;
+	players[player].runspeed = runspeed;
+	players[player].thrustfactor = thrustfactor;
+	players[player].accelstart = accelstart;
+	players[player].acceleration = acceleration;
+	players[player].charflags = charflags;
+	players[player].supercolor = supercolor;
+	players[player].starttranscolor = starttrans;
+	players[player].endtranscolor = endtrans;
+	players[player].prefcolor = prefcolor;
+	players[player].slingitem = slingitem;
+	players[player].thokitem = thokitem;
+	players[player].spinitem = spinitem;
+	players[player].waterskip = waterskip;
+	players[player].actionspd = actionspd;
+	players[player].mindash = mindash;
+	players[player].maxdash = maxdash;
 
-    p->usedown = p->attackdown = true;  // don't do anything immediately
-    p->playerstate = PST_LIVE;
-    p->health = initial_health;
-    p->readyweapon = p->pendingweapon = wp_pistol;
-    p->weaponowned[wp_fist] = true; // Tails 11-06-99
-    p->weaponowned[wp_pistol] = false; // Tails 11-06-99
-    p->ammo[am_clip] = initial_bullets;
+	players[player].starposttime = starposttime;
+	players[player].starpostx = starpostx;
+	players[player].starposty = starposty;
+	players[player].starpostz = starpostz;
+	players[player].starpostnum = starpostnum;
+	players[player].starpostangle = starpostangle;
+	players[player].starpostbit = starpostbit;
+	players[player].jumpfactor = jumpfactor;
+	players[player].boxindex = boxindex;
+	players[player].exiting = exiting;
 
-    // Boris stuff
-    if(!p->originalweaponswitch)
-        VerifFavoritWeapon(p);
-    //eof Boris
+	players[player].numboxes = numboxes;
+	players[player].laps = laps;
+	players[player].totalring = totalring;
+	players[player].dbginfo = dbginfo;
 
-    for (i=0 ; i<NUMAMMO ; i++)
-        p->maxammo[i] = maxammo[i];
+	players[player].mare = mare;
 
+	p->usedown = p->attackdown = p->jumpdown = true; // don't do anything immediately
+	p->playerstate = PST_LIVE;
+	p->health = 1; // 0 rings
+
+	if (netgame || multiplayer)
+		p->powers[pw_flashing] = flashingtics-1; // Babysitting deterrent
+
+	if (P_IsLocalPlayer(p))
+	{
+		if (!(mapmusic & 2048))
+			mapmusic = mapheaderinfo[gamemap-1].musicslot;
+
+		S_ChangeMusic(mapmusic & 2047, true);
+	}
+	
+	if (gametype == GT_COOP)
+		P_FindEmerald(); // scan for emeralds to hunt for
+
+	// If NiGHTS, find lowest mare to start with.
+	p->mare = P_FindLowestMare();
+
+	if (cv_debug)
+		CONS_Printf("Current mare is %d\n", p->mare);
+
+	if (p->mare == 255)
+		p->mare = 0;
 }
 
 //
@@ -1470,529 +1724,775 @@ void G_PlayerReborn (int player)
 // at the given mapthing_t spot
 // because something is occupying it
 //
-boolean G_CheckSpot ( int           playernum,
-                      mapthing_t*   mthing )
+static boolean G_CheckSpot(int playernum, mapthing_t *mthing)
 {
-    fixed_t             x;
-    fixed_t             y;
-    subsector_t*        ss;
-    unsigned            an;
-    mobj_t*             mo;
-    int                 i;
+	fixed_t x;
+	fixed_t y;
+	subsector_t *ss;
+	int i;
 
-    // added 25-4-98 : maybe there is no player start
-    if(!mthing || mthing->type<0)
-        return false;
+	// maybe there is no player start
+	if (!mthing || mthing->type < 0)
+		return false;
 
-    if (!players[playernum].mo)
-    {
-        // first spawn of level, before corpses
-        for (i=0 ; i<playernum ; i++)
-            // added 15-1-98 check if player is in game (mistake from id)
-            if (playeringame[i]
-                && players[i].mo->x == mthing->x << FRACBITS
-                && players[i].mo->y == mthing->y << FRACBITS)
-                return false;
-        return true;
-    }
+	if (!players[playernum].mo)
+	{
+		// first spawn of level
+		for (i = 0; i < playernum; i++)
+			if (playeringame[i] && players[i].mo
+				&& players[i].mo->x == mthing->x << FRACBITS
+				&& players[i].mo->y == mthing->y << FRACBITS)
+			{
+				return false;
+			}
+		return true;
+	}
 
-    x = mthing->x << FRACBITS;
-    y = mthing->y << FRACBITS;
+	x = mthing->x << FRACBITS;
+	y = mthing->y << FRACBITS;
+	ss = R_PointInSubsector(x, y);
 
-    if (!P_CheckPosition (players[playernum].mo, x, y) )
-        return false;
+	if (!P_CheckPosition(players[playernum].mo, x, y))
+		return false;
 
-    // flush an old corpse if needed
-    if (bodyqueslot >= BODYQUESIZE)
-        P_RemoveMobj (bodyque[bodyqueslot%BODYQUESIZE]);
-    bodyque[bodyqueslot%BODYQUESIZE] = players[playernum].mo;
-    bodyqueslot++;
-
-    // spawn a teleport fog
-    ss = R_PointInSubsector (x,y);
-    an = ( ANG45 * (mthing->angle/45) ) >> ANGLETOFINESHIFT;
-
-    mo = P_SpawnMobj (x+20*finecosine[an], y+20*finesine[an]
-                      , ss->sector->floorheight
-                      , MT_TFOG);
-
-    //added:16-01-98:consoleplayer -> displayplayer (hear snds from viewpt)
-    // removed 9-12-98: why not ????
-// Get rid of this sound! Tails 04-01-2001
-//    if (players[displayplayer].viewz != 1)
-//        S_StartSound (mo, sfx_telept);  // don't start sound on first frame
-
-    return true;
+	return true;
 }
-
 
 //
 // G_DeathMatchSpawnPlayer
 // Spawns a player at one of the random death match spots
 // called at level load and each death
 //
-boolean G_DeathMatchSpawnPlayer (int playernum)
+void G_DeathMatchSpawnPlayer(int playernum)
 {
-    int             i,j,n;
-    int             selections;
-/*
-if(cv_gametype.value == 4) // If CTF, Spawn players at Team Starts Tails 08-04-2001
-{
-    selections = redctfstarts_p - redctfstarts;
-    if( !selections)
-        I_Error("No Red Team start in this map !");
+	int i, j;
 
-    for (j=0 ; j<MAXPLAYERS ; j++)
-    {
-		if(players[playernum].ctfteam == 1)
+	if (numdmstarts)
+		for (j = 0; j < 64; j++)
 		{
-			i = P_Random() % selections;
-			if (G_CheckSpot (playernum, &redctfstarts[i]) )
+			i = P_Random() % numdmstarts;
+			if (G_CheckSpot(playernum, deathmatchstarts[i]))
 			{
-				redctfstarts[i].type = playernum+1;
-				P_SpawnPlayer (&redctfstarts[i]);
-				return true;
+				P_SpawnPlayer(deathmatchstarts[i], playernum);
+				return;
 			}
 		}
-    }
 
+	// Use a coop start dependent on playernum
+	CONS_Printf("No deathmatch start in this map - shifting to player starts to avoid crash...\n");
 
-    selections = bluectfstarts_p - bluectfstarts;
-    if( !selections)
-        I_Error("No Blue Team start in this map !");
+	if (!numcoopstarts)
+		I_Error("There aren't enough starts in this map!\n");
 
-    for (j=0 ; j<MAXPLAYERS ; j++)
-    {
-		if(players[playernum].ctfteam == 2)
-		{
-			i = P_Random() % selections;
-			if (G_CheckSpot (playernum, &bluectfstarts[i]) )
-			{
-			    bluectfstarts[i].type = playernum+1;
-			    P_SpawnPlayer (&bluectfstarts[i]);
-			    return true;
-			}
-		}
-    }
+	i = playernum % numcoopstarts;
+	P_SpawnPlayer(playerstarts[i], playernum);
 }
 
-else
-{*/
-    selections = deathmatch_p - deathmatchstarts;
-    if( !selections)
-        I_Error("No deathmatch start in this map! (Error 1)");
-
-    if(demoversion<123)
-        n=20;
-    else
-        n=64;
-
-    for (j=0 ; j<n ; j++)
-    {
-        i = P_Random() % selections;
-        if (G_CheckSpot (playernum, &deathmatchstarts[i]) )
-        {
-            deathmatchstarts[i].type = playernum+1;
-            P_SpawnPlayer (&deathmatchstarts[i]);
-            return true;
-        }
-    }
-//}
-    if(demoversion<113)
-    {
-
-    // no good spot, so the player will probably get stuck
-        P_SpawnPlayer (&playerstarts[playernum]);
-        return true;
-    }
-    return false;
-}
-
-void G_CoopSpawnPlayer (int playernum)
+// G_CoopSpawnPlayer
+//
+void G_CoopSpawnPlayer(int playernum, boolean starpost)
 {
-    int i;
+	int i, j;
 
-    // no deathmatch use the spot
-    if (G_CheckSpot (playernum, &playerstarts[playernum]) )
-    {
-        P_SpawnPlayer (&playerstarts[playernum]);
-        return;
-    }
+	// CTF Start Spawns
+	if (gametype == GT_CTF)
+	{
+		switch (players[playernum].ctfteam)
+		{
+			case 1: // Red Team
+				if (!numredctfstarts)
+				{
+					CONS_Printf("No Red Team start in this map, resorting to Deathmatch starts!\n");
+					goto startdeath;
+				}
 
-    // try to spawn at one of the other players spots
-    for (i=0 ; i<MAXPLAYERS ; i++)
-    {
-        if (G_CheckSpot (playernum, &playerstarts[i]) )
-        {
-            playerstarts[i].type = playernum+1;     // fake as other player
-            P_SpawnPlayer (&playerstarts[i]);
-            playerstarts[i].type = i+1;               // restore
-            return;
-        }
-        // he's going to be inside something.  Too bad.
-    }
+				for (j = 0; j < 32; j++)
+				{
+					i = P_Random() % numredctfstarts;
+					if (G_CheckSpot(playernum, redctfstarts[i]))
+					{
+						P_SpawnPlayer(redctfstarts[i], playernum);
+						return;
+					}
+				}
+				break;
+			case 2: // Blue Team
+				if (!numbluectfstarts)
+				{
+					CONS_Printf("No Blue Team start in this map, resorting to Deathmatch starts!\n");
+					goto startdeath;
+				}
 
-    if(demoversion<113)
-        P_SpawnPlayer (&playerstarts[playernum]);
+				for (j = 0; j < 32; j++)
+				{
+					i = P_Random() % numbluectfstarts;
+					if (G_CheckSpot(playernum, bluectfstarts[i]))
+					{
+						P_SpawnPlayer(bluectfstarts[i], playernum);
+						return;
+					}
+				}
+				break;
+			default:
+startdeath:
+				G_DeathMatchSpawnPlayer(playernum);
+				return;
+		}
+	}
+
+	if (starpost)
+	{
+		P_SpawnStarpostPlayer(players[playernum].mo, playernum);
+		return;
+	}
+
+	// no deathmatch use the spot
+	if (G_CheckSpot(playernum, playerstarts[playernum]))
+	{
+		P_SpawnPlayer(playerstarts[playernum], playernum);
+		return;
+	}
+
+	// use the player start anyway if it exists
+	if (playerstarts[playernum] && playerstarts[playernum]->type >= 0)
+	{
+		P_SpawnPlayer(playerstarts[playernum], playernum);
+		return;
+	}
+
+	// resort to the player one start, and if there is none, we're screwed
+	if (!playerstarts[0] || playerstarts[0]->type < 0)
+		I_Error("Not enough starts in this map!\n");
+
+	P_SpawnPlayer(playerstarts[0], playernum);
 }
 
 //
 // G_DoReborn
 //
-void G_DoReborn (int playernum)
+void G_DoReborn(int playernum)
 {
-    player_t*  player = &players[playernum];
+	player_t *player = &players[playernum];
+	boolean starpost = false;
 
-    // boris comment : this test is like 'single player game'
-    //                 all this kind of hiden variable must be removed
-    if (!multiplayer && !(cv_deathmatch.value || cv_gametype.value)) // Tails 03-13-2001
-    {
-        // reload the level from scratch
-        G_DoLoadLevel ();
-    }
-    else
-    {
-        // respawn at the start
+	if (countdowntimeup || (!multiplayer && gametype == GT_COOP))
+	{
+		// reload the level from scratch
+		if (countdowntimeup)
+		{
+			player->starpostangle = 0;
+			player->starposttime = 0;
+			player->starpostx = 0;
+			player->starposty = 0;
+			player->starpostz = 0;
+			player->starpostnum = 0;
+			player->starpostbit = 0;
+		}
+		if (!modifiedgame && player->dbginfo > 3
+			&& gamemap == 0xbc-0xbb)
+		{
+			gamemap = 0x10;
 
-        // first dissasociate the corpse
-        if(player->mo)
-        {
-            player->mo->player = NULL;
-            player->mo->eflags &= ~MF_INVISIBLE;
-			P_RemoveMobj(player->mo); // Tails 10-07-2001
-        }
-        // spawn at random spot if in death match
-        if (cv_deathmatch.value || cv_gametype.value == 1 || cv_gametype.value == 3) // Tails 03-13-2001
-        {
-            if(G_DeathMatchSpawnPlayer (playernum))
-               return;
-        }
+			player->starpostangle = 0;
+			player->starposttime = 0;
+			player->starpostx = 0;
+			player->starposty = 0;
+			player->starpostz = 0;
+			player->starpostnum = 0;
+			player->starpostbit = 0;
+		}
+		if (mapheaderinfo[gamemap-1].noreload && !imcontinuing)
+		{
+			P_LoadThingsOnly();
 
-        G_CoopSpawnPlayer (playernum);
-    }
+			P_RehitStarposts();
+
+			// Do a wipe
+			wipegamestate = -1;
+
+			if (player->starposttime)
+				starpost = true;
+
+			// Starpost support
+			G_CoopSpawnPlayer(playernum, starpost);
+		}
+		else
+			G_DoLoadLevel(true);
+
+		imcontinuing = false;
+	}
+	else if (!modifiedgame && player->dbginfo > 3
+		&& gamemap == 0xbc-0xbb && gametype == GT_COOP)
+	{
+		gamemap = 0x10;
+
+		player->starpostangle = 0;
+		player->starposttime = 0;
+		player->starpostx = 0;
+		player->starposty = 0;
+		player->starpostz = 0;
+		player->starpostnum = 0;
+		player->starpostbit = 0;
+
+		G_DoLoadLevel(true);
+	}
+	else if ((multiplayer || netgame)
+		&& gametype == GT_COOP
+		&& !modifiedgame
+		&& gamemap == 0x10)
+	{
+		int i;
+		for (i = 0; i < MAXPLAYERS; i++)
+		{
+			if (!playeringame[i])
+				continue;
+
+			players[i].mo->player = NULL;
+			players[i].mo->flags2 &= ~MF2_DONTDRAW;
+			P_SetMobjState(players[i].mo, S_DISS);
+		}
+		G_DoLoadLevel(true);
+	}
+	else
+	{
+		// respawn at the start
+
+		if (player->starposttime)
+			starpost = true;
+
+		// first dissasociate the corpse
+		if (player->mo)
+		{
+			player->mo->player = NULL;
+			player->mo->flags2 &= ~MF2_DONTDRAW;
+			// Don't leave your carcass stuck 10-billion feet in the ground!
+			P_SetMobjState(player->mo, S_DISS);
+		}
+		// spawn at random spot if in death match
+		if (gametype == GT_MATCH || gametype == GT_TAG 
+#ifdef CHAOSISNOTDEADYET
+			|| gametype == GT_CHAOS
+#endif
+			)
+		{
+			G_DeathMatchSpawnPlayer(playernum);
+			return;
+		}
+
+		// Starpost support
+		G_CoopSpawnPlayer(playernum, starpost);
+	}
 }
 
-
-// DOOM Par Times
-static const int pars[4][10] =
+void G_AddPlayer(int playernum)
 {
-    {0},
-    {0,30,75,120,90,165,180,180,30,165},
-    {0,90,90,90,120,90,360,240,30,170},
-    {0,90,45,90,150,90,90,165,30,135}
-};
+	player_t *p = &players[playernum];
 
-// DOOM II Par Times
-static const int cpars[32] =
+	p->playerstate = PST_REBORN;
+}
+
+static boolean secretexit;
+
+void G_ExitLevel(void)
 {
-    30,90,120,120,90,150,120,120,270,90,        //  1-10
-    210,150,150,150,210,150,420,150,210,150,    // 11-20
-    240,150,180,150,150,300,330,420,300,180,    // 21-30
-    120,30                                      // 31-32
-};
+	if (gamestate == GS_LEVEL)
+	{
+		secretexit = false;
+		gameaction = ga_completed;
+	}
+}
 
+/** Get the typeoflevel flag needed to indicate support of a gametype.
+  * In single-player, this always returns TOL_SP.
+  * \param gametype The gametype for which support is desired.
+  * \return The typeoflevel flag to check for that gametype.
+  * \author Graue <graue@oceanbase.org>
+  */
+static short TOLFlag(int pgametype)
+{
+	if (!multiplayer)          return TOL_SP;
+	if (pgametype == GT_COOP)  return TOL_COOP;
+	if (pgametype == GT_RACE)  return TOL_RACE;
+	if (pgametype == GT_MATCH) return TOL_MATCH;
+#ifdef CHAOSISNOTDEADYET
+	if (pgametype == GT_CHAOS) return TOL_CHAOS;
+#endif
+	if (pgametype == GT_TAG)   return TOL_TAG;
+	if (pgametype == GT_CTF)   return TOL_CTF;
+
+	CONS_Printf("Error: Weird gametype! %d\n", pgametype);
+	return MAXSHORT;
+}
+
+/** Select a random map with the given typeoflevel flags.
+  * If no map has those flags, this arbitrarily gives you map 1.
+  * \param tolflags The typeoflevel flags to insist on. Other bits may
+  *                 be on too, but all of these must be on.
+  * \return A random map with those flags, 1-based, or 1 if no map
+  *         has those flags.
+  * \author Graue <graue@oceanbase.org>
+  */
+static int RandMap(short tolflags)
+{
+	XBOXSTATIC int okmaps[NUMMAPS];
+	int numokmaps = 0;
+	int ix;
+	int mapnum;
+
+	// Find all the maps that are ok and and put them in an array.
+	for (ix = 0; ix < NUMMAPS; ix++)
+		if ((mapheaderinfo[ix].typeoflevel & tolflags) == tolflags)
+			okmaps[numokmaps++] = ix;
+
+	if (numokmaps == 0)
+		return 1; // Sorry, none match. You get MAP01.
+
+	mapnum = M_Random() << 8;
+	mapnum |= M_Random();
+	mapnum %= numokmaps;
+
+	return okmaps[mapnum]+1;
+}
 
 //
 // G_DoCompleted
 //
-boolean         secretexit;
-
-void G_ExitLevel (void)
+void G_DoCompleted(void)
 {
-    if( gamestate==GS_LEVEL )
-    {
-        secretexit = false;
-        gameaction = ga_completed;
-    }
-}
+	int i;
+	boolean gottoken = false;
 
-// Here's for the german edition.
-void G_SecretExitLevel (void)
-{
-    // IF NO WOLF3D LEVELS, NO SECRET EXIT!
-    if ( (gamemode == commercial)
-      && (W_CheckNumForName("map31")<0))
-        secretexit = false;
-    else
-        secretexit = true;
-    gameaction = ga_completed;
-}
+	tokenlist = 0; // Reset the list
 
-void G_DoCompleted (void)
-{
-    int             i;
-	boolean	 gottoken; // I got it! Tails 08-17-2001
-	gottoken = false; // Tails 08-17-2001
+	gameaction = ga_nothing;
 
-    gameaction = ga_nothing;
+	for (i = 0; i < MAXPLAYERS; i++)
+		if (playeringame[i])
+			G_PlayerFinishLevel(i); // take away cards and stuff
 
-    for (i=0 ; i<MAXPLAYERS ; i++)
-        if (playeringame[i])
-            G_PlayerFinishLevel (i);        // take away cards and stuff
+	if (automapactive)
+		AM_Stop();
 
-    if (automapactive)
-        AM_Stop ();
+	S_StopSounds();
 
-    if ( gamemode != commercial)
-        switch(gamemap)
-        {
-          case 8:
-            //BP add comment : no intermistion screen
-            if(cv_deathmatch.value)
-                wminfo.next = 0;
-            else
-            {
-                F_StartFinale();
-                return;
-            }
-          case 9:
-            for (i=0 ; i<MAXPLAYERS ; i++)
-                players[i].didsecret = true;
-            break;
-        }
+	prevmap = gamemap-1;
 
-    wminfo.didsecret = players[consoleplayer].didsecret;
-    wminfo.epsd = gameepisode -1;
-    wminfo.last = gamemap -1;
+	// go to next level
+	// nextmap is 0-based, unlike gamemap
+	if (nextmapoverride != 0)
+		nextmap = nextmapoverride-1;
+	else
+		nextmap = mapheaderinfo[gamemap-1].nextlevel-1;
 
-    // wminfo.next is 0 biased, unlike gamemap
-    if ( gamemode == commercial)
-    {
-        if (secretexit)
-            switch(gamemap)
-            {
-              case 15 : wminfo.next = 30; break;
-              case 31 : wminfo.next = 31; break;
-              default : wminfo.next = 15;break;
-            }
-        else
-            switch(gamemap)
-            {
-              case 31:
-              case 32: wminfo.next = 15; break;
-			  case 12:
-				  wminfo.next = 5; break;
-			  case 14:
-				  wminfo.next = 12; break;
-              default: wminfo.next = gamemap;
-            }
-	if(!cv_gametype.value)
+	// Remember last map for when you come out of the special stage.
+	if (gamemap < sstage_start || gamemap > sstage_end)
+		lastmap = nextmap;
+
+	// If nextmap is actually going to get used, make sure it points to
+	// a map of the proper gametype -- skip levels that don't support
+	// the current gametype. (Helps avoid playing boss levels in Race,
+	// for instance).
+	if (!token && (gamemap < sstage_start || gamemap > sstage_end))
 	{
-		for(i=0; i<MAXPLAYERS; i++) // Special Stage Token Checker Tails 08-11-2001
+		short tolflag = TOLFlag(gametype);
+
+		if (nextmap >= 0 && nextmap < NUMMAPS
+			&& !(mapheaderinfo[nextmap].typeoflevel & tolflag))
 		{
-			if(playeringame[i])
+			register int cm = nextmap;
+			unsigned char visitedmap[(NUMMAPS+7)/8];
+
+			memset(visitedmap, 0, sizeof (visitedmap));
+
+			while (!(mapheaderinfo[cm].typeoflevel & tolflag))
 			{
-				if(players[i].token)
+				visitedmap[cm/8] |= (1<<(cm%8));
+				cm = mapheaderinfo[cm].nextlevel-1;
+				if (cm >= NUMMAPS || cm < 0) // out of range (either 1100-1102 or error)
+					break;
+				if (visitedmap[cm/8] & (1<<(cm%8))) // smells familiar
 				{
-					players[i].token--;
-					gottoken = true;
+					// We got stuck in a loop, came back
+					// to the map we started on without
+					// finding one supporting the current
+					// gametype. Thus, print a warning,
+					// and just use this map anyways.
+					CONS_Printf("Warning: Can't find a "
+						"compatible map after map %d; "
+						"using map %d even though it "
+						"is not compatible with the "
+						"current gametype\n",
+							prevmap+1, cm+1);
+					break;
 				}
 			}
+
+			nextmap = cm;
 		}
 	}
 
-	if(gamemap == 4 && !gottoken) // Tails 08-16-2001
-		wminfo.next = 0; // Tails 08-16-2001
+	if (nextmap < 0 || (nextmap >= NUMMAPS && nextmap < 1100-1)
+		|| nextmap > 1102-1)
+	{
+		I_Error("Followed map %d to invalid map %d\n", prevmap + 1, nextmap + 1);
 	}
-    else
-    {
-        if (secretexit)
-            wminfo.next = 8;    // go to secret level
-        else if (gamemap == 9)
-        {
-            // returning from secret level
-            switch (gameepisode)
-            {
-              case 1 :  wminfo.next = 3; break;
-              case 2 :  wminfo.next = 5; break;
-              case 3 :  wminfo.next = 6; break;
-              case 4 :  wminfo.next = 2; break;
-              default : wminfo.next = 0; break;
-            }
-        }
-        else
-            if (gamemap == 8)
-                wminfo.next = 0; // wrape around in deathmatch
-            else
-                wminfo.next = gamemap;          // go to next level
-    }
 
-    wminfo.maxkills = totalkills;
-    wminfo.maxitems = totalitems;
-    wminfo.maxsecret = totalsecret;
-    wminfo.maxfrags = 0;
-    if ( gamemode == commercial )
-        wminfo.partime = TICRATE*cpars[gamemap-1];
-    else
-        wminfo.partime = TICRATE*pars[gameepisode][gamemap];
-    wminfo.pnum = consoleplayer;
+	// wrap around in race
+	if (nextmap >= 1100-1 && nextmap <= 1102-1 && gametype == GT_RACE)
+		nextmap = racestage_start-1;
 
-    for (i=0 ; i<MAXPLAYERS ; i++)
-    {
-        wminfo.plyr[i].in = playeringame[i];
-        wminfo.plyr[i].sscore = players[i].fscore; // show da score man! Tails 03-09-2000
-        wminfo.plyr[i].skills = players[i].killcount;
-        wminfo.plyr[i].sitems = players[i].itemcount;
-        wminfo.plyr[i].ssecret = players[i].secretcount;
-        memcpy (wminfo.plyr[i].frags, players[i].frags
-                , sizeof(wminfo.plyr[i].frags));
-        wminfo.plyr[i].addfrags = players[i].addfrags;
-    }
+	if (gametype == GT_COOP && token)
+	{
+		if (!(emeralds & EMERALD1))
+			nextmap = sstage_start - 1; // Special Stage 1
+		else if (!(emeralds & EMERALD2))
+			nextmap = sstage_start; // Special Stage 2
+		else if (!(emeralds & EMERALD3))
+			nextmap = sstage_start + 1; // Special Stage 3
+		else if (!(emeralds & EMERALD4))
+			nextmap = sstage_start + 2; // Special Stage 4
+		else if (!(emeralds & EMERALD5))
+			nextmap = sstage_start + 3; // Special Stage 5
+		else if (!(emeralds & EMERALD6))
+			nextmap = sstage_start + 4; // Special Stage 6
+		else if (!(emeralds & EMERALD7))
+			nextmap = sstage_start + 5; // Special Stage 7
+		else
+		{
+			gottoken = false;
+			goto skipit;
+		}
 
-    gamestate = GS_INTERMISSION;
-    automapactive = false;
+		token--;
+		gottoken = true;
+	}
+skipit:
 
-    if (statcopy)
-        memcpy (statcopy, &wminfo, sizeof(wminfo));
+	if ((gamemap >= sstage_start && gamemap <= sstage_end) && !gottoken)
+	{
+		nextmap = lastmap; // Exiting from a special stage? Go back to the game. Tails 08-11-2001
+	}
 
-    WI_Start (&wminfo);
+	automapactive = false;
+
+	if (gametype == GT_MATCH || gametype == GT_TAG || gametype == GT_CTF
+#ifdef CHAOSISNOTDEADYET
+		|| gametype == GT_CHAOS
+#endif
+		)
+	{
+		if (cv_advancemap.value == 0) // Stay on same map.
+			nextmap = prevmap;
+		else if (cv_advancemap.value == 2) // Go to random map.
+			nextmap = RandMap(TOLFlag(gametype))-1;
+	}
+
+	if (skipstats)
+		G_AfterIntermission();
+	else
+	{
+		gamestate = GS_INTERMISSION;
+		Y_StartIntermission();
+	}
 }
 
+void G_AfterIntermission(void)
+{
+	cechotimer = 0;
+
+	if (mapheaderinfo[gamemap-1].cutscenenum) // Start a custom cutscene.
+		F_StartCustomCutscene(mapheaderinfo[gamemap-1].cutscenenum-1, false, false);
+	else
+	{
+		if (nextmap < 1100-1)
+			G_NextLevel();
+		else
+			Y_EndGame();
+	}
+}
 
 //
 // G_NextLevel (WorldDone)
 //
 // init next level or go to the final scene
-// called by end of intermision screen (wi_stuff)
-void G_NextLevel (void)
+// called by end of intermission screen (y_inter)
+//
+void G_NextLevel(void)
 {
-    gameaction = ga_worlddone;
-    if (secretexit)
-        players[consoleplayer].didsecret = true;
-
-    if ( gamemode == commercial && xmasmode) // Tails 12-12-2001
-    {
-        if(cv_deathmatch.value==0)
-    {
-        switch (gamemap)
-        {
-          case 15:
-          case 31:
-            if (!secretexit)
-                break;
-          case 4: // Was Case 6 Tails 06-17-2001
-          case 5:
-          case 20:
-          case 30:
-                gameaction = ga_nothing;
-            F_StartFinale ();
-            break;
-        }
-    }
-        else
-            if(gamemap==30)
-                wminfo.next = 0; // wrape around in deathmatch
-    }
+	gameaction = ga_worlddone;
 }
 
-void G_DoWorldDone (void)
+static void G_DoWorldDone(void)
 {
-    if( demoversion<129 )
-    {
-        gamemap = wminfo.next+1;
-        G_DoLoadLevel ();
-    }
-    else
-        // not in demo because demo have the mapcommand on it
-        if(server && !demoplayback) 
-        {
-            if( cv_deathmatch.value==0 && cv_gametype.value==0) // Tails 03-13-2001
-                // don't reset player between maps
-                COM_BufAddText (va("map \"%s\" -noresetplayers\n",G_BuildMapName(gameepisode,wminfo.next+1)));
-            else
-                // resetplayer in deathmatch for more equality
-                COM_BufAddText (va("map \"%s\"\n",G_BuildMapName(gameepisode,wminfo.next+1)));
+	// not in demo because demo have the mapcommand on it
+	if (server && !demoplayback)
+	{
+		int nextgametype;
 
-//            gamestate = wipegamestate = GS_NULL; // no more tic with this setings
-        }
-    
-    gameaction = ga_nothing;
-    viewactive = true;
+		// for custom exit (linetype 71) that changes gametype
+		if (nextmapgametype != -1)
+			nextgametype = nextmapgametype;
+		else
+			nextgametype = gametype;
+
+		if (gametype == GT_COOP && nextgametype == GT_COOP)
+			// don't reset player between maps
+			D_MapChange(nextmap+1, nextgametype, gameskill, 0, 0, false, false);
+		else
+			// resetplayer in match/chaos/tag/CTF/race for more equality
+			D_MapChange(nextmap+1, nextgametype, gameskill, 1, 0, false, false);
+	}
+
+	gameaction = ga_nothing;
 }
 
+//
+// G_LoadGameSettings
+//
+// Sets a tad of default info we need.
+void G_LoadGameSettings(void)
+{
+	// defaults
+	spstage_start = 1;
+	sstage_start = 50;
+	sstage_end = 56;
+	racestage_start = 1;
+}
+
+// G_LoadGameData
+// Loads the main data file, which stores information such as emblems found, etc.
+void G_LoadGameData(void)
+{
+	int length, i;
+	boolean modded = false;
+	boolean corrupt = false;
+
+	for (i = 0; i < MAXEMBLEMS; i++)
+		emblemlocations[i].collected = false;
+
+	memset(mapvisited, false, sizeof (boolean) * NUMMAPS);
+
+	foundeggs = 0;
+	totalplaytime = 0;
+	grade = 0;
+	timesbeaten = 0;
+
+	length = FIL_ReadFile(va(pandf, srb2home, gamedatafilename), &savebuffer);
+	if (!length)
+	{
+		gamedataloaded = 1; // Aw, no game data. Their loss!
+		return;
+	}
+
+	save_p = savebuffer;
+
+	foundeggs = (READLONG(save_p)-30)/5;
+	totalplaytime = READULONG(save_p);
+	grade = (READLONG(save_p)-75)/4;
+	
+	for (i = 0; i < NUMMAPS; i++)
+		mapvisited[i] = READBYTE(save_p);
+
+	for (i = 0; i < MAXEMBLEMS; i++)
+		emblemlocations[i].collected = READBYTE(save_p)-125-(i/4);
+
+	READBYTE(save_p); // DUMMY BYTE REMOVE FOR v1.1
+
+	modded = READBYTE(save_p);
+	timesbeaten = (READLONG(save_p)/4)+2;
+
+	// Initialize the table
+	memset(timedata, 0, sizeof (timeattack_t) * NUMMAPS);
+
+	for (i = 0; i < NUMMAPS; i++)
+		timedata[i].time = READULONG(save_p);
+
+	// Aha! Someone's been screwing with the save file!
+	if ((modded && !savemoddata))
+		corrupt = true;
+	else if (timesbeaten < 0)
+		corrupt = true;
+	else if (modded != true && modded != false)
+		corrupt = true;
+	else if (grade > 2047)
+		corrupt = true;
+	else
+	{
+		for (i = 0; i < MAXEMBLEMS; i++)
+		{
+			if (emblemlocations[i].collected != true
+				&& emblemlocations[i].collected != false)
+			{
+				corrupt = true;
+				break;
+			}
+		}
+
+		if (!corrupt)
+		{
+			for (i = 0; i < NUMMAPS; i++)
+			{
+				if (mapvisited[i] != true
+					&& mapvisited[i] != false)
+				{
+					corrupt = true;
+					break;
+				}
+			}
+		}
+	}
+
+	if (corrupt)
+	{
+		const char *gdfolder = "the SRB2 folder";
+		if (strcmp(srb2home,"."))
+			gdfolder = srb2home;
+		I_Error("Corrupt game data file.\nDelete %s(maybe in %s)\nand try again.", gamedatafilename, gdfolder);
+	}
+
+	// done
+	Z_Free(savebuffer);
+	save_p = NULL;
+	gamedataloaded = 1;
+}
+
+// G_SaveGameData
+// Saves the main data file, which stores information such as emblems found, etc.
+void G_SaveGameData(void)
+{
+	size_t length;
+	int i;
+	long stemp;
+	byte btemp;
+
+	if (!gamedataloaded)
+		return;
+
+	save_p = savebuffer = (byte *)malloc(GAMEDATASIZE);
+	if (!save_p)
+	{
+		CONS_Printf("No more free memory for saving game data\n");
+		return;
+	}
+
+	if (modifiedgame && !savemoddata)
+	{
+		free(savebuffer);
+		save_p = savebuffer = NULL;
+		return;
+	}
+
+	// Cipher
+	// Author: Caesar <caesar@rome.it>
+	//
+	stemp =(foundeggs*5)+30;
+	WRITELONG(save_p, stemp);
+	WRITEULONG(save_p, totalplaytime);
+	stemp = (grade*4)+75;
+	WRITELONG(save_p, stemp);
+
+	for (i = 0; i < NUMMAPS; i++)
+		WRITEBYTE(save_p, mapvisited[i]);
+
+	for (i = 0; i < MAXEMBLEMS; i++)
+	{
+		btemp = (byte)(emblemlocations[i].collected+125+(i/4));
+		WRITEBYTE(save_p, btemp);
+	}
+
+	WRITEBYTE(save_p, 0); // DUMMY BYTE REMOVE FOR v1.1
+
+	btemp = (byte)(savemoddata || modifiedgame);
+	WRITEBYTE(save_p, btemp);
+	stemp = (timesbeaten-2)*4;
+	WRITELONG(save_p, stemp);
+
+	for (i = 0; i < NUMMAPS; i++)
+		WRITEULONG(save_p, timedata[i].time);
+
+	length = save_p - savebuffer;
+
+	FIL_WriteFile(va(pandf, srb2home, gamedatafilename), savebuffer, length);
+	free(savebuffer);
+	save_p = savebuffer = NULL;
+}
 
 //
 // G_InitFromSavegame
 // Can be called by the startup code or the menu task.
 //
-void G_LoadGame (int slot)
+void G_LoadGame(unsigned int slot)
 {
-        COM_BufAddText(va("load %d\n",slot));
+	COM_BufAddText(va("load %u\n",slot));
 }
 
-#define VERSIONSIZE             16
+#define VERSIONSIZE 16
 
-void G_DoLoadGame (int slot) // Working on lots of garbage here Tails 06-10-2001
+void G_DoLoadGame(unsigned int slot)
 {
-    int         length;
-    int         i;
-    char        vcheck[VERSIONSIZE];
-    char        savename[255];
+	int length;
+	char vcheck[VERSIONSIZE];
+	char savename[255];
 
-    sprintf(savename,savegamename,slot);
+	sprintf(savename, savegamename, slot);
 
-    length = FIL_ReadFile (savename, &savebuffer);
-    if (!length)
-    {
-        CONS_Printf ("Couldn't read file %s", savename);
-        return;
-    }
+	length = FIL_ReadFile(savename, &savebuffer);
+	if (!length)
+	{
+		CONS_Printf("Couldn't read file %s", savename);
+		return;
+	}
 
-    save_p = savebuffer + SAVESTRINGSIZE;
+	// skip the description field
+	save_p = savebuffer + SAVESTRINGSIZE;
 
-    // skip the description field
-    memset (vcheck,0,sizeof(vcheck));
-    sprintf (vcheck,"version %i",VERSION);
-    if (strcmp (save_p, vcheck))
-    {
-        M_StartMessage ("Save game from different version\n\nPress ESC\n",NULL,false);
-        return;                         // bad version
-    }
-    save_p += VERSIONSIZE;
+	memset(vcheck, 0, sizeof (vcheck));
+	sprintf(vcheck, "version %d", VERSION);
+	if (strcmp((const char *)save_p, (const char *)vcheck))
+	{
+		M_StartMessage("Save game from different version\n\nPress ESC\n", NULL, MM_NOTHING);
+		Z_Free(savebuffer);
+		save_p = savebuffer = NULL;
+		return; // bad version
+	}
+	save_p += VERSIONSIZE;
 
-    if(demoplayback)  // reset game engine
-        G_StopDemo();
+	if (demoplayback) // reset game engine
+		G_StopDemo();
 
-    gameskill = *save_p++;
-    gameepisode = *save_p++;
-    gamemap = *save_p++;
-    for (i=0 ; i<MAXPLAYERS ; i++)
-        playeringame[i] = *save_p++;
+	paused = false;
+	automapactive = false;
 
-    //added:27-02-98: reset the game version
-    G_Downgrade(VERSION);
+	// This bypasses D_MapChange entirely, so set the gametype right
+	gametype = GT_COOP;
 
-    usergame      = true;      // will be set false if a demo
-    paused        = false;
-    automapactive = false;
-    viewactive    = true;
+	// dearchive all the modifications
+	if (!P_LoadGame())
+	{
+		M_StartMessage("savegame file corrupted\n\nPress ESC\n", NULL, MM_NOTHING);
+		Command_ExitGame_f();
+		Z_Free(savebuffer);
+		save_p = savebuffer = NULL;
+		return;
+	}
 
-    // load a base level
-    G_InitNew (gameskill, G_BuildMapName(gameepisode, gamemap),true);
+	gameaction = ga_nothing;
+	gamestate = GS_LEVEL;
+	displayplayer = consoleplayer;
 
-    // dearchive all the modifications
-    P_UnArchivePlayers ();
+	// done
+	Z_Free(savebuffer);
+	save_p = savebuffer = NULL;
+	multiplayer = playeringame[1];
+	if (playeringame[1] && !netgame)
+		CV_SetValue(&cv_splitscreen,1);
 
-    if(*save_p != 0x1d)
-    {
-        CONS_Printf ("Bad savegame\n");
-        gameaction=GS_DEMOSCREEN;
-    }
+	if (setsizeneeded)
+		R_ExecuteSetViewSize();
 
-    // done
-    Z_Free (savebuffer);
-
-    multiplayer = playeringame[1];
-    if(playeringame[1] && !netgame)
-        CV_SetValue(&cv_splitscreen,1);
-
-    if (setsizeneeded)
-        R_ExecuteSetViewSize ();
-
-    // draw the pattern into the back screen
-    R_FillBackScreen ();
-    CON_ToggleOff ();
-
+	// draw the pattern into the back screen
+	R_FillBackScreen();
+	CON_ToggleOff();
 }
 
 //
@@ -2000,301 +2500,183 @@ void G_DoLoadGame (int slot) // Working on lots of garbage here Tails 06-10-2001
 // Called by the menu task.
 // Description is a 24 byte text string
 //
-void G_SaveGame ( int   slot, char* description )
+void G_SaveGame(unsigned int slot, const char *descriptiontxt)
 {
-    if (server)
-        COM_BufAddText(va("save %d \"%s\"\n",slot,description));
+	if (server)
+		COM_BufAddText(va("save %u \"%s\"\n", slot, descriptiontxt));
 }
 
-void G_DoSaveGame (int   savegameslot, char* savedescription)
+void G_DoSaveGame(unsigned int savegameslot, const char *savedescription)
 {
-  char        name2[VERSIONSIZE];
-    char        description[SAVESTRINGSIZE];
-    int         length;
-    int         i;
-    char        name[256];
+	boolean saved;
+	char savename[256] = "";
+	const char *backup;
 
-    gameaction = ga_nothing;
+	gameaction = ga_nothing;
 
-    sprintf(name,savegamename,savegameslot);
+	sprintf(savename, savegamename, savegameslot);
+	backup = va("%s",savename);
 
-    gameaction = ga_nothing;
+	gameaction = ga_nothing;
+	{
+		char name[VERSIONSIZE];
+		char descriptionstr[SAVESTRINGSIZE];
+		size_t length;
 
-    save_p = savebuffer = (byte *)malloc(SAVEGAMESIZE);
-    if(!save_p)
-    {
-        CONS_Printf ("No More free memory for savegame\n");
-        return;
-    }
+		save_p = savebuffer = (byte *)malloc(SAVEGAMESIZE);
+		if (!save_p)
+		{
+			CONS_Printf("No more free memory for savegame\n");
+			return;
+		}
+	
+		strcpy(descriptionstr, savedescription);
+		descriptionstr[SAVESTRINGSIZE] = 0;
+		WRITEMEM(save_p, descriptionstr, SAVESTRINGSIZE);
+		memset(name, 0, sizeof (name));
+		sprintf(name, "version %d", VERSION);
+		WRITEMEM(save_p, name, VERSIONSIZE);
+	
+		P_SaveGame();
+	
+		length = save_p - savebuffer;
+		if (length > SAVEGAMESIZE)
+			I_Error("Savegame buffer overrun");
+		saved = FIL_WriteFile(backup, savebuffer, length);
+		free(savebuffer);
+		save_p = savebuffer = NULL;
+	}
 
-    strcpy(description,savedescription);
-    description[SAVESTRINGSIZE]=0;
-    memcpy (save_p, description, SAVESTRINGSIZE);
-    save_p += SAVESTRINGSIZE;
-    memset (name2,0,sizeof(name2));
-    sprintf (name2,"version %i",VERSION);
-    memcpy (save_p, name2, VERSIONSIZE);
-    save_p += VERSIONSIZE;
+	gameaction = ga_nothing;
 
-    *save_p++ = gameskill;
-    *save_p++ = gameepisode;
-    *save_p++ = gamemap;
-    for (i=0 ; i<MAXPLAYERS ; i++)
-        *save_p++ = playeringame[i];
+	if (saved)
+		players[consoleplayer].message = GGSAVED;
+	else
+		CONS_Printf("Error while writing to %s for save slot %u, base: %s\n",backup,savegameslot,savegamename);
 
-    P_ArchivePlayers ();
-
-    *save_p++ = 0x1d;           // consistancy marker
-
-    length = save_p - savebuffer;
-    if (length > SAVEGAMESIZE)
-        I_Error ("Savegame buffer overrun");
-    FIL_WriteFile (name, savebuffer, length);
-    free(savebuffer);
-
-    gameaction = ga_nothing;
-
-    players[consoleplayer].message = GGSAVED;
-
-    // draw the pattern into the back screen
-    R_FillBackScreen ();
+	// draw the pattern into the back screen
+	R_FillBackScreen();
 }
 
-
 //
-// G_InitNew
-//  Can be called by the startup code or the menu task,
-//  consoleplayer, displayplayer, playeringame[] should be set.
+// G_DeferedInitNew
+// Can be called by the startup code or the menu task,
+// consoleplayer, displayplayer, playeringame[] should be set.
 //
-// Boris comment : single player start game
-void G_DeferedInitNew (skill_t skill, char* mapname, boolean StartSplitScreenGame)
+void G_DeferedInitNew(skill_t skill, const char *mapname, int pickedchar, boolean SSSG, boolean FLS)
 {
-    G_Downgrade(VERSION);
-    paused        = false;
-    usergame      = true;
+	paused = false;
 
-    // this leave the actual game if needed
-    SV_StartSinglePlayerServer();
-    
-    CV_SetValue(&cv_splitscreen,StartSplitScreenGame);
-    CV_SetValue(&cv_deathmatch,0);
-    CV_SetValue(&cv_fastmonsters,0);
-    CV_SetValue(&cv_respawnmonsters,0);
-    CV_SetValue(&cv_timelimit,0);
-    CV_SetValue(&cv_fraglimit,0);
+	if (demoplayback)
+		COM_BufAddText("stopdemo\n");
 
-        COM_BufAddText (va("map \"%s\" -skill %d -monsters 1\n",mapname,skill+1));
+	// this leave the actual game if needed
+	SV_StartSinglePlayerServer();
+
+	if ((boolean)cv_splitscreen.value != SSSG)
+		CV_SetValue(&cv_splitscreen, SSSG);
+
+	SetSavedSkin(0, pickedchar, atoi(skins[pickedchar].prefcolor));
+
+	if (mapname)
+		D_MapChange(M_MapNumber(mapname[3], mapname[4]), gametype, skill, 1, 1, false, FLS);
 }
 
 //
 // This is the map command interpretation something like Command_Map_f
 //
-// called at : map cmd execution, doloadgame, doplaydemo
-void G_InitNew (skill_t skill, char* mapname, boolean resetplayer)
+// called at: map cmd execution, doloadgame, doplaydemo
+void G_InitNew(skill_t skill, const char *mapname, boolean resetplayer, boolean skipprecutscene)
 {
-    int             i;
+	int i;
 
-    //added:27-02-98: disable selected features for compatibility with
-    //                older demos, plus reset new features as default
-    if(!G_Downgrade (demoversion))
-    {
-        CONS_Printf("Cannot Downgrade engine\n");
-        return;
-    }
+	if (paused)
+	{
+		paused = false;
+		S_ResumeSound();
+	}
 
-    if (paused)
-    {
-        paused = false;
-        S_ResumeSound ();
-    }
+	if (skill < sk_easy)
+		skill = sk_easy;
+	else if (skill > sk_insane)
+		skill = sk_insane;
 
-    if (skill > sk_nightmare)
-        skill = sk_nightmare;
+	if (!(grade & 128) && skill == sk_insane) // Nice try, haxor.
+		skill = sk_nightmare;
 
-    M_ClearRandom ();
+	if (!netgame)
+	{
+		if (!(demoplayback || demorecording))
+			P_SetRandIndex((byte)(totalplaytime % 256));
+		else // Constant seed for demos
+			P_SetRandIndex(0);
+	}
 
-    if(server)
-    {
-        if (skill == sk_nightmare )
-        {
-            CV_SetValue(&cv_respawnmonsters,1);
-            CV_SetValue(&cv_fastmonsters,1);
-        }
-    }
+	if (resetplayer)
+	{
+		// Clear a bunch of variables
+		lastmap = tokenlist = token = sstimer = redscore = bluescore = 0;
+		countdown = countdown2 = 0;
 
-    // force players to be initialized upon first level load
-    if( resetplayer )
-        for (i=0 ; i<MAXPLAYERS ; i++)
-{
-            players[i].playerstate = PST_REBORN;
+		for (i = 0; i < MAXPLAYERS; i++)
+		{
+			players[i].playerstate = PST_REBORN;
+			players[i].starpostangle = players[i].starpostnum = players[i].starposttime = 0;
+			players[i].starpostx = players[i].starposty = players[i].starpostz = 0;
+			players[i].starpostbit = 0;
 
-players[i].emerald1 = 0;
-players[i].emerald2 = 0;
-players[i].emerald3 = 0;
-players[i].emerald4 = 0;
-players[i].emerald5 = 0;
-players[i].emerald6 = 0;
-players[i].emerald7 = 0;
+			// set lives/continues based on game skill
+			switch (skill)
+			{
+				case sk_insane:
+					players[i].lives = 1;
+					players[i].continues = 0;
+					break;
+				case sk_nightmare:
+				case sk_hard:
+				case sk_medium:
+					players[i].lives = 3;
+					players[i].continues = 1;
+					break;
+				case sk_easy:
+					players[i].lives = 5;
+					players[i].continues = 2;
+					break;
+				default: // Oops!?
+					CONS_Printf("ERROR: GAME SKILL UNDETERMINED!\n");
+					break;
+			}
 
-// start set lives/continues via game skill Tails 03-11-2000
+			players[i].score = players[i].xtralife = 0;
+		}
 
-if (skill == sk_nightmare)
-{
-players[i].lives = 1;
-players[i].continues = 0;
+		if (!(cv_debug || devparm) && !(multiplayer || netgame))
+			SetSavedSkin(0, players[0].skin, players[0].prefcolor);
+	}
+
+	// internal game map
+	// well this check is useless because it is done before (d_netcmd.c::command_map_f)
+	// but in case of for demos....
+	if (W_CheckNumForName(mapname) == -1)
+	{
+		I_Error("Internal game map '%s' not found\n", mapname);
+		Command_ExitGame_f();
+		return;
+	}
+
+	gamemap = (short)M_MapNumber(mapname[3], mapname[4]); // get xx out of MAPxx
+	maptol = mapheaderinfo[gamemap-1].typeoflevel;
+	globalweather = mapheaderinfo[gamemap-1].weather;
+
+	gameskill = skill;
+	playerdeadview = false;
+	automapactive = false;
+
+	if (!skipprecutscene && mapheaderinfo[gamemap-1].precutscenenum) // Start a custom cutscene.
+		F_StartCustomCutscene(mapheaderinfo[gamemap-1].precutscenenum-1, true, resetplayer);
+	else
+		G_DoLoadLevel(resetplayer);
 }
-
-else if (skill == sk_hard)
-{
-players[i].lives = 3;
-players[i].continues = 1;
-}
-
-else if (skill == sk_medium)
-{
-players[i].lives = 5;
-players[i].continues = 2;
-}
-
-else if (skill == sk_easy)
-{
-players[i].lives = 6;
-players[i].continues = 3;
-}
-
-else if (skill == sk_baby)
-{
-players[i].lives = 9;
-players[i].continues = 5;
-}
-
-// end set lives/continues via game skill Tails 03-11-2000
-
-if(!cv_gametype.value == 1)
-players[i].score = 0; // Set score to 0 Tails 03-10-2000
-
-players[i].xtralife = players[i].xtralife2 = 0;
-}
-
-    // for internal maps only
-    if (FIL_CheckExtension(mapname))
-    {
-        // external map file
-        strncpy (gamemapname, mapname, MAX_WADPATH);
-        gameepisode = 1;
-        gamemap = 1;
-    }
-    else
-    {
-        // internal game map
-        // well this  check is useless because it is do before (d_netcmd.c::command_map_f)
-        // but in case of for demos....
-        if (W_CheckNumForName(mapname)==-1)
-        {
-            CONS_Printf("\2Internal game map '%s' not found\n"
-                        "(use .wad extension for external maps)\n",mapname);
-            D_StartTitle ();
-            return;
-        }
-
-        gamemapname[0] = 0;             // means not an external wad file
-        if (gamemode==commercial)       //doom2
-        {
-            gamemap = atoi(mapname+3);  // get xx out of MAPxx
-            gameepisode = 1;
-        }
-        else
-        {
-            gamemap = mapname[3]-'0';           // ExMy
-            gameepisode = mapname[1]-'0';
-        }
-    }
-
-    gameskill     = skill;
-    playerdeadview = false;
-    viewactive    = true;
-    automapactive = false;
-
-    G_DoLoadLevel ();
-}
-
-
-//added:03-02-98:
-//
-//  'Downgrade' the game engine so that it is compatible with older demo
-//   versions. This will probably get harder and harder with each new
-//   'feature' that we add to the game. This will stay until it cannot
-//   be done a 'clean' way, then we'll have to forget about old demos..
-//
-boolean G_Downgrade(int version)
-{
-    int i;
-
-    if (version<109)
-        return false;
-
-    // smoke trails for skull head attack since v1.25
-    if (version<125)
-    {
-        states[S_ROCKET].action.acv = NULL;
-
-//        states[S_SKULL_ATK3].action.acv = NULL;
-//        states[S_SKULL_ATK4].action.acv = NULL;
-    }
-    else
-    {
-        //activate rocket trails by default
-        states[S_ROCKET].action.acv     = A_SmokeTrailer;
-/*
-        // smoke trails behind the skull heads
-        states[S_SKULL_ATK3].action.acv = A_SmokeTrailer;
-        states[S_SKULL_ATK4].action.acv = A_SmokeTrailer;*/
-    }
-
-    //hmmm.. first time I see an use to the switch without break...
-    switch (version)
-    {
-      case 109:
-        // disable rocket trails
-        states[S_ROCKET].action.acv = NULL; //NULL like in Doom2 v1.9
-
-        // Boris : for older demos, initalise the new skincolor value
-        //         also disable the new preferred weapons order.
-        for(i=0;i<4;i++)
-        {
-            players[i].skincolor = i % MAXSKINCOLORS;
-            players[i].originalweaponswitch=true;
-        }//eof Boris
-
-      case 111:
-        //added:16-02-98: make sure autoaim is used for older
-        //                demos not using mouse aiming
-        for(i=0;i<MAXPLAYERS;i++)
-            players[i].autoaim_toggle = true;
-
-      default:
-        break;
-    }
-
-
-    //SoM: 3/17/2000: Demo compatability
-    if(version < 129) {
-      boomsupport = 0;
-      allow_pushers = 0;
-      variable_friction = 0;
-      }
-    else {
-      boomsupport = 1;
-      allow_pushers = 1;
-      variable_friction = 1;
-      }
-
-    // always true now, might be false in the future, if couldn't
-    // go backward and disable all the features...
-    demoversion = version;
-    return true;
-}
-
 
 //
 // DEMO RECORDING
@@ -2305,349 +2687,264 @@ boolean G_Downgrade(int version)
 #define ZT_ANGLE        0x04
 #define ZT_BUTTONS      0x08
 #define ZT_AIMING       0x10
-#define ZT_CHAT         0x20    // no more used
 #define ZT_EXTRADATA    0x40
-#define DEMOMARKER      0x80    // demoend
+#define DEMOMARKER      0x80 // demoend
 
-ticcmd_t oldcmd[MAXPLAYERS];
+static ticcmd_t oldcmd[MAXPLAYERS];
 
-void G_ReadDemoTiccmd (ticcmd_t* cmd,int playernum)
+static void G_ReadDemoTiccmd(ticcmd_t *cmd, int playernum)
 {
-    if (*demo_p == DEMOMARKER)
-    {
-        // end of demo data stream
-        G_CheckDemoStatus ();
-        return;
-    }
-    if(demoversion<112)
-    {
-        cmd->forwardmove = READCHAR(demo_p);
-        cmd->sidemove = READCHAR(demo_p);
-        cmd->angleturn = READBYTE(demo_p)<<8;
-        cmd->buttons = READBYTE(demo_p);
-        cmd->aiming = 0;
-    }
-    else
-    {
-        char ziptic=*demo_p++;
+	char ziptic;
 
-        if(ziptic & ZT_FWD)
-            oldcmd[playernum].forwardmove = READCHAR(demo_p);
-        if(ziptic & ZT_SIDE)
-            oldcmd[playernum].sidemove = READCHAR(demo_p);
-        if(ziptic & ZT_ANGLE)
-        {
-            if(demoversion<125)
-                oldcmd[playernum].angleturn = READBYTE(demo_p)<<8;
-            else
-                oldcmd[playernum].angleturn = READSHORT(demo_p);
-        }
-        if(ziptic & ZT_BUTTONS)
-            oldcmd[playernum].buttons = READBYTE(demo_p);
-        if(ziptic & ZT_AIMING)
-        {
-            if(demoversion<128)
-                oldcmd[playernum].aiming = READCHAR(demo_p);
-            else
-                oldcmd[playernum].aiming = READSHORT(demo_p);
-        }
-        if(ziptic & ZT_CHAT)
-            demo_p++;
-        if(ziptic & ZT_EXTRADATA)
-            ReadLmpExtraData(&demo_p,playernum);
-        else
-            ReadLmpExtraData(0,playernum);
+	ziptic = *demo_p++;
 
-        memcpy(cmd,&(oldcmd[playernum]),sizeof(ticcmd_t));
-    }
+	if (ziptic & ZT_FWD)
+		oldcmd[playernum].forwardmove = READCHAR(demo_p);
+	if (ziptic & ZT_SIDE)
+		oldcmd[playernum].sidemove = READCHAR(demo_p);
+	if (ziptic & ZT_ANGLE)
+		oldcmd[playernum].angleturn = READSHORT(demo_p);
+	if (ziptic & ZT_BUTTONS)
+		oldcmd[playernum].buttons = READBYTE(demo_p);
+	if (ziptic & ZT_AIMING)
+		oldcmd[playernum].aiming = READSHORT(demo_p);
+	if (ziptic & ZT_EXTRADATA)
+		ReadLmpExtraData(&demo_p, playernum);
+	else
+		ReadLmpExtraData(0, playernum);
+
+	memcpy(cmd, &(oldcmd[playernum]), sizeof (ticcmd_t));
+
+	if (*demo_p == DEMOMARKER)
+	{
+		// end of demo data stream
+		G_CheckDemoStatus();
+		return;
+	}
 }
 
-void G_WriteDemoTiccmd (ticcmd_t* cmd,int playernum)
+static void G_WriteDemoTiccmd(ticcmd_t *cmd, int playernum)
 {
-    char ziptic=0;
-    byte *ziptic_p;
+	char ziptic = 0;
+	byte *ziptic_p;
 
-    ziptic_p=demo_p++;  // the ziptic
-                        // write at the end of this function
+	ziptic_p = demo_p++; // the ziptic, written at the end of this function
 
-    if(cmd->forwardmove != oldcmd[playernum].forwardmove)
-    {
-        *demo_p++ = cmd->forwardmove;
-        oldcmd[playernum].forwardmove = cmd->forwardmove;
-        ziptic|=ZT_FWD;
-    }
+	if (cmd->forwardmove != oldcmd[playernum].forwardmove)
+	{
+		WRITEBYTE(demo_p,cmd->forwardmove);
+		oldcmd[playernum].forwardmove = cmd->forwardmove;
+		ziptic |= ZT_FWD;
+	}
 
-    if(cmd->sidemove != oldcmd[playernum].sidemove)
-    {
-        *demo_p++ = cmd->sidemove;
-        oldcmd[playernum].sidemove=cmd->sidemove;
-        ziptic|=ZT_SIDE;
-    }
+	if (cmd->sidemove != oldcmd[playernum].sidemove)
+	{
+		WRITEBYTE(demo_p,cmd->sidemove);
+		oldcmd[playernum].sidemove = cmd->sidemove;
+		ziptic |= ZT_SIDE;
+	}
 
-    if(cmd->angleturn != oldcmd[playernum].angleturn)
-    {
-        *(short *)demo_p = cmd->angleturn;
-        demo_p +=2;
-        oldcmd[playernum].angleturn=cmd->angleturn;
-        ziptic|=ZT_ANGLE;
-    }
+	if (cmd->angleturn != oldcmd[playernum].angleturn)
+	{
+		WRITESHORT(demo_p,cmd->angleturn);
+		oldcmd[playernum].angleturn = cmd->angleturn;
+		ziptic |= ZT_ANGLE;
+	}
 
-    if(cmd->buttons != oldcmd[playernum].buttons)
-    {
-        *demo_p++ = cmd->buttons;
-        oldcmd[playernum].buttons=cmd->buttons;
-        ziptic|=ZT_BUTTONS;
-    }
+	if (cmd->buttons != oldcmd[playernum].buttons)
+	{
+		WRITEBYTE(demo_p,cmd->buttons);
+		oldcmd[playernum].buttons = cmd->buttons;
+		ziptic |= ZT_BUTTONS;
+	}
 
-    if(cmd->aiming != oldcmd[playernum].aiming)
-    {
-        *(short *)demo_p = cmd->aiming;
-        demo_p+=2;
-        oldcmd[playernum].aiming=cmd->aiming;
-        ziptic|=ZT_AIMING;
-    }
+	if (cmd->aiming != oldcmd[playernum].aiming)
+	{
+		WRITESHORT(demo_p,cmd->aiming);
+		oldcmd[playernum].aiming = cmd->aiming;
+		ziptic |= ZT_AIMING;
+	}
 
-    if(AddLmpExtradata(&demo_p,playernum))
-        ziptic|=ZT_EXTRADATA;
+	if (AddLmpExtradata(&demo_p, playernum))
+		ziptic |= ZT_EXTRADATA;
 
-    *ziptic_p=ziptic;
-    //added:16-02-98: attention here for the ticcmd size!
-    // latest demos with mouse aiming byte in ticcmd
-    if (ziptic_p > demoend - (5*MAXPLAYERS))
-    {
-        G_CheckDemoStatus ();   // no more space
-        return;
-    }
+	*ziptic_p = ziptic;
 
-//  don't work in network the consistency is not copyed in the cmd
-//    demo_p = ziptic_p;
-//    G_ReadDemoTiccmd (cmd,playernum);         // make SURE it is exactly the same
+	// attention here for the ticcmd size!
+	// latest demos with mouse aiming byte in ticcmd
+	if (ziptic_p > demoend - (5*MAXPLAYERS))
+	{
+		G_CheckDemoStatus(); // no more space
+		return;
+	}
 }
-
-
 
 //
 // G_RecordDemo
 //
-void G_RecordDemo (char* name)
+void G_RecordDemo(const char *name)
 {
-    int             i;
-    int             maxsize;
+	int maxsize;
 
-    usergame = false; // can't save, can't end
-    strcpy (demoname, name);
-    strcat (demoname, ".lmp");
-    maxsize = 0x20000;
-    i = M_CheckParm ("-maxdemo");
-    if (i && i<myargc-1)
-        maxsize = atoi(myargv[i+1])*1024;
-    demobuffer = Z_Malloc (maxsize,PU_STATIC,NULL);
-    demoend = demobuffer + maxsize;
+	strcpy(demoname, name);
+	strcat(demoname, ".lmp");
+	maxsize = 1024*1024;
+	if (M_CheckParm("-maxdemo") && M_IsNextParm())
+		maxsize = atoi(M_GetNextParm()) * 1024;
+//	if (demobuffer)
+//		free(demobuffer);
+	demobuffer = malloc(maxsize);
+	demoend = demobuffer + maxsize;
 
-    demorecording = true;
+	demorecording = true;
 }
 
-
-void G_BeginRecording (void)
+void G_BeginRecording(void)
 {
-    int             i;
+	int i;
 
-    demo_p = demobuffer;
+	demo_p = demobuffer;
 
-    *demo_p++ = VERSION;
-    *demo_p++ = gameskill;
-    *demo_p++ = gameepisode;
-    *demo_p++ = gamemap;
-    *demo_p++ = cv_deathmatch.value;   // just to be compatible with old demo (no more used)
-	*demo_p++ = cv_gametype.value; // Game Types Tails 03-13-2001
-	*demo_p++ = cv_analog.value; // Analog Tails 06-22-2001
-    *demo_p++ = cv_respawnmonsters.value;// just to be compatible with old demo (no more used)
-    *demo_p++ = cv_fastmonsters.value;   // just to be compatible with old demo (no more used)
-    *demo_p++ = nomonsters;
-    *demo_p++ = consoleplayer;
-    *demo_p++ = cv_timelimit.value;      // just to be compatible with old demo (no more used)
+	WRITEBYTE(demo_p,VERSION);
+	WRITEBYTE(demo_p,gameskill);
+	WRITEBYTE(demo_p,gamemap);
+	WRITEBYTE(demo_p,gametype);
+	WRITEBYTE(demo_p,cv_analog.value);
+	WRITEBYTE(demo_p,cv_analog2.value);
+	WRITEBYTE(demo_p,consoleplayer);
+	WRITEBYTE(demo_p,cv_timelimit.value); // just to be compatible with old demo (no longer used)
+	WRITEBYTE(demo_p,multiplayer);
 
-    for (i=0 ; i<MAXPLAYERS ; i++)
-    {
-        if(playeringame[i])
-          *demo_p++ = 1;
-        else
-          *demo_p++ = 0;
-    }
+	for (i = 0; i < MAXPLAYERS; i++)
+	{
+		if (playeringame[i])
+			WRITEBYTE(demo_p,1);
+		else
+			WRITEBYTE(demo_p,0);
+	}
 
-    memset(oldcmd,0,sizeof(oldcmd));
+	memset(oldcmd, 0, sizeof (oldcmd));
 }
-
 
 //
 // G_PlayDemo
 //
-
-void G_DeferedPlayDemo (char* name)
+void G_DeferedPlayDemo(const char *name)
 {
-    COM_BufAddText("playdemo \"");
-    COM_BufAddText(name);
-    COM_BufAddText("\"\n");
+	COM_BufAddText("playdemo \"");
+	COM_BufAddText(name);
+	COM_BufAddText("\"\n");
 }
 
-
 //
-//  Start a demo from a .LMP file or from a wad resource (eg: DEMO1)
+// Start a demo from a .LMP file or from a wad resource
 //
-void G_DoPlayDemo (char *defdemoname)
+void G_DoPlayDemo(char *defdemoname)
 {
-    skill_t skill;
-    int     i, episode, map;
+	skill_t skill;
+	int i, map;
 
-//
-// load demo file / resource
-//
+	// load demo file / resource
 
-    //it's an internal demo
-    if ((i=W_CheckNumForName(defdemoname)) == -1)
-    {
-        FIL_DefaultExtension(defdemoname,".lmp");
-        if (!FIL_ReadFile (defdemoname, &demobuffer) )
-        {
-            CONS_Printf ("\2ERROR: couldn't open file '%s'.\n", defdemoname);
-            goto no_demo;
-        }
-        demo_p = demobuffer;
-    }
-    else
-        demobuffer = demo_p = W_CacheLumpNum (i, PU_STATIC);
+	// it's an internal demo
+	if ((i = W_CheckNumForName(defdemoname)) == -1)
+	{
+		FIL_DefaultExtension(defdemoname, ".lmp");
+		if (!FIL_ReadFile(defdemoname, &demobuffer))
+		{
+			CONS_Printf("\2ERROR: couldn't open file '%s'.\n", defdemoname);
+			gameaction = ga_nothing;
+			return;
+		}
+		demo_p = demobuffer;
+	}
+	else
+		demobuffer = demo_p = W_CacheLumpNum(i, PU_STATIC);
 
-//
-// read demo header
-//
+	// read demo header
+	gameaction = ga_nothing;
+	skill = *demo_p++;
+	map = *demo_p++;
 
-    gameaction = ga_nothing;
+	demo_p++;
 
-    if ( (demoversion = *demo_p++) < 109 )
-    {
-        CONS_Printf ("\2ERROR: demo version too old.\n");
-        Z_Free (demobuffer);
-no_demo:
-        gameaction = ga_nothing;
-        return;
-    }
+	demo_p++;
 
-    if (demoversion < VERSION)
-        CONS_Printf ("\2Demo is from an older game version\n");
+	demo_p++;
 
-    skill       = *demo_p++;
-    episode     = *demo_p++;
-    map         = *demo_p++;
-    if (demoversion < 127)
-        // push it in the console will be too late set
-        cv_deathmatch.value=*demo_p++;
-    else
-        demo_p++;
+	// pay attention to displayplayer because the status bar links
+	// to the display player when playing back a demo.
+	displayplayer = consoleplayer = *demo_p++;
 
-    if (demoversion < 127)
-        // push it in the console will be too late set
-        cv_gametype.value=*demo_p++;
-    else
-        demo_p++; // Game Types Tails 03-13-2001
+	// support old v1.9 demos with ONLY 4 PLAYERS ! Man! what a shame!!!
 
-    if (demoversion < 127)
-        // push it in the console will be too late set
-        cv_analog.value=*demo_p++;
-    else
-        demo_p++; // Analog Tails 06-22-2001
+	demo_p++;
 
-    if (demoversion < 128)
-        // push it in the console will be too late set
-        cv_respawnmonsters.value=*demo_p++;
-    else
-        demo_p++;
+	multiplayer = *demo_p++;
 
-    if (demoversion < 128)
-    {
-        // push it in the console will be too late set
-        cv_fastmonsters.value=*demo_p++;
-        cv_fastmonsters.func();
-    }
-    else
-        demo_p++;
+	for (i = 0; i < 32; i++)
+		playeringame[i] = *demo_p++;
 
-    nomonsters  = *demo_p++;
-
-    //added:08-02-98: added displayplayer because the status bar links
-    // to the display player when playing back a demo.
-    displayplayer = consoleplayer = *demo_p++;
-
-     //added:11-01-98:
-    //  support old v1.9 demos with ONLY 4 PLAYERS ! Man! what a shame!!!
-    if (demoversion==109)
-    {
-        for (i=0 ; i<4 ; i++)
-            playeringame[i] = *demo_p++;
-    }
-    else
-    {
-        if(demoversion<128)
-        {
-           cv_timelimit.value=*demo_p++;
-           cv_timelimit.func();
-        }
-        else
-            demo_p++;
-
-        if (demoversion<113)
-        {
-            for (i=0 ; i<8 ; i++)
-                playeringame[i] = *demo_p++;
-        }
-        else
-            for (i=0 ; i<32 ; i++)
-                playeringame[i] = *demo_p++;
-#if MAXPLAYERS>32
-#error Please add support for old lmps
+#if MAXPLAYERS > 32
+"Please add support for old lmps"
 #endif
-    }
 
-    // FIXME: do a proper test here
-    multiplayer = playeringame[1];
-//        if(consoleplayer==0)
-//            secondarydisplayplayer = 1;
-//        else
-//            secondarydisplayplayer = 0;
-//        CV_SetValue(&cv_splitscreen,1);
+	memset(oldcmd, 0, sizeof (oldcmd));
 
-    memset(oldcmd,0,sizeof(oldcmd));
+	// wait map command in the demo
+	gamestate = wipegamestate = GS_WAITINGPLAYERS;
 
-    // don't spend a lot of time in loadlevel
-    if(demoversion<127)
-    {
-        precache = false;
-        G_InitNew (skill, G_BuildMapName(episode, map),true);
-        precache = true;
-        CON_ToggleOff (); // will be done at the end of map command
-    }
-    else
-        // wait map command in the demo
-        gamestate = wipegamestate = GS_WAITINGPLAYERS;
-
-    demoplayback = true;
-    usergame = false;
+	demoplayback = true;
 }
 
 //
 // G_TimeDemo
-//             NOTE: name is a full filename for external demos
+// NOTE: name is a full filename for external demos
 //
-void G_TimeDemo (char* name)
+static int restorecv_vidwait;
+
+void G_TimeDemo(const char *name)
 {
-    nodrawers = M_CheckParm ("-nodraw");
-    noblit = M_CheckParm ("-noblit");
-    timingdemo = true;
-    singletics = true;
-    framecount = 0;
-    demostarttime = I_GetTime ();
-    G_DeferedPlayDemo (name);
+	nodrawers = M_CheckParm("-nodraw");
+	noblit = M_CheckParm("-noblit");
+	restorecv_vidwait = cv_vidwait.value;
+	if (cv_vidwait.value)
+		CV_Set(&cv_vidwait, "0");
+	timingdemo = true;
+	singletics = true;
+	framecount = 0;
+	demostarttime = I_GetTime();
+	G_DeferedPlayDemo(name);
 }
 
+void G_MovieMode(boolean enable)
+{
+	if (enable)
+	{
+		CONS_Printf("Movie mode enabled.\n");
+		singletics = true;
+		moviemode = true;
+#ifdef HAVE_MNG
+		M_OpenMNG();
+#endif
+	}
+	else
+	{
+		CONS_Printf("Movie mode disabled.\n");
+		singletics = false;
+		moviemode = false;
+#ifdef HAVE_MNG
+		M_CloseMNG();
+#endif
+	}
+}
+
+void G_DoneLevelLoad(void)
+{
+	CONS_Printf("Loaded level in %f sec\n", (double)(I_GetTime() - demostarttime) / TICRATE);
+	framecount = 0;
+	demostarttime = I_GetTime();
+}
 
 /*
 ===================
@@ -2663,60 +2960,97 @@ void G_TimeDemo (char* name)
 // called from stopdemo command, map command, and g_checkdemoStatus.
 void G_StopDemo(void)
 {
-    Z_Free (demobuffer);
-    demoplayback  = false;
-    timingdemo = false;
-    singletics = false;
-    usergame   = true;        // will be set false if a demo
+	Z_Free(demobuffer);
+	demobuffer = NULL;
+	demoplayback = false;
+	timingdemo = false;
+	singletics = false;
 
-    G_Downgrade(VERSION);
-    usergame      = true;
+	if (gamestate == GS_INTERMISSION)
+		Y_EndIntermission(); // cleanup
 
-    gamestate=wipegamestate=GS_NULL;
-    SV_StopServer();
-//    SV_StartServer();
-    SV_ResetServer();
+	gamestate = wipegamestate = GS_NULL;
+	SV_StopServer();
+	SV_ResetServer();
 }
 
-boolean G_CheckDemoStatus (void)
+boolean G_CheckDemoStatus(void)
 {
-    if (timingdemo)
-    {
-        int time;
-        float f1,f2;
-        time = I_GetTime () - demostarttime;
-        if(!time) return true;
-        G_StopDemo ();
-        timingdemo = false;
-        f1=time;
-        f2=framecount*TICRATE;
-        CONS_Printf ("timed %i gametics in %i realtics\n"
-                     "%f secondes, %f avg fps\n"
-                     ,leveltime,time,f1/TICRATE,f2/f1);
-        D_AdvanceDemo ();
-        return true;
-    }
+	boolean saved;
+	if (timingdemo)
+	{
+		int time;
+		double f1, f2;
+		time = I_GetTime() - demostarttime;
+		if (!time)
+			return true;
+		G_StopDemo();
+		timingdemo = false;
+		f1 = (double)time;
+		f2 = (double)framecount*TICRATE;
+		CONS_Printf("timed %d gametics in %d realtics\n"
+			"%f seconds, %f avg fps\n",
+			leveltime,time,f1/TICRATE,f2/f1);
+		if (restorecv_vidwait != cv_vidwait.value)
+			CV_SetValue(&cv_vidwait, restorecv_vidwait);
+		D_AdvanceDemo();
+		return true;
+	}
 
-    if (demoplayback)
-    {
-        if (singledemo)
-            I_Quit ();
-        G_StopDemo();
-        D_AdvanceDemo ();
-        return true;
-    }
+	if (demoplayback)
+	{
+		if (singledemo)
+			I_Quit();
+		G_StopDemo();
 
-    if (demorecording)
-    {
-        *demo_p++ = DEMOMARKER;
-        FIL_WriteFile (demoname, demobuffer, demo_p - demobuffer);
-        Z_Free (demobuffer);
-        demorecording = false;
+		if (!timeattacking)
+			D_AdvanceDemo();
 
-        CONS_Printf("\2Demo %s recorded\n",demoname);
-        return true;
-        //I_Quit ();
-    }
+		return true;
+	}
 
-    return false;
+	if (demorecording)
+	{
+		*demo_p++ = DEMOMARKER;
+		saved = FIL_WriteFile(demoname, demobuffer, demo_p - demobuffer);
+		free(demobuffer);
+		demorecording = false;
+
+		if (!timeattacking)
+		{
+			if (saved)
+				CONS_Printf("\2Demo %s recorded\n",demoname);
+			else
+				CONS_Printf("\2Demo %s not saved\n",demoname);
+		}
+
+		timeattacking = false;
+
+		return true;
+	}
+
+	return false;
+}
+
+/* These functions handle the exitgame flag. Before, when the user
+   chose to end a game, it happened immediately, which could cause
+   crashes if the game was in the middle of something. Now, a flag
+   is set, and the game can then be stopped when it's safe to do
+   so.
+*/
+
+// Used as a callback function.
+void G_SetExitGameFlag(void)
+{
+	exitgame = true;
+}
+
+void G_ClearExitGameFlag(void)
+{
+	exitgame = false;
+}
+
+boolean G_GetExitGameFlag(void)
+{
+	return exitgame;
 }

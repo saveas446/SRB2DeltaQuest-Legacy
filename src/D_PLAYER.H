@@ -1,10 +1,8 @@
 // Emacs style mode select   -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id: d_player.h,v 1.2 2000/02/27 00:42:10 hurdler Exp $
-//
 // Copyright (C) 1993-1996 by id Software, Inc.
-// Portions Copyright (C) 1998-2000 by DooM Legacy Team.
+// Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -15,31 +13,17 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-//
-// $Log: d_player.h,v $
-// Revision 1.2  2000/02/27 00:42:10  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:32  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
-// DESCRIPTION:
-//      player data structures
-//
 //-----------------------------------------------------------------------------
-
+/// \file
+/// \brief player data structures
 
 #ifndef __D_PLAYER__
 #define __D_PLAYER__
-
 
 // The player data structure depends on a number
 // of other structs: items (internal inventory),
 // animation states (closely tied to the sprites
 // used to represent them, unfortunately).
-#include "d_items.h"
 #include "p_pspr.h"
 
 // In addition, the player is just a special
@@ -51,295 +35,312 @@
 // as commands per game tick.
 #include "d_ticcmd.h"
 
+// Extra abilities/settings for skins (combinable stuff)
+typedef enum
+{
+	SF_RUNONWATER       =   1, // Allow this character to run on water
+	SF_SPINALLOWED      =   2, // Is the player allowed to spin/spindash (on floor)?
+	SF_NOJUMPSPIN       =   4, // Play the "Spring Up" animation for jumping
+	SF_ALLOWSUPER       =   8, // Allow this character to become super
+	SF_SUPERANIMS       =  16, // If super, use the super sonic animations
+	SF_SUPERSPIN        =  32, // Should spin frames be played while super?
+	SF_MULTIABILITY     =  64, // Modifies an ability to allow things like multi-glide, multi-thok, etc.
+	SF_LIGHTDASH        = 128, // Overrides cv_lightdash
+	SF_HOMING           = 256, // Overrides cv_homing
+	SF_RINGSLINGER      = 512, // Overrides cv_ringslinger
+} skinflags_t;	
+
 //
 // Player states.
 //
 typedef enum
 {
-    // Playing or camping.
-    PST_LIVE,
-    // Dead on the ground, view follows killer.
-    PST_DEAD,
-    // Ready to restart/respawn???
-    PST_REBORN
-
+	// Playing or camping.
+	PST_LIVE,
+	// Dead on the ground, view follows killer.
+	PST_DEAD,
+	// Ready to restart/respawn???
+	PST_REBORN
 } playerstate_t;
 
+// If more player frames are added after S_PLAY_SUPERHIT, update this.
+extern long playerstatetics[MAXPLAYERS][S_PLAY_SUPERHIT+1];
 
 //
 // Player internal flags, for cheats and debug.
 //
 typedef enum
 {
-    // No clipping, walk through barriers.
-    CF_NOCLIP           = 1,
-    // No damage, no health loss.
-    CF_GODMODE          = 2,
-    // Not really a cheat, just a debug aid.
-    CF_NOMOMENTUM       = 4,
+	// No clipping, walk through barriers.
+	CF_NOCLIP = 1,
+	// No damage, no health loss.
+	CF_GODMODE = 2,
+	// Not really a cheat, just a debug aid.
+	CF_NOMOMENTUM = 4,
 
-    //added:28-02-98: new cheats
-    CF_FLYAROUND        = 8,
-
-    //added:28-02-98: NOT REALLY A CHEAT
-    // Allow player avatar to walk in-air
-    //  if trying to get over a small wall (hack for playability)
-    CF_JUMPOVER         = 16
-
+	CF_FLYAROUND = 8
 } cheat_t;
 
+// Player powers. (don't edit this comment)
+typedef enum
+{
+	pw_invulnerability,
+	pw_sneakers,
+	pw_flashing,
+	pw_jumpshield, // jump shield
+	pw_fireshield, // fire shield
+	pw_tailsfly, // tails flying
+	pw_underwater, // underwater timer
+	pw_spacetime, // In space, no one can hear you spin!
+	pw_extralife, // Extra Life timer
+	pw_ringshield, // ring shield
+	pw_bombshield, // bomb shield
+	pw_watershield, // water shield
+	pw_super, // Are you super?
+
+	// Mario-specific
+	pw_fireflower,
+
+	// New Multiplayer Weapons
+	pw_homingring,
+	pw_railring,
+	pw_infinityring,
+	pw_automaticring,
+	pw_explosionring,
+
+	// NiGHTS powerups
+	pw_superparaloop,
+	pw_nightshelper,
+
+	NUMPOWERS
+} powertype_t;
 
 // ========================================================================
 //                          PLAYER STRUCTURE
 // ========================================================================
 typedef struct player_s
 {
-    mobj_t*             mo;
+	mobj_t *mo;
 
-	// Emerald hunting Tails 12-20-2001
-	mobj_t*             hunt1;
-	mobj_t*             hunt2;
-	mobj_t*             hunt3;
+	playerstate_t playerstate;
+	ticcmd_t cmd;
 
-    // added 1-6-98: for movement prediction
-#ifdef CLIENTPREDICTION2
-    mobj_t*             spirit;
-#endif
-    playerstate_t       playerstate;
-    ticcmd_t            cmd;
+	// Determine POV, including viewpoint bobbing during movement.
+	// Focal origin above r.z
+	fixed_t viewz;
+	// Base height above floor for viewz.
+	fixed_t viewheight;
+	// Bob/squat speed.
+	fixed_t deltaviewheight;
+	// bounded/scaled total momentum.
+	fixed_t bob;
 
-    // Determine POV,
-    //  including viewpoint bobbing during movement.
-    // Focal origin above r.z
-    fixed_t             viewz;
-    // Base height above floor for viewz.
-    fixed_t             viewheight;
-    // Bob/squat speed.
-    fixed_t             deltaviewheight;
-    // bounded/scaled total momentum.
-    fixed_t             bob;
+	// Mouse aiming, where the guy is looking at!
+	// It is updated with cmd->aiming.
+	angle_t aiming;
 
-    //added:16-02-98: mouse aiming, where the guy is looking at!
-    //                 It is updated with cmd->aiming.
-    angle_t             aiming;
+	angle_t awayviewaiming; // Used for cut-away view
 
-    // This is only used between levels,
-    // mo->health is used during levels.
-    int                 health;
-    int                 armorpoints;
-    // Armor type is 0-2.
-    byte                armortype;
+	// This is only used between levels,
+	// mo->health is used during levels.
+	int health;
 
-    // Power ups. invinc and invis are tic counters.
-    int                 powers[NUMPOWERS];
-    byte                cards; // bit field see declration of card_t
-    boolean             backpack;
+	// Power ups. invinc and invis are tic counters.
+	int powers[NUMPOWERS];
 
-    // Frags, kills of other players.
-    USHORT              addfrags;   // player have killed a player but is gone
-    USHORT              frags[MAXPLAYERS];
-    weapontype_t        readyweapon;
+	boolean autoaim_toggle;
 
-    // Is wp_nochange if not changing.
-    weapontype_t        pendingweapon;
+	// True if button down last tic.
+	boolean attackdown;
+	boolean usedown;
+	boolean jumpdown; // don't jump like a monkey!
 
-    boolean             weaponowned[NUMWEAPONS];
-    int                 ammo[NUMAMMO];
-    int                 maxammo[NUMAMMO];
-     // added by Boris : preferred weapons order stuff
-     char                favoritweapon[NUMWEAPONS];
-     boolean             originalweaponswitch;
-     //added:28-02-98:
-     boolean             autoaim_toggle;
+	// Bit flags, for cheats and debug.
+	// See cheat_t, above.
+	cheat_t cheats;
 
-    // True if button down last tic.
-    boolean             attackdown;
-    boolean             usedown;
-    boolean             jumpdown;   //added:19-03-98:dont jump like a monkey!
+	// Hint messages.
+	const char *message;
 
-    // Bit flags, for cheats and debug.
-    // See cheat_t, above.
-    int                 cheats;
+	// For screen flashing (red or bright).
+	int bonuscount;
 
-    // Refired shots are less accurate.
-    int                 refire;
+	int specialsector; // lava/slime/water...
 
-     // For intermission stats.
-    int                 killcount;
-    int                 itemcount;
-    int                 secretcount;
+	// Player skin colorshift, 0-15 for which color to draw player.
+	int skincolor;
 
-    // Hint messages.
-    char*               message;
+	int skin;
 
-    // For screen flashing (red or bright).
-    int                 damagecount;
-    int                 bonuscount;
+	int score; // player score
+	int dashspeed; // dashing speed
 
-    // Who did damage (NULL for floors/ceilings).
-    mobj_t*             attacker;
-    int                 specialsector;      //lava/slime/water...
+	int normalspeed; // Normal ground
 
-    // So gun flashes light up areas.
-    int                 extralight;
+	int runspeed; // Speed you break into the run animation
 
-    // Current PLAYPAL, ???
-    //  can be set to REDCOLORMAP for pain, etc.
-    int                 fixedcolormap;
+	int thrustfactor; // Thrust = thrustfactor * acceleration
+	int accelstart; // Starting acceleration if speed = 0.
+	int acceleration; // Acceleration
 
-    // Player skin colorshift,
-    //  0-3 for which color to draw player.
-    // adding 6-2-98 comment : unused by doom2 1.9 now is used
-    int                 skincolor;
+	int charability; // Ability definition
+                     //
+	                 // 0 = Sonic Thok
+	                 // 1 = Tails Fly
+	                 // 2 = Knuckles Glide/Climb Combo
+	                 // 3 = Glide Only
+	                 // 4 = Double Jump
+	                 // 5 = Super Sonic Float
+	                 //
 
-    // added 2/8/98
-    int                 skin;
+	int charflags; // Extra abilities/settings for skins (combinable stuff)
+	               //
+	               // See SF_ flags
 
-    // Overlay view sprites (gun, etc).
-    pspdef_t            psprites[NUMPSPRITES];
+	int slingitem; // Object # for SF_RINGSLINGER to fire
 
-    // True if secret level has been done.
-    boolean             didsecret;
+	int thokitem; // Object # to spawn for the thok
+	int spinitem; // Object # to spawn for spindash/spinning
 
-    int score; // player score Tails 03-01-2000
-    int dashspeed; // dashing speed Tails 03-01-2000
+	int waterskip; // Can you skip across the water?
+	int actionspd; // Speed of thok/glide/fly
+	int mindash; // Minimum spindash speed
+	int maxdash; // Maximum spindash speed
 
-    int charspeed; // Speed definition Tails 03-01-2000
-	int charability; // Ability definition Tails 11-15-2000
+	int supercolor; // Color to transform to when turning super
 
-    int lives; // do lives now, worry about continues later Tails 03-09-2000
-    int continues; // continues that player has acquired Tails 03-11-2000
+	int jumpfactor; // How high can the player jump?
 
-    int timebonus; // Time Bonus Tails 03-10-2000
-    int ringbonus; // Ring Bonus Tails 03-10-2000
-    int fscore; // Fake score for intermissions Tails 03-12-2000
-    int seconds; // Tails 06-13-2000
-    int minutes; // Tails 06-13-2000
+	int boxindex; // Life icon index for 1up box (See A_1upThinker in p_enemy.c)
 
-// start emeralds Tails 04-08-2000
-    int emerald1;
-    int emerald2;
-    int emerald3;
-    int emerald4;
-    int emerald5;
-    int emerald6;
-    int emerald7;
-	int token; // Number of tokens collected in a level Tails 08-11-2001
-	int lastmap; // Last level you were at Tails 08-11-2001
-	int	sstimer; // Time allotted in the special stage Tails 08-11-2001
-// end emeralds Tails 04-08-2000
+	int starttranscolor; // Start position for the changeable color of a skin
+	int endtranscolor; // End position for the changeable color of a skin
 
-    int superready; // Ready for Super? Tails 04-08-2000
+	int prefcolor; // forced color in single player, default in multi
 
-    int acceleration; // Acceleration Tails 04-24-2000
+	int lives;
+	int continues; // continues that player has acquired
+	boolean timeover; // Did you get a time-over?
 
-    int xtralife; // Ring Extra Life counter
+	int superready; // Ready for Super?
 
-	int xtralife2; // Score xtra life counter
+	int xtralife; // Ring Extra Life counter
 
-    int walking; // Are the walking frames playing? Tails 08-18-2000
-    int running; // Are the running frames playing? Tails 08-18-2000
-    int spinning; // Are the spinning frames playing? Tails 08-18-2000
-    int speed; // Player's speed (distance formula of MOMX and MOMY values) Tails 08-21-2000
-    int mforward; // Moving forward
-    int mbackward; // Moving backward
-    int jumping; // Jump counter Tails 10-14-2000
+	int walking; // Are the walking frames playing?
+	int running; // Are the running frames playing?
+	int spinning; // Are the spinning frames playing?
+	int speed; // Player's speed (distance formula of MOMX and MOMY values)
+	int jumping; // Jump counter
 
-	// Moved eflags to player ints Tails 10-30-2000
+	// Moved eflags to player ints
 	int mfjumped;
 	int mfspinning;
 	int mfstartdash;
+	int secondjump; // for charability == 4 and charability == 5
 
-	int fly1; // Tails flying Tails 11-01-2000
-	int camunder; // Is the camera underwater? Tails 11-02-2000
-	int scoreadd; // Used for multiple enemy attack bonus Tails 11-03-2000
-	int gliding; // Are you gliding? Tails 11-15-2000
-	int glidetime; // Glide counter for thrust Tails 11-17-2000
-	int climbing; // Climbing on the wall Tails 11-18-2000
-	int deadtimer; // End game if game over lasts too long Tails 11-21-2000
-	int splish; // Don't make splish repeat tons Tails 12-08-2000
-	int exiting; // Exitlevel timer Tails 12-15-2000
-	int blackow; // Tails 01-11-2001
+	int fly1; // Tails flying
+	int scoreadd; // Used for multiple enemy attack bonus
+	int gliding; // Are you gliding?
+	tic_t glidetime; // Glide counter for thrust
+	int climbing; // Climbing on the wall
+	int deadtimer; // End game if game over lasts too long
+	int splish; // Don't make splish repeat tons
+	tic_t exiting; // Exitlevel timer
+	int blackow;
 
-	int homing; // Are you homing? Tails 06-20-2001
+	boolean homing; // Are you homing?
 
 	////////////////////////////
 	// Conveyor Belt Movement //
 	////////////////////////////
-	fixed_t cmomx; // Conveyor momx Tails 04-13-2001
-	fixed_t cmomy; // Conveyor momy Tails 04-13-2001
-	fixed_t rmomx; // "Real" momx (momx - cmomx) Tails 04-13-2001
-	fixed_t rmomy; // "Real" momy (momy - cmomy)Tails 04-13-2001
-
+	fixed_t cmomx; // Conveyor momx
+	fixed_t cmomy; // Conveyor momy
+	fixed_t rmomx; // "Real" momx (momx - cmomx)
+	fixed_t rmomy; // "Real" momy (momy - cmomy)
 
 	/////////////////////
 	// Race Mode Stuff //
 	/////////////////////
-	int numboxes; // Number of item boxes obtained for Race Mode Tails 04-25-2001
-	int totalring; // Total number of rings obtained for Race Mode Tails 04-25-2001
-	int countdown; // 60 second countdown for Race Mode Tails 04-25-2001
-	int countdown2; // 2nd countdown variable for first to finish Tails 04-25-2001
-	int realtime; // integer replacement for leveltime Tails 04-25-2001
-	int racescore; // Total of won categories Tails 05-01-2001
+	int numboxes; // Number of item boxes obtained for Race Mode
+	int totalring; // Total number of rings obtained for Race Mode
+	int realtime; // integer replacement for leveltime
+	int racescore; // Total of won categories
+	int laps; // Number of laps (optional)
 
 	////////////////////
 	// Tag Mode Stuff //
 	////////////////////
-	int tagit; // The player is it! For Tag Mode Tails 05-08-2001
-	int tagcount; // Number of tags player has made Tails 05-09-2001
-	int tagzone; // Tag Zone timer Tails 05-11-2001
-	int taglag; // Don't go back in the tag zone too early Tails 05-11-2001
+	int tagit; // The player is it! For Tag Mode
+	int tagcount; // Number of tags player has avoided
+	int tagzone; // Tag Zone timer
+	int taglag; // Don't go back in the tag zone too early
 
-	int redxvi; // RedXVI
+	////////////////////
+	// CTF Mode Stuff //
+	////////////////////
+	int ctfteam; // 1 == Red, 2 == Blue
+	unsigned short gotflag; // 1 == Red, 2 == Blue Do you have the flag?
+
+	int dbginfo; // Debugger
+	int emeraldhunt; // # of emeralds found
+	boolean snowbuster; // Snow Buster upgrade!
+	int bustercount; // Charge for Snow Buster
+
+	int weapondelay; // Delay (if any) to fire the weapon again
+	tic_t taunttimer; // Delay before you can use the taunt again
+
+	// Starpost information
+	int starpostx;
+	int starposty;
+	int starpostz;
+	int starpostnum; // The number of the last starpost you hit
+	tic_t starposttime; // Your time when you hit the starpost
+	int starpostangle; // Angle that the starpost is facing - you respawn facing this way
+	unsigned int starpostbit; // List of starposts hit
+
+	/////////////////
+	// NiGHTS Stuff//
+	/////////////////
+	angle_t angle_pos;
+	angle_t old_angle_pos;
+	boolean nightsmode; // Is the player in NiGHTS mode?
+
+	boolean transfertoclosest;
+	mobj_t *axis1;
+	mobj_t *axis2;
+	tic_t bumpertime; // Currently being bounced by MT_NIGHTSBUMPER
+	int flyangle;
+	tic_t drilltimer;
+	int linkcount;
+	tic_t linktimer;
+	int anotherflyangle;
+	tic_t nightstime; // How long you can fly as NiGHTS.
+	boolean nightsfall; // Spill rings after falling
+	int drillmeter;
+	byte drilldelay;
+	boolean drilling;
+	boolean skiddown;
+	boolean bonustime; // Capsule destroyed, now it's bonus time!
+	mobj_t *capsule; // Go inside the capsule
+	byte mare; // Current mare
+
+	short lastsidehit, lastlinehit;
+
+	boolean carried; // Tails pickup!
+
+	int losscount; // # of times you've lost only 1 ring
+
+	mobjtype_t currentthing; // For the object placement mode
+
+	boolean lightdash; // Experimental fun thing
+	boolean lightdashallowed;
+
+	boolean thokked; // You already thokked on this jump.
+
+	int onconveyor; // You are on a conveyor belt if nonzero
+
+	mobj_t *awayviewmobj;
+	int awayviewtics;
 } player_t;
-
-
-//
-// INTERMISSION
-// Structure passed e.g. to WI_Start(wb)
-//
-typedef struct
-{
-    boolean     in;     // whether the player is in game
-
-    // Player stats, kills, collected items etc.
-    int         sscore; // score tally Tails 03-09-2000
-    int         skills;
-    int         sitems;
-    int         ssecret;
-	int			minutes; // Tails
-	int			seconds; // Tails
-    USHORT      frags[MAXPLAYERS]; // added 17-1-98 more than 4 players
-    // BP: unused for now but don't forget....
-    USHORT      addfrags;
-
-} wbplayerstruct_t;
-
-typedef struct
-{
-    int         epsd;   // episode # (0-2)
-
-    // if true, splash the secret level
-    boolean     didsecret;
-
-    // previous and next levels, origin 0
-    int         last;
-    int         next;
-
-    int         maxkills;
-    int         maxitems;
-    int         maxsecret;
-    int         maxfrags;
-
-    // the par time
-    int         partime;
-
-    // index of this player in game
-    int         pnum;
-
-    wbplayerstruct_t    plyr[MAXPLAYERS];
-
-} wbstartstruct_t;
-
 
 #endif

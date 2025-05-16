@@ -1,10 +1,8 @@
 // Emacs style mode select   -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id: m_argv.h,v 1.3 2000/03/29 19:39:48 bpereira Exp $
-//
 // Copyright (C) 1993-1996 by id Software, Inc.
-// Portions Copyright (C) 1998-2000 by DooM Legacy Team.
+// Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -15,24 +13,9 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-//
-// $Log: m_argv.h,v $
-// Revision 1.3  2000/03/29 19:39:48  bpereira
-// no message
-//
-// Revision 1.2  2000/02/27 00:42:10  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:32  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
-// DESCRIPTION:
-//  
-//    
 //-----------------------------------------------------------------------------
-
+/// \file
+/// \brief Command line arguments
 
 #ifndef __M_ARGV__
 #define __M_ARGV__
@@ -40,26 +23,22 @@
 //
 // MISC
 //
-extern  int     myargc;
-extern  char**  myargv;
+extern int myargc;
+extern char **myargv;
 
-// Returns the position of the given parameter
-// in the arg list (0 if not found).
-int  M_CheckParm (char* check);
+// Returns the position of the given parameter in the arg list (0 if not found).
+int M_CheckParm(const char *check);
 
+// Pushes all parameters beginning with a +, ex: +map map01
+void M_PushSpecialParameters(void);
 
-// push all parameters bigining by a +, ex : +map map01
-void M_PushSpecialParameters( void );
-
-// return true if there is available parameters
-// use it befor M_GetNext 
+// Returns true if there are available parameters.
 boolean M_IsNextParm(void);
 
-// return the next parameter after a M_CheckParm
-// NULL if not found use M_IsNext to find if there is a parameter
+// Returns the next parameter after a M_CheckParm, NULL if not found.
 char *M_GetNextParm(void);
 
-// Find a Response File
-void M_FindResponseFile (void);
+// Finds and loads a response file (@moreargs.txt)
+void M_FindResponseFile(void);
 
 #endif //__M_ARGV__

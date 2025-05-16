@@ -1,8 +1,6 @@
 // Emacs style mode select   -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id: tmap.s,v 1.4 2000/08/10 14:58:42 ydario Exp $
-//
 // Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
@@ -15,31 +13,13 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-//
-// $Log: tmap.s,v $
-// Revision 1.4  2000/08/10 14:58:42  ydario
-// OS/2 port
-//
-// Revision 1.3  2000/04/24 20:24:38  bpereira
-// no message
-//
-// Revision 1.2  2000/02/27 00:42:11  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:32  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
 // DESCRIPTION:
 //      optimised drawing routines for span/column rendering
 //
-//
 //-----------------------------------------------------------------------------
-
 
 // structures, must match the C structures!
 #include "asm_defs.inc"
-
 
 // Rappel: seuls EAX, ECX, EDX peuvent ˆtre ‚cras‚s librement.
 //         il faut sauver esi,edi, cd...gs
@@ -58,7 +38,6 @@
 /*                                                                          */
 /*        (soustrait l'op‚rande source DE l'op‚rande destination,           */
 /*         comme sur Motorola! )                                            */
-
 
 // RAPPEL: Intel
 //         SECTION:[BASE+INDEX*SCALE+DISP]
@@ -80,7 +59,7 @@
     .align 2
 #else
     .align 4
-#endif    
+#endif
 C(loopcount):   .long   0
 C(pixelcount):  .long   0
 C(tystep):      .long   0
@@ -146,7 +125,7 @@ C(ASM_PatchRowBytes):
     .align 2
 #else
     .align 5
-#endif    
+#endif
 .globl C(R_DrawColumn_8)
 C(R_DrawColumn_8):
     pushl   %ebp                // preserve caller's stack frame pointer
@@ -311,7 +290,7 @@ vdone:
     .align 2
 #else
     .align 5
-#endif    
+#endif
 .globl C(R_DrawHColumn_8)
 C(R_DrawHColumn_8):
     pushl   %ebp
@@ -431,7 +410,7 @@ vhdone:
     .align 2
 #else
     .align 5
-#endif    
+#endif
 .globl C(R_RotateBuffer)
 C(R_RotateBuffer):
     pushl   %ebp
@@ -483,7 +462,7 @@ C(R_RotateBuffer):
     .align 2
 #else
     .align 5
-#endif    
+#endif
 .globl C(R_DrawSkyColumn_8)
 C(R_DrawSkyColumn_8):
     pushl   %ebp
@@ -652,7 +631,7 @@ C(texwidth):    .long   64      // texture width
     .align 2
 #else
     .align 4
-#endif    
+#endif
 .globl C(R_DrawSpan_8)
 C(R_DrawSpan_8):
     pushl   %ebp                // preserve caller's stack frame pointer
@@ -805,7 +784,7 @@ hdone:
     .align 2
 #else
     .align 5
-#endif    
+#endif
 
 .globl C(R_DrawTranslucentColumn_8)
 C(R_DrawTranslucentColumn_8):
@@ -841,16 +820,16 @@ C(R_DrawTranslucentColumn_8):
     imul     %ecx,%eax
     movl     C(dc_texturemid),%edx
     subl     %eax,%edx
-     movl     %edx,%ebx
+    movl     %edx,%ebx
 
-     shrl     $16,%ebx          // frac int.
-     andl     $0x0000007f,%ebx
-     shll     $16,%edx          // y frac up
+    shrl     $16,%ebx          // frac int.
+    andl     $0x0000007f,%ebx
+    shll     $16,%edx          // y frac up
 
-     movl     %ecx,%ebp
-     shll     $16,%ebp          // fracstep f. up
-     shrl     $16,%ecx          // fracstep i. ->cl
-     andb     $0x7f,%cl
+    movl     %ecx,%ebp
+    shll     $16,%ebp          // fracstep f. up
+    shrl     $16,%ecx          // fracstep i. ->cl
+    andb     $0x7f,%cl
     pushw    %cx
     movl     %edx,%ecx
     popw     %cx
@@ -930,7 +909,7 @@ C(R_DrawTranslucentColumn_8):
 //
 vt4quadloop:
     movb    (%esi,%ebx),%ah      // fetch texel : colormap number
-p5:    movb    0x12345678(%edi),%al           // fetch dest  : index into colormap
+p5: movb    0x12345678(%edi),%al           // fetch dest  : index into colormap
 
     movl    %ebp,C(tystep)
     movl    %edi,%ebp
@@ -1002,7 +981,7 @@ vtdone:
     .align 2
 #else
     .align 5
-#endif    
+#endif
 .globl C(R_DrawShadeColumn_8)
 C(R_DrawShadeColumn_8):
     pushl   %ebp                // preserve caller's stack frame pointer
@@ -1191,7 +1170,7 @@ shdone:
     .align 2
 #else
     .align 5
-#endif    
+#endif
 .globl C(R_DrawWaterColumn)
 C(R_DrawWaterColumn):
     pushl   %ebp                // preserve caller's stack frame pointer
@@ -1374,7 +1353,7 @@ advancetable:   .long   0, 0
     .align 2
 #else
     .align 4
-#endif    
+#endif
 .globl C(R_DrawSpanNoWrap)
 C(R_DrawSpanNoWrap):
     pushl   %ebp                // preserve caller's stack frame pointer
@@ -1570,7 +1549,7 @@ htvdone:
     .align 2
 #else
     .align 4
-#endif    
+#endif
 .globl C(R_RotateBufferasm)
 C(R_RotateBufferasm):
     pushl   %ebp                // preserve caller's stack frame pointer

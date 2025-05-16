@@ -1,10 +1,8 @@
 // Emacs style mode select   -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id: v_video.c,v 1.9 2000/04/27 17:43:19 hurdler Exp $
-//
 // Copyright (C) 1993-1996 by id Software, Inc.
-// Portions Copyright (C) 1998-2000 by DooM Legacy Team.
+// Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -15,43 +13,12 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-//
-// $Log: v_video.c,v $
-// Revision 1.9  2000/04/27 17:43:19  hurdler
-// colormap code in hardware mode is now the default
-//
-// Revision 1.8  2000/04/24 20:24:38  bpereira
-// no message
-//
-// Revision 1.7  2000/04/24 15:10:57  hurdler
-// Support colormap for text
-//
-// Revision 1.6  2000/04/22 21:12:15  hurdler
-// I like it better like that
-//
-// Revision 1.5  2000/04/06 20:47:08  hurdler
-// add Boris' changes for coronas in doom3.wad
-//
-// Revision 1.4  2000/03/29 20:10:50  hurdler
-// your fix didn't work under windows, find another solution
-//
-// Revision 1.3  2000/03/12 23:16:41  linuxcub
-// Fixed definition of VID_BlitLinearScreen (Well, it now compiles under RH61)
-//
-// Revision 1.2  2000/02/27 00:42:11  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:33  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
-// DESCRIPTION:
-//      Gamma correction LUT stuff.
-//      Functions to draw patches (by post) directly to screen.
-//      Functions to blit a block to the screen.
-//
 //-----------------------------------------------------------------------------
+/// \file
+/// \brief Gamma correction LUT stuff
+/// 
+///	Functions to draw patches (by post) directly to screen.
+///	Functions to blit a block to the screen.
 
 #include "doomdef.h"
 #include "r_local.h"
@@ -60,1456 +27,1709 @@
 #include "r_draw.h"
 #include "console.h"
 
-#include "i_video.h"            //rendermode
+#include "i_video.h" // rendermode
 #include "z_zone.h"
+#include "doomstat.h"
 
 #ifdef HWRENDER
-#include "hardware/hw_main.h"
+#include "hardware/hw_glob.h"
 #endif
 
 // Each screen is [vid.width*vid.height];
-byte*      screens[5];
+byte *screens[5];
 
-consvar_t cv_ticrate={"vid_ticrate","0",0,CV_OnOff,NULL};
+static CV_PossibleValue_t gamma_cons_t[] = {{0, "MIN"}, {4, "MAX"}, {0, NULL}};
+static void CV_usegamma_OnChange(void);
 
-ULONG       pLocalPalette[256];     // local copy of the palette for V_GetColor()
+consvar_t cv_ticrate = {"vid_ticrate", "Off", 0, CV_OnOff, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_usegamma = {"gamma", "0", CV_SAVE|CV_CALL, gamma_cons_t, CV_usegamma_OnChange, 0, NULL, NULL, 0, 0, NULL};
 
-// Now where did these came from?
-byte gammatable[5][256] =
+#ifdef HWRENDER
+static void CV_Gammaxxx_ONChange(void);
+// Saved hardware mode variables
+// - You can change them in software,
+// but they won't do anything.
+static CV_PossibleValue_t grcrappymlook_cons_t[] = {{0, "Off"}, {1, "On"}, {2, "Full"}, {0, NULL}};
+static CV_PossibleValue_t grgamma_cons_t[] = {{1, "MIN"}, {255, "MAX"}, {0, NULL}};
+
+consvar_t cv_voodoocompatibility = {"gr_voodoocompatibility", "Off", CV_SAVE, CV_OnOff, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_grcrappymlook = {"gr_mlook", "Full", CV_SAVE, grcrappymlook_cons_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_grfovchange = {"gr_fovchange", "Off", CV_SAVE, CV_OnOff, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_grfog = {"gr_fog", "Off", CV_SAVE, CV_OnOff, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_grfogcolor = {"gr_fogcolor", "000000", CV_SAVE, NULL, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_grgammared = {"gr_gammared", "127", CV_SAVE|CV_CALL, grgamma_cons_t,
+                           CV_Gammaxxx_ONChange, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_grgammagreen = {"gr_gammagreen", "127", CV_SAVE|CV_CALL, grgamma_cons_t,
+                             CV_Gammaxxx_ONChange, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_grgammablue = {"gr_gammablue", "127", CV_SAVE|CV_CALL, grgamma_cons_t,
+                            CV_Gammaxxx_ONChange, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_grdynamiclighting = {"gr_dynamiclighting", "On", CV_SAVE, CV_OnOff, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_grstaticlighting  = {"gr_staticlighting", "On", CV_SAVE, CV_OnOff, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_grcoronas = {"gr_coronas", "On", CV_SAVE, CV_OnOff, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_grcoronasize = {"gr_coronasize", "1", CV_SAVE| CV_FLOAT, 0, NULL, 0, NULL, NULL, 0, 0, NULL};
+#endif
+
+const byte gammatable[5][256] =
 {
-    {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,
-     17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,
-     33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,
-     49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,
-     65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,
-     81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,
-     97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,
-     113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,
-     128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,
-     144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,
-     160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,
-     176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,
-     192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,
-     208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,
-     224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,
-     240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255},
+	{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,
+	17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,
+	33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,
+	49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,
+	65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,
+	81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,
+	97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,
+	113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,
+	128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,
+	144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,
+	160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,
+	176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,
+	192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,
+	208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,
+	224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,
+	240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255},
 
-    {2,4,5,7,8,10,11,12,14,15,16,18,19,20,21,23,24,25,26,27,29,30,31,
-     32,33,34,36,37,38,39,40,41,42,44,45,46,47,48,49,50,51,52,54,55,
-     56,57,58,59,60,61,62,63,64,65,66,67,69,70,71,72,73,74,75,76,77,
-     78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,
-     99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,
-     115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,129,
-     130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,
-     146,147,148,148,149,150,151,152,153,154,155,156,157,158,159,160,
-     161,162,163,163,164,165,166,167,168,169,170,171,172,173,174,175,
-     175,176,177,178,179,180,181,182,183,184,185,186,186,187,188,189,
-     190,191,192,193,194,195,196,196,197,198,199,200,201,202,203,204,
-     205,205,206,207,208,209,210,211,212,213,214,214,215,216,217,218,
-     219,220,221,222,222,223,224,225,226,227,228,229,230,230,231,232,
-     233,234,235,236,237,237,238,239,240,241,242,243,244,245,245,246,
-     247,248,249,250,251,252,252,253,254,255},
+	{2,4,5,7,8,10,11,12,14,15,16,18,19,20,21,23,24,25,26,27,29,30,31,
+	32,33,34,36,37,38,39,40,41,42,44,45,46,47,48,49,50,51,52,54,55,
+	56,57,58,59,60,61,62,63,64,65,66,67,69,70,71,72,73,74,75,76,77,
+	78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,
+	99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,
+	115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,129,
+	130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,
+	146,147,148,148,149,150,151,152,153,154,155,156,157,158,159,160,
+	161,162,163,163,164,165,166,167,168,169,170,171,172,173,174,175,
+	175,176,177,178,179,180,181,182,183,184,185,186,186,187,188,189,
+	190,191,192,193,194,195,196,196,197,198,199,200,201,202,203,204,
+	205,205,206,207,208,209,210,211,212,213,214,214,215,216,217,218,
+	219,220,221,222,222,223,224,225,226,227,228,229,230,230,231,232,
+	233,234,235,236,237,237,238,239,240,241,242,243,244,245,245,246,
+	247,248,249,250,251,252,252,253,254,255},
 
-    {4,7,9,11,13,15,17,19,21,22,24,26,27,29,30,32,33,35,36,38,39,40,42,
-     43,45,46,47,48,50,51,52,54,55,56,57,59,60,61,62,63,65,66,67,68,69,
-     70,72,73,74,75,76,77,78,79,80,82,83,84,85,86,87,88,89,90,91,92,93,
-     94,95,96,97,98,100,101,102,103,104,105,106,107,108,109,110,111,112,
-     113,114,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,
-     129,130,131,132,133,133,134,135,136,137,138,139,140,141,142,143,144,
-     144,145,146,147,148,149,150,151,152,153,153,154,155,156,157,158,159,
-     160,160,161,162,163,164,165,166,166,167,168,169,170,171,172,172,173,
-     174,175,176,177,178,178,179,180,181,182,183,183,184,185,186,187,188,
-     188,189,190,191,192,193,193,194,195,196,197,197,198,199,200,201,201,
-     202,203,204,205,206,206,207,208,209,210,210,211,212,213,213,214,215,
-     216,217,217,218,219,220,221,221,222,223,224,224,225,226,227,228,228,
-     229,230,231,231,232,233,234,235,235,236,237,238,238,239,240,241,241,
-     242,243,244,244,245,246,247,247,248,249,250,251,251,252,253,254,254,
-     255},
+	{4,7,9,11,13,15,17,19,21,22,24,26,27,29,30,32,33,35,36,38,39,40,42,
+	43,45,46,47,48,50,51,52,54,55,56,57,59,60,61,62,63,65,66,67,68,69,
+	70,72,73,74,75,76,77,78,79,80,82,83,84,85,86,87,88,89,90,91,92,93,
+	94,95,96,97,98,100,101,102,103,104,105,106,107,108,109,110,111,112,
+	113,114,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,
+	129,130,131,132,133,133,134,135,136,137,138,139,140,141,142,143,144,
+	144,145,146,147,148,149,150,151,152,153,153,154,155,156,157,158,159,
+	160,160,161,162,163,164,165,166,166,167,168,169,170,171,172,172,173,
+	174,175,176,177,178,178,179,180,181,182,183,183,184,185,186,187,188,
+	188,189,190,191,192,193,193,194,195,196,197,197,198,199,200,201,201,
+	202,203,204,205,206,206,207,208,209,210,210,211,212,213,213,214,215,
+	216,217,217,218,219,220,221,221,222,223,224,224,225,226,227,228,228,
+	229,230,231,231,232,233,234,235,235,236,237,238,238,239,240,241,241,
+	242,243,244,244,245,246,247,247,248,249,250,251,251,252,253,254,254,
+	255},
 
-    {8,12,16,19,22,24,27,29,31,34,36,38,40,41,43,45,47,49,50,52,53,55,
-     57,58,60,61,63,64,65,67,68,70,71,72,74,75,76,77,79,80,81,82,84,85,
-     86,87,88,90,91,92,93,94,95,96,98,99,100,101,102,103,104,105,106,107,
-     108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,
-     125,126,127,128,129,130,131,132,133,134,135,135,136,137,138,139,140,
-     141,142,143,143,144,145,146,147,148,149,150,150,151,152,153,154,155,
-     155,156,157,158,159,160,160,161,162,163,164,165,165,166,167,168,169,
-     169,170,171,172,173,173,174,175,176,176,177,178,179,180,180,181,182,
-     183,183,184,185,186,186,187,188,189,189,190,191,192,192,193,194,195,
-     195,196,197,197,198,199,200,200,201,202,202,203,204,205,205,206,207,
-     207,208,209,210,210,211,212,212,213,214,214,215,216,216,217,218,219,
-     219,220,221,221,222,223,223,224,225,225,226,227,227,228,229,229,230,
-     231,231,232,233,233,234,235,235,236,237,237,238,238,239,240,240,241,
-     242,242,243,244,244,245,246,246,247,247,248,249,249,250,251,251,252,
-     253,253,254,254,255},
+	{8,12,16,19,22,24,27,29,31,34,36,38,40,41,43,45,47,49,50,52,53,55,
+	57,58,60,61,63,64,65,67,68,70,71,72,74,75,76,77,79,80,81,82,84,85,
+	86,87,88,90,91,92,93,94,95,96,98,99,100,101,102,103,104,105,106,107,
+	108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,
+	125,126,127,128,129,130,131,132,133,134,135,135,136,137,138,139,140,
+	141,142,143,143,144,145,146,147,148,149,150,150,151,152,153,154,155,
+	155,156,157,158,159,160,160,161,162,163,164,165,165,166,167,168,169,
+	169,170,171,172,173,173,174,175,176,176,177,178,179,180,180,181,182,
+	183,183,184,185,186,186,187,188,189,189,190,191,192,192,193,194,195,
+	195,196,197,197,198,199,200,200,201,202,202,203,204,205,205,206,207,
+	207,208,209,210,210,211,212,212,213,214,214,215,216,216,217,218,219,
+	219,220,221,221,222,223,223,224,225,225,226,227,227,228,229,229,230,
+	231,231,232,233,233,234,235,235,236,237,237,238,238,239,240,240,241,
+	242,242,243,244,244,245,246,246,247,247,248,249,249,250,251,251,252,
+	253,253,254,254,255},
 
-    {16,23,28,32,36,39,42,45,48,50,53,55,57,60,62,64,66,68,69,71,73,75,76,
-     78,80,81,83,84,86,87,89,90,92,93,94,96,97,98,100,101,102,103,105,106,
-     107,108,109,110,112,113,114,115,116,117,118,119,120,121,122,123,124,
-     125,126,128,128,129,130,131,132,133,134,135,136,137,138,139,140,141,
-     142,143,143,144,145,146,147,148,149,150,150,151,152,153,154,155,155,
-     156,157,158,159,159,160,161,162,163,163,164,165,166,166,167,168,169,
-     169,170,171,172,172,173,174,175,175,176,177,177,178,179,180,180,181,
-     182,182,183,184,184,185,186,187,187,188,189,189,190,191,191,192,193,
-     193,194,195,195,196,196,197,198,198,199,200,200,201,202,202,203,203,
-     204,205,205,206,207,207,208,208,209,210,210,211,211,212,213,213,214,
-     214,215,216,216,217,217,218,219,219,220,220,221,221,222,223,223,224,
-     224,225,225,226,227,227,228,228,229,229,230,230,231,232,232,233,233,
-     234,234,235,235,236,236,237,237,238,239,239,240,240,241,241,242,242,
-     243,243,244,244,245,245,246,246,247,247,248,248,249,249,250,250,251,
-     251,252,252,253,254,254,255,255}
+	{16,23,28,32,36,39,42,45,48,50,53,55,57,60,62,64,66,68,69,71,73,75,76,
+	78,80,81,83,84,86,87,89,90,92,93,94,96,97,98,100,101,102,103,105,106,
+	107,108,109,110,112,113,114,115,116,117,118,119,120,121,122,123,124,
+	125,126,128,128,129,130,131,132,133,134,135,136,137,138,139,140,141,
+	142,143,143,144,145,146,147,148,149,150,150,151,152,153,154,155,155,
+	156,157,158,159,159,160,161,162,163,163,164,165,166,166,167,168,169,
+	169,170,171,172,172,173,174,175,175,176,177,177,178,179,180,180,181,
+	182,182,183,184,184,185,186,187,187,188,189,189,190,191,191,192,193,
+	193,194,195,195,196,196,197,198,198,199,200,200,201,202,202,203,203,
+	204,205,205,206,207,207,208,208,209,210,210,211,211,212,213,213,214,
+	214,215,216,216,217,217,218,219,219,220,220,221,221,222,223,223,224,
+	224,225,225,226,227,227,228,228,229,229,230,230,231,232,232,233,233,
+	234,234,235,235,236,236,237,237,238,239,239,240,240,241,241,242,242,
+	243,243,244,244,245,245,246,246,247,247,248,248,249,249,250,250,251,
+	251,252,252,253,254,254,255,255}
 };
 
+// local copy of the palette for V_GetColor()
+RGBA_t *pLocalPalette = NULL;
 
-// -------------+
-// V_GetColor   : Get the ARGB value from a palette color index, using the
-//              : last set palette.
-// Returns      : ARGB 8888 value
-// -------------+
-ULONG V_GetColor( int color )
+// keep a copy of the palette so that we can get the RGB value for a color index at any time.
+static void LoadPalette(const char *lumpname)
 {
-    return pLocalPalette[color&0xFF];
-}
+	int i, palsize;
+	const byte *usegamma = gammatable[cv_usegamma.value];
+	byte *pal;
 
+	i = W_GetNumForName(lumpname);
+	palsize = W_LumpLength(i)/3;
+	if (pLocalPalette)
+		Z_Free(pLocalPalette);
+
+	pLocalPalette = Z_Malloc(sizeof (RGBA_t)*palsize, PU_STATIC, NULL);
+
+	pal = W_CacheLumpNum(i, PU_CACHE);
+	for (i = 0; i < palsize; i++)
+	{
+		pLocalPalette[i].s.red = usegamma[*pal++];
+		pLocalPalette[i].s.green = usegamma[*pal++];
+		pLocalPalette[i].s.blue = usegamma[*pal++];
+		pLocalPalette[i].s.alpha = 0xff;
+	}
+}
 
 // -------------+
 // V_SetPalette : Set the current palette to use for palettized graphics
-//              : (that is, most if not all of Doom's original graphics)
-// Note         : we keep a copy of the palette so that we can get the RGB
-//              : value for a color index at any time.
+//              :
 // -------------+
-void V_SetPalette( byte* palette )
+void V_SetPalette(int palettenum)
 {
-    int     i;
-    ULONG   rgb;
-    byte*   usegamma = gammatable[scr_gamma%5];
-    byte*   pal = palette;
+	if (!pLocalPalette)
+		LoadPalette("PLAYPAL");
 
-    // keep a copy of the palette, for V_GetColor()
-    for( i=0; i<256; i++ )
-    {
-        rgb = ( usegamma[*pal++] ) << 16;
-        rgb |= ( usegamma[*pal++] ) << 8;
-        rgb |= usegamma[*pal++];
-        pLocalPalette[i] = rgb;
-    }
-
-    I_SetPalette( palette );
-}
-
-
-
-//added:18-02-98: this is an offset added to the destination address,
-//                for all SCALED graphics. When the menu is displayed,
-//                it is TEMPORARILY set to vid.centerofs, the rest of
-//                the time it should be zero.
-//                The menu is scaled, a round multiple of the original
-//                pixels to keep the graphics clean, then it is centered
-//                a little, but excepeted the menu, scaled graphics don't
-//                have to be centered. Set by m_menu.c, and SCR_Recalc()
-int     scaledofs;
-
-
-// V_MarkRect : this used to refresh only the parts of the screen
-//              that were modified since the last screen update
-//              it is useless today
-//
-int        dirtybox[4];
-void V_MarkRect ( int           x,
-                  int           y,
-                  int           width,
-                  int           height )
-{
-    M_AddToBox (dirtybox, x, y);
-    M_AddToBox (dirtybox, x+width-1, y+height-1);
-}
-
-
-//
-// V_CopyRect
-//
-void V_CopyRect
-( int           srcx,
-  int           srcy,
-  int           srcscrn,
-  int           width,
-  int           height,
-  int           destx,
-  int           desty,
-  int           destscrn )
-{
-    byte*       src;
-    byte*       dest;
-
-#ifdef RANGECHECK
-    if (srcx<0
-        ||srcx+width >vid.width
-        || srcy<0
-        || srcy+height>vid.height
-        ||destx<0||destx+width >vid.width
-        || desty<0
-        || desty+height>vid.height
-        || (unsigned)srcscrn>4
-        || (unsigned)destscrn>4)
-    {
-        I_Error ("Bad V_CopyRect");
-    }
+#ifdef HWRENDER
+	if (rendermode != render_soft && rendermode != render_none)
+		HWR_SetPalette(&pLocalPalette[palettenum*256]);
+#if defined (UNIXLIKE) || defined (SDL)
+	else
 #endif
-    V_MarkRect (destx, desty, width, height);
+#endif
+	if (rendermode != render_none)
+		I_SetPalette(&pLocalPalette[palettenum*256]);
+}
 
-#ifdef DEBUG
-    CONS_Printf("V_CopyRect: vidwidth %d screen[%d]=%x to screen[%d]=%x\n",
-             vid.width,srcscrn,screens[srcscrn],destscrn,screens[destscrn]);
-    CONS_Printf("..........: srcx %d srcy %d width %d height %d destx %d desty %d\n",
-            srcx,srcy,width,height,destx,desty);
+void V_SetPaletteLump(const char *pal)
+{
+	LoadPalette(pal);
+#ifdef HWRENDER
+	if (rendermode != render_soft && rendermode != render_none)
+		HWR_SetPalette(pLocalPalette);
+#if defined (UNIXLIKE) || defined (SDL)
+	else
+#endif
+#endif
+	if (rendermode != render_none)
+		I_SetPalette(pLocalPalette);
+}
+
+static void CV_usegamma_OnChange(void)
+{
+	// reload palette
+	LoadPalette("PLAYPAL");
+	V_SetPalette(0);
+}
+
+// change the palette directly to see the change
+#ifdef HWRENDER
+static void CV_Gammaxxx_ONChange(void)
+{
+	if (rendermode != render_soft && rendermode != render_none)
+		V_SetPalette(0);
+}
 #endif
 
-    src = screens[srcscrn]+vid.width*srcy+srcx;
-    dest = screens[destscrn]+vid.width*desty+destx;
 
-    for ( ; height>0 ; height--)
-    {
-        memcpy (dest, src, width);
-        src += vid.width;
-        dest += vid.width;
-    }
-}
-
-#if !defined(USEASM) || defined(WIN32)
+#if !defined (__GNUC__) || !defined (USEASM) //Alam: non-GCC can't use vid_copy.s
 // --------------------------------------------------------------------------
 // Copy a rectangular area from one bitmap to another (8bpp)
-// srcPitch, destPitch : width of source and destination bitmaps
 // --------------------------------------------------------------------------
-void VID_BlitLinearScreen (byte* srcptr, byte* destptr,
-                           int width, int height,
-                           int srcrowbytes, int destrowbytes)
+void VID_BlitLinearScreen(const byte *srcptr, byte *destptr, int width, int height, int srcrowbytes,
+	int destrowbytes)
 {
-    if (srcrowbytes==destrowbytes)
-    {
-        memcpy (destptr, srcptr, srcrowbytes * height);
-    }
-    else
-    {
-        while (height--)
-        {
-            memcpy (destptr, srcptr, width);
-            destptr += destrowbytes;
-            srcptr += srcrowbytes;
-        }
-    }
+	if (srcrowbytes == destrowbytes)
+		memcpy(destptr, srcptr, srcrowbytes * height);
+	else
+	{
+		while (height--)
+		{
+			memcpy(destptr, srcptr, width);
+
+			destptr += destrowbytes;
+			srcptr += srcrowbytes;
+		}
+	}
 }
 #endif
 
 //
-//  V_DrawMappedPatch : like V_DrawScaledPatch, but with a colormap.
+// V_DrawMappedPatch: like V_DrawScaledPatch, but with a colormap.
 //
-//
-//added:05-02-98:
-void V_DrawMappedPatch ( int           x,
-                         int           y,
-                         int           scrn,
-                         patch_t*      patch,
-                         byte*         colormap )
+void V_DrawMappedPatch(int x, int y, int scrn, patch_t *patch, const byte *colormap)
 {
-    int         count;
-    int         col;
-    column_t*   column;
-    byte*       desttop;
-    byte*       dest;
-    byte*       source;
-    int         w;
+	size_t count;
+	int col, w, dupx, dupy, ofs, colfrac, rowfrac;
+	const column_t *column;
+	byte *desttop, *dest;
+	const byte *source, *deststop;
 
-    int         dupx,dupy;
-    int         ofs;
-    int         colfrac,rowfrac;
-
-    // draw a 3Dfx converted patch
 #ifdef HWRENDER
-    if ( rendermode != render_soft) {
-        HWR_DrawMappedPatch ((GlidePatch_t*)patch, x, y, colormap);
-        return;
-    }
+	// draw a hardware converted patch
+	if (rendermode != render_soft && rendermode != render_none)
+	{
+		HWR_DrawMappedPatch((GlidePatch_t *)patch, x, y, scrn, colormap);
+		return;
+	}
 #endif
 
-    dupx = vid.dupx;
-    dupy = vid.dupy;
+	if (scrn & V_NOSCALEPATCH)
+		dupx = dupy = 1;
+	else
+	{
+		dupx = vid.dupx;
+		dupy = vid.dupy;
+	}
 
-    y -= SHORT(patch->topoffset);
-    x -= SHORT(patch->leftoffset);
+	y -= SHORT(patch->topoffset);
+	x -= SHORT(patch->leftoffset);
 
-    if (!scrn)
-        V_MarkRect (x, y, SHORT(patch->width)*dupx, SHORT(patch->height)*dupy);
+	if (scrn & V_NOSCALESTART)
+	{
+		desttop = screens[scrn&0xffff] + (y*vid.width) + x;
+		deststop = screens[scrn&0xffff] + vid.width * vid.height * vid.bpp;
+	}
+	else
+	{
+		desttop = screens[scrn&0xffff] + (y*vid.dupy*vid.width) + (x*vid.dupx);
+		deststop = screens[scrn&0xffff] + vid.width * vid.height * vid.bpp;
 
-    col = 0;
-    colfrac  = FixedDiv (FRACUNIT, dupx<<FRACBITS);
-    rowfrac  = FixedDiv (FRACUNIT, dupy<<FRACBITS);
+		// Center it if necessary
+		if (!(scrn & V_NOSCALEPATCH))
+		{
+			if (vid.fdupx != dupx)
+			{
+				// dupx adjustments pretend that screen width is BASEVIDWIDTH * dupx,
+				// so center this imaginary screen
+				if (scrn & V_SNAPTORIGHT)
+					desttop += (vid.width - (BASEVIDWIDTH * dupx));
+				else if (!(scrn & V_SNAPTOLEFT))
+					desttop += (vid.width - (BASEVIDWIDTH * dupx)) / 2;
+			}
+			if (vid.fdupy != dupy)
+			{
+				// same thing here
+				if (scrn & V_SNAPTOBOTTOM)
+					desttop += (vid.height - (BASEVIDHEIGHT * dupy)) * vid.width;
+				else if (!(scrn & V_SNAPTOTOP))
+					desttop += (vid.height - (BASEVIDHEIGHT * dupy)) * vid.width / 2;
+			}
+			// if it's meant to cover the whole screen, black out the rest
+			if (x == 0 && patch->width == BASEVIDWIDTH && y == 0 && patch->height == BASEVIDHEIGHT)
+				V_DrawFill(0, 0, vid.width, vid.height, 0);
+		}
+	}
+	scrn &= 0xffff;
 
-    desttop = screens[scrn] + (y*dupy*vid.width) + (x*dupx) + scaledofs;
+	col = 0;
+	colfrac = FixedDiv(FRACUNIT, dupx<<FRACBITS);
+	rowfrac = FixedDiv(FRACUNIT, dupy<<FRACBITS);
 
-    w = SHORT(patch->width)<<FRACBITS;
+	w = SHORT(patch->width)<<FRACBITS;
 
-    for ( ; col<w ; col+=colfrac, desttop++)
-    {
-        column = (column_t *)((byte *)patch + LONG(patch->columnofs[col>>FRACBITS]));
+	for (; col < w; col += colfrac, desttop++)
+	{
+		column = (const column_t *)((const byte *)patch + LONG(patch->columnofs[col>>FRACBITS]));
 
-        while (column->topdelta != 0xff )
-        {
-            source = (byte *)column + 3;
-            dest   = desttop + column->topdelta*dupy*vid.width;
-            count  = column->length*dupy;
+		while (column->topdelta != 0xff)
+		{
+			source = (const byte *)column + 3;
+			dest = desttop + column->topdelta*dupy*vid.width;
+			count = column->length*dupy;
 
-            ofs = 0;
-            while (count--)
-            {
-                *dest = *(colormap + source[ofs>>FRACBITS] );
-                dest += vid.width;
-                ofs += rowfrac;
-            }
+			ofs = 0;
+			while (count--)
+			{
+				if (dest < deststop)
+					*dest = *(colormap + source[ofs>>FRACBITS]);
+				else
+					count = 0;
+				dest += vid.width;
+				ofs += rowfrac;
+			}
 
-            column = (column_t *)( (byte *)column + column->length + 4 );
-        }
-    }
-
+			column = (const column_t *)((const byte *)column + column->length + 4);
+		}
+	}
 }
-
 
 //
 // V_DrawScaledPatch
-//   like V_DrawPatch, but scaled 2,3,4 times the original size and position
-//   this is used for menu and title screens, with high resolutions
 //
-//added:05-02-98:
-void V_DrawScaledPatch ( int           x,
-                         int           y,
-                         int           scrn,    // hacked flags in it...
-                         patch_t*      patch )
+// Like V_DrawPatch, but scaled 2, 3, 4 times the original size and position.
+// This is used for menu and title screens, with high resolutions.
+//
+void V_DrawScaledPatch(int x, int y, int scrn, patch_t *patch)
 {
-    int         count;
-    int         col;
-    column_t*   column;
-    byte*       desttop;
-    byte*       dest;
-    byte*       source;
-    int         w;
+	size_t count;
+	int col, dupx, dupy, ofs, colfrac, rowfrac;
+	const column_t *column;
+	byte *desttop, *dest, *destend;
+	const byte *source, *deststop;
 
-    int         dupx,dupy;
-    int         ofs;
-    int         colfrac,rowfrac;
-
-    // draw a 3Dfx converted patch
-    #ifdef HWRENDER
-    if ( rendermode != render_soft) {
-        HWR_DrawPatch ((GlidePatch_t*)patch, x, y);
-        return;
-    }
-    #endif
-
-    dupx = vid.dupx;
-    dupy = vid.dupy;
-
-    y -= SHORT(patch->topoffset);
-    x -= SHORT(patch->leftoffset);
-
-    col = 0;
-    colfrac  = FixedDiv (FRACUNIT, dupx<<FRACBITS);
-    rowfrac  = FixedDiv (FRACUNIT, dupy<<FRACBITS);
-
-    desttop = screens[scrn&0xFF];
-    if (scrn&V_NOSCALESTART)
-        desttop += (y*vid.width) + x;
-    else
-        desttop += (y*dupy*vid.width) + (x*dupx) + scaledofs;
-
-    w = SHORT(patch->width)<<FRACBITS;
-
-    for ( ; col<w ; col+=colfrac, desttop++)
-    {
-        column = (column_t *)((byte *)patch + LONG(patch->columnofs[col>>FRACBITS]));
-
-        while (column->topdelta != 0xff )
-        {
-            source = (byte *)column + 3;
-            dest   = desttop + column->topdelta*dupy*vid.width;
-            count  = column->length*dupy;
-
-            ofs = 0;
-            while (count--)
-            {
-                *dest = source[ofs>>FRACBITS];
-                dest += vid.width;
-                ofs += rowfrac;
-            }
-
-            column = (column_t *)( (byte *)column + column->length + 4 );
-        }
-    }
-}
-
-
-// Same as V_DrawScaledPatch, but x-mirrored - just for f_finale.c
-//
-void V_DrawScaledPatchFlipped ( int           x,
-                                int           y,
-                                int           scrn,    // hacked flags in it...
-                                patch_t*      patch )
-{
-    int         count;
-    int         col;
-    column_t*   column;
-    byte*       desttop;
-    byte*       dest;
-    byte*       source;
-    int         w;
-
-    int         dupx,dupy;
-    int         ofs;
-    int         colfrac,rowfrac;
-
-    // draw a 3Dfx converted patch
-    #ifdef HWRENDER
-    if ( rendermode != render_soft) {
-        HWR_DrawPatch ((GlidePatch_t*)patch, x, y);
-        return;
-    }
-    #endif
-
-    dupx = vid.dupx;
-    dupy = vid.dupy;
-
-    y -= SHORT(patch->topoffset);
-    x -= SHORT(patch->leftoffset);
-
-    col = 0;
-    colfrac  = FixedDiv (FRACUNIT, dupx<<FRACBITS);
-    rowfrac  = FixedDiv (FRACUNIT, dupy<<FRACBITS);
-
-    desttop = screens[scrn&0xFF];
-    if (scrn&V_NOSCALESTART)
-        desttop += (y*vid.width) + x;
-    else
-        desttop += (y*dupy*vid.width) + (x*dupx) + scaledofs;
-
-    w = SHORT(patch->width)<<FRACBITS;
-
-    for (col=w-colfrac; col>=0; col-=colfrac, desttop++)
-    {
-        column = (column_t *)((byte *)patch + LONG(patch->columnofs[col>>FRACBITS]));
-
-        while (column->topdelta != 0xff )
-        {
-            source = (byte *)column + 3;
-            dest   = desttop + column->topdelta*dupy*vid.width;
-            count  = column->length*dupy;
-
-            ofs = 0;
-            while (count--)
-            {
-                *dest = source[ofs>>FRACBITS];
-                dest += vid.width;
-                ofs += rowfrac;
-            }
-
-            column = (column_t *)( (byte *)column + column->length + 4 );
-        }
-    }
-}
-
-
-
-
-//added:16-02-98: now used for crosshair
-//
-//  This draws a patch over a background with translucency...SCALED
-//  DOESNT SCALE THE STARTING COORDS!!
-//
-void V_DrawTranslucentPatch ( int           x,
-                              int           y,
-                              int           scrn,
-                              patch_t*      patch )
-{
-    int         count;
-    int         col;
-    column_t*   column;
-    byte*       desttop;
-    byte*       dest;
-    byte*       source;
-    int         w;
-
-    int         dupx,dupy;
-    int         ofs;
-    int         colfrac,rowfrac;
-
-    // draw a 3Dfx converted patch
-    #ifdef HWRENDER
-    if ( rendermode != render_soft) {
-        HWR_DrawPatch ((GlidePatch_t*)patch, x, y);
-        return;
-    }
-    #endif
-
-    dupx = vid.dupx;
-    dupy = vid.dupy;
-
-    y -= SHORT(patch->topoffset)*dupy;
-    x -= SHORT(patch->leftoffset)*dupx;
-
-    if (!scrn)
-        V_MarkRect (x, y, SHORT(patch->width)*dupx, SHORT(patch->height)*dupy);
-
-    col = 0;
-    colfrac  = FixedDiv (FRACUNIT, dupx<<FRACBITS);
-    rowfrac  = FixedDiv (FRACUNIT, dupy<<FRACBITS);
-
-    desttop = screens[scrn] + (y*vid.width) + x;
-
-    w = SHORT(patch->width)<<FRACBITS;
-
-    for ( ; col<w ; col+=colfrac, desttop++)
-    {
-        column = (column_t *)((byte *)patch + LONG(patch->columnofs[col>>FRACBITS]));
-
-        while (column->topdelta != 0xff )
-        {
-            source = (byte *)column + 3;
-            dest   = desttop + column->topdelta*dupy*vid.width;
-            count  = column->length*dupy;
-
-            ofs = 0;
-            while (count--)
-            {
-                *dest = *( transtables + ((source[ofs>>FRACBITS]<<8)&0xFF00) + (*dest&0xFF) );
-                dest += vid.width;
-                ofs += rowfrac;
-            }
-
-            column = (column_t *)( (byte *)column + column->length + 4 );
-        }
-    }
-}
-
-
-//
-//  Masks a column based masked pic to the screen, USING A COLORMAP
-//
-//  This is just like V_DrawMappedPatch, but it doesn't scale since it's
-//  used for the status bar right now...
-//
-//  This is called 'V_DrawTranslationPatch' because it is used to draw
-//  the facebacks of statusbar and intermission screens with the right
-//  player colors.
-//
-void V_DrawTranslationPatch ( int           x,
-                              int           y,
-                              int           scrn,
-                              patch_t*      patch,
-                              byte*         colormap )
-{
-    int         count;
-    int         col;
-    column_t*   column;
-    byte*       desttop;
-    byte*       dest;
-    byte*       source;
-    int         w;
-
-    // draw a 3Dfx converted patch
 #ifdef HWRENDER
-    if ( rendermode != render_soft) {
-        HWR_DrawMappedPatch ((GlidePatch_t*)patch, x, y, colormap);
-        return;
-    }
+	// draw a hardware converted patch
+	if (rendermode != render_soft && rendermode != render_none)
+	{
+		HWR_DrawPatch((GlidePatch_t *)patch, x, y, scrn);
+		return;
+	}
 #endif
 
-    y -= SHORT(patch->topoffset);
-    x -= SHORT(patch->leftoffset);
-#ifdef RANGECHECK
-    if (x<0
-        ||x+SHORT(patch->width) >vid.width
-        || y<0
-        || y+SHORT(patch->height)>vid.height
-        || (unsigned)scrn>4)
-    {
-      fprintf( stderr, "Patch at %d,%d exceeds LFB\n", x,y );
-      // No I_Error abort - what is up with TNT.WAD?
-      fprintf( stderr, "V_DrawPatch: bad patch (ignored)\n");
-      return;
-    }
-#endif
+	if ((scrn & V_NOSCALEPATCH))
+		dupx = dupy = 1;
+	else
+	{
+		dupx = vid.dupx;
+		dupy = vid.dupy;
+	}
 
-    if (!scrn)
-        V_MarkRect (x, y, SHORT(patch->width), SHORT(patch->height));
+	y -= SHORT(patch->topoffset);
+	x -= SHORT(patch->leftoffset);
 
-    col = 0;
-    desttop = screens[scrn]+y*vid.width+x;
+	colfrac = FixedDiv(FRACUNIT, dupx<<FRACBITS);
+	rowfrac = FixedDiv(FRACUNIT, dupy<<FRACBITS);
 
-    w = SHORT(patch->width);
+	desttop = screens[scrn&0xFF];
+	deststop = screens[scrn&0xFF] + vid.width * vid.height * vid.bpp;
 
-    for ( ; col<w ; x++, col++, desttop++)
-    {
-        column = (column_t *)((byte *)patch + LONG(patch->columnofs[col]));
+	if (!desttop)
+		return;
 
-        // step through the posts in a column
-        while (column->topdelta != 0xff )
-        {
-            source = (byte *)column + 3;
-            dest = desttop + column->topdelta*vid.width;
-            count = column->length;
+	if (scrn & V_NOSCALESTART)
+		desttop += (y*vid.width) + x;
+	else
+	{
+		desttop += (y*dupy*vid.width) + (x*dupx);
 
-            while (count--)
-            {
-                *dest = *(colormap + *(source++) );
-                dest += vid.width;
-            }
-            column = (column_t *)(  (byte *)column + column->length + 4 );
-        }
-    }
+		// Center it if necessary
+		if (!(scrn & V_NOSCALEPATCH))
+		{
+			if (vid.fdupx != dupx)
+			{
+				// dupx adjustments pretend that screen width is BASEVIDWIDTH * dupx,
+				// so center this imaginary screen
+				if (scrn & V_SNAPTORIGHT)
+					desttop += (vid.width - (BASEVIDWIDTH * dupx));
+				else if (!(scrn & V_SNAPTOLEFT))
+					desttop += (vid.width - (BASEVIDWIDTH * dupx)) / 2;
+			}
+			if (vid.fdupy != dupy)
+			{
+				// same thing here
+				if (scrn & V_SNAPTOBOTTOM)
+					desttop += (vid.height - (BASEVIDHEIGHT * dupy)) * vid.width;
+				else if (!(scrn & V_SNAPTOTOP))
+					desttop += (vid.height - (BASEVIDHEIGHT * dupy)) * vid.width / 2;
+			}
+			// if it's meant to cover the whole screen, black out the rest
+			if (x == 0 && patch->width == BASEVIDWIDTH && y == 0 && patch->height == BASEVIDHEIGHT)
+				V_DrawFill(0, 0, vid.width, vid.height, 0);
+		}
+	}
+	destend = desttop + SHORT(patch->width) * dupx;
+
+	for (col = 0; desttop < destend; col += colfrac, desttop++)
+	{
+		register int heightmask;
+
+		column = (const column_t *)((const byte *)(patch) + LONG(patch->columnofs[col>>FRACBITS]));
+
+		while (column->topdelta != 0xff)
+		{
+			source = (const byte *)(column) + 3;
+			dest = desttop + column->topdelta*dupy*vid.width;
+			count = column->length*dupy;
+
+			ofs = 0;
+
+			heightmask = column->length - 1;
+
+			if (column->length & heightmask)
+			{
+				heightmask++;
+				heightmask <<= FRACBITS;
+
+				if (rowfrac < 0)
+					while ((rowfrac += heightmask) < 0)
+						;
+				else
+					while (rowfrac >= heightmask)
+						rowfrac -= heightmask;
+
+				do
+				{
+					if (dest < deststop)
+						*dest = source[ofs>>FRACBITS];
+					else
+						count = 0;
+					dest += vid.width;
+					ofs += rowfrac;
+					if ((ofs + rowfrac) > heightmask)
+						goto donedrawing;
+				} while (count--);
+			}
+			else
+			{
+				while (count--)
+				{
+					if (dest < deststop)
+						*dest = source[ofs>>FRACBITS];
+					else
+						count = 0;
+					dest += vid.width;
+					ofs += rowfrac;
+				}
+			}
+donedrawing:
+			column = (const column_t *)((const byte *)column + column->length + 4);
+		}
+	}
 }
 
+/** Draws a patch to the screen, being careful not to go off the right
+  * side or bottom of the screen. This is slower than a normal draw, so
+  * it gets a separate function.
+  *
+  * With hardware rendering, the patch is clipped anyway, so this is
+  * just the same as V_DrawScaledPatch().
+  *
+  * \param x     X coordinate for left side, based on 320x200 screen.
+  * \param y     Y coordinate for top, based on 320x200 screen.
+  * \param scrn  Any of several flags to change the drawing behavior.
+  * \param patch Patch to draw.
+  * \sa V_DrawScaledPatch
+  * \author Graue <graue@oceanbase.org>
+  */
+static void V_DrawClippedScaledPatch(int x, int y, int scrn, patch_t *patch)
+{
+	size_t count;
+	int col, dupx, dupy, ofs, colfrac, rowfrac;
+	const column_t *column;
+	byte *desttop, *dest, *destend;
+	const byte *source, *deststop;
+
+#ifdef HWRENDER
+	// draw a hardware converted patch
+	if (rendermode != render_soft && rendermode != render_none)
+	{
+		// V_NOSCALESTART might be impled for software, but not for hardware!
+		HWR_DrawClippedPatch((GlidePatch_t *)patch, x, y, V_NOSCALESTART);
+		return;
+	}
+#endif
+
+	if ((scrn & V_NOSCALEPATCH))
+		dupx = dupy = 1;
+	else
+	{
+		dupx = vid.dupx;
+		dupy = vid.dupy;
+	}
+
+	y -= SHORT(patch->topoffset);
+	x -= SHORT(patch->leftoffset);
+
+	if (x < 0 || y < 0 || x >= vid.width || y >= vid.height)
+		return;
+
+	colfrac = FixedDiv(FRACUNIT, dupx<<FRACBITS);
+	rowfrac = FixedDiv(FRACUNIT, dupy<<FRACBITS);
+
+	if (!screens[scrn&0xff])
+		return;
+
+	desttop = screens[scrn&0xff] + (y*vid.width) + x;
+	deststop = screens[scrn&0xff] + vid.width * vid.height * vid.bpp;
+
+	// make sure it doesn't go off the right
+	if (x + SHORT(patch->width)*dupx <= vid.width)
+		destend = desttop + SHORT(patch->width) * dupx;
+	else
+		destend = desttop + vid.width - x;
+
+	for (col = 0; desttop < destend; col += colfrac, desttop++)
+	{
+		register int heightmask;
+
+		column = (const column_t *)((const byte *)patch + LONG(patch->columnofs[col>>FRACBITS]));
+
+		while (column->topdelta != 0xff)
+		{
+			source = (const byte *)column + 3;
+			dest = desttop + column->topdelta*dupy*vid.width;
+			count = column->length*dupy;
+			if ((dest-screens[scrn&0xff])/vid.width + count > (unsigned)vid.height - 1)
+				count = vid.height - 1 - (dest-screens[scrn&0xff])/vid.width;
+			if (count <= 0)
+				break;
+
+			ofs = 0;
+
+			heightmask = column->length - 1;
+
+			if (column->length & heightmask)
+			{
+				// length is not a power of two
+				heightmask++;
+				heightmask <<= FRACBITS;
+
+				if (rowfrac < 0)
+					while ((rowfrac += heightmask) < 0)
+						;
+				else
+					while (rowfrac >= heightmask)
+						rowfrac -= heightmask;
+
+				do
+				{
+					if (dest < deststop)
+						*dest = source[ofs>>FRACBITS];
+					else
+						count = 0;
+					dest += vid.width;
+					ofs += rowfrac;
+					if ((ofs + rowfrac) > heightmask)
+						goto doneclipping;
+				} while (count--);
+			}
+			else
+			{
+				// length is a power of two
+				while (count--)
+				{
+					if (dest < deststop)
+						*dest = source[ofs>>FRACBITS];
+					else
+						count = 0;
+					dest += vid.width;
+					ofs += rowfrac;
+				}
+			}
+doneclipping:
+			column = (const column_t *)((const byte *)column + column->length + 4);
+		}
+	}
+}
+
+// Draws a patch 2x as small.
+void V_DrawSmallScaledPatch(int x, int y, int scrn, patch_t *patch)
+{
+	size_t count;
+	int col, dupx, dupy, ofs, colfrac, rowfrac;
+	const column_t *column;
+	byte *desttop, *dest, *destend;
+	const byte *source, *deststop;
+	boolean skippixels = false;
+
+#ifdef HWRENDER
+	// draw a hardware converted patch
+	if (rendermode != render_soft && rendermode != render_none)
+	{
+		if (!(scrn & V_NOSCALESTART)) // Graue 07-08-2004: I have no idea why this works
+		{
+			x = (int)(vid.fdupx*x);
+			y = (int)(vid.fdupy*y);
+			scrn |= V_NOSCALESTART;
+		}
+		HWR_DrawSmallPatch((GlidePatch_t *)patch, x, y, scrn, colormaps);
+		return;
+	}
+#endif
+
+	if (vid.dupx > 1 && vid.dupy > 1)
+	{
+		dupx = vid.dupx / 2;
+		dupy = vid.dupy / 2;
+	}
+	else
+	{
+		dupx = dupy = 1;
+		skippixels = true;
+	}
+
+	y -= SHORT(patch->topoffset);
+	x -= SHORT(patch->leftoffset);
+
+	colfrac = FixedDiv(FRACUNIT, dupx<<FRACBITS);
+	rowfrac = FixedDiv(FRACUNIT, dupy<<FRACBITS);
+
+	desttop = screens[scrn&0xFF] + (y * vid.dupy * vid.width) + (x * vid.dupx);
+	deststop = screens[scrn&0xFF] + vid.width * vid.height * vid.bpp;
+
+	/// \bug yeah... the Y still seems to be off a few lines...
+	/// see rankings in 640x480 or 800x600
+	if (vid.fdupx != vid.dupx)
+	{
+		// dupx adjustments pretend that screen width is BASEVIDWIDTH * dupx,
+		// so center this imaginary screen
+		if (scrn & V_SNAPTORIGHT)
+			desttop += (vid.width - (BASEVIDWIDTH * vid.dupx));
+		else if (!(scrn & V_SNAPTOLEFT))
+			desttop += (vid.width - (BASEVIDWIDTH * vid.dupx)) / 2;
+	}
+	if (vid.fdupy != dupy)
+	{
+		// same thing here
+		if (scrn & V_SNAPTOBOTTOM)
+			desttop += (vid.height - (BASEVIDHEIGHT * vid.dupy)) * vid.width;
+		else if (!(scrn & V_SNAPTOTOP))
+			desttop += (vid.height - (BASEVIDHEIGHT * vid.dupy)) * vid.width / 2;
+	}
+
+	if (skippixels)
+		destend = desttop + SHORT(patch->width)/2 * dupx;
+	else
+		destend = desttop + SHORT(patch->width) * dupx;
+
+	if (skippixels)
+	{
+		for (col = 0; desttop < destend; col += colfrac, col += colfrac, desttop++)
+		{
+			column = (const column_t *)((const byte *)patch + LONG(patch->columnofs[col>>FRACBITS]));
+
+			while (column->topdelta != 0xff)
+			{
+				source = (const byte *)column + 3;
+				dest = desttop + column->topdelta*dupy*vid.width;
+				count = (column->length*dupy)/2;
+
+				ofs = 0;
+				while (count--)
+				{
+					if (dest < deststop)
+						*dest = source[ofs>>FRACBITS];
+					else
+						count = 0;
+					dest += vid.width;
+					ofs += rowfrac;
+					ofs += rowfrac;
+				}
+
+				column = (const column_t *)((const byte *)column + column->length + 4);
+			}
+		}
+	}
+	else
+	{
+		for (col = 0; desttop < destend; col += colfrac, desttop++)
+		{
+			column = (const column_t *)((const byte *)patch + LONG(patch->columnofs[col>>FRACBITS]));
+
+			while (column->topdelta != 0xff)
+			{
+				source = (const byte *)column + 3;
+				dest = desttop + column->topdelta*dupy*vid.width;
+				count = column->length*dupy;
+
+				ofs = 0;
+				while (count--)
+				{
+					if (dest < deststop)
+						*dest = source[ofs>>FRACBITS];
+					else
+						count = 0;
+					dest += vid.width;
+					ofs += rowfrac;
+				}
+
+				column = (const column_t *)((const byte *)column + column->length + 4);
+			}
+		}
+	}
+}
+
+// Draws a patch 2x as small, and colormapped.
+void V_DrawSmallMappedPatch(int x, int y, int scrn, patch_t *patch, const byte *colormap)
+{
+	size_t count;
+	int col, dupx, dupy, ofs, colfrac, rowfrac;
+	const column_t *column;
+	byte *desttop, *dest, *destend;
+	const byte *source, *deststop;
+	boolean skippixels = false;
+
+#ifdef HWRENDER
+	// draw a hardware converted patch
+	if (rendermode != render_soft && rendermode != render_none)
+	{
+		if (!(scrn & V_NOSCALESTART)) // Graue 07-08-2004: I have no idea why this works
+		{
+			x = (int)(vid.fdupx*x);
+			y = (int)(vid.fdupy*y);
+			scrn |= V_NOSCALESTART;
+		}
+		HWR_DrawSmallPatch((GlidePatch_t *)patch, x, y, scrn, colormap);
+		return;
+	}
+#endif
+
+	if (vid.dupx > 1 && vid.dupy > 1)
+	{
+		dupx = vid.dupx / 2;
+		dupy = vid.dupy / 2;
+	}
+	else
+	{
+		dupx = dupy = 1;
+		skippixels = true;
+	}
+
+	y -= SHORT(patch->topoffset);
+	x -= SHORT(patch->leftoffset);
+
+	colfrac = FixedDiv(FRACUNIT, dupx<<FRACBITS);
+	rowfrac = FixedDiv(FRACUNIT, dupy<<FRACBITS);
+
+	desttop = screens[scrn&0xFF] + (y * vid.dupy * vid.width) + (x * vid.dupx);
+	deststop = screens[scrn&0xFF] + vid.width * vid.height * vid.bpp;
+
+	/// \bug yeah... the Y still seems to be off a few lines...
+	/// see rankings in 640x480 or 800x600
+	if (vid.fdupx != vid.dupx)
+	{
+		// dupx adjustments pretend that screen width is BASEVIDWIDTH * dupx,
+		// so center this imaginary screen
+		if (scrn & V_SNAPTORIGHT)
+			desttop += (vid.width - (BASEVIDWIDTH * vid.dupx));
+		else if (!(scrn & V_SNAPTOLEFT))
+			desttop += (vid.width - (BASEVIDWIDTH * vid.dupx)) / 2;
+	}
+	if (vid.fdupy != dupy)
+	{
+		// same thing here
+		if (scrn & V_SNAPTOBOTTOM)
+			desttop += (vid.height - (BASEVIDHEIGHT * vid.dupy)) * vid.width;
+		else if (!(scrn & V_SNAPTOTOP))
+			desttop += (vid.height - (BASEVIDHEIGHT * vid.dupy)) * vid.width / 2;
+	}
+
+	if (skippixels)
+		destend = desttop + SHORT(patch->width)/2 * dupx;
+	else
+		destend = desttop + SHORT(patch->width) * dupx;
+
+	if (skippixels)
+	{
+		for (col = 0; desttop < destend; col += colfrac, col += colfrac, desttop++)
+		{
+			column = (const column_t *)((const byte *)patch + LONG(patch->columnofs[col>>FRACBITS]));
+
+			while (column->topdelta != 0xff)
+			{
+				source = (const byte *)column + 3;
+				dest = desttop + column->topdelta*dupy*vid.width;
+				count = (column->length*dupy)/2;
+
+				ofs = 0;
+				while (count--)
+				{
+					if (dest < deststop)
+						*dest = *(colormap + source[ofs>>FRACBITS]);
+					else
+						count = 0;
+					dest += vid.width;
+					ofs += rowfrac;
+					ofs += rowfrac;
+				}
+
+				column = (const column_t *)((const byte *)column + column->length + 4);
+			}
+		}
+	}
+	else
+	{
+		for (col = 0; desttop < destend; col += colfrac, desttop++)
+		{
+			column = (const column_t *)((const byte *)patch + LONG(patch->columnofs[col>>FRACBITS]));
+
+			while (column->topdelta != 0xff)
+			{
+				source = (const byte *)column + 3;
+				dest = desttop + column->topdelta*dupy*vid.width;
+				count = column->length*dupy;
+
+				ofs = 0;
+				while (count--)
+				{
+					if (dest < deststop)
+						*dest = *(colormap + source[ofs>>FRACBITS]);
+					else
+						count = 0;
+					dest += vid.width;
+					ofs += rowfrac;
+				}
+
+				column = (const column_t *)((const byte *)column + column->length + 4);
+			}
+		}
+	}
+}
+
+// This draws a patch over a background with translucency...SCALED.
+// SCALE THE STARTING COORDS!
+// Used for crosshair.
+//
+void V_DrawTranslucentPatch(int x, int y, int scrn, patch_t *patch)
+{
+	size_t count;
+	int col, w, dupx, dupy, ofs, colfrac, rowfrac;
+	const column_t *column;
+	byte *desttop, *dest;
+	const byte *source, *translevel, *deststop;
+
+#ifdef HWRENDER
+	// draw a hardware converted patch
+	if (rendermode != render_soft && rendermode != render_none)
+	{
+		HWR_DrawTranslucentPatch((GlidePatch_t *)patch, x, y, scrn);
+		return;
+	}
+#endif
+
+	if (scrn & V_8020TRANS)
+		translevel = ((2)<<FF_TRANSSHIFT) - 0x10000 + transtables;
+	else if (scrn & V_9010TRANS)
+		translevel = ((3)<<FF_TRANSSHIFT) - 0x10000 + transtables;
+	else
+		translevel = transtables;
+
+	dupx = vid.dupx;
+	dupy = vid.dupy;
+
+	if (scrn & V_TOPLEFT)
+	{
+		y -= SHORT(patch->topoffset);
+		x -= SHORT(patch->leftoffset);
+	}
+	else
+	{
+		y -= SHORT(patch->topoffset)*dupy;
+		x -= SHORT(patch->leftoffset)*dupx;
+	}
+
+	colfrac = FixedDiv(FRACUNIT, dupx<<FRACBITS);
+	rowfrac = FixedDiv(FRACUNIT, dupy<<FRACBITS);
+
+	desttop = screens[scrn&0xffff];
+	deststop = screens[scrn&0xffff] + vid.width * vid.height * vid.bpp;
+	if (scrn & V_NOSCALESTART)
+		desttop += (y*vid.width) + x;
+	else
+	{
+		desttop += (y*dupy*vid.width) + (x*dupx);
+
+		// Center it if necessary
+		if (!(scrn & V_NOSCALEPATCH))
+		{
+			if (vid.fdupx != dupx)
+			{
+				// dupx adjustments pretend that screen width is BASEVIDWIDTH * dupx,
+				// so center this imaginary screen
+				if (scrn & V_SNAPTORIGHT)
+					desttop += (vid.width - (BASEVIDWIDTH * dupx));
+				else if (!(scrn & V_SNAPTOLEFT))
+					desttop += (vid.width - (BASEVIDWIDTH * dupx)) / 2;
+			}
+			if (vid.fdupy != dupy)
+			{
+				// same thing here
+				if (scrn & V_SNAPTOBOTTOM)
+					desttop += (vid.height - (BASEVIDHEIGHT * dupy)) * vid.width;
+				else if (!(scrn & V_SNAPTOTOP))
+					desttop += (vid.height - (BASEVIDHEIGHT * dupy)) * vid.width / 2;
+			}
+			// if it's meant to cover the whole screen, black out the rest
+			if (x == 0 && patch->width == BASEVIDWIDTH && y == 0 && patch->height == BASEVIDHEIGHT)
+				V_DrawFill(0, 0, vid.width, vid.height, 0);
+		}
+	}
+
+	w = SHORT(patch->width)<<FRACBITS;
+
+	for (col = 0; col < w; col += colfrac, desttop++)
+	{
+		column = (const column_t *)((const byte *)patch + LONG(patch->columnofs[col>>FRACBITS]));
+
+		while (column->topdelta != 0xff)
+		{
+			source = (const byte *)column + 3;
+			dest = desttop + column->topdelta*dupy*vid.width;
+			count = column->length*dupy;
+
+			ofs = 0;
+			while (count--)
+			{
+				if (dest < deststop)
+					*dest = *(translevel + ((source[ofs>>FRACBITS]<<8)&0xff00) + (*dest&0xff));
+				else
+					count = 0;
+				dest += vid.width;
+				ofs += rowfrac;
+			}
+
+			column = (const column_t *)((const byte *)column + column->length + 4);
+		}
+	}
+}
 
 //
 // V_DrawPatch
-// Masks a column based masked pic to the screen. NO SCALING!!!
+// Masks a column based masked pic to the screen. NO SCALING!
 //
-void V_DrawPatch ( int           x,
-                   int           y,
-                   int           scrn,
-                   patch_t*      patch )
+void V_DrawPatch(int x, int y, int scrn, patch_t *patch)
 {
+	size_t count;
+	int col, w;
+	const column_t *column;
+	byte *desttop, *dest;
+	const byte *source, *deststop;
 
-    int         count;
-    int         col;
-    column_t*   column;
-    byte*       desttop;
-    byte*       dest;
-    byte*       source;
-    int         w;
-
-    // draw a 3Dfx converted patch
-    #ifdef HWRENDER
-    if ( rendermode != render_soft) {
-        HWR_DrawPatch ((GlidePatch_t*)patch, x, y);
-        return;
-    }
-    #endif
-
-    y -= SHORT(patch->topoffset);
-    x -= SHORT(patch->leftoffset);
-#ifdef RANGECHECK
-    if (x<0
-        ||x+SHORT(patch->width) >vid.width
-        || y<0
-        || y+SHORT(patch->height)>vid.height
-        || (unsigned)scrn>4)
-    {
-      fprintf( stderr, "Patch at %d,%d exceeds LFB\n", x,y );
-      // No I_Error abort - what is up with TNT.WAD?
-      fprintf( stderr, "V_DrawPatch: bad patch (ignored)\n");
-      return;
-    }
+#ifdef HWRENDER
+	// draw a hardware converted patch
+	if (rendermode != render_soft && rendermode != render_none)
+	{
+		HWR_DrawPatch((GlidePatch_t *)patch, x, y, V_NOSCALESTART|V_NOSCALEPATCH);
+		return;
+	}
 #endif
 
-    if (!scrn)
-        V_MarkRect (x, y, SHORT(patch->width), SHORT(patch->height));
-
-    col = 0;
-    desttop = screens[scrn]+y*vid.width+x;
-
-    w = SHORT(patch->width);
-
-    for ( ; col<w ; x++, col++, desttop++)
-    {
-        column = (column_t *)((byte *)patch + LONG(patch->columnofs[col]));
-
-        // step through the posts in a column
-        while (column->topdelta != 0xff )
-        {
-            source = (byte *)column + 3;
-            dest = desttop + column->topdelta*vid.width;
-            count = column->length;
-
-            while (count--)
-            {
-                *dest = *source++;
-                dest += vid.width;
-            }
-            column = (column_t *)(  (byte *)column + column->length
-                                    + 4 );
-        }
-    }
-}
-
-
-//
-// V_DrawPatchFlipped
-// Masks a column based masked pic to the screen.
-// Flips horizontally, e.g. to mirror face.
-//
-void
-V_DrawPatchFlipped
-( int           x,
-  int           y,
-  int           scrn,
-  patch_t*      patch )
-{
-
-    int         count;
-    int         col;
-    column_t*   column;
-    byte*       desttop;
-    byte*       dest;
-    byte*       source;
-    int         w;
-
-    // draw a 3Dfx converted patch
-    #ifdef HWRENDER
-    if ( rendermode != render_soft) {
-        HWR_DrawPatch ((GlidePatch_t*)patch, x, y);
-        return;
-    }
-    #endif
-
-    y -= SHORT(patch->topoffset);
-    x -= SHORT(patch->leftoffset);
+	y -= SHORT(patch->topoffset);
+	x -= SHORT(patch->leftoffset);
 #ifdef RANGECHECK
-    if (x<0
-        ||x+SHORT(patch->width) >vid.width
-        || y<0
-        || y+SHORT(patch->height)>vid.height
-        || (unsigned)scrn>4)
-    {
-      fprintf( stderr, "Patch origin %d,%d exceeds LFB\n", x,y );
-      I_Error ("Bad V_DrawPatch in V_DrawPatchFlipped");
-    }
+	if (x < 0 || x + SHORT(patch->width) > vid.width || y < 0
+		|| y + SHORT(patch->height) > vid.height || (unsigned)scrn > 4)
+	{
+		fprintf(stderr, "Patch at %d, %d exceeds LFB\n", x, y);
+		// No I_Error abort - what is up with TNT.WAD?
+		fprintf(stderr, "V_DrawPatch: bad patch (ignored)\n");
+		return;
+	}
 #endif
 
-    if (!scrn)
-        V_MarkRect (x, y, SHORT(patch->width), SHORT(patch->height));
+	desttop = screens[scrn] + y*vid.width + x;
+	deststop = screens[scrn&0xffff] + vid.width * vid.height * vid.bpp;
+	w = SHORT(patch->width);
 
-    col = 0;
-    desttop = screens[scrn]+y*vid.width+x;
+	for (col = 0; col < w; x++, col++, desttop++)
+	{
+		column = (const column_t *)((const byte *)patch + LONG(patch->columnofs[col]));
 
-    w = SHORT(patch->width);
+		// step through the posts in a column
+		while (column->topdelta != 0xff)
+		{
+			source = (const byte *)column + 3;
+			dest = desttop + column->topdelta*vid.width;
+			count = column->length;
 
-    for ( ; col<w ; x++, col++, desttop++)
-    {
-        column = (column_t *)((byte *)patch + LONG(patch->columnofs[w-1-col]));
-
-        // step through the posts in a column
-        while (column->topdelta != 0xff )
-        {
-            source = (byte *)column + 3;
-            dest = desttop + column->topdelta*vid.width;
-            count = column->length;
-
-            while (count--)
-            {
-                *dest = *source++;
-                dest += vid.width;
-            }
-            column = (column_t *)(  (byte *)column + column->length
-                                    + 4 );
-        }
-    }
+			while (count--)
+			{
+				if (dest < deststop)
+					*dest = *source++;
+				else
+					count = 0;
+				dest += vid.width;
+			}
+			column = (const column_t *)((const byte *)column + column->length + 4);
+		}
+	}
 }
-
-
-
-//
-// V_DrawPatchDirect
-// Draws directly to the screen on the pc.
-//
-void
-V_DrawPatchDirect
-( int           x,
-  int           y,
-  int           scrn,
-  patch_t*      patch )
-{
-    V_DrawPatch (x,y,scrn, patch);
-
-    /*
-    int         count;
-    int         col;
-    column_t*   column;
-    byte*       desttop;
-    byte*       dest;
-    byte*       source;
-    int         w;
-
-    y -= SHORT(patch->topoffset);
-    x -= SHORT(patch->leftoffset);
-
-#ifdef RANGECHECK
-    if (x<0
-        ||x+SHORT(patch->width) >vid.width
-        || y<0
-        || y+SHORT(patch->height)>vid.height
-        || (unsigned)scrn>4)
-    {
-        I_Error ("Bad V_DrawPatchDirect");
-    }
-#endif
-
-    //  V_MarkRect (x, y, SHORT(patch->width), SHORT(patch->height));
-    desttop = destscreen + y*vid.width/4 + (x>>2);
-
-    w = SHORT(patch->width);
-    for ( col = 0 ; col<w ; col++)
-    {
-        outp (SC_INDEX+1,1<<(x&3));
-        column = (column_t *)((byte *)patch + LONG(patch->columnofs[col]));
-
-        // step through the posts in a column
-
-        while (column->topdelta != 0xff )
-        {
-            source = (byte *)column + 3;
-            dest = desttop + column->topdelta*vid.width/4;
-            count = column->length;
-
-            while (count--)
-            {
-                *dest = *source++;
-                dest += vid.width/4;
-            }
-            column = (column_t *)(  (byte *)column + column->length
-                                    + 4 );
-        }
-        if ( ((++x)&3) == 0 )
-            desttop++;  // go to next byte, not next plane
-    }*/
-}
-
-
 
 //
 // V_DrawBlock
 // Draw a linear block of pixels into the view buffer.
 //
-void V_DrawBlock ( int           x,
-                   int           y,
-                   int           scrn,
-                   int           width,
-                   int           height,
-                   byte*         src )
+void V_DrawBlock(int x, int y, int scrn, int width, int height, const byte *src)
 {
-    byte*       dest;
+	byte *dest;
+	const byte *deststop;
 
 #ifdef RANGECHECK
-    if (x<0
-        ||x+width >vid.width
-        || y<0
-        || y+height>vid.height
-        || (unsigned)scrn>4 )
-    {
-        I_Error ("Bad V_DrawBlock");
-    }
+	if (x < 0 || x + width > vid.width || y < 0 || y + height > vid.height || (unsigned)scrn > 4)
+		I_Error("Bad V_DrawBlock");
 #endif
 
-    //V_MarkRect (x, y, width, height);
+	dest = screens[scrn] + y*vid.width + x;
+	deststop = screens[scrn] + vid.width * vid.height * vid.bpp;
 
-    dest = screens[scrn] + y*vid.width + x;
+	while (height--)
+	{
+		memcpy(dest, src, width);
 
-    while (height--)
-    {
-        memcpy (dest, src, width);
-        src += width;
-        dest += vid.width;
-    }
+		src += width;
+		dest += vid.width;
+		if (dest > deststop)
+			return;
+	}
 }
 
-
-
 //
-// V_GetBlock
-// Gets a linear block of pixels from the view buffer.
+// Fills a box of pixels with a single color, NOTE: scaled to screen size
 //
-void
-V_GetBlock
-( int           x,
-  int           y,
-  int           scrn,
-  int           width,
-  int           height,
-  byte*         dest )
+void V_DrawFill(int x, int y, int w, int h, int c)
 {
-    byte*       src;
-    if (rendermode!=render_soft)
-        I_Error ("V_GetBlock: called in non-software mode");
-
-
-#ifdef RANGECHECK
-    if (x<0
-        ||x+width >vid.width
-        || y<0
-        || y+height>vid.height
-        || (unsigned)scrn>4 )
-    {
-        I_Error ("Bad V_GetBlock");
-    }
-#endif
-
-    src = screens[scrn] + y*vid.width+x;
-
-    while (height--)
-    {
-        memcpy (dest, src, width);
-        src += vid.width;
-        dest += width;
-    }
-}
-
-
-//  Draw a linear pic, scaled, TOTALLY CRAP CODE!!! OPTIMISE AND ASM!!
-//  CURRENTLY USED FOR StatusBarOverlay, scale pic but not starting coords
-//
-void V_DrawScalePic ( int           x1,
-                      int           y1,
-                      int           scrn,
-                      int           lumpnum )
-{
-    int         dupx,dupy;
-    int         i;
-    byte        *src, *dest;
-    int         y;
-    int         width,height;
-    pic_t*      pic;
+	byte *dest;
+	const byte *deststop;
+	int u, v, dupx, dupy;
 
 #ifdef HWRENDER
-    if (rendermode!=render_soft)
-    {
-        HWR_DrawPic(x1, y1, lumpnum);
-        return;
-    }
+	if (rendermode != render_soft && rendermode != render_none)
+	{
+		HWR_DrawFill(x, y, w, h, c);
+		return;
+	}
 #endif
 
-    pic = W_CacheLumpNum(lumpnum,PU_CACHE);
-    width = SHORT(pic->width);
-    height= SHORT(pic->height);
+	dupx = vid.dupx;
+	dupy = vid.dupy;
 
-    if (pic->mode != 0)
-    {
-        CONS_Printf("pic mode %d not supported in Software\n");
-        return;
-    }
+	if (!screens[0])
+		return;
 
-    dest = screens[scrn] + (y1*vid.width) + (x1);
+	dest = screens[0] + y*dupy*vid.width + x*dupx;
+	deststop = screens[0] + vid.width * vid.height * vid.bpp;
 
-    for (y=0 ; height-- ; y++)
-    {
-        for(dupy=vid.dupy;dupy;dupy--)        
-        {
-            src = pic->data + y*width;
-            for (i=0 ; i<width ; i++)
-            {
-                for(dupx=vid.dupx;dupx;dupx--)
-                    *dest++ = *src;
-                src++;
-            }
-            dest += vid.width-vid.dupx*width;
-        }
-    }
+	w *= dupx;
+	h *= dupy;
 
+	if (x && y && x + w < vid.width && y + h < vid.height)
+	{
+		// Center it if necessary
+		if (vid.fdupx != dupx)
+		{
+			// dupx adjustments pretend that screen width is BASEVIDWIDTH * dupx,
+			// so center this imaginary screen
+			if (c & V_SNAPTORIGHT)
+				dest += (vid.width - (BASEVIDWIDTH * dupx));
+			else if (!(c & V_SNAPTOLEFT))
+				dest += (vid.width - (BASEVIDWIDTH * dupx)) / 2;
+		}
+		if (vid.fdupy != dupy)
+		{
+			// same thing here
+			if (c & V_SNAPTOBOTTOM)
+				dest += (vid.height - (BASEVIDHEIGHT * dupy)) * vid.width;
+			else if (!(c & V_SNAPTOTOP))
+				dest += (vid.height - (BASEVIDHEIGHT * dupy)) * vid.width / 2;
+		}
+	}
+
+	c &= 255;
+
+	for (v = 0; v < h; v++, dest += vid.width)
+		for (u = 0; u < w; u++)
+		{
+			if (dest > deststop)
+				return;
+			dest[u] = (byte)c;
+		}
 }
 
-
-
 //
-//  Fills a box of pixels with a single color, NOTE: scaled to screen size
+// Fills a box of pixels using a flat texture as a pattern, scaled to screen size.
 //
-//added:05-02-98:
-void V_DrawFill (int x, int y, int w, int h, int c)
+void V_DrawFlatFill(int x, int y, int w, int h, int flatnum)
 {
-    byte      *dest;
-    int       u, v;
-    int       dupx,dupy;
+	byte *dest;
+	int u, v, dupx, dupy;
+	fixed_t dx, dy, xfrac, yfrac;
+	const byte *src, *deststop;
+	byte *flat;
+	int size, lflatsize, flatshift;
 
 #ifdef HWRENDER
-    if (rendermode!=render_soft)
-    {
-        HWR_DrawFill(x, y, w, h, c);
-        return;
-    }
+	if (rendermode != render_soft && rendermode != render_none)
+	{
+		HWR_DrawFlatFill(x, y, w, h, flatnum);
+		return;
+	}
 #endif
 
-    dupx = vid.dupx;
-    dupy = vid.dupy;
+	size = W_LumpLength(flatnum);
 
-    dest = screens[0] + y*dupy*vid.width + x*dupx + scaledofs;
+	switch (size)
+	{
+		case 4194304: // 2048x2048 lump
+			lflatsize = 2048;
+			flatshift = 10;
+			break;
+		case 1048576: // 1024x1024 lump
+			lflatsize = 1024;
+			flatshift = 9;
+			break;
+		case 262144:// 512x512 lump
+			lflatsize = 512;
+			flatshift = 8;
+			break;
+		case 65536: // 256x256 lump
+			lflatsize = 256;
+			flatshift = 7;
+			break;
+		case 16384: // 128x128 lump
+			lflatsize = 128;
+			flatshift = 7;
+			break;
+		case 1024: // 32x32 lump
+			lflatsize = 32;
+			flatshift = 5;
+			break;
+		default: // 64x64 lump
+			lflatsize = 64;
+			flatshift = 6;
+			break;
+	}
 
-    w *= dupx;
-    h *= dupy;
+	flat = W_CacheLumpNum(flatnum, PU_CACHE);
 
-    for (v=0 ; v<h ; v++, dest += vid.width)
-        for (u=0 ; u<w ; u++)
-            dest[u] = c;
+	dupx = vid.dupx;
+	dupy = vid.dupy;
+
+	dest = screens[0] + y*dupy*vid.width + x*dupx;
+	deststop = screens[0] + vid.width * vid.height * vid.bpp;
+
+	// from V_DrawScaledPatch
+	if (vid.fdupx != vid.dupx)
+	{
+		// dupx adjustments pretend that screen width is BASEVIDWIDTH * dupx,
+		// so center this imaginary screen
+		dest += (vid.width - (BASEVIDWIDTH * dupx)) / 2;
+	}
+	if (vid.fdupy != vid.dupy)
+	{
+		// same thing here
+		dest += (vid.height - (BASEVIDHEIGHT * dupy)) * vid.width / 2;
+	}
+
+	w *= dupx;
+	h *= dupy;
+
+	dx = FixedDiv(FRACUNIT, dupx<<FRACBITS);
+	dy = FixedDiv(FRACUNIT, dupy<<FRACBITS);
+
+	yfrac = 0;
+	for (v = 0; v < h; v++, dest += vid.width)
+	{
+		xfrac = 0;
+		src = flat + (((yfrac >> (FRACBITS - 1)) & (lflatsize - 1)) << flatshift);
+		for (u = 0; u < w; u++)
+		{
+			if (&dest[u] > deststop)
+				return;
+			dest[u] = src[(xfrac>>FRACBITS)&(lflatsize-1)];
+			xfrac += dx;
+		}
+		yfrac += dy;
+	}
 }
 
-
-
 //
-//  Fills a box of pixels using a flat texture as a pattern,
-//  scaled to screen size.
+// V_DrawPatchFill
 //
-//added:06-02-98:
-void V_DrawFlatFill (int x, int y, int w, int h, int flatnum)
+void V_DrawPatchFill(patch_t *pat)
 {
-    byte      *dest;
-    int       u, v;
-    int       dupx,dupy;
-    fixed_t   dx,dy,xfrac,yfrac;
-    byte      *src;
-    byte      *flat;
+	int x, y, pw = pat->width * vid.dupx, ph = pat->height * vid.dupy;
+
+	for (x = 0; x < vid.width; x += pw)
+	{
+		for (y = 0; y < vid.height; y += ph)
+		{
+			if (x + pw >= vid.width || y + ph >= vid.height)
+				V_DrawClippedScaledPatch(x, y, 0, pat); // V_NOSCALESTART is implied
+			else
+				V_DrawScaledPatch(x, y, V_NOSCALESTART, pat);
+		}
+	}
+}
+
+//
+// Fade all the screen buffer, so that the menu is more readable,
+// especially now that we use the small hufont in the menus...
+//
+void V_DrawFadeScreen(void)
+{
+	int x, y, w;
+	int *buf;
+	unsigned int quad;
+	byte p1, p2, p3, p4;
+	const byte *fadetable = (byte *)colormaps + 16*256, *deststop = screens[0] + vid.width * vid.height * vid.bpp;
 
 #ifdef HWRENDER
-    if (rendermode != render_soft)
-    {
-        HWR_DrawFlatFill(x,y,w,h,flatnum);
-        return;
-    }
+	if (rendermode != render_soft && rendermode != render_none)
+	{
+		HWR_FadeScreenMenuBack(0x01010160, 0); // hack, 0 means full height
+		return;
+	}
 #endif
 
-    flat = W_CacheLumpNum (flatnum, PU_CACHE);
-
-    dupx = vid.dupx;
-    dupy = vid.dupy;
-
-    dest = screens[0] + y*dupy*vid.width + x*dupx + scaledofs;
-
-    w *= dupx;
-    h *= dupy;
-
-    dx = FixedDiv(FRACUNIT,dupx<<FRACBITS);
-    dy = FixedDiv(FRACUNIT,dupy<<FRACBITS);
-
-    yfrac = 0;
-    for (v=0; v<h ; v++, dest += vid.width)
-    {
-        xfrac = 0;
-        src = flat + (((yfrac>>FRACBITS)&63)<<6);
-        for (u=0 ; u<w ; u++)
-        {
-            dest[u] = src[(xfrac>>FRACBITS)&63];
-            xfrac += dx;
-        }
-        yfrac += dy;
-    }
+	w = vid.width>>2;
+	for (y = 0; y < vid.height; y++)
+	{
+		buf = (int *)(screens[0] + vid.width*y);
+		for (x = 0; x < w; x++)
+		{
+			if (buf+ x > (const int *)deststop)
+				return;
+			memcpy(&quad,buf+x,sizeof (quad)); //quad = buf[x];
+			p1 = fadetable[quad&255];
+			p2 = fadetable[(quad>>8)&255];
+			p3 = fadetable[(quad>>16)&255];
+			p4 = fadetable[quad>>24];
+			quad = (p4<<24) | (p3<<16) | (p2<<8) | p1;//buf[x] = (p4<<24) | (p3<<16) | (p2<<8) | p1;
+			memcpy(buf+x,&quad,sizeof (quad));
+		}
+	}
 }
 
-
-
+// Simple translucency with one color. Coords are resolution dependent.
 //
-//  Fade all the screen buffer, so that the menu is more readable,
-//  especially now that we use the small hufont in the menus...
-//
-void V_DrawFadeScreen (void)
+void V_DrawFadeConsBack(int px1, int py1, int px2, int py2, int color)
 {
-    int         x,y,w;
-    int         *buf;
-    unsigned    quad;
-    byte        p1, p2, p3, p4;
-    byte*       fadetable = (byte *) colormaps + 16*256;
-    //short*    wput;
+	int x, y, w;
+	int *buf;
+	unsigned int quad;
+	byte p1, p2, p3, p4;
+	short *wput;
+	const byte *deststop = screens[0] + vid.width * vid.height * vid.bpp;
+	byte *colormap;
 
 #ifdef HWRENDER // not win32 only 19990829 by Kin
-    if (rendermode!=render_soft) {
-        HWR_FadeScreenMenuBack (0x01010160, 0);  //faB: hack, 0 means full height :o
-        return;
-    }
+	if (rendermode != render_soft && rendermode != render_none)
+	{
+		unsigned int hwcolor;
+
+		switch (color)
+		{
+			case 0: // white
+				hwcolor = 0xffffff00;
+				break;
+			case 1: // orange
+				hwcolor = 0xff800000;
+				break;
+			case 2: // blue
+				hwcolor = 0x0000ff00;
+				break;
+			case 3: // green
+				hwcolor = 0x00800000;
+				break;
+			case 4: // gray
+				hwcolor = 0x80808000;
+				break;
+			case 5: // red
+				hwcolor = 0xff000000;
+				break;
+			default:
+				hwcolor = 0x00800000;
+				break;
+		}
+
+		HWR_FadeScreenMenuBack(hwcolor, py2);
+		return;
+	}
 #endif
 
-    w = vid.width>>2;
-    for (y=0 ; y<vid.height ; y++)
-    {
-        buf = (int *)(screens[0] + vid.width*y);
-        for (x=0 ; x<w ; x++)
-        {
-            quad = buf[x];
-            p1 = fadetable[quad&255];
-            p2 = fadetable[(quad>>8)&255];
-            p3 = fadetable[(quad>>16)&255];
-            p4 = fadetable[quad>>24];
-            buf[x] = (p4<<24) | (p3<<16) | (p2<<8) | p1;
-        }
-    }
+	switch (color)
+	{
+		case 0:
+			colormap = cwhitemap;
+			break;
+		case 1:
+			colormap = corangemap;
+			break;
+		case 2:
+			colormap = cbluemap;
+			break;
+		case 3:
+			colormap = cgreenmap;
+			break;
+		case 4:
+			colormap = cgraymap;
+			break;
+		case 5:
+			colormap = credmap;
+			break;
+		default:
+			colormap = cgreenmap;
+			break;
+	}
 
-#ifdef _16bitcrapneverfinished
- else
- {
-    w = vid.width;
-    for (y=0 ; y<vid.height ; y++)
-    {
-        wput = (short*) (vid.buffer + vid.width*y);
-        for (x=0 ; x<w ; x++)
-        {
-            *wput++ = (*wput>>1) & 0x3def;
-        }
-    }
- }
-#endif
+	if (scr_bpp == 1)
+	{
+		px1 >>=2;
+		px2 >>=2;
+		for (y = py1; y < py2; y++)
+		{
+			buf = (int *)(screens[0] + vid.width*y);
+			for (x = px1; x < px2; x++)
+			{
+				if (&buf[x] > (const int *)deststop)
+					return;
+				memcpy(&quad,buf+x,sizeof (quad)); //quad = buf[x];
+				p1 = colormap[quad&255];
+				p2 = colormap[(quad>>8)&255];
+				p3 = colormap[(quad>>16)&255];
+				p4 = colormap[quad>>24];
+				quad = (p4<<24) | (p3<<16) | (p2<<8) | p1;//buf[x] = (p4<<24) | (p3<<16) | (p2<<8) | p1;
+				memcpy(buf+x, &quad, sizeof (quad));
+			}
+		}
+	}
+	else
+	{
+		w = px2 - px1;
+		for (y = py1; y < py2; y++)
+		{
+			wput = (short *)(screens[0] + vid.width*y) + px1;
+			for (x = 0; x < w; x++)
+			{
+				if (wput > (const short *)deststop)
+					return;
+				*wput = (short)(((*wput&0x7bde) + (15<<5)) >>1);
+				wput++;
+			}
+		}
+	}
 }
-
-
-// Simple translucence with one color, coords are resolution dependent
-//
-//added:20-03-98: console test
-void V_DrawFadeConsBack (int x1, int y1, int x2, int y2)
-{
-    int         x,y,w;
-    int         *buf;
-    unsigned    quad;
-    byte        p1, p2, p3, p4;
-    short*      wput;
-
- if (scr_bpp==1)
- {
-    x1 >>=2;
-    x2 >>=2;
-    for (y=y1 ; y<y2 ; y++)
-    {
-        buf = (int *)(screens[0] + vid.width*y);
-        for (x=x1 ; x<x2 ; x++)
-        {
-            quad = buf[x];
-            p1 = greenmap[quad&255];
-            p2 = greenmap[(quad>>8)&255];
-            p3 = greenmap[(quad>>16)&255];
-            p4 = greenmap[quad>>24];
-            buf[x] = (p4<<24) | (p3<<16) | (p2<<8) | p1;
-        }
-    }
- }
- else
- {
-    w = x2-x1;
-    for (y=y1 ; y<y2 ; y++)
-    {
-        wput = (short*)(vid.buffer + vid.width*y) + x1;
-        for (x=0 ; x<w ; x++)
-        {
-            *wput++ = ((*wput&0x7bde) + (15<<5)) >>1;
-        }
-    }
- }
-}
-
 
 // Writes a single character (draw WHITE if bit 7 set)
 //
-//added:20-03-98:
-void V_DrawCharacter (int x, int y, int c)
+void V_DrawCharacter(int x, int y, int c)
 {
-    int         w;
-    boolean     white;
+	int w, flags;
+	const byte *colormap = NULL;
 
-    white = c & 0x80;
-    c &= 0x7f;
+	switch (c & 0xff00)
+	{
+	case 0x100: // 0x81, purple
+		colormap = purplemap;
+		break;
+	case 0x200: // 0x82, yellow
+		colormap = yellowmap;
+		break;
+	case 0x300: // 0x83, lgreen
+		colormap = lgreenmap;
+		break;
+	case 0x400: // 0x84, blue
+		colormap = bluemap;
+		break;
+	case 0x500: // 0x85, red
+		colormap = redmap;
+		break;
+	}
 
-    c = toupper(c) - HU_FONTSTART;
-    if (c < 0 || c>= HU_FONTSIZE)
-        return;
+	flags = c & 0xffff0000;
+	c &= 0x7f;
 
-    w = SHORT (hu_font[c]->width);
-    if (x+w > vid.width /*BASEVIDWIDTH*/)
-        return;
+	c = toupper(c) - HU_FONTSTART;
+	if (c < 0 || (c >= HU_REALFONTSIZE && c != '~' - HU_FONTSTART && c != '`' - HU_FONTSTART))
+		return;
 
-//    if (scalemode)
-//        V_DrawScaledPatch(x, y, 0, hu_font[c]);
-//    else
-    if (white)
-        // draw with colormap, WITHOUT scale
-        V_DrawTranslationPatch(x, y, 0, hu_font[c], whitemap);
-    else
-        V_DrawPatch(x, y, 0, hu_font[c]);
+	w = hu_font[c]->width;
+	if (x + w > vid.width)
+		return;
+
+	if (colormap != NULL)
+		V_DrawMappedPatch(x, y, flags, hu_font[c], colormap);
+	else
+		V_DrawScaledPatch(x, y, flags, hu_font[c]);
 }
 
-
-
 //
-//  Write a string using the hu_font
-//  NOTE: the text is centered for screens larger than the base width
+// Write a string using the hu_font
+// NOTE: the text is centered for screens larger than the base width
 //
-//added:05-02-98:
-void V_DrawString (int x, int y, char* string)
+void V_DrawString(int x, int y, int option, const char *string)
 {
-    int         w;
-    char*       ch;
-    int         c;
-    int         cx;
-    int         cy;
+	int r, w, c, cx = x, cy = y, dupx, dupy, scrwidth = BASEVIDWIDTH;
+	const char *ch = string, *q;
 
-    ch = string;
-    cx = x;
-    cy = y;
+	if (option & V_NOSCALESTART)
+	{
+		dupx = vid.dupx;
+		dupy = vid.dupy;
+		scrwidth = vid.width;
+	}
+	else
+		dupx = dupy = 1;
 
-    while(1)
-    {
-        c = *ch++;
-        if (!c)
-            break;
-        if (c == '\n')
-        {
-            cx = x;
-            cy += 12;
-            continue;
-        }
+	for (;;)
+	{
+		c = *ch++;
+		if (!c)
+			break;
+		if (c == '\n')
+		{
+			cx = x;
 
-        c = toupper(c) - HU_FONTSTART;
-        if (c < 0 || c>= HU_FONTSIZE)
-        {
-            cx += 4;
-            continue;
-        }
+			if (option & V_RETURN8)
+				cy += 8*dupy;
+			else
+				cy += 12*dupy;
 
-        w = SHORT (hu_font[c]->width);
-        if (cx+w > BASEVIDWIDTH)
-            break;
-        V_DrawScaledPatch(cx, cy, 0, hu_font[c]);
-        cx+=w;
-    }
+			continue;
+		}
+
+		c = toupper(c) - HU_FONTSTART;
+		if (c < 0 || (c >= HU_REALFONTSIZE && c != '~' - HU_FONTSTART && c != '`' - HU_FONTSTART))
+		{
+			cx += 4*dupx;
+			continue;
+		}
+
+		w = hu_font[c]->width * dupx;
+		if (cx + w > scrwidth)
+			break;
+
+		if (option & V_WORDWRAP)
+		{
+			q = ch-1;
+			r = 0;
+
+			while (q[r] != 0 && q[r] != 0x20)
+			{
+				r++;
+				if ((q[r] == 0x20 || q[r] == 0x00) && (cx + w*r > scrwidth)) // Encountered a space
+				{
+					if (option & V_RETURN8)
+						cy += 8*dupy;
+					else
+						cy += 12*dupy;
+
+					cx = x;
+					break;
+				}
+			}
+		}
+
+		if (option & V_YELLOWMAP)
+			V_DrawMappedPatch(cx, cy, option, hu_font[c], yellowmap);
+		else if ((option & V_TRANSLUCENT)
+			|| (option & V_8020TRANS)
+			|| (option & V_9010TRANS))
+			V_DrawTranslucentPatch(cx, cy, option & ~V_TRANSLUCENT, hu_font[c]);
+		else
+			V_DrawScaledPatch(cx, cy, option, hu_font[c]);
+		cx += w;
+	}
 }
 
-
-//
-//added:03-02-98: V_DrawString, using a colormap to display the text in
-//                brighter colors.
-void V_DrawStringWhite (int x, int y, char* string)
+void V_DrawCenteredString(int x, int y, int option, const char *string)
 {
-    int         w;
-    char*       ch;
-    int         c;
-    int         cx;
-    int         cy;
-
-    ch = string;
-    cx = x;
-    cy = y;
-    while(1)
-    {
-        c = *ch++;
-        if (!c)
-            break;
-        if (c == '\n')
-        {
-            cx = x;
-            cy += 12;
-            continue;
-        }
-
-        c = toupper(c) - HU_FONTSTART;
-        if (c < 0 || c>= HU_FONTSIZE)
-        {
-            cx += 4;
-            continue;
-        }
-
-        w = SHORT (hu_font[c]->width);
-        if (cx+w > vid.width)
-            break;
-        V_DrawMappedPatch(cx, cy, 0, hu_font[c], whitemap);
-        cx+=w;
-    }
+	x -= V_StringWidth(string)/2;
+	V_DrawString(x, y, option, string);
 }
 
+void V_DrawRightAlignedString(int x, int y, int option, const char *string)
+{
+	x -= V_StringWidth(string);
+	V_DrawString(x, y, option, string);
+}
+
+// Write a string using the credit font
+// NOTE: the text is centered for screens larger than the base width
+//
+void V_DrawCreditString(int x, int y, int option, const char *string)
+{
+	int w, c, cx = x, cy = y, dupx, dupy, scrwidth = BASEVIDWIDTH;
+	const char *ch = string;
+
+	if (option & V_NOSCALESTART)
+	{
+		dupx = vid.dupx;
+		dupy = vid.dupy;
+		scrwidth = vid.width;
+	}
+	else
+		dupx = dupy = 1;
+
+	for (;;)
+	{
+		c = *ch++;
+		if (!c)
+			break;
+		if (c == '\n')
+		{
+			cx = x;
+			cy += 12*dupy;
+			continue;
+		}
+
+		c = toupper(c) - CRED_FONTSTART;
+		if (c < 0 || c >= CRED_FONTSIZE)
+		{
+			cx += 16*dupx;
+			continue;
+		}
+
+		w = cred_font[c]->width * dupx;
+		if (cx + w > scrwidth)
+			break;
+
+		V_DrawScaledPatch(cx, cy, option, cred_font[c]);
+		cx += w;
+	}
+}
+
+// Find string width from cred_font chars
+//
+int V_CreditStringWidth(const char *string)
+{
+	int c, w = 0;
+	size_t i;
+
+	for (i = 0; i < strlen(string); i++)
+	{
+		c = toupper(string[i]) - CRED_FONTSTART;
+		if (c < 0 || c >= CRED_FONTSIZE)
+			w += 8;
+		else
+			w += cred_font[c]->width;
+	}
+
+	return w;
+}
+
+// Write a string using the level title font
+// NOTE: the text is centered for screens larger than the base width
+//
+void V_DrawLevelTitle(int x, int y, int option, const char *string)
+{
+	int w, c, cx = x, cy = y, dupx, dupy, scrwidth = BASEVIDWIDTH;
+	const char *ch = string;
+
+	if (option & V_NOSCALESTART)
+	{
+		dupx = vid.dupx;
+		dupy = vid.dupy;
+		scrwidth = vid.width;
+	}
+	else
+		dupx = dupy = 1;
+
+	for (;;)
+	{
+		c = *ch++;
+		if (!c)
+			break;
+		if (c == '\n')
+		{
+			cx = x;
+			cy += 12*dupy;
+			continue;
+		}
+
+		c = toupper(c);
+		if ((c != LT_FONTSTART && (c < '0' || c > '9')) && (c < LT_REALFONTSTART || c > LT_FONTEND))
+		{ /// \note font start hack
+			cx += 16*dupx;
+			continue;
+		}
+
+		c -= LT_FONTSTART;
+
+		w = lt_font[c]->width * dupx;
+		if (cx + w > scrwidth)
+			break;
+
+		V_DrawScaledPatch(cx, cy, option, lt_font[c]);
+		cx += w;
+	}
+}
+
+// Find string width from lt_font chars
+//
+int V_LevelNameWidth(const char *string)
+{
+	int c, w = 0;
+	size_t i;
+
+	for (i = 0; i < strlen(string); i++)
+	{
+		c = toupper(string[i]) - LT_FONTSTART;
+		if (c < 0 || (c > 0 && c < LT_REALFONTSTART - LT_FONTSTART) || c >= LT_FONTSIZE)
+			w += 16;
+		else
+			w += lt_font[c]->width;
+	}
+
+	return w;
+}
+
+// Find max height of the string
+//
+int V_LevelNameHeight(const char *string)
+{
+	int c, w = 0;
+	size_t i;
+
+	for (i = 0; i < strlen(string); i++)
+	{
+		c = toupper(string[i]) - LT_FONTSTART;
+		if (c < 0 || (c >= HU_REALFONTSIZE && c != '~' - HU_FONTSTART && c != '`' - HU_FONTSTART)
+		 || hu_font[c] == NULL)
+			continue;	
+
+		if (lt_font[c]->height > w)
+			w = lt_font[c]->height;
+	}
+
+	return w;
+}
 
 //
 // Find string width from hu_font chars
 //
-int V_StringWidth (char* string)
+int V_StringWidth(const char *string)
 {
-    int             i;
-    int             w = 0;
-    int             c;
+	int c, w = 0;
+	size_t i;
 
-    for (i = 0;i < (int)strlen(string);i++)
-    {
-        c = toupper(string[i]) - HU_FONTSTART;
-        if (c < 0 || c >= HU_FONTSIZE)
-            w += 4;
-        else
-            w += SHORT (hu_font[c]->width);
-    }
+	for (i = 0; i < strlen(string); i++)
+	{
+		c = toupper(string[i]) - HU_FONTSTART;
+		if (c < 0 || (c >= HU_REALFONTSIZE && c != '~' - HU_FONTSTART && c != '`' - HU_FONTSTART)
+			|| hu_font[c] == NULL)
+		{
+			w += 4;
+		}
+		else
+			w += hu_font[c]->width;
+	}
 
-    return w;
+	return w;
 }
 
 // V_Init
-// olf software stuff, buffers are allocated at video mode setup
+// old software stuff, buffers are allocated at video mode setup
 // here we set the screens[x] pointers accordingly
-// WARNING :
-// - called at runtime (don't init cvar here)
-void V_Init (void)
+// WARNING: called at runtime (don't init cvar here)
+void V_Init(void)
 {
-    int         i;
-    byte*       base;
-    int         screensize;
-#ifdef HWRENDER // not win32 only 19990829 by Kin
-    // hardware modes do not use screens[] pointers
-    if (rendermode != render_soft)
-    {
-        // be sure to cause a NULL read/write error so we detect it, in case of..
-        for (i=0 ; i<NUMSCREENS ; i++)
-            screens[i] = NULL;
-        return;
-    }
-#endif
-    
-    //added:26-01-98:start address of NUMSCREENS * width*height vidbuffers
-    base = vid.buffer;
+	int i;
+	byte *base = vid.buffer;
+	const int screensize = vid.width * vid.height * vid.bpp;
 
-    screensize = vid.width * vid.height * vid.bpp;
+	LoadPalette("PLAYPAL");
+	// hardware modes do not use screens[] pointers
+	for (i = 0; i < NUMSCREENS; i++)
+		screens[i] = NULL;
+	if (rendermode != render_soft)
+	{
+		return; // be sure to cause a NULL read/write error so we detect it, in case of..
+	}
 
-    for (i=0 ; i<NUMSCREENS ; i++)
-        screens[i] = base + i*screensize;
+	// start address of NUMSCREENS * width*height vidbuffers
+	if (base)
+	{
+		for (i = 0; i < NUMSCREENS; i++)
+			screens[i] = base + i*screensize;
+	
+		// statusbar buffer
+		screens[4] = base + NUMSCREENS*screensize;
+	}
 
-    //added:26-01-98: statusbar buffer
-    screens[4] = base + NUMSCREENS*screensize;
-
- //!debug
 #ifdef DEBUG
- CONS_Printf("V_Init done:\n");
- for(i=0;i<NUMSCREENS+1;i++)
-     CONS_Printf(" screens[%d] = %x\n",i,screens[i]);
+	CONS_Printf("V_Init done:\n");
+	for (i = 0; i < NUMSCREENS+1; i++)
+		CONS_Printf(" screens[%d] = %x\n", i, screens[i]);
 #endif
-
 }
-
-
-//
-//
-//
-typedef struct {
-    int    px;
-    int    py;
-} modelvertex_t;
-
-void R_DrawSpanNoWrap (void);   //tmap.S
-
-//
-//  Tilts the view like DukeNukem...
-//
-//added:12-02-98:
-
-#ifdef HWRENDER
-void V_DrawTiltView (byte *viewbuffer)  // don't touch direct video I'll find something..
-{}
-#else
-
-static modelvertex_t vertex[4];
-
-void V_DrawTiltView (byte *viewbuffer)
-{
-    fixed_t    leftxfrac;
-    fixed_t    leftyfrac;
-    fixed_t    xstep;
-    fixed_t    ystep;
-
-    int        y;
-
-    vertex[0].px = 0;   // tl
-    vertex[0].py = 53;
-    vertex[1].px = 212; // tr
-    vertex[1].py = 0;
-    vertex[2].px = 264; // br
-    vertex[2].py = 144;
-    vertex[3].px = 53;  // bl
-    vertex[3].py = 199;
-
-    // resize coords to screen
-    for (y=0;y<4;y++)
-    {
-        vertex[y].px = (vertex[y].px * vid.width) / BASEVIDWIDTH;
-        vertex[y].py = (vertex[y].py * vid.height) / BASEVIDHEIGHT;
-    }
-
-    ds_colormap = fixedcolormap;
-    ds_source = viewbuffer;
-
-    // starting points top-left and top-right
-    leftxfrac  = vertex[0].px <<FRACBITS;
-    leftyfrac  = vertex[0].py <<FRACBITS;
-
-    // steps
-    xstep = ((vertex[3].px - vertex[0].px)<<FRACBITS) / vid.height;
-    ystep = ((vertex[3].py - vertex[0].py)<<FRACBITS) / vid.height;
-
-    ds_y  = (int) vid.direct;
-    ds_x1 = 0;
-    ds_x2 = vid.width-1;
-    ds_xstep = ((vertex[1].px - vertex[0].px)<<FRACBITS) / vid.width;
-    ds_ystep = ((vertex[1].py - vertex[0].py)<<FRACBITS) / vid.width;
-
-
-//    I_Error("ds_y %d ds_x1 %d ds_x2 %d ds_xstep %x ds_ystep %x \n"
-//            "ds_xfrac %x ds_yfrac %x ds_source %x\n", ds_y,
-//                      ds_x1,ds_x2,ds_xstep,ds_ystep,leftxfrac,leftyfrac,
-//                      ds_source);
-
-    // render spans
-    for (y=0; y<vid.height; y++)
-    {
-        // FAST ASM routine!
-        ds_xfrac = leftxfrac;
-        ds_yfrac = leftyfrac;
-        R_DrawSpanNoWrap ();
-        ds_y += vid.rowbytes;
-
-        // move along the left and right edges of the polygon
-        leftxfrac += xstep;
-        leftyfrac += ystep;
-    }
-
-}
-#endif
-
-//
-// Test 'scrunch perspective correction' tm (c) ect.
-//
-//added:05-04-98:
-
-#ifdef HWRENDER // not win32 only 19990829 by Kin
-void V_DrawPerspView (byte *viewbuffer, int aiming)
-{}
-#else
-
-void V_DrawPerspView (byte *viewbuffer, int aiming)
-{
-
-     byte*      source;
-     byte*      dest;
-     int        y;
-     int        x1,w;
-     int        offs;
-
-     fixed_t    topfrac,bottomfrac,scale,scalestep;
-     fixed_t    xfrac,xfracstep;
-
-    source = viewbuffer;
-
-    //+16 to -16 fixed
-    offs = ((aiming*20)<<16) / 100;
-
-    topfrac    = ((vid.width-40)<<16) - (offs*2);
-    bottomfrac = ((vid.width-40)<<16) + (offs*2);
-
-    scalestep  = (bottomfrac-topfrac) / vid.height;
-    scale      = topfrac;
-
-    for (y=0; y<vid.height; y++)
-    {
-        x1 = ((vid.width<<16) - scale)>>17;
-        dest = ((byte*) vid.direct) + (vid.rowbytes*y) + x1;
-
-        xfrac = (20<<FRACBITS) + ((!x1)&0xFFFF);
-        xfracstep = FixedDiv((vid.width<<FRACBITS)-(xfrac<<1),scale);
-        w = scale>>16;
-        while (w--)
-        {
-            *dest++ = source[xfrac>>FRACBITS];
-            xfrac += xfracstep;
-        }
-        scale += scalestep;
-        source += vid.width;
-    }
-
-}
-#endif

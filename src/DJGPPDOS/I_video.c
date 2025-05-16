@@ -1,7 +1,5 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
-//
-// $Id: I_video.c,v 1.2 2000/02/27 00:42:11 hurdler Exp $
 //
 // Copyright (C) 1993-1996 by id Software, Inc.
 // Portions Copyright (C) 1998-2000 by DooM Legacy Team.
@@ -15,22 +13,10 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-//
-// $Log: I_video.c,v $
-// Revision 1.2  2000/02/27 00:42:11  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:33  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
-// DESCRIPTION:
-//      hardware and software level, screen and video i/o, refresh,
-//      setup ... a big mess. Got to clean that up!
-//
 //-----------------------------------------------------------------------------
-
+/// \file
+/// \brief hardware and software level, screen and video i/o, refresh,
+///	setup ... a big mess. Got to clean that up!
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -58,7 +44,7 @@
 
 
 //dosstuff -newly added
-unsigned long dascreen;
+static unsigned long dascreen;
 static int gfx_use_vesa1;
 
 boolean    highcolor;
@@ -68,20 +54,12 @@ boolean    highcolor;
 rendermode_t    rendermode=render_soft;
 
 //
-// I_StartFrame
+// I_OsPolling
 //
-void I_StartFrame (void)
+void I_OsPolling()
 {
-    // er?
-}
-
-//
-// I_StartTic
-//
-void I_StartTic()
-{
-    I_GetEvent();
-    //i dont think i have to do anything else here
+	I_GetEvent();
+	//i dont think i have to do anything else here
 }
 
 
@@ -90,7 +68,7 @@ void I_StartTic()
 //
 void I_UpdateNoBlit (void)
 {
-    // what is this?
+	// what is this?
 }
 
 
@@ -111,91 +89,92 @@ static   unsigned long  nombre = TICRATE*10;
 #define SCALE      4
 #define PUTDOT(xx,yy,cc) screens[0][((yy)*vid.width+(xx))*vid.bpp]=(cc)
 
-int fpsgraph[FPSPOINTS];
+static int fpsgraph[FPSPOINTS];
 
 //
 // I_FinishUpdate
 //
-void I_BlitScreenVesa1(void);   //see later
+static void I_BlitScreenVesa1(void);   //see later
 void I_FinishUpdate (void)
 {
 
-    static int  lasttic;
-    int         tics;
-    int         i;
-    // UNUSED static unsigned char *bigscreen=0;
+	static int  lasttic;
+	int         tics;
+	int         i;
+	// UNUSED static unsigned char *bigscreen=0;
 
-    // draws little dots on the bottom of the screen
-    if (cv_ticrate.value)
-    {
+	// draws little dots on the bottom of the screen
+	if (cv_ticrate.value)
+	{
 #if 1   // display a graph of ticrate should be a cvar
-        int k,j,l;
+		int k,j,l;
 
-        i = I_GetTime();
-        tics = i - lasttic;
-        lasttic = i;
-        if (tics > 20) tics = 20;
+		i = I_GetTime();
+		tics = i - lasttic;
+		lasttic = i;
+		if (tics > 20) tics = 20;
 
-        for (i=0;i<FPSPOINTS-1;i++)
-            fpsgraph[i]=fpsgraph[i+1];
-        fpsgraph[FPSPOINTS-1]=20-tics;
+		for (i=0;i<FPSPOINTS-1;i++)
+			fpsgraph[i]=fpsgraph[i+1];
+		fpsgraph[FPSPOINTS-1]=20-tics;
 
-        // draw lines
-        for(j=0;j<=20*SCALE*vid.dupy;j+=2*SCALE*vid.dupy)
-        {
-           l=(vid.height-1-j)*vid.width*vid.bpp;
-           for (i=0;i<FPSPOINTS*SCALE*vid.dupx;i+=4)
-               screens[0][l+i]=0xff;
-        }
+		// draw lines
+		for (j=0;j<=20*SCALE*vid.dupy;j+=2*SCALE*vid.dupy)
+		{
+		   l=(vid.height-1-j)*vid.width*vid.bpp;
+		   for (i=0;i<FPSPOINTS*SCALE*vid.dupx;i+=4)
+			   screens[0][l+i]=0xff;
+		}
 
-        // draw the graph
-        for (i=0;i<FPSPOINTS;i++)
-            for(k=0;k<SCALE*vid.dupx;k++)
-                PUTDOT(i*SCALE*vid.dupx+k,vid.height-1-(fpsgraph[i]*SCALE*vid.dupy),0xff);
+		// draw the graph
+		for (i=0;i<FPSPOINTS;i++)
+			for (k=0;k<SCALE*vid.dupx;k++)
+				PUTDOT(i*SCALE*vid.dupx+k,vid.height-1-(fpsgraph[i]*SCALE*vid.dupy),0xff);
 
 #else   // the old ticrate shower
-        for (i=0 ; i<tics*2 ; i+=2)
-            screens[0][ (vid.height-1)*vid.width*vid.bpp + i] = 0xff;
-        for ( ; i<20*2 ; i+=2)
-            screens[0][ (vid.height-1)*vid.width*vid.bpp + i] = 0x0;
+		for (i=0 ; i<tics*2 ; i+=2)
+			screens[0][ (vid.height-1)*vid.width*vid.bpp + i] = 0xff;
+		for ( ; i<20*2 ; i+=2)
+			screens[0][ (vid.height-1)*vid.width*vid.bpp + i] = 0x0;
 #endif
-    }
+	}
 
-   //blast it to the screen
-   // this code sucks
-   //memcpy(dascreen,screens[0],screenwidth*screenheight);
+	//blast it to the screen
+	// this code sucks
+	//memcpy(dascreen,screens[0],screenwidth*screenheight);
 
-   //added:03-01-98: I tried to I_WaitVBL(1) here, but it slows down
-   //  the game when the view becomes complicated, it looses ticks
-   //I_WaitVBL(1);
+	//added:03-01-98: I tried to I_WaitVBL(1) here, but it slows down
+	//  the game when the view becomes complicated, it looses ticks
+	if ( cv_vidwait.value )
+		I_WaitVBL(1);
 
 
 //added:16-01-98:profile screen blit.
 #ifdef TIMING
-    ProfZeroTimer();
+	ProfZeroTimer();
 #endif
-    //added:08-01-98: support vesa1 bank change, without Allegro's BITMAP screen.
-    if( gfx_use_vesa1 )
-    {
-        I_Error("Banked screen update not finished for dynamic res\n");
-        //I_BlitScreenVesa1();    //blast virtual to physical screen.
-    }
-    else
-    {
-        //added:16-01-98:use quickie asm routine, last 2 args are
-        //                   src and dest rowbytes
-        //                   (memcpy is as fast as this one...)
-        VID_BlitLinearScreen ( vid.buffer, vid.direct,
-                               vid.width*vid.bpp, vid.height,
-                               vid.width*vid.bpp, vid.rowbytes );
-    }
+	//added:08-01-98: support vesa1 bank change, without Allegro's BITMAP screen.
+	if ( gfx_use_vesa1 )
+	{
+		I_Error("Banked screen update not finished for dynamic res\n");
+		I_BlitScreenVesa1();    //blast virtual to physical screen.
+	}
+	else
+	{
+		//added:16-01-98:use quickie asm routine, last 2 args are
+		//                   src and dest rowbytes
+		//                   (memcpy is as fast as this one...)
+		VID_BlitLinearScreen ( screens[0], vid.direct,
+		                       vid.width*vid.bpp, vid.height,
+		                       vid.width*vid.bpp, vid.rowbytes );
+	}
 #ifdef TIMING
-    RDMSR(0x10,&mycount);
-    mytotal += mycount;   //64bit add
+	RDMSR(0x10,&mycount);
+	mytotal += mycount;   //64bit add
 
-    if(nombre--==0)
-       I_Error("ScreenBlit CPU Spy reports: 0x%d %d\n", *((int*)&mytotal+1),
-                                             (int)mytotal );
+	if (nombre--==0)
+		I_Error("ScreenBlit CPU Spy reports: 0x%d %d\n", *((int *)&mytotal+1),
+		        (int)mytotal );
 #endif
 
 }
@@ -204,29 +183,25 @@ void I_FinishUpdate (void)
 //
 // I_ReadScreen
 //
-void I_ReadScreen (byte* scr)
+void I_ReadScreen (byte *scr)
 {
-    memcpy (scr, vid.buffer, vid.width*vid.height*vid.bpp);
+	VID_BlitLinearScreen ( screens[0], scr,
+					   vid.width*vid.bpp, vid.height,
+					   vid.width*vid.bpp, vid.rowbytes );
 }
 
 
-void I_SetPalette (byte* palette)
+void I_SetPalette (RGBA_t *palette)
 {
-    int    c,i;
-    byte*  usegamma;
+	int i;
 
-    usegamma = gammatable[scr_gamma%5];
-
-    outportb(0x3c8,0);
-    for (i=0;i<256;i++)
-    {
-      c = usegamma[*palette++];
-      outportb(0x3c9,c>>2);
-      c = usegamma[*palette++];
-      outportb(0x3c9,c>>2);
-      c = usegamma[*palette++];
-      outportb(0x3c9,c>>2);
-    }
+	outportb(0x3c8,0);
+	for (i=0;i<256;i++,palette++)
+	{
+		outportb(0x3c9,palette->s.red>>2);
+		outportb(0x3c9,palette->s.green>>2);
+		outportb(0x3c9,palette->s.blue>>2);
+	}
 }
 
 
@@ -235,34 +210,34 @@ void I_SetPalette (byte* palette)
 // I_BlastScreen : copy the virtual screen buffer to the physical screen mem
 //                 using bank switching if needed.
 /*==========================================================================*/
-void I_BlitScreenVesa1(void)
+static void I_BlitScreenVesa1(void)
 {
 #define VIDBANKSIZE     (1<<16)
 #define VIDBANKSIZEMASK (VIDBANKSIZE-1)   // defines ahoy!
 
-  __dpmi_regs r;
-  unsigned char *p_src;
-  long     i;
-  long     virtualsize;
+	__dpmi_regs r;
+	unsigned char *p_src;
+	long     i;
+	long     virtualsize;
 
-   // virtual screen buffer size
-   virtualsize = vid.rowbytes * vid.height * SCREENDEPTH;
+	// virtual screen buffer size
+	virtualsize = vid.rowbytes * vid.height * SCREENDEPTH;
 
-   p_src  = screens[0];
+	p_src  = screens[0];
 
-   for(i=0; virtualsize > 0; i++ )
-   {
-      r.x.ax = 0x4f05;
-      r.x.bx = 0x0;
-      r.x.cx = 0x0;
-      r.x.dx = i;
-      __dpmi_int(0x10,&r);      //set bank
+	for (i=0; virtualsize > 0; i++ )
+	{
+		r.x.ax = 0x4f05;
+		r.x.bx = 0x0;
+		r.x.cx = 0x0;
+		r.x.dx = i;
+		__dpmi_int(0x10,&r);      //set bank
 
-      memcpy((byte *)dascreen,p_src,(virtualsize < VIDBANKSIZE) ? virtualsize : VIDBANKSIZE );
+		memcpy((byte *)dascreen,p_src,(virtualsize < VIDBANKSIZE) ? virtualsize : VIDBANKSIZE );
 
-      p_src += VIDBANKSIZE;
-      virtualsize -= VIDBANKSIZE;
-   }
+		p_src += VIDBANKSIZE;
+		virtualsize -= VIDBANKSIZE;
+	}
 
 }
 
@@ -270,15 +245,15 @@ void I_BlitScreenVesa1(void)
 //added:08-01-98: now we use Allegro's set_gfx_mode, but we want to
 //                restore the exact text mode that was before.
 static short  myOldVideoMode;
-void I_SaveOldVideoMode(void)
+static inline void I_SaveOldVideoMode(void)
 {
-  __dpmi_regs r;
-    r.x.ax = 0x4f03;                 // Return current video mode
-    __dpmi_int(0x10,&r);
-    if( r.x.ax != 0x4f )
-        myOldVideoMode = -1;
-    else
-        myOldVideoMode = r.x.bx;
+	__dpmi_regs r;
+	r.x.ax = 0x4f03;                 // Return current video mode
+	__dpmi_int(0x10,&r);
+	if ( r.x.ax != 0x4f )
+		myOldVideoMode = -1;
+	else
+		myOldVideoMode = r.x.bx;
 }
 
 
@@ -287,77 +262,78 @@ void I_SaveOldVideoMode(void)
 //
 void I_ShutdownGraphics (void)
 {
-    __dpmi_regs r;
+	__dpmi_regs r;
 
-    if( !graphics_started )
-        return;
+	if ( !graphics_started )
+		return;
 
-    // free the last video mode screen buffers
-    if (vid.buffer)
-        free (vid.buffer);
+	// free the last video mode screen buffers
+	if (vid.buffer)
+		free (vid.buffer);
 
-    /* Restore old video mode */
-    if(myOldVideoMode!=-1)
-    {
-       /* Restore old video mode */
-       r.x.ax = 0x4f02;                 // Set Super VGA video mode
-       r.x.bx = myOldVideoMode;
-       __dpmi_int(0x10,&r);
+	/* Restore old video mode */
+	if (myOldVideoMode!=-1)
+	{
+		/* Restore old video mode */
+		r.x.ax = 0x4f02;                 // Set Super VGA video mode
+		r.x.bx = myOldVideoMode;
+		__dpmi_int(0x10,&r);
 
-       // Boris: my s3 don't do a cls because "win95" :<
-       clrscr();
-    }
-    else  // no vesa put the normal video mode
-    {
-       r.x.ax = 0x03;
-       __dpmi_int(0x10,&r);
-    }
+		// Boris: my s3 don't do a cls because "win95" :<
+		clrscr();
+	}
+	else  // no vesa put the normal video mode
+	{
+		r.x.ax = 0x03;
+		__dpmi_int(0x10,&r);
+	}
 
-    graphics_started = false;
+	graphics_started = false;
 }
 
 
 //added:08-01-98:
 //  Set VESA1 video mode, coz Allegro set_gfx_mode a larger screenwidth...
 //
+#if 0
 int set_vesa1_mode( int width, int height )
 {
-    __dpmi_regs r;
+	__dpmi_regs r;
 
-    // setup video mode.
-	// Removed weird modes Tails 01-18-2001
-    r.x.ax = 0x4f02;
-    if( ( width==320 )&&( height==200 ) && ( SCREENDEPTH==1 ) )
-       r.x.bx   = 0x13;                             // 320x 200x1 (256 colors)
-//    else
-//    if( ( width==320 )&&( height==240 ) && ( SCREENDEPTH==1 ) )
-//       r.x.bx   = 0x154;                            // 320x 240x1 (256 colors)
-//    else
-//    if( ( width==320 )&&( height==400 ) && ( SCREENDEPTH==1 ) )
-//       r.x.bx   = 0x155;                            // 320x 400x1 (256 colors)
-    else
-    if( ( width==640 )&&( height==400 ) && ( SCREENDEPTH==1 ) )
-       r.x.bx   = 0x100;                            // 640x 400x1 (256 colors)
-/*    else
-    if( ( width==640 )&&( height==480 ) && ( SCREENDEPTH==1 ) )
-       r.x.bx   = 0x101;                            // 640x 480x1 (256 colors)
-    else
-    if( ( width==800 )&&( height==600 ) && ( SCREENDEPTH==1 ) )
-       r.x.bx   = 0x103;                            // 800x 600x1 (256 colors)
-    else
-    if( ( width==1024)&&( height==768 ) && ( SCREENDEPTH==1 ) )
-       r.x.bx   = 0x105;  */                        //1024x 768x1 (256 colors)
-    else
-       I_Error("I_SetVesa1Mode: video mode not supported.");
+	// setup video mode.
+	r.x.ax = 0x4f02;
+	if ( ( width==320 )&&( height==200 ) && ( SCREENDEPTH==1 ) )
+		r.x.bx   = 0x13;                             // 320x 200x1 (256 colors)
+	else
+	if ( ( width==320 )&&( height==240 ) && ( SCREENDEPTH==1 ) )
+		r.x.bx   = 0x154;                            // 320x 240x1 (256 colors)
+	else
+	if ( ( width==320 )&&( height==400 ) && ( SCREENDEPTH==1 ) )
+		r.x.bx   = 0x155;                            // 320x 400x1 (256 colors)
+	else
+	if ( ( width==640 )&&( height==400 ) && ( SCREENDEPTH==1 ) )
+		r.x.bx   = 0x100;                            // 640x 400x1 (256 colors)
+	else
+	if ( ( width==640 )&&( height==480 ) && ( SCREENDEPTH==1 ) )
+		r.x.bx   = 0x101;                            // 640x 480x1 (256 colors)
+	else
+	if ( ( width==800 )&&( height==600 ) && ( SCREENDEPTH==1 ) )
+		r.x.bx   = 0x103;                            // 800x 600x1 (256 colors)
+	else
+	if ( ( width==1024)&&( height==768 ) && ( SCREENDEPTH==1 ) )
+		r.x.bx   = 0x105;                            //1024x 768x1 (256 colors)
+	else
+		I_Error("I_SetVesa1Mode: video mode not supported.");
 
-    // enter graphics mode.
-    __dpmi_int(0x10,&r);
+	// enter graphics mode.
+	__dpmi_int(0x10,&r);
 
-    if( r.x.ax != 0x4f )
-       I_Error("I_SetVesa1Mode: init video mode failed !");
+	if ( r.x.ax != 0x4f )
+		I_Error("I_SetVesa1Mode: init video mode failed !");
 
-    return 0;
+	return 0;
 }
+#endif
 
 
 //added:08-01-98: now uses Allegro to setup Linear Frame Buffer video modes.
@@ -367,34 +343,34 @@ int set_vesa1_mode( int width, int height )
 //
 void I_StartupGraphics(void)
 {
-    //added:26-01-98: VID_Init() must be done only once,
-    //                use VID_SetMode() to change vid mode while in the game.
-    if( graphics_started )
-        return;
+	//added:26-01-98: VID_Init() must be done only once,
+	//                use VID_SetMode() to change vid mode while in the game.
+	if ( graphics_started )
+		return;
 
-    // remember the exact screen mode we were...
-    I_SaveOldVideoMode();
+	// remember the exact screen mode we were...
+	I_SaveOldVideoMode();
 
-    CONS_Printf("Vid_Init...");
+	CONS_Printf("Vid_Init...");
 
-    // 0 for 256 color, else use highcolor modes
-    highcolor = M_CheckParm ("-highcolor");
+	// 0 for 256 color, else use highcolor modes
+	highcolor = M_CheckParm ("-highcolor");
 
-    VID_Init();
+	VID_Init();
 
-    //gfx_use_vesa1 = false;
+	//gfx_use_vesa1 = false;
 
-    //added:03-01-98: register exit code for graphics
-    I_AddExitFunc(I_ShutdownGraphics);
-    graphics_started = true;
+	//added:03-01-98: register exit code for graphics
+	I_AddExitFunc(I_ShutdownGraphics);
+	graphics_started = true;
 
 }
 
 // for fuck'n debuging
 void IO_Color( byte color, byte r, byte g, byte b )
 {
-  outportb( 0x03c8 , color );              // registre couleur
-  outportb( 0x03c9 , (r>>2) & 0x3f );     // R
-  outportb( 0x03c9 , (g>>2) & 0x3f );     // G
-  outportb( 0x03c9 , (b>>2) & 0x3f );     // B
+	outportb( 0x03c8 , color );              // registre couleur
+	outportb( 0x03c9 , (r>>2) & 0x3f );     // R
+	outportb( 0x03c9 , (g>>2) & 0x3f );     // G
+	outportb( 0x03c9 , (b>>2) & 0x3f );     // B
 }

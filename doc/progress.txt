@@ -39,7 +39,6 @@ FSZ - 0%
 TODO:
 MMZ2 - Only a small portion of this level has seen any changes.
 MMZ3 - Dunno what Samwise wants, but apparently we're not done here.
-RMZ1 - Finish the rest of the level design.
 RMZ2 - Remake this level to get it up to new standards.
 RVZ1 - Complete rework, Final Demo-style.
 RVZ2 - Complete rework, Final Demo-style.

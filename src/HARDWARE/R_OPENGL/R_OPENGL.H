@@ -1,8 +1,6 @@
 // Emacs style mode select   -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id: r_opengl.h,v 1.10 2000/08/10 19:58:05 bpereira Exp $
-//
 // Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
@@ -15,87 +13,78 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-//
-// $Log: r_opengl.h,v $
-// Revision 1.10  2000/08/10 19:58:05  bpereira
-// no message
-//
-// Revision 1.9  2000/08/03 17:57:42  bpereira
-// no message
-//
-// Revision 1.8  2000/05/09 21:10:04  hurdler
-// update version
-//
-// Revision 1.7  2000/04/18 12:45:09  hurdler
-// change a little coronas' code
-//
-// Revision 1.6  2000/04/07 23:10:15  metzgermeister
-// fullscreen support under X in Linux
-//
-// Revision 1.5  2000/03/07 03:31:14  hurdler
-// fix linux compilation
-//
-// Revision 1.4  2000/03/06 15:29:32  hurdler
-// change version number
-//
-// Revision 1.3  2000/02/27 16:37:14  hurdler
-// Update version number
-//
-// Revision 1.2  2000/02/27 00:42:11  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:33  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
-// DESCRIPTION:
-//      
-//
 //-----------------------------------------------------------------------------
-
+/// \file
+/// \brief OpenGL API for Doom Legacy
 
 #ifndef _R_OPENGL_H_
 #define _R_OPENGL_H_
 
+#ifdef SDL
+
+#ifdef _MSC_VER
+#pragma warning(disable : 4214 4244)
+#endif
+
+#include "SDL_opengl.h" //Alam_GBC: Simple, yes?
+
+#ifdef _MSC_VER
+#pragma warning(default : 4214 4244)
+#endif
+
+#else
 #include <GL/gl.h>
 #include <GL/glu.h>
+#endif
 
 #define  _CREATE_DLL_  // necessary for Unix AND Windows
+#include "../../doomdef.h"
 #include "../hw_drv.h"
 
 // ==========================================================================
 //                                                                DEFINITIONS
 // ==========================================================================
 
-#define MIN(x,y) ( ((x)<(y)) ? (x) : (y) )
-#define MAX(x,y) ( ((x)>(y)) ? (x) : (y) )
+#define MIN(x,y) (((x)<(y)) ? (x) : (y))
+#define MAX(x,y) (((x)>(y)) ? (x) : (y))
 
 #undef DEBUG_TO_FILE            // maybe defined in previous *.h
 #define DEBUG_TO_FILE           // output debugging msgs to ogllog.txt
-
-#ifndef MINI_GL_COMPATIBILITY
-//    #define USE_PALETTED_TEXTURE
-#define DRIVER_STRING "HWRAPI Init(): DooM Legacy OpenGL renderer v1.29 pre-release 8\n"
+#if defined (SDL) && (!defined (LOGMESSAGES) || defined (SDLIO))
+#undef DEBUG_TO_FILE
 #endif
 
-#ifndef __WIN32__
-typedef unsigned int    DWORD;
-typedef char*           LPCTSTR;
-typedef int             HANDLE;
+#ifndef DRIVER_STRING 
+//    #define USE_PALETTED_TEXTURE
+#define DRIVER_STRING "HWRAPI Init(): SRB2 OpenGL renderer" // Tails
 #endif
 
 // ==========================================================================
 //                                                                     PROTOS
 // ==========================================================================
 
-void DBG_Printf(LPCTSTR lpFmt, ...);                                          
 void Flush(void);
-int  isExtAvailable(char *extension);
-int  SetRes(viddef_t *lvid, vmode_t *pcurrentmode);
-void UnSetRes(void);
+int isExtAvailable(const char *extension, const GLubyte *start);
 boolean SetupPixelFormat(int WantColorBits, int WantStencilBits, int WantDepthBits);
 void SetModelView(GLint w, GLint h);
 void SetStates(void);
+float byteasfloat(byte fbyte);
+#ifdef USE_PALETTED_TEXTURE
+extern PFNGLCOLORTABLEEXTPROC glColorTableEXT;
+extern GLubyte                palette_tex[256*3];
+#endif
+
+#ifndef GL_EXT_texture_filter_anisotropic
+#define GL_TEXTURE_MAX_ANISOTROPY_EXT     0x84FE
+#define GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT 0x84FF
+#endif
+
+#ifdef USE_WGL_SWAP
+typedef void (APIENTRY *PFNWGLEXTSWAPCONTROLPROC) (int);
+typedef int (APIENTRY *PFNWGLEXTGETSWAPINTERVALPROC) (void);
+extern PFNWGLEXTSWAPCONTROLPROC wglSwapIntervalEXT;
+extern PFNWGLEXTGETSWAPINTERVALPROC wglGetSwapIntervalEXT;
+#endif
 
 // ==========================================================================
 //                                                                     GLOBAL
@@ -103,9 +92,27 @@ void SetStates(void);
 
 extern const GLubyte    *gl_extensions;
 extern RGBA_t           myPaletteData[];
+#ifndef SDL
+#ifdef _WINDOWS
 extern HANDLE           logstream;
+#elif !defined (SDLIO)
+extern int              logstream;
+#endif
+#endif
 extern GLint            screen_width;
 extern GLint            screen_height;
 extern GLbyte           screen_depth;
+extern GLint            maximumAnisotropy;
+
+/**	\brief OpenGL flags for video driver
+*/
+extern int              oglflags;
+extern GLint            textureformatGL;
+
+typedef enum
+{
+	GLF_NOZBUFREAD = 0x01,
+	GLF_NOTEXENV   = 0x02,
+} oglflags_t;
 
 #endif

@@ -1,8 +1,6 @@
 // Emacs style mode select   -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id: Vid_vesa.h,v 1.2 2000/02/27 00:42:11 hurdler Exp $
-//
 // Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
@@ -14,21 +12,9 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-//
-// $Log: Vid_vesa.h,v $
-// Revision 1.2  2000/02/27 00:42:11  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:33  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
-// DESCRIPTION:
-//      VESA extra modes.
-//      
 //-----------------------------------------------------------------------------
-
+/// \file
+/// \brief VESA extra modes.
 
 #include "../doomdef.h"
 #include "../screen.h"
@@ -48,78 +34,76 @@
 // VESA information block structure
 typedef struct vbeinfoblock_s
 {
-    unsigned char  VESASignature[4]   __attribute__ ((packed));
-    unsigned short VESAVersion        __attribute__ ((packed));
-    unsigned long  OemStringPtr       __attribute__ ((packed));
-    byte    Capabilities[4];
-    unsigned long  VideoModePtr       __attribute__ ((packed));
-    unsigned short TotalMemory        __attribute__ ((packed));
-    byte    OemSoftwareRev[2];
-    byte    OemVendorNamePtr[4];
-    byte    OemProductNamePtr[4];
-    byte    OemProductRevPtr[4];
-    byte    Reserved[222];
-    byte    OemData[256];
+	unsigned char  VESASignature[4]     ATTRPACK;
+	unsigned short VESAVersion          /*ATTRPACK*/;
+	unsigned long  OemStringPtr         ATTRPACK;
+	byte           Capabilities[4];
+	unsigned long  VideoModePtr         ATTRPACK;
+	unsigned short TotalMemory          ATTRPACK;
+	byte           OemSoftwareRev[2];
+	byte           OemVendorNamePtr[4];
+	byte           OemProductNamePtr[4];
+	byte           OemProductRevPtr[4];
+	byte           Reserved[222];
+	byte           OemData[256];
 } vbeinfoblock_t;
 
 
 // VESA information for a specific mode
 typedef struct vesamodeinfo_s
 {
-   unsigned short ModeAttributes       __attribute__ ((packed));
-   unsigned char  WinAAttributes       __attribute__ ((packed));
-   unsigned char  WinBAttributes       __attribute__ ((packed));
-   unsigned short WinGranularity       __attribute__ ((packed));
-   unsigned short WinSize              __attribute__ ((packed));
-   unsigned short WinASegment          __attribute__ ((packed));
-   unsigned short WinBSegment          __attribute__ ((packed));
-   unsigned long  WinFuncPtr           __attribute__ ((packed));
-   unsigned short BytesPerScanLine     __attribute__ ((packed));
-   unsigned short XResolution          __attribute__ ((packed));
-   unsigned short YResolution          __attribute__ ((packed));
-   unsigned char  XCharSize            __attribute__ ((packed));
-   unsigned char  YCharSize            __attribute__ ((packed));
-   unsigned char  NumberOfPlanes       __attribute__ ((packed));
-   unsigned char  BitsPerPixel         __attribute__ ((packed));
-   unsigned char  NumberOfBanks        __attribute__ ((packed));
-   unsigned char  MemoryModel          __attribute__ ((packed));
-   unsigned char  BankSize             __attribute__ ((packed));
-   unsigned char  NumberOfImagePages   __attribute__ ((packed));
-   unsigned char  Reserved_page        __attribute__ ((packed));
-   unsigned char  RedMaskSize          __attribute__ ((packed));
-   unsigned char  RedMaskPos           __attribute__ ((packed));
-   unsigned char  GreenMaskSize        __attribute__ ((packed));
-   unsigned char  GreenMaskPos         __attribute__ ((packed));
-   unsigned char  BlueMaskSize         __attribute__ ((packed));
-   unsigned char  BlueMaskPos          __attribute__ ((packed));
-   unsigned char  ReservedMaskSize     __attribute__ ((packed));
-   unsigned char  ReservedMaskPos      __attribute__ ((packed));
-   unsigned char  DirectColorModeInfo  __attribute__ ((packed));
+   unsigned short ModeAttributes       /*ATTRPACK*/;
+   unsigned char  WinAAttributes       ATTRPACK;
+   unsigned char  WinBAttributes       ATTRPACK;
+   unsigned short WinGranularity       /*ATTRPACK*/;
+   unsigned short WinSize              ATTRPACK;
+   unsigned short WinASegment          /*ATTRPACK*/;
+   unsigned short WinBSegment          ATTRPACK;
+   unsigned long  WinFuncPtr           ATTRPACK;
+   unsigned short BytesPerScanLine     /*ATTRPACK*/;
+   unsigned short XResolution          ATTRPACK;
+   unsigned short YResolution          /*ATTRPACK*/;
+   unsigned char  XCharSize            ATTRPACK;
+   unsigned char  YCharSize            ATTRPACK;
+   unsigned char  NumberOfPlanes       ATTRPACK;
+   unsigned char  BitsPerPixel         ATTRPACK;
+   unsigned char  NumberOfBanks        ATTRPACK;
+   unsigned char  MemoryModel          ATTRPACK;
+   unsigned char  BankSize             ATTRPACK;
+   unsigned char  NumberOfImagePages   ATTRPACK;
+   unsigned char  Reserved_page        ATTRPACK;
+   unsigned char  RedMaskSize          ATTRPACK;
+   unsigned char  RedMaskPos           ATTRPACK;
+   unsigned char  GreenMaskSize        ATTRPACK;
+   unsigned char  GreenMaskPos         ATTRPACK;
+   unsigned char  BlueMaskSize         ATTRPACK;
+   unsigned char  BlueMaskPos          ATTRPACK;
+   unsigned char  ReservedMaskSize     ATTRPACK;
+   unsigned char  ReservedMaskPos      ATTRPACK;
+   unsigned char  DirectColorModeInfo  ATTRPACK;
 
    /* VBE 2.0 extensions */
-   unsigned long  PhysBasePtr          __attribute__ ((packed));
-   unsigned long  OffScreenMemOffset   __attribute__ ((packed));
-   unsigned short OffScreenMemSize     __attribute__ ((packed));
+   unsigned long  PhysBasePtr          /*ATTRPACK*/;
+   unsigned long  OffScreenMemOffset   ATTRPACK;
+   unsigned short OffScreenMemSize     /*ATTRPACK*/;
 
    /* VBE 3.0 extensions */
-   unsigned short LinBytesPerScanLine  __attribute__ ((packed));
-   unsigned char  BnkNumberOfPages     __attribute__ ((packed));
-   unsigned char  LinNumberOfPages     __attribute__ ((packed));
-   unsigned char  LinRedMaskSize       __attribute__ ((packed));
-   unsigned char  LinRedFieldPos       __attribute__ ((packed));
-   unsigned char  LinGreenMaskSize     __attribute__ ((packed));
-   unsigned char  LinGreenFieldPos     __attribute__ ((packed));
-   unsigned char  LinBlueMaskSize      __attribute__ ((packed));
-   unsigned char  LinBlueFieldPos      __attribute__ ((packed));
-   unsigned char  LinRsvdMaskSize      __attribute__ ((packed));
-   unsigned char  LinRsvdFieldPos      __attribute__ ((packed));
-   unsigned long  MaxPixelClock        __attribute__ ((packed));
+   unsigned short LinBytesPerScanLine  ATTRPACK;
+   unsigned char  BnkNumberOfPages     ATTRPACK;
+   unsigned char  LinNumberOfPages     ATTRPACK;
+   unsigned char  LinRedMaskSize       ATTRPACK;
+   unsigned char  LinRedFieldPos       ATTRPACK;
+   unsigned char  LinGreenMaskSize     ATTRPACK;
+   unsigned char  LinGreenFieldPos     ATTRPACK;
+   unsigned char  LinBlueMaskSize      ATTRPACK;
+   unsigned char  LinBlueFieldPos      ATTRPACK;
+   unsigned char  LinRsvdMaskSize      ATTRPACK;
+   unsigned char  LinRsvdFieldPos      ATTRPACK;
+   unsigned long  MaxPixelClock        ATTRPACK;
 
-   unsigned char  Reserved[190]        __attribute__ ((packed));
+   unsigned char  Reserved[190]        ATTRPACK;
 } vesamodeinfo_t;
 
 
 // setup standard VGA + VESA modes list, activate the default video mode.
 void VID_Init (void);
-// setup a video mode, this is to be called from the menu
-int  VID_SetMode (int modenum);

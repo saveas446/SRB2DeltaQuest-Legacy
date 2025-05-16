@@ -1,8 +1,6 @@
 // Emacs style mode select   -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
-// $Id: i_tcp.h,v 1.2 2000/02/27 00:42:10 hurdler Exp $
-//
 // Copyright (C) 1998-2000 by DooM Legacy Team.
 //
 // This program is free software; you can redistribute it and/or
@@ -14,20 +12,28 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-//
-// $Log: i_tcp.h,v $
-// Revision 1.2  2000/02/27 00:42:10  hurdler
-// fix CR+LF problem
-//
-// Revision 1.1.1.1  2000/02/22 20:32:32  hurdler
-// Initial import into CVS (v1.29 pr3)
-//
-//
-// DESCRIPTION:
-//
-//
 //-----------------------------------------------------------------------------
+/// \file
+/// \brief TCP driver, sockets.
 
+#ifndef __I_TCP__
+#define __I_TCP__
 
-int I_InitTcpNetwork(void);
+extern unsigned short sock_port;
+
+/**	\brief	The I_InitTcpNetwork function
+
+	\return	true if going or in a netgame, else it's false
+	
+*/
+boolean I_InitTcpNetwork(void);
+
+/**	\brief	The I_InitTcpNetwork function
+
+	\return	true if TCP/IP stack was initilized, else it's false
+	
+*/
+boolean I_InitTcpDriver(void);
+void I_ShutdownTcpDriver(void);
+
+#endif
