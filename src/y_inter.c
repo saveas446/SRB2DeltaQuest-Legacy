@@ -138,9 +138,6 @@ static enum
 } inttype = int_none;
 
 static void Y_AwardCoopBonuses(void);
-static void Y_AwardSpecialStageBonus(void);
-static void Y_CalculateRaceWinners(void);
-static void Y_CalculateTimeRaceWinners(void);
 static void Y_CalculateMatchWinners(void);
 static void Y_DrawScaledNum(int x, int y, int flags, int num);
 #define Y_DrawNum(x,y,n) Y_DrawScaledNum(x, y, 0, n)
@@ -1483,24 +1480,8 @@ static void Y_UnloadData(void)
 			UNLOAD(data.coop.pringbonus);
 			UNLOAD(data.coop.ptotal);
 			break;
-		case int_spec:
-			// unload the special stage patches
-			UNLOAD(data.spec.cemerald);
-			UNLOAD(data.spec.pringbonus);
-			UNLOAD(data.spec.cscore);
-			UNLOAD(data.spec.nowsuper);
-			break;
 		case int_match:
 			UNLOAD(data.match.result);
-			break;
-		case int_ctf:
-			UNLOAD(data.match.blueflag);
-			UNLOAD(data.match.redflag);
-			break;
-		case int_race:
-		case int_timerace:
-			// unload the RESULT patch
-			UNLOAD(data.race.result);
 			break;
 		default:
 			//without this default, int_none, int_tag, int_ctf,

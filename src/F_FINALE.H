@@ -60,7 +60,6 @@ void F_EndCutScene(void);
 
 void F_StartFinale(void);
 void F_StartDemoEnd(void);
-void F_StartIntro(void);
 void F_StartTitleScreen(void);
 void F_StartCredits(void);
 

@@ -1912,7 +1912,6 @@ char *warningmsg = "No Clans, advertising websites,\nChat, Hangout, Hacked,\nor 
 static void M_DrawServerMenu(void)
 {
 	int lumpnum;
-	patch_t *PictureOfLevel;
 
 	M_DrawGenericMenu();
 
@@ -1924,13 +1923,6 @@ static void M_DrawServerMenu(void)
 
 //  A 160x100 image of the level as entry MAPxxP
 	lumpnum = W_CheckNumForName(va("%sP", G_BuildMapName(cv_nextmap.value)));
-
-	if (lumpnum != -1)
-		PictureOfLevel = W_CachePatchName(va("%sP", G_BuildMapName(cv_nextmap.value)), PU_CACHE);
-	else
-		PictureOfLevel = W_CachePatchName("BLANKLVL", PU_CACHE);
-	
-	V_DrawSmallScaledPatch((BASEVIDWIDTH*3/4)-(PictureOfLevel->width/4), (BASEVIDHEIGHT*3/4)-(PictureOfLevel->height/4), 0, PictureOfLevel);
 }
 
 static menuitem_t ServerMenu[] =
@@ -3635,7 +3627,6 @@ static void M_TimeAttack(int choice)
 //
 void M_DrawTimeAttackMenu(void)
 {
-	patch_t *PictureOfLevel;
 	int lumpnum;
 	char hours[4];
 	char minutes[4];
@@ -3653,14 +3644,7 @@ void M_DrawTimeAttackMenu(void)
 
 //  A 160x100 image of the level as entry MAPxxP
 	lumpnum = W_CheckNumForName(va("%sP", G_BuildMapName(cv_nextmap.value)));
-
-	if (lumpnum != -1)
-		PictureOfLevel = W_CachePatchName(va("%sP", G_BuildMapName(cv_nextmap.value)), PU_CACHE);
-	else
-		PictureOfLevel = W_CachePatchName("BLANKLVL", PU_CACHE);
 	
-	V_DrawSmallScaledPatch(208, 128, 0, PictureOfLevel);
-
 	for (i = 0; i < NUMMAPS; i++)
 	{
 		if (!(mapheaderinfo[i].timeattack))
@@ -4438,17 +4422,9 @@ static void M_DrawLevelSelectMenu(void)
 	if (cv_nextmap.value)
 	{
 		int lumpnum;
-		patch_t *PictureOfLevel;
 
 	//  A 160x100 image of the level as entry MAPxxP
 		lumpnum = W_CheckNumForName(va("%sP", G_BuildMapName(cv_nextmap.value)));
-
-		if (lumpnum != -1)
-			PictureOfLevel = W_CachePatchName(va("%sP", G_BuildMapName(cv_nextmap.value)), PU_CACHE);
-		else
-			PictureOfLevel = W_CachePatchName("BLANKLVL", PU_CACHE);
-		
-		V_DrawSmallScaledPatch(200, 110, 0, PictureOfLevel);
 	}
 }
 

@@ -79,10 +79,6 @@ static patch_t *homing3; // Emerald hunt indicators
 static patch_t *homing4; // Emerald hunt indicators
 static patch_t *homing5; // Emerald hunt indicators
 static patch_t *homing6; // Emerald hunt indicators
-static patch_t *race1;
-static patch_t *race2;
-static patch_t *race3;
-static patch_t *racego;
 static patch_t *supersonic;
 static patch_t *ttlnum;
 static patch_t *nightslink;
@@ -392,10 +388,6 @@ void ST_Init(void)
 	homing4	= W_CachePatchName("HOMING4", PU_STATIC); // Emerald hunt indicators
 	homing5	= W_CachePatchName("HOMING5", PU_STATIC); // Emerald hunt indicators
 	homing6	= W_CachePatchName("HOMING6", PU_STATIC); // Emerald hunt indicators
-	race1 = W_CachePatchName("RACE1", PU_STATIC);
-	race2 = W_CachePatchName("RACE2", PU_STATIC);
-	race3 = W_CachePatchName("RACE3", PU_STATIC);
-	racego = W_CachePatchName("RACEGO", PU_STATIC);
 	supersonic = W_CachePatchName("SUPERICO", PU_STATIC);
 	nightslink = W_CachePatchName("NGHTLINK", PU_STATIC);
 	count5 = W_CachePatchName("CNTFA0", PU_STATIC);
@@ -1717,26 +1709,6 @@ static void ST_overlayDrawer(void)
 		{
 			// No continues here. Save 17-05-2025
 			Command_ExitGame_f();
-		}
-	}
-
-	if (gametype == GT_RACE)
-	{
-		if (leveltime > TICRATE && leveltime <= 2*TICRATE)
-			V_DrawScaledPatch(SCX((BASEVIDWIDTH - race3->width)/2), (int)(SCY(BASEVIDHEIGHT/2)), V_NOSCALESTART, race3);
-		else if (leveltime > 2*TICRATE && leveltime <= 3*TICRATE)
-			V_DrawScaledPatch(SCX((BASEVIDWIDTH - race2->width)/2), (int)(SCY(BASEVIDHEIGHT/2)), V_NOSCALESTART, race2);
-		else if (leveltime > 3*TICRATE && leveltime <= 4*TICRATE)
-			V_DrawScaledPatch(SCX((BASEVIDWIDTH - race1->width)/2), (int)(SCY(BASEVIDHEIGHT/2)), V_NOSCALESTART, race1);
-		else if (leveltime > 4*TICRATE && leveltime <= 5*TICRATE)
-			V_DrawScaledPatch(SCX((BASEVIDWIDTH - racego->width)/2), (int)(SCY(BASEVIDHEIGHT/2)), V_NOSCALESTART, racego);
-
-		if (circuitmap)
-		{
-			if (stplyr->exiting)
-				V_DrawString(BASEVIDWIDTH-80, STRINGY(BASEVIDHEIGHT-32), V_YELLOWMAP, "FINISHED!");
-			else
-				V_DrawString(BASEVIDWIDTH-80, STRINGY(BASEVIDHEIGHT-32), 0, va("Lap: %d/%d", stplyr->laps+1, cv_numlaps.value));
 		}
 	}
 

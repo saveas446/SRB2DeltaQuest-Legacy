@@ -1456,7 +1456,7 @@ void D_SRB2Main(void)
 		}
 	}
 	else
-		F_StartIntro(); // Tails 03-03-2002
+		D_StartTitle();
 
 	if (dedicated && server)
 	{
