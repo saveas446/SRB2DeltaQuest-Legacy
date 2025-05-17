@@ -3130,7 +3130,6 @@ static ffloor_t *P_AddFakeFloor(sector_t *sec, sector_t *sec2, line_t *master, i
 static ffloor_t *P_AddOldWater(sector_t *sec, sector_t *sec2, line_t *master, int flags)
 {
 	ffloor_t *ffloor;
-	line_t* master2;
 	thinker_t *th;
 	friction_t *f;
 	pusher_t *p;
@@ -3163,13 +3162,6 @@ static ffloor_t *P_AddOldWater(sector_t *sec, sector_t *sec2, line_t *master, in
 	// Reduce floor height by one so we don't see the floor texture
 	floorheight = (&sec->floorheight);
 	floorheight--;
-
-	//Create a copy of the master line so we can modify it without unknowingly changing a texture or something
-	master2 = Z_Malloc(sizeof (line_t), PU_LEVEL, NULL); 
-	memcpy(master2, master, sizeof(line_t));
-	
-	//Fuck you, it works
-	sides[master2->sidenum[0]].midtexture = R_TextureNumForName("GFALL1");
 	
 	// Add the floor
 	ffloor = Z_Malloc(sizeof (ffloor_t), PU_LEVEL, NULL);
@@ -3188,7 +3180,7 @@ static ffloor_t *P_AddOldWater(sector_t *sec, sector_t *sec2, line_t *master, in
 	ffloor->topyoffs = &sec2->ceiling_yoffs;
 
 	ffloor->flags = flags;
-	ffloor->master = master2;
+	ffloor->master = master;
 
 	// scan the thinkers
 	// to see if this FOF should have friction

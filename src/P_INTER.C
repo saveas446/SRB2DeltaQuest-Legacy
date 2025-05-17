@@ -920,7 +920,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 		case MT_EMMY:
 			P_SpawnMobj(special->x, special->y, special->z, MT_SPARK);
 			tokenlist += special->health;
-			token++;
 	
 			if (ALL7EMERALDS) // Got all 7
 			{

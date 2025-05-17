@@ -1486,7 +1486,10 @@ void R_StoreWallRange(int start, int stop)
         if (worldlow > worldbottom)     //seulement si VISIBLE!!!
         {
             // bottom texture
-            bottomtexture = texturetranslation[sidedef->bottomtexture];
+			
+			//! NULL POINTER PROTECTION
+			if (texturetranslation != 0) 
+				bottomtexture = texturetranslation[sidedef->bottomtexture];
 
             if (linedef->flags & ML_DONTPEGBOTTOM)
             {
