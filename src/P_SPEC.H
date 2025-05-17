@@ -92,7 +92,10 @@ typedef struct
 {
 	thinker_t thinker;
 	sector_t *sector;
+	int count;
 	int maxlight;
+	int mintime;
+	int maxtime;
 	int minlight;
 } lightflash_t;
 
@@ -721,5 +724,7 @@ mobj_t *P_GetObjectTypeInSectorNum(mobjtype_t type, size_t s);
 void P_CalcHeight(player_t *player);
 
 sector_t *P_ThingOnSpecial3DFloor(mobj_t *mo);
+
+void    P_SpawnLightFlash (sector_t* sector);
 
 #endif

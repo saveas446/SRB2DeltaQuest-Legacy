@@ -3117,6 +3117,141 @@ static ffloor_t *P_AddFakeFloor(sector_t *sec, sector_t *sec2, line_t *master, i
 	return ffloor;
 }
 
+/** Adds old water.
+  * This function is a hack but do you know what? I don't care.
+  *
+  * \param sec    Target sector.
+  * \param sec2   Control sector.
+  * \param master Control linedef.
+  * \param flags  Options affecting this 3Dfloor.
+  * \return Pointer to the new 3Dfloor.
+  * \sa P_AddFFloor, P_AddFakeFloorsByLine, P_SpawnSpecials
+  */
+static ffloor_t *P_AddOldWater(sector_t *sec, sector_t *sec2, line_t *master, int flags)
+{
+	ffloor_t *ffloor;
+	line_t* master2;
+	thinker_t *th;
+	friction_t *f;
+	pusher_t *p;
+	int floorheight;
+
+	if (sec2->ceilingheight < sec2->floorheight)
+		I_Error("One of your FOFs with a tag of %d has a top height less than that of the bottom.\n", master->tag);
+
+	if (sec2->numattached == 0)
+	{
+		sec2->attached = malloc(sizeof (size_t));
+		if (!sec2->attached)
+			I_Error("No more free memory to AddFakeFloor");
+		sec2->attached[0] = sec - sectors;
+		sec2->numattached = 1;
+	}
+	else
+	{
+		int i;
+
+		for (i = 0; i < sec2->numattached; i++)
+			if (sec2->attached[i] == (size_t)(sec - sectors))
+				return NULL;
+
+		sec2->attached = realloc(sec2->attached, sizeof (size_t)*(sec2->numattached + 1));
+		sec2->attached[sec2->numattached] = sec - sectors;
+		sec2->numattached++;
+	}
+	
+	// Reduce floor height by one so we don't see the floor texture
+	floorheight = (&sec->floorheight);
+	floorheight--;
+
+	//Create a copy of the master line so we can modify it without unknowingly changing a texture or something
+	master2 = Z_Malloc(sizeof (line_t), PU_LEVEL, NULL); 
+	memcpy(master2, master, sizeof(line_t));
+	
+	//Fuck you, it works
+	sides[master2->sidenum[0]].midtexture = R_TextureNumForName("GFALL1");
+	
+	// Add the floor
+	ffloor = Z_Malloc(sizeof (ffloor_t), PU_LEVEL, NULL);
+	ffloor->secnum = (int)(sec2 - sectors);
+	ffloor->target = sec;
+	ffloor->bottomheight = floorheight;
+	ffloor->bottompic = &sec2->floorpic;
+	ffloor->bottomxoffs = &sec2->floor_xoffs;
+	ffloor->bottomyoffs = &sec2->floor_yoffs;
+
+	// Add the ceiling
+	ffloor->topheight = &sec2->floorheight;
+	ffloor->toppic = &sec2->floorpic;
+	ffloor->toplightlevel = &sec2->lightlevel;
+	ffloor->topxoffs = &sec2->ceiling_xoffs;
+	ffloor->topyoffs = &sec2->ceiling_yoffs;
+
+	ffloor->flags = flags;
+	ffloor->master = master2;
+
+	// scan the thinkers
+	// to see if this FOF should have friction
+	for (th = thinkercap.next; th != &thinkercap; th = th->next)
+	{
+		if (th->function.acp1 != (actionf_p1)T_Friction)
+			continue;
+
+		f = (friction_t *)th;
+
+		if (&sectors[f->affectee] == sec2)
+			Add_Friction(f->friction, f->movefactor, (int)(sec-sectors), true);
+	}
+
+	// scan the thinkers
+	// to see if this FOF should have wind/current/pusher
+	for (th = thinkercap.next; th != &thinkercap; th = th->next)
+	{
+		if (th->function.acp1 != (actionf_p1)T_Pusher)
+			continue;
+
+		p = (pusher_t *)th;
+
+		if (&sectors[p->affectee] == sec2)
+			Add_Pusher(p->type, p->x_mag<<FRACBITS, p->y_mag<<FRACBITS, p->source, (int)(sec-sectors), p->affectee);
+	}
+
+	if (flags & FF_TRANSLUCENT)
+	{
+		if (sides[master->sidenum[0]].toptexture > 0)
+			ffloor->alpha = sides[master->sidenum[0]].toptexture;
+		else
+			ffloor->alpha = 0x80;
+	}
+	else
+		ffloor->alpha = 0xff;
+
+	if (flags & FF_QUICKSAND)
+		CheckForQuicksand = true;
+
+	if ((flags & FF_BUSTUP) || (flags & FF_SHATTER) || (flags & FF_SPINBUST))
+		CheckForBustableBlocks = true;
+
+	if ((flags & FF_MARIO))
+	{
+		P_AddBlockThinker(sec2, sec, master);
+		CheckForMarioBlocks = true;
+	}
+
+	if ((flags & FF_CRUMBLE))
+		sec2->crumblestate = 1;
+
+	if ((flags & FF_FLOATBOB))
+	{
+		P_AddFloatThinker(sec2, sec);
+		CheckForFloatBob = true;
+	}
+
+	P_AddFFloor(sec, ffloor);
+
+	return ffloor;
+}
+
 //
 // SPECIAL SPAWNING
 //
@@ -3501,7 +3636,153 @@ static int axtoi(char *hexStg)
   */
 void P_SpawnSpecials(void)
 {
-	sector_t *sector;
+	//PART 1: SETUP
+	sector_t*   sector;
+    int         i;
+	int			z; // Tails 08-26-2001
+    int         episode;
+	short   numlinespecials;
+	
+    episode = 1;
+    if (W_CheckNumForName("texture2") >= 0)
+        episode = 2;
+
+
+    /*// See if -TIMER needs to be used. (or -avg)
+    levelTimer = false;
+
+    if(cv_timelimit.value)
+    {
+        levelTimer = true;
+        levelTimeCount = cv_timelimit.value * 60 * TICRATE;
+    }*/
+	
+	//PART 2: SECTOR SPECIALS
+    /*for (i=0 ; i<numsectors ; i++, sector++)
+    {
+        if (!sector->special)
+            continue;
+
+		//secrets don't do anything in demo 2 anyway
+        /*if (sector->special&SECRET_MASK) //SoM: 3/8/2000: count secret flags
+          totalsecret++;*/
+	/*
+        switch (sector->special&31)
+        {
+          case 1:
+            // FLICKERING LIGHTS
+            P_SpawnLightFlash (sector);
+            break;
+
+          case 2:
+            // STROBE FAST
+            P_SpawnStrobeFlash(sector,FASTDARK,0);
+            break;
+
+          case 3:
+            // STROBE SLOW
+            P_SpawnStrobeFlash(sector,SLOWDARK,0);
+            break;
+
+          case 4:
+            // STROBE FAST/DEATH SLIME
+            P_SpawnStrobeFlash(sector,FASTDARK,0);
+            sector->special |= 3<<DAMAGE_SHIFT; //SoM: 3/8/2000: put damage bits in
+            break;
+
+          case 8:
+            // GLOWING LIGHT
+            P_SpawnGlowingLight(sector);
+            sector->special = 4; // Tails 9-15-99
+            break;
+
+		//secrets don't do anything in demo 2 anyway
+          /*case 9:
+            // SECRET SECTOR
+            if(sector->special<32)
+              totalsecret++;
+            break;*/
+
+	/*		case 10:
+            // DOOR CLOSE IN 30 SECONDS
+            P_SpawnDoorCloseIn30 (sector);
+            break;
+
+          case 12:
+            // SYNC STROBE SLOW
+            P_SpawnStrobeFlash (sector, SLOWDARK, 1);
+            break;
+
+          case 13:
+            // SYNC STROBE FAST
+            P_SpawnStrobeFlash (sector, FASTDARK, 1);
+            break;
+
+          case 14:
+            // DOOR RAISE IN 5 MINUTES
+            P_SpawnDoorRaiseIn5Mins (sector, i);
+            break;
+
+          case 17:
+            P_SpawnFireFlicker(sector);
+            break;
+        }
+    }*/
+	
+	//PART 3: LINEDEFS
+	
+    /*copy pasted from march 02 plsss work
+    P_RemoveAllActiveCeilings();
+    P_RemoveAllActivePlats();*/
+
+	//the stuff seen here seems to be gone, maybe 
+    /*for (i = 0;i < MAXBUTTONS;i++)
+      memset(&buttonlist[i],0,sizeof(button_t));*/
+
+    /*P_InitTagLists();   //Create xref tables for tags
+    P_SpawnScrollers(); //Add generalized scrollers
+    P_SpawnFriction();  //New friction model using linedefs
+    P_SpawnPushers();   //New pusher model using linedefs*/
+	
+	P_InitTagLists();   // Create xref tables for tags
+	P_SpawnScrollers(); // Add generalized scrollers
+	P_SpawnFriction();  // Friction model using linedefs
+	P_SpawnPushers();   // Pusher model using linedefs
+	
+	
+    //  Init line EFFECTs
+    numlinespecials = 0;
+    for (i = 0;i < numlines; i++)
+    {
+        switch(lines[i].special)
+        {
+          int s, sec;
+          //SoM: 3/20/2000: support for drawn heights coming from different sector
+          case 270:
+          // as far as i can tell this code is identical to the 1.08 version so idk why this isn't working
+			sec = sides[*lines[i].sidenum].sector-sectors;
+            for (s = -1; (s = P_FindSectorFromLineTag(lines+i,s)) >= 0;)
+            {
+				//Create water FOF with ceiling height of control sector and floor height of target sector
+				//to emulate old water
+				
+				//You don't know how long it took me to find this solution.
+				//HOURS of trying to restore the old water.
+				//I beg of you, just use this hack.
+				P_AddOldWater(&sectors[s], &sectors[sec], lines+i, FF_EXISTS|FF_RENDERALL|FF_SWIMMABLE|FF_BOTHPLANES|FF_ALLSIDES|FF_CUTEXTRA|FF_EXTRA|FF_CUTSPRITES);
+            }
+            break;
+          case 281:
+            sec = sides[*lines[i].sidenum].sector-sectors;
+            for (s = -1; (s = P_FindSectorFromLineTag(lines+i,s)) >= 0;)
+              P_AddFakeFloor(&sectors[s], &sectors[sec], lines+i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL);
+            break;
+	      case 282: // Ring Sector Tails 10-31-2000
+			EV_DoFloor(&lines[i], instantLower); // Tails 10-31-2000
+		  break; // Tails 10-31-2000
+		}
+	}
+/*	sector_t *sector;
 	int i, j;
 
 	// Set the default gravity. Custom gravity overrides this setting.
@@ -4237,7 +4518,7 @@ void P_SpawnSpecials(void)
 			default:
 				break;
 		}
-	}
+	}*/
 }
 
 /** Adds 3Dfloors as appropriate based on a common control linedef.

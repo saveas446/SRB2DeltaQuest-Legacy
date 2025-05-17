@@ -21,6 +21,7 @@
 
 #include "doomdef.h"
 #include "p_local.h"
+#include "p_spec.h"
 #include "r_state.h"
 #include "z_zone.h"
 #include "m_random.h"
@@ -265,6 +266,51 @@ void P_SpawnStrobeFlash(sector_t *sector, int fastOrSlow, int inSync)
 
 	sector->lightingdata = flash;
 }
+
+// T_LightFlash
+// Do flashing lights.
+//
+void T_LightFlash (lightflash_t* flash)
+{
+    if (--flash->count)
+        return;
+
+    if (flash->sector->lightlevel == flash->maxlight)
+    {
+        flash-> sector->lightlevel = flash->minlight;
+        flash->count = (P_Random()&flash->mintime)+1;
+    }
+    else
+    {
+        flash-> sector->lightlevel = flash->maxlight;
+        flash->count = (P_Random()&flash->maxtime)+1;
+    }
+
+}
+
+
+void P_SpawnLightFlash (sector_t*       sector)
+{
+    lightflash_t*       flash;
+
+    // nothing special about it during gameplay
+    sector->special &= ~31; //SoM: 3/7/2000: Clear non-generalized type
+
+    flash = Z_Malloc ( sizeof(*flash), PU_LEVSPEC, 0);
+
+    P_AddThinker (&flash->thinker);
+
+    flash->thinker.function.acp1 = (actionf_p1) T_LightFlash;
+    flash->sector = sector;
+    flash->maxlight = sector->lightlevel;
+
+    flash->minlight = P_FindMinSurroundingLight(sector,sector->lightlevel);
+    flash->maxtime = 64;
+    flash->mintime = 7;
+    flash->count = (P_Random()&flash->maxtime)+1;
+}
+
+
 
 /** Thinker function for glowing light.
   *

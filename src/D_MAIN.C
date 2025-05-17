@@ -885,6 +885,8 @@ static void IdentifyVersion(void)
 	D_AddFile(va(pandf,srb2waddir,"drill.dta")); //drill.dta
 	D_AddFile(va(pandf,srb2waddir,"soar.dta")); //soar.dta
 
+//And music.dta is dead!
+/*
 #if !defined (SDL) || defined (HAVE_MIXER)
 	{
 #ifdef DC
@@ -898,7 +900,7 @@ static void IdentifyVersion(void)
 		else
 			I_Error("File %s has been modified with non-music lumps",musicfile);
 	}
-#endif
+#endif*/
 
 	// Temporary patchfile loading
 	//D_AddFile(va(pandf,srb2waddir,"srb2pat.wad"));//srb2pat.wad

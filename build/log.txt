@@ -1,7 +1,13 @@
 GetArgcArgv() ...
-lpCmdLine is '"D:\Games\SRB2\demo_2\build\srb2debug.exe" '
-Myargc: 1
-myargv[0] : 'D:\Games\SRB2\demo_2\build\srb2debug.exe'
+lpCmdLine is 'srb2debug  -win -nomusic -nosound -nocd -warp 1'
+Myargc: 7
+myargv[0] : 'srb2debug'
+myargv[1] : '-win'
+myargv[2] : '-nomusic'
+myargv[3] : '-nosound'
+myargv[4] : '-nocd'
+myargv[5] : '-warp'
+myargv[6] : '1'
 I_StartupSystem() ...
 D_SRB2Main() ...
  May 16 2025                   Sonic Robo Blast 2                      21:30:37 
@@ -11,7 +17,7 @@ system memory 2047MB free 2047MB
 64 megabytes requested for Z_Init.
 W_Init: Init WADfiles.
 I_StartupTimer...
-Added file D:\Games\SRB2\demo_2\build\srb2.srb (3597 lumps)
+Added file D:\Games\SRB2\demo_2\build\srb2.srb (3133 lumps)
 Loading main config from D:\Games\SRB2\demo_2\build\srb2.srb
 Added file D:\Games\SRB2\demo_2\build\sonic.plr (172 lumps)
 Added file D:\Games\SRB2\demo_2\build\tails.plr (171 lumps)
@@ -23,32 +29,12 @@ Added file D:\Games\SRB2\demo_2\build\rail.wpn (37 lumps)
 Added file D:\Games\SRB2\demo_2\build\infn.wpn (37 lumps)
 Added file D:\Games\SRB2\demo_2\build\drill.dta (182 lumps)
 Added file D:\Games\SRB2\demo_2\build\soar.dta (102 lumps)
-Added file D:\Games\SRB2\demo_2\build\music.dta (132 lumps)
 ===========================================================================
                    We hope you enjoy this game as
                      much as we did making it!
                             ...wait. =P
 ===========================================================================
 I_StartupGraphics...
-mode 640 x 480 x 32 bpp
-mode 720 x 480 x 32 bpp
-mode 720 x 576 x 32 bpp
-mode 800 x 600 x 32 bpp
-mode 1024 x 768 x 32 bpp
-mode 1152 x 864 x 32 bpp
-mode 1176 x 664 x 32 bpp
-mode 1280 x 720 x 32 bpp
-mode 1280 x 768 x 32 bpp
-mode 1280 x 800 x 32 bpp
-mode 1280 x 960 x 32 bpp
-mode 1280 x 1024 x 32 bpp
-mode 1360 x 768 x 32 bpp
-mode 1366 x 768 x 32 bpp
-mode 1440 x 1080 x 32 bpp
-mode 1600 x 900 x 32 bpp
-mode 1600 x 1024 x 32 bpp
-mode 1680 x 1050 x 32 bpp
-mode 1920 x 1080 x 32 bpp
 #00: 320x200x1bpp (desc: '320x200W')
 VID_SetMode(0)
 HU_Init: Setting up heads up display.
@@ -74,15 +60,8 @@ added skin 'knuckles'
 
 InitColormaps...
 S_Init: Setting up sound.
-I_StartupSound:  Compacting onboard sound-memory... done
-sound initialised.
 I_InitDigMusic()
 I_InitMIDIMusic()
-MIDI product name: Microsoft MIDI Mapper
-MIDI technology: Microsoft MIDI Mapper
-MIDI caps:
--Direct support for midiStreamOut()
--Volume control
 ST_Init: Init status bar.
 D_CheckNetGame: Checking network game status.
 Entering main app loop...
@@ -102,10 +81,5 @@ Speeding off to level...
 >quit
 I_ShutdownMouse()
 I_ShutdownKeyboard()
-I_ShutdownDigMusic: 
-I_ShutdownMIDIMusic: 
-I_ShutdownSound()
-I_ShutdownDigMusic: 
-I_ShutdownMIDIMusic: 
 I_ShutdownGraphics()
 I_Quit(): end of logstream.
