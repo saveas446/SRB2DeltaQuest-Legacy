@@ -671,7 +671,7 @@ void F_StartTitleScreen(void)
 
 	// IWAD dependent stuff.
 
-	S_ChangeMusic(mus_titles, looptitle);
+	S_ChangeMusic(mus_dm2ttl, looptitle);
 
 	finalecount = 0;
 	finalestage = 0;
@@ -765,7 +765,9 @@ void F_StartCredits(void)
 	CON_ToggleOff();
 	CON_ClearHUD();
 	S_StopMusic();
-	S_ChangeMusic(mus_credit, false);
+	//Credits, at least as they appear in Final Demo, won't be a thing in D2U
+	//Save 17-05-2025
+	//S_ChangeMusic(mus_credit, false);
 	finalecount = 0;
 	animtimer = 0;
 
@@ -982,7 +984,7 @@ void F_StartCustomCutscene(int cutscenenum, boolean precutscene, boolean resetpl
 	mouthtics = BASEVIDWIDTH - 64; // Crap.. I forgot what this is for! I'd better not touch it...
 
 	if (cutscenes[cutnum].scene[scenenum].musicslot != 0)
-		S_ChangeMusic(cutscenes[cutnum].scene[scenenum].musicslot, false);
+		S_ChangeMusic(cutscenes[cutnum].scene[scenenum].musicslot , false);
 }
 
 static void F_IntroTextWrite(void);
@@ -2719,7 +2721,7 @@ static void F_AdvanceToNextScene(void)
 	}
 
 	if (cutscenes[cutnum].scene[scenenum].musicslot != 0)
-		S_ChangeMusic(cutscenes[cutnum].scene[scenenum].musicslot, false);
+		S_ChangeMusic(cutscenes[cutnum].scene[scenenum].musicslot , false);
 
 	if (rendermode == render_soft)
 	{

@@ -2630,10 +2630,7 @@ static inline void M_SetupChoosePlayer(int choice)
 {
 	choice = 0;
 	if (Playing() == false)
-	{
 		S_StopMusic();
-		S_ChangeMusic(mus_chrsel, true);
-	}
 
 	M_SetupNextMenu (&PlayerDef);
 }
@@ -3639,7 +3636,7 @@ static void M_TimeAttack(int choice)
 	CV_AddValue(&cv_nextmap, -1);
 
 	gamestate = GS_TIMEATTACK;
-	S_ChangeMusic(mus_racent, true);
+	S_ChangeMusic(mus_read_m, true);
 }
 
 //
@@ -3656,7 +3653,7 @@ void M_DrawTimeAttackMenu(void)
 	tic_t besttime = 0;
 	int i;
 
-	S_ChangeMusic(mus_racent, true); // Eww, but needed for when user hits escape during demo playback
+	S_ChangeMusic(mus_dm2int, true); // Eww, but needed for when user hits escape during demo playback
 
 	V_DrawPatchFill(W_CachePatchName("SRB2BACK", PU_CACHE));
 
@@ -5255,7 +5252,7 @@ static void M_ToggleDigital(void)
 		if (nofmod) return;
 		S_Init(cv_soundvolume.value, cv_digmusicvolume.value, cv_midimusicvolume.value);
 		S_StopMusic();
-		S_ChangeMusic(mus_lclear, false);
+		S_ChangeMusic(mus_dm2int, false);
 		M_StartMessage("Digital Music Enabled", NULL, MM_NOTHING);
 	}
 	else
@@ -5282,7 +5279,7 @@ static void M_ToggleMIDI(void)
 		I_InitMIDIMusic();
 		if (nomusic) return;
 		S_Init(cv_soundvolume.value, cv_digmusicvolume.value, cv_midimusicvolume.value);
-		S_ChangeMusic(mus_lclear, false);
+		S_ChangeMusic(mus_dm2int, false);
 		M_StartMessage("MIDI Music Enabled", NULL, MM_NOTHING);
 	}
 	else
@@ -7573,7 +7570,7 @@ void M_StartControlPanel(void)
 		itemOn = currentMenu->lastOn;
 		timeattacking = false;
 		gamestate = GS_TIMEATTACK;
-		S_ChangeMusic(mus_racent, true);
+		S_ChangeMusic(mus_dm2int, true);
 		CV_AddValue(&cv_nextmap, 1);
 		CV_AddValue(&cv_nextmap, -1);
 		return;

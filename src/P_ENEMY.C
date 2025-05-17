@@ -1606,10 +1606,7 @@ void A_Invincibility(mobj_t *actor)
 	if (P_IsLocalPlayer(player) && !player->powers[pw_super])
 	{
 		S_StopMusic();
-		if (mariomode)
-			S_ChangeMusic(mus_minvnc, false);
-		else
-			S_ChangeMusic(mus_invinc, false);
+		S_ChangeMusic(mus_invinc, false);
 	}
 }
 
@@ -1638,7 +1635,7 @@ void A_SuperSneakers(mobj_t *actor)
 	if (P_IsLocalPlayer(player) && (!player->powers[pw_super] && !mapheaderinfo[gamemap-1].nossmusic))
 	{
 		S_StopMusic();
-		S_ChangeMusic(mus_shoes, false);
+		S_ChangeMusic(mus_invinc, false);
 	}
 }
 

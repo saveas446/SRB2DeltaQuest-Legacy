@@ -1547,7 +1547,7 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 					musicnum += 2048;
 
 				if ((musicnum & ~2048) < NUMMUSIC && (musicnum & ~2048) > mus_None)
-					S_ChangeMusic(musicnum & 2047, !(line->flags & ML_NOCLIMB));
+					//S_ChangeMusic(musicnum & 2047, !(line->flags & ML_NOCLIMB));
 				else
 					S_StopMusic();
 

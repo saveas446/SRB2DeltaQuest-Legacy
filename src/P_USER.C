@@ -761,7 +761,7 @@ void P_DoSuperTransformation(player_t *player, boolean giverings)
 	if (!mapheaderinfo[gamemap-1].nossmusic && P_IsLocalPlayer(player))
 	{
 		S_StopMusic();
-		S_ChangeMusic(mus_supers, true);
+		S_ChangeMusic(mus_invinc, true);
 	}
 	S_StartSound(player->mo, sfx_supert);
 
@@ -826,19 +826,10 @@ void P_AddPlayerScore(player_t *player, int amount)
 //
 void P_RestoreMusic(player_t *player)
 {
-	if (player->powers[pw_super] && !mapheaderinfo[gamemap-1].nossmusic)
-		S_ChangeMusic(mus_supers, true);
-	else if (player->powers[pw_invulnerability] > 1 && player->powers[pw_extralife] <= 1)
-	{
-		if (mariomode)
-			S_ChangeMusic(mus_minvnc, false);
-		else
-			S_ChangeMusic(mus_invinc, false);
-	}
-	else if (player->powers[pw_sneakers] > 1 && !mapheaderinfo[gamemap-1].nossmusic)
-		S_ChangeMusic(mus_shoes, false);
+	if ((player->powers[pw_invulnerability] > 1 && player->powers[pw_extralife] <= 1) || (player->powers[pw_sneakers] > 1 && !mapheaderinfo[gamemap-1].nossmusic) || (player->powers[pw_super] && !mapheaderinfo[gamemap-1].nossmusic))
+		S_ChangeMusic(mus_invinc, false);
 	else if (!(player->powers[pw_extralife] > 1))
-		S_ChangeMusic(mapmusic & 2047, true);
+		S_ChangeMusic(mapmusic & 2047 , true);
 }
 
 //
@@ -4293,7 +4284,7 @@ static void P_MovePlayer(player_t *player)
 		mobj_t *killer;
 
 		if ((netgame || multiplayer) && P_IsLocalPlayer(player))
-			S_ChangeMusic(mapmusic & 2047, true);
+			S_ChangeMusic(mapmusic & 2047 , true);
 
 		killer = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_DISS);
 		killer->threshold = 42; // Special flag that it was drowning which killed you.
@@ -4303,7 +4294,7 @@ static void P_MovePlayer(player_t *player)
 	else if (player->powers[pw_spacetime] == 1)
 	{
 		if ((netgame || multiplayer) && P_IsLocalPlayer(player))
-			S_ChangeMusic(mapmusic & 2047, true);
+			S_ChangeMusic(mapmusic & 2047 , true);
 
 		P_DamageMobj(player->mo, NULL, NULL, 10000);
 	}
@@ -7314,7 +7305,7 @@ static void P_DeathThink(player_t *player)
 
 		// Return to level music
 		if (netgame && player->deadtimer == gameovertics && P_IsLocalPlayer(player))
-			S_ChangeMusic(mapmusic & 2047, true);
+			S_ChangeMusic(mapmusic & 2047 , true);
 	}
 }
 
