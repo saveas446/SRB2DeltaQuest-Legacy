@@ -13,22 +13,13 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (Australia) resources
+// Neutral resources
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENA)
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
 #ifdef _WIN32
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_AUS
+LANGUAGE 0x00, 0x00
 #pragma code_page(1252)
 #endif //_WIN32
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDI_ICON1               ICON    DISCARDABLE     "Srb2win.ico"
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -55,52 +46,27 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
+#endif    // Neutral resources
+/////////////////////////////////////////////////////////////////////////////
 
-#ifndef _MAC
+
+/////////////////////////////////////////////////////////////////////////////
+// English (Australia) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENA)
+#ifdef _WIN32
+LANGUAGE 0x00, 0x00
+#pragma code_page(1252)
+#endif //_WIN32
+
 /////////////////////////////////////////////////////////////////////////////
 //
-// Version
+// Icon
 //
 
-VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,0
- PRODUCTVERSION 1,0,0,0
- FILEFLAGSMASK 0x3fL
-#ifdef _DEBUG
- FILEFLAGS 0x1L
-#else
- FILEFLAGS 0x0L
-#endif
- FILEOS 0x4L
- FILETYPE 0x1L
- FILESUBTYPE 0x0L
-BEGIN
-    BLOCK "StringFileInfo"
-    BEGIN
-        BLOCK "04090000"
-        BEGIN
-            VALUE "Comments", "Visit our web site at www.srb2.org for news and updates!\0"
-            VALUE "CompanyName", "Sonic Team Junior\0"
-            VALUE "FileDescription", "Demo 2 Ultimate\0"
-            VALUE "FileVersion", "1, 0, 0, 0\0"
-            VALUE "InternalName", "srb2\0"
-            VALUE "LegalCopyright", "Copyright © 1998-2005 Sonic Team Junior, D2U made in 2023-2025\0"
-            VALUE "LegalTrademarks", "Sonic the Hedgehog and related characters are trademarks of Sega.\0"
-            VALUE "OriginalFilename", "srb2win.exe\0"
-            VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "Sonic Robo Blast 2\0"
-            VALUE "ProductVersion", "1, 0, 0, 0\0"
-            VALUE "SpecialBuild", "\0"
-        END
-    END
-    BLOCK "VarFileInfo"
-    BEGIN
-        VALUE "Translation", 0x409, 0
-    END
-END
-
-#endif    // !_MAC
-
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON2               ICON    DISCARDABLE     "Srb2win.ico"
 #endif    // English (Australia) resources
 /////////////////////////////////////////////////////////////////////////////
 

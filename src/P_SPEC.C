@@ -28,6 +28,7 @@
 #include "r_data.h"
 #include "m_random.h"
 #include "p_mobj.h"
+#include "p_doors.h"
 #include "i_system.h"
 #include "s_sound.h"
 #include "w_wad.h"
@@ -97,64 +98,43 @@ static size_t maxanims;
 /** Hardcoded animation sequences.
   * Used if no ANIMATED lump is found in a loaded wad.
   */
-static animdef_t harddefs[] =
+animdef_t               harddefs[] =
 {
-	// DOOM II flat animations.
-	{false,     "NUKAGE3",      "NUKAGE1",      4},
-	{false,     "FWATER16",     "FWATER1",      4},
-	{false,     "BWATER16",     "BWATER01",      4},
-	{false,     "LWATER16",     "LWATER1",      4},
-	{false,     "WATER7",       "WATER0",       4},
-	{false,     "SWATER4",      "SWATER1",      8},
-	{false,     "LAVA4",        "LAVA1",        8},
-	{false,     "BLOOD3",       "BLOOD1",       8},
+    // DOOM II flat animations.
+    {false,     "NUKAGE3",      "NUKAGE1",      8},
+    {false,     "FWATER16",     "FWATER1",      4},
+    {false,     "SWATER4",      "SWATER1",      8},
+    {false,     "LAVA4",        "LAVA1",        8},
+    {false,     "BLOOD3",       "BLOOD1",       8},
 
-	{false,     "RROCK08",      "RROCK05",      8},
-	{false,     "QUIKSN16",    "QUIKSN01",      4}, // Quicksand
-	{false,     "CHEMG16",      "CHEMG01",      4}, // THZ Chemical gunk
-	{false,     "GOOP16",       "GOOP01",       4}, // Green chemical gunk
-	{false,     "SLIME08",      "SLIME05",      4},
-	{false,     "THZBOXF4",     "THZBOXF1",     2}, // Moved up with the flats
-	{false,     "ALTBOXF4",     "ALTBOXF1",     2},
+    {false,     "RROCK08",      "RROCK05",      8},
+    {false,     "CHEMG16",      "CHEMG01",      4}, // Tails 12-11-2000 THZ Chemical gunk
+    {false,     "SLIME08",      "SLIME05",      4}, // Tails
+//    {false,     "SLIME12",      "SLIME09",      8},
 
-	{false,     "BLUE3",        "BLUE1",        4},
-	{false,     "GREY3",        "GREY1",        4},
+    // animated textures
+/*    {true,      "BLODGR4",      "BLODGR1",      8},
+    {true,      "SLADRIP3",     "SLADRIP1",     8},
 
-	// animated textures
-	{true,      "GFALL4",       "GFALL1",       2}, // Short waterfall
-	{true,      "CFALL4",       "CFALL1",       2}, // Long waterfall
-	{true,      "TFALL4",       "TFALL1",       2}, // THZ Chemical fall
-	{true,      "AFALL4",       "AFALL1",       2}, // Green Chemical fall
-	{true,      "THZBOX04",     "THZBOX01",     2},
-	{true,      "ALTBOX04",     "ALTBOX01",     2},
-	{true,      "SFALL4",       "SFALL1",       4}, // Lava fall
-	{true,      "BFALL4",       "BFALL1",       2}, // HPZ waterfall
-	{true,      "GREYW3",       "GREYW1",       4},
-	{true,      "BLUEW3",       "BLUEW1",       4},
-	{true,      "COMP6",        "COMP4",        4},
-	{true,      "RED3",         "RED1",         4},
-	{true,      "YEL3",         "YEL1",         4},
+    {true,      "BLODRIP4",     "BLODRIP1",     8},
+    {true,      "FIREWALL",     "FIREWALA",     8},
+    {true,      "GSTFONT3",     "GSTFONT1",     8},
+    {true,      "FIRELAVA",     "FIRELAV3",     8},
+    {true,      "FIREMAG3",     "FIREMAG1",     8},
+    {true,      "FIREBLU2",     "FIREBLU1",     8},
+    {true,      "ROCKRED3",     "ROCKRED1",     8},
 
-	// Begin dummy slots
-	{false,     "DUMYSLOT",    "DUMYSLOT",    8},
-	{false,     "DUMYSLOT",    "DUMYSLOT",    8},
-	{false,     "DUMYSLOT",    "DUMYSLOT",    8},
-	{false,     "DUMYSLOT",    "DUMYSLOT",    8},
-	{false,     "DUMYSLOT",    "DUMYSLOT",    8},
-	{false,     "DUMYSLOT",    "DUMYSLOT",    8},
-	{false,     "DUMYSLOT",    "DUMYSLOT",    8},
-	{false,     "DUMYSLOT",    "DUMYSLOT",    8},
-	{false,     "DUMYSLOT",    "DUMYSLOT",    8},
-	{false,     "DUMYSLOT",    "DUMYSLOT",    8},
-	{false,     "DUMYSLOT",    "DUMYSLOT",    8},
-	{false,     "DUMYSLOT",    "DUMYSLOT",    8},
-	{false,     "DUMYSLOT",    "DUMYSLOT",    8},
-	{false,     "DUMYSLOT",    "DUMYSLOT",    8},
-	{false,     "DUMYSLOT",    "DUMYSLOT",    8},
-	{false,     "DUMYSLOT",    "DUMYSLOT",    8},
+    {true,      "BFALL4",       "BFALL1",       8},
+    {true,      "SFALL4",       "SFALL1",       8},
+    {true,      "WFALL4",       "WFALL1",       8},
+    {true,      "DBRAIN4",      "DBRAIN1",      8},*/
+	{true,      "GFALL4",       "GFALL1",       4}, // Short waterfall Tails 11-07-2000
+	{true,      "CFALL4",       "CFALL1",       4}, // Long waterfall Tails 11-07-2000
+	{true,      "TFALL4",       "TFALL1",       4}, // THZ Chemical fall Tails 11-07-2000
 
-	{   -1,             "",            "",    0},
+    {-1}
 };
+
 
 // Animating line specials
 
@@ -1479,8 +1459,18 @@ void P_SwitchWeather(int weathernum)
 void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 {
 	int secnum = -1;
-
-	// note: no commands with linedef types <= 98 can be used
+	
+    switch (line->special)
+    {
+        // TRIGGERS.
+        // All from here to RETRIGGERS.
+      case 2:
+        // Open Door
+        if(EV_DoDoor(line,dooropen))
+          line->special = 0;
+        break;
+	}
+	/*// note: no commands with linedef types <= 98 can be used
 	switch (line->special)
 	{
 		case 101: // Set tagged sector's floor height/pic
@@ -1849,7 +1839,7 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 				else if (cv_chasecam.value && mo->player == &players[displayplayer])
 					P_ResetCamera(mo->player, &camera);*/
 
-				mo->player->rmomx = mo->player->rmomy = 1;
+/*				mo->player->rmomx = mo->player->rmomy = 1;
 				mo->player->cmomx = mo->player->cmomy = 0;
 				P_ResetPlayer(mo->player);
 				P_SetPlayerMobjState(mo, S_PLAY_STND);
@@ -1893,7 +1883,7 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 
 		default:
 			break;
-	}
+	}*/
 }
 
 //
@@ -2794,7 +2784,8 @@ static inline void P_PlayerOnSpecial3DFloor(player_t *player)
 	}
 }
 
-#define VDOORSPEED (FRACUNIT*2/NEWTICRATERATIO)
+//maybe uncomment this if door speed is broken
+//#define VDOORSPEED (FRACUNIT*2/NEWTICRATERATIO)
 
 /** Checks if the player is in a special sector or FOF and apply any specials.
   *

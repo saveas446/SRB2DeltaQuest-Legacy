@@ -1225,7 +1225,7 @@ static void Got_AddPlayer(char **p, int playernum);
 // called one time at init
 void D_ClientServerInit(void)
 {
-	DEBFILE(va("- - -== SRB2 v%d.%.2d.%d"VERSIONSTRING" debugfile ==- - -\n",
+	DEBFILE(va("- - -== Doom LEGACY v%i.%.i.%i"VERSIONSTRING" debugfile ==- - -\n",
 		VERSION/100, VERSION%100, SUBVERSION));
 
 	COM_AddCommand("getplayernum", Command_GetPlayerNum);
