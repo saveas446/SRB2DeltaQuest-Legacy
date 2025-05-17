@@ -34,6 +34,7 @@ SRB2*.pcx
 *.iobj
 *.pch
 *.pdb
+*.idb
 *.ipdb
 *.pgc
 *.pgd
