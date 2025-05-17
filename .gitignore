@@ -63,3 +63,4 @@ SRB2*.pcx
 objs/*
 build/log.txt
 build/log.txt
+build/gamedata.dat

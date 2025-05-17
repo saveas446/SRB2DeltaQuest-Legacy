@@ -4769,8 +4769,9 @@ static void P_MovePlayer(player_t *player)
 						}
 						else // Otherwise, THOK!
 						{
-							if (!player->thokked || (player->charflags & SF_MULTIABILITY))
-							{
+							//The return of multi-thok! Save
+							/*if (!player->thokked || (player->charflags & SF_MULTIABILITY))
+							{*/
 								// Catapult the player
 								if ((player->mo->eflags & MF_UNDERWATER))
 									P_InstaThrust(player->mo, player->mo->angle, (player->actionspd<<FRACBITS)/2);
@@ -4810,7 +4811,7 @@ static void P_MovePlayer(player_t *player)
 
 								player->mfspinning = player->mfstartdash = 0;
 								player->thokked = true;
-							}
+							//}
 						}
 					}
 					break;
