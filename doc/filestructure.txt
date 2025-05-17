@@ -1,5 +1,0 @@
-build - build of new exe
-demo - latest demo version (right now demo 2)
-dev - dev version
-doc - documentation, like this
-src - new exe source code
