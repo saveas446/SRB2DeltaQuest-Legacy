@@ -16,10 +16,10 @@
 // English (U.S.) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-/*#ifdef _WIN32
+#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-#endif //_WIN32*/
+#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -81,10 +81,10 @@ BEGIN
         BEGIN
             VALUE "Comments", "Visit our web site at www.srb2.org for news and updates!\0"
             VALUE "CompanyName", "Sonic Team Junior\0"
-            VALUE "FileDescription", "Sonic Robo Blast 2\0"
+            VALUE "FileDescription", "Demo 2 Ultimate\0"
             VALUE "FileVersion", "1, 09\0"
-            VALUE "InternalName", "srb2\0"
-            VALUE "LegalCopyright", "Copyright © 1998-2005 Sonic Team Junior\0"
+            VALUE "InternalName", "D2U\0"
+            VALUE "LegalCopyright", "Copyright © 1998-2005 Sonic Team Junior, 2024-2025 Samuel & save__as\0"
             VALUE "LegalTrademarks", "Sonic the Hedgehog and related characters are trademarks of Sega.\0"
             VALUE "OriginalFilename", "srb2win.exe\0"
             VALUE "PrivateBuild", "\0"
