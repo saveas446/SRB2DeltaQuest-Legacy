@@ -164,9 +164,6 @@ static void M_StopMessage(int choice);
 static void M_GameOption(int choice);
 static void M_NetOption(int choice);
 static void M_MatchOptions(int choice);
-static void M_RaceOptions(int choice);
-static void M_TagOptions(int choice);
-static void M_CTFOptions(int choice);
 #ifdef CHAOSISNOTDEADYET
 static void M_ChaosOptions(int choice);
 #endif
@@ -1838,12 +1835,6 @@ consvar_t cv_chooseskin = {"chooseskin", DEFAULTSKIN, CV_HIDEN|CV_CALL, skins_co
 CV_PossibleValue_t gametype_cons_t[] =
 {
 	{GT_COOP, "Coop"}, {GT_MATCH, "Match"},
-	{GTF_TEAMMATCH, "Team Match"}, {GT_RACE, "Race"},
-	{GTF_TIMEONLYRACE, "Time-Only Race"}, {GT_TAG, "Tag"},
-	{GT_CTF, "CTF"},
-#ifdef CHAOSISNOTDEADYET
-	{GT_CHAOS, "Chaos"},
-#endif
 	{0, NULL}
 };
 consvar_t cv_newgametype = {"newgametype", "Coop", CV_HIDEN|CV_CALL, gametype_cons_t, Newgametype_OnChange, 0, NULL, NULL, 0, 0, NULL};
@@ -4791,9 +4782,6 @@ static menuitem_t NetOptionsMenu[] =
 	/// \todo do map change
 
 	{IT_STRING | IT_CALL, NULL, "Match Mode Options...",  M_MatchOptions,      20},
-	{IT_STRING | IT_CALL, NULL, "Race Mode Options...",  M_RaceOptions,       30},
-	{IT_STRING | IT_CALL, NULL, "Tag Mode Options...",  M_TagOptions,        40},
-	{IT_STRING | IT_CALL, NULL, "CTF Mode Options...",  M_CTFOptions,        50},
 #ifdef CHAOSISNOTDEADYET
 	{IT_STRING | IT_CALL, NULL, "Chaos Mode Options...",  M_ChaosOptions,      60},
 #endif
@@ -5058,39 +5046,6 @@ static void M_MatchOptions(int choice)
 		return;
 	}
 	M_SetupNextMenu(&MatchOptionsDef);
-}
-
-static void M_RaceOptions(int choice)
-{
-	choice = 0;
-	if (!(server || (adminplayer == consoleplayer)))
-	{
-		M_StartMessage("You are not the server\nYou can't change the options\n",NULL,MM_NOTHING);
-		return;
-	}
-	M_SetupNextMenu(&RaceOptionsDef);
-}
-
-static void M_TagOptions(int choice)
-{
-	choice = 0;
-	if (!(server || (adminplayer == consoleplayer)))
-	{
-		M_StartMessage("You are not the server\nYou can't change the options\n",NULL,MM_NOTHING);
-		return;
-	}
-	M_SetupNextMenu(&TagOptionsDef);
-}
-
-static void M_CTFOptions(int choice)
-{
-	choice = 0;
-	if (!(server || (adminplayer == consoleplayer)))
-	{
-		M_StartMessage("You are not the server\nYou can't change the options\n",NULL,MM_NOTHING);
-		return;
-	}
-	M_SetupNextMenu(&CTFOptionsDef);
 }
 
 #ifdef CHAOSISNOTDEADYET

@@ -418,12 +418,6 @@ void ST_Init(void)
 	invincibility = W_CachePatchName("PINVB0", PU_STATIC);
 	sneakers = W_CachePatchName("SHTVB0", PU_STATIC);
 
-	rflagico = W_CachePatchName("RFLAGICO", PU_STATIC);
-	bflagico = W_CachePatchName("BFLAGICO", PU_STATIC);
-	gotrflag = W_CachePatchName("GOTRFLAG", PU_STATIC);
-	gotbflag = W_CachePatchName("GOTBFLAG", PU_STATIC);
-	nonicon = W_CachePatchName("NONICON", PU_STATIC);
-
 	// NiGHTS HUD things
 	bluestat = W_CachePatchName("BLUESTAT", PU_STATIC);
 	byelstat = W_CachePatchName("BYELSTAT", PU_STATIC);

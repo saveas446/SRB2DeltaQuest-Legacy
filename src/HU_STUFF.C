@@ -1010,37 +1010,7 @@ void HU_DrawTabRankings(int x, int y, playersort_t *tab, int scorelines, int whi
 				V_DrawSmallMappedPatch (x, y-4, 0, faceprefix[players[tab[i].num].skin], colormap);
 			}
 		}
-
-		if (gametype == GT_CTF)
-		{
-			patch_t *p;
-
-			if (players[tab[i].num].gotflag & MF_REDFLAG) // Red
-			{
-				p = W_CachePatchName("RFLAGICO", PU_CACHE);
-				V_DrawSmallScaledPatch(x-32, y-4, 0, p);
-			}
-			else if (players[tab[i].num].gotflag & MF_BLUEFLAG) // Blue
-			{
-				p = W_CachePatchName("BFLAGICO", PU_CACHE);
-				V_DrawSmallScaledPatch(x-32, y-4, 0, p);
-			}
-		}
-
-		if (gametype == GT_RACE)
-		{
-			if (circuitmap)
-			{
-				if (players[tab[i].num].exiting)
-					V_DrawRightAlignedString(x+240, y, 0, va("%d:%02d.%02d", players[tab[i].num].realtime/(60*TICRATE), players[tab[i].num].realtime/TICRATE % 60, players[tab[i].num].realtime % TICRATE));
-				else
-					V_DrawRightAlignedString(x+240, y, 0, va("%d", tab[i].count));
-			}
-			else
-				V_DrawRightAlignedString(x+240, y, 0, va("%d:%02d.%02d", tab[i].count/(60*TICRATE), tab[i].count/TICRATE % 60, tab[i].count % TICRATE));
-		}
-		else
-			V_DrawRightAlignedString(x+240, y, 0, va("%d", tab[i].count));
+		V_DrawRightAlignedString(x+240, y, 0, va("%d", tab[i].count));
 
 		y += 16;
 	}
@@ -1062,19 +1032,6 @@ static void HU_DrawRankings(void)
 		p = W_CachePatchName("RESULT", PU_CACHE);
 		V_DrawScaledPatch((BASEVIDWIDTH - p->width)/2, 5, 0, p);
 	}*/
-
-	if (gametype == GT_CTF)
-	{
-		p = W_CachePatchName("BFLAGICO", PU_CACHE);
-		V_DrawSmallScaledPatch(128 - p->width/4, 4, 0, p);
-
-		V_DrawCenteredString(128, 16, 0, va("%d", bluescore));
-
-		p = W_CachePatchName("RFLAGICO", PU_CACHE);
-		V_DrawSmallScaledPatch(192 - p->width/4, 4, 0, p);
-
-		V_DrawCenteredString(192, 16, 0, va("%d", redscore));
-	}
 
 	if (gametype != GT_RACE)
 	{
