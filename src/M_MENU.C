@@ -156,6 +156,13 @@ static short skullAnimCounter = 10; // skull animation counter
 //
 static void M_DrawSaveLoadBorder(int x,int y);
 
+//===========================================================================
+//                            MULTI PLAYER MENU
+//===========================================================================
+static void M_SetupMultiPlayer(int choice);
+static void M_SetupMultiPlayerBis(int choice);
+static void M_Splitscreen(int choice);
+
 static void M_DrawThermo(int x,int y,consvar_t *cv);
 static void M_DrawSlider(int x, int y, int range);
 static void M_CentreText(int y, const char *string); // write text centered
@@ -350,6 +357,7 @@ typedef enum
 	main_end
 } main_e;
 
+//main menu options
 static menuitem_t MainMenu[] =
 {
 	{IT_CALL    | IT_STRING, NULL, "    secrets",   M_SecretsMenu,   84},
@@ -518,25 +526,38 @@ static void M_SaveGame(int choice);
 static void M_Statistics(int choice);
 static void M_TimeAttack(int choice);
 
+//comment this out to remove time attack and statics menus
+//#define FD_SPMENUOPTIONS
+
 typedef enum
 {
 	newgame = 0,
+#ifdef FD_SPMENUOPTIONS
 	timeattack,
 	statistics,
+#endif
 	loadgame,
 	savegame,
 	endgame,
+	playersetup,
 	single_end
 } single_e;
 
+
+
 static menuitem_t SinglePlayerMenu[] =
 {
-	{IT_CALL | IT_STRING, NULL, "New Game",   M_NewGame,      60},
-	{IT_CALL | IT_STRING, NULL, "Time Attack",M_TimeAttack,   70},
-	{IT_CALL | IT_STRING, NULL, "Statistics", M_Statistics,   80},
-	{IT_CALL | IT_STRING, NULL, "Load Game",  M_LoadGame,    100},
-	{IT_CALL | IT_STRING, NULL, "Save Game",  M_SaveGame,    110},
-	{IT_CALL | IT_STRING, NULL, "End Game",   M_EndGame,     120},
+	#ifdef FD_SPMENUOPTIONS
+	{IT_CALL | IT_STRING, NULL, "New Game",   M_NewGame,     60},
+	{IT_CALL | IT_STRING, NULL, "Time Attack",M_TimeAttack,  70},
+	{IT_CALL | IT_STRING, NULL, "Statistics", M_Statistics,  80},
+	#else
+	{IT_CALL | IT_STRING, NULL, "New Game",   M_NewGame,     80},
+	#endif
+	{IT_CALL | IT_STRING, NULL, "Load Game",  M_LoadGame,    90},
+	{IT_CALL | IT_STRING, NULL, "Save Game",  M_SaveGame,    100},
+	{IT_CALL | IT_STRING, NULL, "End Game",   M_EndGame,     110},
+	{IT_CALL | IT_STRING, NULL, "Player Setup", M_SetupMultiPlayer, 120}
 };
 
 menu_t SinglePlayerDef =
@@ -2103,13 +2124,6 @@ static void M_StartServerMenu(int choice)
 	M_SetupNextMenu(&Serverdef);
 }
 
-//===========================================================================
-//                            MULTI PLAYER MENU
-//===========================================================================
-static void M_SetupMultiPlayer(int choice);
-static void M_SetupMultiPlayerBis(int choice);
-static void M_Splitscreen(int choice);
-
 typedef enum
 {
 	startserver = 0,
@@ -2312,11 +2326,13 @@ static  consvar_t *setupm_cvname;
 static void M_SetupMultiPlayer(int choice)
 {
 	choice = 0;
-	if (!(gamestate == GS_LEVEL || gamestate == GS_INTERMISSION))
+	
+	// The return of Demo 2-style skin and color switching! Save 18-05-2025
+	/*if (!(gamestate == GS_LEVEL || gamestate == GS_INTERMISSION))
 	{
 		M_StartMessage("You have to be in a game\nto do this.\n\nPress a key\n",NULL,MM_NOTHING);
 		return;
-	}
+	}*/
 
 	multi_state = &states[mobjinfo[MT_PLAYER].seestate];
 	multi_tics = multi_state->tics;
@@ -2337,11 +2353,13 @@ static void M_SetupMultiPlayer(int choice)
 static void M_SetupMultiPlayerBis(int choice)
 {
 	choice = 0;
-	if (!(gamestate == GS_LEVEL || gamestate == GS_INTERMISSION))
+	
+	// The return of Demo 2-style skin and color switching! Save 18-05-2025
+	/*if (!(gamestate == GS_LEVEL || gamestate == GS_INTERMISSION))
 	{
 		M_StartMessage("You have to be in a game\nto do this.\n\nPress a key\n",NULL,MM_NOTHING);
 		return;
-	}
+	}*/
 
 	multi_state = &states[mobjinfo[MT_PLAYER].seestate];
 	multi_tics = multi_state->tics;
@@ -3720,7 +3738,7 @@ static void M_ReplayTimeAttack(int choice)
 static void M_ChooseSkill(int choice)
 {
 	skillnum = choice+1; // Tails 03-02-2002
-	M_SetupChoosePlayer(0);
+	M_ChoosePlayer(0); // bypass the character select screen Save 18-05-2025
 }
 
 static void M_EraseData(int choice);
