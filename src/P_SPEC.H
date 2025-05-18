@@ -222,6 +222,11 @@ typedef struct
 	fixed_t origspeed;    ///< The original, "real" speed.
 } ceiling_t;
 
+typedef struct ceilinglist {
+  ceiling_t *ceiling; 
+  struct ceilinglist *next,**prev;
+} ceilinglist_t;
+
 #define CEILSPEED (FRACUNIT/NEWTICRATERATIO)
 
 int EV_DoCeiling(line_t *line, ceiling_e type);
@@ -236,6 +241,9 @@ void T_MoveCeiling(ceiling_t *ceiling);
 //
 typedef enum
 {
+    // lower floor to highest surrounding floor
+    lowerFloor,
+	
 	// lower floor to lowest surrounding floor
 	lowerFloorToLowest,
 
@@ -253,6 +261,8 @@ typedef enum
 
 	bounceFloor,
 	bounceFloorCrush,
+	
+	donutRaise,
 } floor_e;
 
 typedef enum
@@ -273,6 +283,8 @@ typedef struct
 	boolean crush;
 	sector_t *sector;
 	int direction;
+    int newspecial;
+    int oldspecial; //SoM: 3/6/2000
 	fixed_t texture;
 	fixed_t floordestheight;
 	fixed_t speed;
@@ -309,6 +321,57 @@ typedef enum
 	pastdest
 } result_e;
 
+int EV_SilentLineTeleport(line_t *line, int side, mobj_t *thing, boolean reverse);
+
+typedef enum
+{
+    up,
+    down,
+    waiting,
+    in_stasis
+
+} plat_e;
+
+
+
+typedef enum
+{
+    perpetualRaise,
+    downWaitUpStay,
+    raiseAndChange,
+    raiseToNearestAndChange,
+    blazeDWUS,
+    //SoM:3/4/2000: Added boom stuffs
+    genLift,      //General stuff
+    genPerpetual, 
+    toggleUpDn,   //Instant toggle of stuff.
+
+} plattype_e;
+
+
+
+typedef struct
+{
+    thinker_t   thinker;
+    sector_t*   sector;
+    fixed_t     speed;
+    fixed_t     low;
+    fixed_t     high;
+    int         wait;
+    int         count;
+    plat_e      status;
+    plat_e      oldstatus;
+    boolean     crush;
+    int         tag;
+    plattype_e  type;
+
+    struct platlist *list; //SoM: 3/6/2000: Boom's improved code without limits.
+} plat_t;
+
+typedef struct platlist {
+  plat_t *plat; 
+  struct platlist *next,**prev;
+} platlist_t;
 
 #define DAMAGE_MASK     0x60
 #define DAMAGE_SHIFT    5
@@ -330,6 +393,8 @@ typedef enum
 int P_SectorActive
 ( special_e t,
   sector_t* s );
+  
+int     EV_StopPlat(line_t* line);
   
 typedef enum
 {

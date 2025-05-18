@@ -27,6 +27,8 @@
 //                              CEILINGS
 // ==========================================================================
 
+ceilinglist_t *activeceilings;
+
 // the list of ceilings moving currently, including crushers
 int ceilmovesound = sfx_stnmov;
 
@@ -513,6 +515,61 @@ int EV_DoCeiling(line_t *line, ceiling_e type)
 	return rtn;
 }
 
+//
+// Add an active ceiling
+//
+//SoM: 3/6/2000: Take advantage of the new Boom method for active ceilings.
+void P_AddActiveCeiling(ceiling_t* ceiling)
+{
+  ceilinglist_t *list = malloc(sizeof *list);
+  list->ceiling = ceiling;
+  ceiling->list = list;
+  if ((list->next = activeceilings))
+    list->next->prev = &list->next;
+  list->prev = &activeceilings;
+  activeceilings = list;
+}
+
+
+
+//
+// Remove a ceiling's thinker
+//
+// SoM: 3/6/2000 :Use improved Boom code.
+void P_RemoveActiveCeiling(ceiling_t* ceiling)
+{
+  ceilinglist_t *list = ceiling->list;
+  ceiling->sector->ceilingdata = NULL;  //jff 2/22/98
+  P_RemoveThinker(&ceiling->thinker);
+  if ((*list->prev = list->next))
+    list->next->prev = list->prev;
+  free(list);
+}
+
+
+
+//
+// Restart a ceiling that's in-stasis
+//
+//SoM: 3/6/2000: Use improved boom code
+int P_ActivateInStasisCeiling(line_t *line)
+{
+  ceilinglist_t *cl;
+  int rtn=0;
+
+  for (cl=activeceilings; cl; cl=cl->next)
+  {
+    ceiling_t *ceiling = cl->ceiling;
+    if (ceiling->tag == line->tag && ceiling->direction == 0)
+    {
+      ceiling->direction = ceiling->olddirection;
+      ceiling->thinker.function.acp1 = (actionf_p1) T_MoveCeiling;
+      rtn=1;
+    }
+  }
+  return rtn;
+}
+
 /** Starts a ceiling crusher.
   *
   * \param line The source line.
@@ -563,4 +620,28 @@ int EV_DoCrush(line_t *line, ceiling_e type)
 		ceiling->type = type;
 	}
 	return rtn;
+}
+
+//
+// EV_CeilingCrushStop
+// Stop a ceiling from crushing!
+//
+//SoM: 3/6/2000: use improved Boom code
+int EV_CeilingCrushStop(line_t* line)
+{
+  int rtn=0;
+
+  ceilinglist_t *cl;
+  for (cl=activeceilings; cl; cl=cl->next)
+  {
+    ceiling_t *ceiling = cl->ceiling;
+    if (ceiling->direction != 0 && ceiling->tag == line->tag)
+    {
+      ceiling->olddirection = ceiling->direction;
+      ceiling->direction = 0;
+      ceiling->thinker.function.acv = (actionf_v)NULL;
+      rtn=1;
+    }
+  }
+  return rtn;
 }

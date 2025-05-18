@@ -211,6 +211,10 @@ void T_MoveFloor(floormove_t *movefloor)
 		{
 			switch (movefloor->type)
 			{
+				case donutRaise:
+					movefloor->sector->special = movefloor->newspecial;
+					movefloor->sector->floorpic = movefloor->texture;
+					break;
 				case moveFloorByFrontSector:
 					if (movefloor->texture < -1) // chained linedef executing
 						P_LinedefExecute(movefloor->texture + 32769, NULL, NULL);
@@ -1512,6 +1516,12 @@ int EV_DoFloor(line_t *line, floor_e floortype)
 
 		switch (floortype)
 		{
+			case lowerFloor:
+            dofloor->direction = -1;
+            dofloor->sector = sec;
+            dofloor->speed = FLOORSPEED;
+            dofloor->floordestheight = P_FindLowestFloorSurrounding(sec); // Was set at "Highest"??? Tails 11-10-2001
+            break;
 			// Used for generic buttons 1-20 (sector types 690-709), button 21
 			// (a special used in THZ2, sector type 710), and the slime lower
 			// button at the end of THZ2 (sector type 986).
@@ -1654,6 +1664,88 @@ int EV_DoFloor(line_t *line, floor_e floortype)
 	}
 
 	return rtn;
+}
+
+//SoM: 3/6/2000: boom donut function
+//
+// EV_DoDonut()
+//
+// Handle donut function: lower pillar, raise surrounding pool, both to height,
+// texture and type of the sector surrounding the pool.
+//
+// Passed the linedef that triggered the donut
+// Returns whether a thinker was created
+//
+int EV_DoDonut(line_t*  line)
+{
+  sector_t* s1;
+  sector_t* s2;
+  sector_t* s3;
+  int       secnum;
+  int       rtn;
+  int       i;
+  floormove_t* floor;
+
+  secnum = -1;
+  rtn = 0;
+  // do function on all sectors with same tag as linedef
+  while ((secnum = P_FindSectorFromLineTag(line,secnum)) >= 0)
+  {
+    s1 = &sectors[secnum];                // s1 is pillar's sector
+              
+    // do not start the donut if the pillar is already moving
+    if (P_SectorActive(floor_special,s1)) //jff 2/22/98
+      continue;
+                      
+    s2 = getNextSector(s1->lines[0],s1);  // s2 is pool's sector
+    if (!s2) continue;                    // note lowest numbered line around
+                                          // pillar must be two-sided 
+
+    // do not start the donut if the pool is already moving
+    if (P_SectorActive(floor_special,s2)) 
+      continue;                           //jff 5/7/98
+                      
+    // find a two sided line around the pool whose other side isn't the pillar
+    for (i = 0;i < s2->linecount;i++)
+    {
+      //jff 3/29/98 use true two-sidedness, not the flag
+      // killough 4/5/98: changed demo_compatibility to compatibility
+      if (!s2->lines[i]->backsector || s2->lines[i]->backsector == s1)
+        continue;
+
+      rtn = 1; //jff 1/26/98 no donut action - no switch change on return
+
+      s3 = s2->lines[i]->backsector;      // s3 is model sector for changes
+        
+      //  Spawn rising slime
+      floor = Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0);
+      P_AddThinker (&floor->thinker);
+      s2->floordata = floor; //jff 2/22/98
+      floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
+      floor->type = donutRaise;
+      floor->crush = false;
+      floor->direction = 1;
+      floor->sector = s2;
+      floor->speed = FLOORSPEED / 2;
+      floor->texture = s3->floorpic;
+      floor->newspecial = 0;
+      floor->floordestheight = s3->floorheight;
+        
+      //  Spawn lowering donut-hole pillar
+      floor = Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0);
+      P_AddThinker (&floor->thinker);
+      s1->floordata = floor; //jff 2/22/98
+      floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
+      floor->type = lowerFloor;
+      floor->crush = false;
+      floor->direction = -1;
+      floor->sector = s1;
+      floor->speed = FLOORSPEED / 2;
+      floor->floordestheight = s3->floorheight;
+      break;
+    }
+  }
+  return rtn;
 }
 
 // SoM: Boom elevator support.
