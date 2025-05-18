@@ -3704,10 +3704,17 @@ static void M_ReplayTimeAttack(int choice)
 	timeattacking = true;
 }
 
+//comment this out to bypass the character select menu
+//#define CHARACTERSELECT
+
 static void M_ChooseSkill(int choice)
 {
 	skillnum = choice+1; // Tails 03-02-2002
+	#ifdef CHARACTERSELECT
+	M_SetupChoosePlayer(0);
+	#else
 	M_ChoosePlayer(0); // bypass the character select screen Save 18-05-2025
+	#endif
 }
 
 static void M_EraseData(int choice);
