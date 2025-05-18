@@ -3747,30 +3747,56 @@ void P_SpawnSpecials(void)
     {
         switch(lines[i].special)
         {
-          int s, sec;
-          //SoM: 3/20/2000: support for drawn heights coming from different sector
-          case 270:
-          // as far as i can tell this code is identical to the 1.08 version so idk why this isn't working
-			sec = sides[*lines[i].sidenum].sector-sectors;
-            for (s = -1; (s = P_FindSectorFromLineTag(lines+i,s)) >= 0;)
-            {
-				//Create water FOF with ceiling height of control sector and floor height of target sector
-				//to emulate old water
+			int s, sec;
+			
+			//l213 Transfer Sector Brightness to Floor Save 18-05-2025
+			//Transfers brightness of control sector to target sector's floor.
+			case 213: 
+				sec = (int)(sides[*lines[i].sidenum].sector-sectors);
+				for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0 ;)
+					sectors[s].floorlightsec = sec;
+			break;		  
+			//l270 Old Water Save 17-05-2025
+			case 270:
+				sec = sides[*lines[i].sidenum].sector-sectors;
+				for (s = -1; (s = P_FindSectorFromLineTag(lines+i,s)) >= 0;)
+				{
+					//Create water FOF with ceiling height of control sector and floor height of target sector
+					//to emulate old water
 				
-				//You don't know how long it took me to find this solution.
-				//HOURS of trying to restore the old water.
-				//I beg of you, just use this hack.
-				P_AddOldWater(&sectors[s], &sectors[sec], lines+i, FF_EXISTS|FF_RENDERALL|FF_SWIMMABLE|FF_BOTHPLANES|FF_ALLSIDES|FF_CUTEXTRA|FF_EXTRA|FF_CUTSPRITES);
-            }
+					//You don't know how long it took me to find this solution.
+					//HOURS of trying to restore the old water.
+					//I beg of you, just use this hack.
+					P_AddOldWater(&sectors[s], &sectors[sec], lines+i, FF_EXISTS|FF_RENDERALL|FF_SWIMMABLE|FF_BOTHPLANES|FF_ALLSIDES|FF_CUTEXTRA|FF_EXTRA|FF_CUTSPRITES);
+				}
+			break;
+			//l281 FOF, Solid, Opaque, Shadowcasting Save 17-05-2025
+			case 281:
+				sec = sides[*lines[i].sidenum].sector-sectors;
+				for (s = -1; (s = P_FindSectorFromLineTag(lines+i,s)) >= 0;)
+					P_AddFakeFloor(&sectors[s], &sectors[sec], lines+i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL);
             break;
-          case 281:
-            sec = sides[*lines[i].sidenum].sector-sectors;
-            for (s = -1; (s = P_FindSectorFromLineTag(lines+i,s)) >= 0;)
-              P_AddFakeFloor(&sectors[s], &sectors[sec], lines+i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL);
+			//l282 Instanly lower floor (used for the illusion of floating objects) Save 17-05-2025
+			case 282:
+				EV_DoFloor(&lines[i], instantLower); // Tails 10-31-2000
+			break; // Tails 10-31-2000
+			//l289 FOF, Solid, Opaque, No Shadows Save 18-05-2025
+			case 289:
+				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_NOSHADE|FF_CUTLEVEL);
             break;
-	      case 282: // Ring Sector Tails 10-31-2000
-			EV_DoFloor(&lines[i], instantLower); // Tails 10-31-2000
-		  break; // Tails 10-31-2000
+			//l300 FOF, Solid, Translucent Save 18-05-2025
+			case 300:
+				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_NOSHADE|FF_TRANSLUCENT|FF_EXTRA|FF_CUTEXTRA);
+			break;
+			//l301 FOF, Intangible, Translucent Save 18-05-2025
+			case 301:
+				// If line has no-climb set, give it shadows, otherwise don't
+				ffloorflags = FF_EXISTS|FF_RENDERALL|FF_TRANSLUCENT|FF_EXTRA|FF_CUTEXTRA|FF_CUTSPRITES;
+				if (!(lines[i].flags & ML_NOCLIMB))
+					ffloorflags |= FF_NOSHADE;
+
+				P_AddFakeFloorsByLine(i, ffloorflags);
+			break;
 		}
 	}
 /*	sector_t *sector;
