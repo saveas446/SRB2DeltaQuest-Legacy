@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C -*- 
 //-----------------------------------------------------------------------------
 //
 // $Id: p_doors.c,v 1.5 2000/04/16 18:38:07 bpereira Exp $
