@@ -781,6 +781,7 @@ CV_PossibleValue_t skill_cons_t[] = {{1,"Easy"} // Tails 01-18-2001
                              ,{4,"Very Hard" } // Tails 01-18-2001
                              ,{0,NULL}};
 
+//WHAT THE FUCK SSN
 static CV_PossibleValue_t map_cons_t[LEVELARRAYSIZE] = {{1,"MAP01"},
                                                  {2,"MAP02"},
                                                  {3,"MAP03"},
@@ -7457,7 +7458,8 @@ void M_Drawer(void)
 		return;
 
 	// now that's more readable with a faded background (yeah like Quake...)
-	V_DrawFadeScreen();
+	// Stop right there! Save 18-05-2025
+	//V_DrawFadeScreen();
 
 	if (currentMenu->drawroutine)
 		currentMenu->drawroutine(); // call current menu Draw routine

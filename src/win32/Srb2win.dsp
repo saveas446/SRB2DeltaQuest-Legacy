@@ -81,7 +81,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 dxguid.lib dinput.lib dsound.lib ddraw.lib uuid.lib winmm.lib wsock32.lib fmodvc.lib gdi32.lib advapi32.lib kernel32.lib user32.lib /nologo /subsystem:windows /pdb:"c:\srb2demo2\srb2debug.pdb" /debug /machine:I386 /out:"C:\srb2demo2\srb2debug.exe" /pdbtype:sept
+# ADD LINK32 dxguid.lib dinput.lib dsound.lib ddraw.lib uuid.lib winmm.lib wsock32.lib fmodvc.lib gdi32.lib advapi32.lib kernel32.lib user32.lib /nologo /subsystem:windows /pdb:"c:\srb2demo2\srb2debug.pdb" /debug /machine:I386 /out:"X:\build\srb2debug.exe" /pdbtype:sept
 # SUBTRACT LINK32 /pdb:none /nodefaultlib
 
 !ENDIF 
@@ -716,6 +716,10 @@ SOURCE=..\Info.h
 # Begin Source File
 
 SOURCE=..\P_ceilng.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\p_doors.c
 # End Source File
 # Begin Source File
 

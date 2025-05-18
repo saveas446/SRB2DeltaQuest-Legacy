@@ -28,7 +28,6 @@
 #include "r_data.h"
 #include "m_random.h"
 #include "p_mobj.h"
-#include "p_doors.h"
 #include "i_system.h"
 #include "s_sound.h"
 #include "w_wad.h"
