@@ -1378,8 +1378,6 @@ void A_BossDeath(mobj_t *mo)
 	}
 
 	// victory!
-	if (!mariomode)
-	{
 		if (mo->flags2 & MF2_BOSSNOTRAP)
 		{
 			for (i = 0; i < MAXPLAYERS; i++)
@@ -1453,13 +1451,6 @@ void A_BossDeath(mobj_t *mo)
 			P_SpawnMobj(mo->x, mo->y, mo->z + mo->height + 32*FRACUNIT, MT_BOSSSPIGOT)->momz = 4*FRACUNIT;
 			return;
 		}
-	}
-	else if (mariomode && mo->type == MT_KOOPA)
-	{
-		junk.tag = 650;
-		EV_DoCeiling(&junk, raiseToHighest);
-		return;
-	}
 }
 
 // Function: A_CustomPower
@@ -1661,17 +1652,12 @@ void A_ExtraLife(mobj_t *actor)
 
 	P_GivePlayerLives(player, 1);
 
-	if (mariomode)
-		S_StartSound(player->mo, sfx_marioa);
-	else
-	{
-		player->powers[pw_extralife] = extralifetics + 1;
+	player->powers[pw_extralife] = extralifetics + 1;
 
-		if (P_IsLocalPlayer(player))
-		{
-			S_StopMusic();
-			S_ChangeMusic(mus_xtlife, false);
-		}
+	if (P_IsLocalPlayer(player))
+	{
+		S_StopMusic();
+		S_ChangeMusic(mus_xtlife, false);
 	}
 }
 

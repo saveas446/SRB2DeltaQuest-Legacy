@@ -818,23 +818,12 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 				P_SetMobjState(special, S_DISS);
 				return;
 			}
-		case MT_FIREFLOWER:
-			if (!mariomode)
-				return;
-			toucher->player->powers[pw_fireflower] = true;
-			toucher->flags =  (toucher->flags & ~MF_TRANSLATION)
-			                | ((13)<<MF_TRANSSHIFT);
-			sound = sfx_shield;
-			break;
-		     // rings
 		case MT_COIN:
 		case MT_FLINGCOIN:
 			if (!(P_CanPickupItem(toucher->player)))
 				return;
-			if (mariomode)
-				P_SpawnMobj (special->x,special->y,special->z, MT_COINSPARKLE)->momz = special->momz;
-			else
-				P_SpawnMobj (special->x,special->y,special->z, MT_COINSPARKLE);
+			
+			P_SpawnMobj (special->x,special->y,special->z, MT_COINSPARKLE);
 			P_GivePlayerRings(player, 1, true);
 	
 			if (player->lightdash)
@@ -862,10 +851,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 		case MT_FLINGRING:
 			if (!(P_CanPickupItem(toucher->player)))
 				return;
-			if (mariomode)
-				P_SpawnMobj (special->x,special->y,special->z, MT_SPARK)->momz = special->momz;
-			else
-				P_SpawnMobj (special->x,special->y,special->z, MT_SPARK);
+			P_SpawnMobj (special->x,special->y,special->z, MT_SPARK);
 			P_GivePlayerRings(player, 1, (special->type == MT_FLINGRING));
 	
 			if (player->lightdash)
@@ -964,8 +950,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			if (player->powers[pw_watershield])
 				return;
 			if (maptol & TOL_NIGHTS)
-				return;
-			if (mariomode)
 				return;
 			else if (special->z < player->mo->z + player->mo->height / 3
 				|| special->z > player->mo->z + (player->mo->height*2/3))
@@ -1441,9 +1425,6 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source)
 	mobjtype_t item;
 	mobj_t *mo;
 
-	if (mariomode && inflictor && (inflictor->type == MT_SHELL || inflictor->type == MT_FIREBALL))
-		target->tracer = inflictor;
-
 	// dead target is no more shootable
 	target->flags &= ~MF_SHOOTABLE;
 	target->flags2 &= ~MF2_SKULLFLY;
@@ -1642,12 +1623,11 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source)
 	if (target->tics < 1)
 		target->tics = 1;
 
-	if (mariomode // Don't show birds, etc. in Mario Mode Tails 12-23-2001
 #ifdef CHAOSISNOTDEADYET
-		|| gametype == GT_CHAOS // Or Chaos Mode!
-#endif
-		) 
+	if (gametype == GT_CHAOS) // Chaos Mode!
 		return;
+#endif
+		
 
 	// Drop stuff.
 	// This determines the kind of object spawned
@@ -2522,15 +2502,6 @@ void P_PlayerRingBurst(player_t *player, int num_rings)
 			mo->flags2 &= ~MF2_NOCLIPHEIGHT;
 			player->powers[pw_explosionring] = 0;
 			mo->fuse = 12*TICRATE;
-		}
-		else if (mariomode)
-		{
-			mo = P_SpawnMobj(player->mo->x,
-							 player->mo->y,
-							 player->mo->z,
-							 MT_FLINGCOIN);
-
-			mo->fuse = (8-player->losscount)*TICRATE;
 		}
 		else
 		{

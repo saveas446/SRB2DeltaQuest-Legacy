@@ -2914,38 +2914,7 @@ static void M_DrawStats(void)
 		V_DrawCenteredString(224, 48, 0, va("%s:%s:%s", hours, minutes, seconds));
 	}
 
-	if (eastermode)
-	{
-		found = 0;
-
-		if (foundeggs & 1)
-			found++;
-		if (foundeggs & 2)
-			found++;
-		if (foundeggs & 4)
-			found++;
-		if (foundeggs & 8)
-			found++;
-		if (foundeggs & 16)
-			found++;
-		if (foundeggs & 32)
-			found++;
-		if (foundeggs & 64)
-			found++;
-		if (foundeggs & 128)
-			found++;
-		if (foundeggs & 256)
-			found++;
-		if (foundeggs & 512)
-			found++;
-		if (foundeggs & 1024)
-			found++;
-		if (foundeggs & 2048)
-			found++;
-
-		V_DrawCenteredString(BASEVIDWIDTH/2, 16, V_YELLOWMAP, va("Eggs Found: %d/%d", found, NUMEGGS));
-	}
-
+	//! DON'T TOUCH THIS CURLY BRACKET
 	{
 		int y = 80;
 		char names[8];

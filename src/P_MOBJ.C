@@ -1496,11 +1496,7 @@ nightsdone:
 					}
 				} // Ugly ugly billions of braces! Argh!
 			}
-
-			// hit the ceiling
-			if (mariomode)
-				S_StartSound(mo, sfx_mario1);
-
+			
 			if (!(mo->player && mo->player->climbing))
 				mo->momz = 0;
 		}
@@ -1730,7 +1726,7 @@ void P_MobjCheckWater(mobj_t *mobj)
 						&& !(mobj->player->powers[pw_watershield])
 						&& mobj->player->powers[pw_underwater] < underwatertics + 1)
 					{
-						if (!(maptol & TOL_NIGHTS) && !mariomode)
+						if (!(maptol & TOL_NIGHTS))
 							mobj->player->powers[pw_underwater] = underwatertics + 1;
 					}
 				}
@@ -5407,10 +5403,6 @@ void P_SpawnHoopsAndRings(mapthing_t *mthing)
 			mobj->z -= mobj->height/2;
 			mobj->target = hoopcenter; // Link the sprite to the center.
 			mobj->fuse = 0;
-
-			if (xmasmode && (i&1))
-				mobj->flags = (mobj->flags & ~MF_TRANSLATION)
-						 | ((MAXSKINCOLORS-1)<<MF_TRANSSHIFT); // Yellow
 
 			// Link all the sprites in the hoop together
 			if (nextmobj)

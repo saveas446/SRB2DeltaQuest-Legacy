@@ -805,17 +805,12 @@ void P_AddPlayerScore(player_t *player, int amount)
 	{
 		P_GivePlayerLives(player, (player->score/50000) - (oldscore/50000));
 
-		if (mariomode)
-			S_StartSound(player->mo, sfx_marioa);
-		else
+		if (P_IsLocalPlayer(player))
 		{
-			if (P_IsLocalPlayer(player))
-			{
-				S_StopMusic();
-				S_ChangeMusic(mus_xtlife, false);
-			}
-			player->powers[pw_extralife] = extralifetics + 1;
+			S_StopMusic();
+			S_ChangeMusic(mus_xtlife, false);
 		}
+		player->powers[pw_extralife] = extralifetics + 1;
 	}
 }
 
@@ -4088,17 +4083,12 @@ static void P_MovePlayer(player_t *player)
 		{
 			P_GivePlayerLives(player, 1);
 
-			if (mariomode)
-				S_StartSound(player->mo, sfx_marioa);
-			else
+			if (P_IsLocalPlayer(player))
 			{
-				if (P_IsLocalPlayer(player))
-				{
-					S_StopMusic();
-					S_ChangeMusic(mus_xtlife, false);
-				}
-				player->powers[pw_extralife] = extralifetics + 1;
+				S_StopMusic();
+				S_ChangeMusic(mus_xtlife, false);
 			}
+			player->powers[pw_extralife] = extralifetics + 1;
 			player->xtralife = 1;
 		}
 
@@ -4106,17 +4096,12 @@ static void P_MovePlayer(player_t *player)
 		{
 			P_GivePlayerLives(player, 1);
 
-			if (mariomode)
-				S_StartSound(player->mo, sfx_marioa);
-			else
-			{
 				if (P_IsLocalPlayer(player))
 				{
 					S_StopMusic();
 					S_ChangeMusic(mus_xtlife, false);
 				}
 				player->powers[pw_extralife] = extralifetics + 1;
-			}
 			player->xtralife = 2;
 		}
 	}
@@ -4501,14 +4486,6 @@ static void P_MovePlayer(player_t *player)
 	/*if (leveltime > 20999) // one tic off so the time doesn't display 10 : 00
 		P_DamageMobj(player->mo, NULL, NULL, 10000);*/
 
-	// Spawn Invincibility Sparkles
-	if (mariomode && player->powers[pw_invulnerability] && !player->powers[pw_super])
-	{
-		player->mo->flags = (player->mo->flags & ~MF_TRANSLATION)
-			| ((leveltime % MAXSKINCOLORS)<<MF_TRANSSHIFT);
-	}
-	else
-	{
 		if (player->powers[pw_invulnerability] && leveltime % (TICRATE/7) == 0
 			&& !player->powers[pw_super])
 		{
@@ -4543,21 +4520,10 @@ static void P_MovePlayer(player_t *player)
 		{
 			P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_SUPERSPARK);
 		}
-	}
 
 	// Resume normal music stuff.
 	if (player->powers[pw_invulnerability] == 1 && (!player->powers[pw_super] ||  mapheaderinfo[gamemap-1].nossmusic))
 	{
-		if (mariomode)
-		{
-			if (player->powers[pw_fireflower])
-				player->mo->flags = (player->mo->flags & ~MF_TRANSLATION)
-					| ((13)<<MF_TRANSSHIFT);
-			else
-				player->mo->flags = (player->mo->flags & ~MF_TRANSLATION)
-					| ((player->skincolor)<<MF_TRANSSHIFT);
-		}
-
 		if (P_IsLocalPlayer(player))
 			P_RestoreMusic(player);
 
@@ -5699,16 +5665,8 @@ dontteeter:
 			P_DamageMobj(player->mo, NULL, NULL, 42000);
 
 		player->bustercount++;
-		if (mariomode)
-		{
-			if (!player->attackdown && player->powers[pw_fireflower])
-			{
-				player->attackdown = true;
-				P_SpawnPlayerMissile(player->mo, MT_FIREBALL);
-				S_StartSound(player->mo, sfx_thok);
-			}
-		}
-		else if ((((gametype == GT_MATCH || gametype == GT_CTF || (cv_ringslinger.value || player->charflags & SF_RINGSLINGER))
+
+		if ((((gametype == GT_MATCH || (cv_ringslinger.value || player->charflags & SF_RINGSLINGER))
 			&& player->mo->health > 1 && (((!player->attackdown || (AUTOMATIC && cmd->buttons & BT_ATTACK)) && !player->weapondelay)))
 			|| (gametype == GT_TAG &&
 			player->mo->health > 1 && (((!player->attackdown || (AUTOMATIC && cmd->buttons & BT_ATTACK)) && !player->weapondelay))

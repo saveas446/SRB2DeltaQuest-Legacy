@@ -88,11 +88,6 @@ static patch_t *count3;
 static patch_t *count2;
 static patch_t *count1;
 static patch_t *count0;
-static patch_t *homingring;
-static patch_t *autoring;
-static patch_t *explosionring;
-static patch_t *railring;
-static patch_t *infinityring;
 static patch_t *jumpshield;
 static patch_t *fireshield;
 static patch_t *ringshield;
@@ -397,11 +392,6 @@ void ST_Init(void)
 	count1 = W_CachePatchName("CNTBA0", PU_STATIC);
 	count0 = W_CachePatchName("CNTAA0", PU_STATIC);
 
-	homingring = W_CachePatchName("HOMNIND", PU_STATIC);
-	autoring = W_CachePatchName("AUTOIND", PU_STATIC);
-	explosionring = W_CachePatchName("BOMBIND", PU_STATIC);
-	railring = W_CachePatchName("RAILIND", PU_STATIC);
-	infinityring = W_CachePatchName("INFNIND", PU_STATIC);
 	jumpshield = W_CachePatchName("WHTVB0", PU_STATIC);
 	fireshield = W_CachePatchName("RDTVB0", PU_STATIC);
 	ringshield = W_CachePatchName("YLTVB0", PU_STATIC);
@@ -1580,22 +1570,6 @@ static void ST_overlayDrawer(void)
 		V_DrawString(16+48, 148, 0, cv_snapto.string);
 	}
 
-	if (!(netgame || multiplayer) && eastermode && !modifiedgame)
-	{
-		char eggsfound[20];
-		unsigned v = (unsigned)foundeggs, found;
-
-		// count the number of bits set in foundeggs, thanks to Brian Kernighan
-		// (assume only lower 12 bits can be used)
-		for (found = 0; v; found++)
-			v &= v - 1;
-
-		sprintf(eggsfound, "Eggs Found: %d/%d", (int)found, NUMEGGS);
-		V_DrawString(184, STRINGY(168), V_TRANSLUCENT, eggsfound);
-
-		ST_drawEggsNeeded();
-	}
-
 	// Countdown timer for Race Mode
 	if (countdown)
 	{
@@ -1628,46 +1602,6 @@ static void ST_overlayDrawer(void)
 	if (hunt3 && hunt3->health)
 		ST_drawEmeraldHuntIcon(hunt3, HUD_HUNTPIC3);
 
-	if (stplyr->powers[pw_railring] > 5*TICRATE || (stplyr->powers[pw_railring] && leveltime & 1))
-	{
-		char railringpower[4];
-		V_DrawScaledPatch(8, STRINGY(56 - splity), V_SNAPTOLEFT|V_TRANSLUCENT, railring);
-		sprintf(railringpower, "%d", stplyr->powers[pw_railring]/TICRATE);
-		V_DrawString(32, STRINGY(56 - splity + 4), V_TRANSLUCENT | V_SNAPTOLEFT, railringpower);
-	}
-
-	if (stplyr->powers[pw_homingring] > 5*TICRATE || (stplyr->powers[pw_homingring] && leveltime & 1))
-	{
-		char homingringpower[4];
-		V_DrawScaledPatch(8, STRINGY(88 - splity), V_SNAPTOLEFT|V_TRANSLUCENT, homingring);
-		sprintf(homingringpower, "%d", stplyr->powers[pw_homingring]/TICRATE);
-		V_DrawString(32, STRINGY(88 - splity + 4), V_TRANSLUCENT | V_SNAPTOLEFT, homingringpower);
-	}
-
-	if (stplyr->powers[pw_infinityring] > 5*TICRATE || (stplyr->powers[pw_infinityring] && leveltime & 1))
-	{
-		char infinityringpower[4];
-		V_DrawScaledPatch(8, STRINGY(120 - splity), V_SNAPTOLEFT|V_TRANSLUCENT, infinityring);
-		sprintf(infinityringpower, "%d", stplyr->powers[pw_infinityring]/TICRATE);
-		V_DrawString(32, STRINGY(120 - splity + 4), V_TRANSLUCENT | V_SNAPTOLEFT, infinityringpower);
-	}
-
-	if (stplyr->powers[pw_explosionring] > 5*TICRATE || (stplyr->powers[pw_explosionring] && leveltime & 1))
-	{
-		char explosionringpower[4];
-		V_DrawScaledPatch(8, STRINGY(152 - splity), V_SNAPTOLEFT|V_TRANSLUCENT, explosionring);
-		sprintf(explosionringpower, "%d", stplyr->powers[pw_explosionring]/TICRATE);
-		V_DrawString(32, STRINGY(152 - splity + 4), V_TRANSLUCENT | V_SNAPTOLEFT, explosionringpower);
-	}
-
-	if (stplyr->powers[pw_automaticring] > 5*TICRATE || (stplyr->powers[pw_automaticring] && leveltime & 1))
-	{
-		char automaticringpower[4];
-		V_DrawScaledPatch(8, STRINGY(184 - splity), V_SNAPTOLEFT|V_TRANSLUCENT, autoring);
-		sprintf(automaticringpower, "%d", stplyr->powers[pw_automaticring]/TICRATE);
-		V_DrawString(32, STRINGY(184 - splity + 4), V_TRANSLUCENT | V_SNAPTOLEFT, automaticringpower);
-	}
-
 	if (stplyr->lightdashallowed)
 	{
 		V_DrawFill(hudinfo[HUD_LIGHTDASHBOX].x, hudinfo[HUD_LIGHTDASHBOX].y, 72, 12, 119);
@@ -1681,36 +1615,6 @@ static void ST_overlayDrawer(void)
 		&& !cv_chasecam2.value))
 	{
 		ST_drawFirstPersonHUD();
-	}
-
-	if (mariomode && stplyr->exiting)
-	{
-		/// \todo doesn't belong in status bar code AT ALL
-		thinker_t *th;
-		mobj_t *mo2;
-		boolean foundtoad = false;
-
-		// scan the remaining thinkers
-		// to find toad
-		for (th = thinkercap.next; th != &thinkercap; th = th->next)
-		{
-			if (th->function.acp1 != (actionf_p1)P_MobjThinker)
-				continue;
-
-			mo2 = (mobj_t *)th;
-			if (mo2->type == MT_TOAD)
-			{
-				foundtoad = true;
-				break;
-			}
-		}
-
-		if (foundtoad)
-		{
-			V_DrawCenteredString(160, 32+16, 0, "Thank you!");
-			V_DrawCenteredString(160, 44+16, 0, "But our earless leader is in");
-			V_DrawCenteredString(160, 56+16, 0, "another castle!");
-		}
 	}
 
 	// draw level title Tails

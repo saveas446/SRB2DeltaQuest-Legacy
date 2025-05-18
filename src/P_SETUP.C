@@ -888,10 +888,6 @@ void P_SpawnSecretItems(boolean loademblems)
 	if (loademblems)
 		P_SpawnEmblems();
 
-	// Easter eggs!
-	if (!eastermode)
-		return;
-
 	if (modifiedgame)
 		return;
 
@@ -1992,24 +1988,11 @@ noscript:
 		if (!cv_chasecam2.changed)
 			CV_SetValue(&cv_chasecam2, cv_chasecam.value);
 	}
-
-	// mario mode
-	if (maptol & TOL_MARIO)
-		mariomode = true;
-	else
-		mariomode = false;
-
 	// 2d mode
 	if (maptol & TOL_2D)
 		twodlevel = true;
 	else
 		twodlevel = false;
-
-	// xmas mode
-	if (maptol & TOL_XMAS)
-		xmasmode = true;
-	else if (!xmasoverride)
-		xmasmode = false;
 
 	// Initial height of PointOfView
 	// will be set by player think.

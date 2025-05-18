@@ -553,14 +553,8 @@ void Y_Ticker(void)
 
 					if (skip == true && (data.coop.gotlife == consoleplayer || data.coop.gotlife == secondarydisplayplayer))
 					{
-						// lives are already added since tally is fake, but play the music
-						if (mariomode)
-							S_StartSound(NULL, sfx_marioa);
-						else
-						{
-							S_StopMusic(); // otherwise it won't restart if this is done twice in a row
-							S_ChangeMusic(mus_xtlife, false);
-						}
+						S_StopMusic(); // otherwise it won't restart if this is done twice in a row
+						S_ChangeMusic(mus_xtlife, false);
 					}
 				}
 			}
@@ -585,14 +579,8 @@ void Y_Ticker(void)
 
 			if (data.coop.score % 50000 < 222) // just passed a 50000 point mark
 			{
-				// lives are already added since tally is fake, but play the music
-				if (mariomode)
-					S_StartSound(NULL, sfx_marioa);
-				else
-				{
-					S_StopMusic(); // otherwise it won't restart if this is done twice in a row
-					S_ChangeMusic(mus_xtlife, false);
-				}
+				S_StopMusic(); // otherwise it won't restart if this is done twice in a row
+				S_ChangeMusic(mus_xtlife, false);
 			}
 		}
 		else
@@ -636,14 +624,8 @@ void Y_Ticker(void)
 
 				if (skip == true && (data.coop.gotlife == consoleplayer || data.coop.gotlife == secondarydisplayplayer))
 				{
-					// lives are already added since tally is fake, but play the music
-					if (mariomode)
-						S_StartSound(NULL, sfx_marioa);
-					else
-					{
-						S_StopMusic(); // otherwise it won't restart if this is done twice in a row
-						S_ChangeMusic(mus_xtlife, false);
-					}
+					S_StopMusic(); // otherwise it won't restart if this is done twice in a row
+					S_ChangeMusic(mus_xtlife, false);
 				}
 			}
 
@@ -655,14 +637,8 @@ void Y_Ticker(void)
 
 			if (data.spec.score % 50000 < 222 && skip == false) // just passed a 50000 point mark
 			{
-				// lives are already added since tally is fake, but play the music
-				if (mariomode)
-					S_StartSound(NULL, sfx_marioa);
-				else
-				{
-					S_StopMusic(); // otherwise it won't restart if this is done twice in a row
-					S_ChangeMusic(mus_xtlife, false);
-				}
+				S_StopMusic(); // otherwise it won't restart if this is done twice in a row
+				S_ChangeMusic(mus_xtlife, false);
 			}
 		}
 		else

@@ -2141,8 +2141,6 @@ void G_DoCompleted(void)
 	if (nextmap >= 1100-1 && nextmap <= 1102-1 && gametype == GT_RACE)
 		nextmap = racestage_start-1;
 
-skipit:
-
 	if ((gamemap >= sstage_start && gamemap <= sstage_end) && !gottoken)
 	{
 		nextmap = lastmap; // Exiting from a special stage? Go back to the game. Tails 08-11-2001

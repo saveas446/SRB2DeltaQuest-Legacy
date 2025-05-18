@@ -96,10 +96,6 @@ static const char *pagename = "MAP1PIC";
 static char *startupwadfiles[MAX_WADFILES];
 
 boolean devparm = false; // started game with -devparm
-boolean xmasmode = false; // Xmas Mode
-boolean xmasoverride = false;
-boolean mariomode = false; // Mario Mode
-boolean eastermode = false; // Easter mode
 
 boolean singletics = false; // timedemo
 
@@ -905,8 +901,6 @@ static void IdentifyVersion(void)
 	// Temporary patchfile loading
 	//D_AddFile(va(pandf,srb2waddir,"srb2pat.wad"));//srb2pat.wad
 
-	if (xmasmode)
-		D_AddFile(va(pandf,srb2waddir,"3drend.dll"));//3drend.dll for XMAS!
 }
 
 /* ======================================================================== */
@@ -967,56 +961,6 @@ static inline void D_InitCutsceneInfo(void)
 			cutscenes[i].scene[j].text = NULL;
 }
 
-static void D_TimeWad(void)
-{
-#ifndef NO_TIME
-	time_t t1; // Date-checker
-	struct tm* tptr; // Date-checker
-	// Do special stuff around Christmas time Tails 11-15-2001
-	t1 = time(NULL);
-	if (t1 != (time_t)-1)
-	{
-		tptr = localtime(&t1);
-
-		if (tptr)
-		{
-			if ((tptr->tm_mon == 11 && tptr->tm_mday > 24))
-			{
-				if (!M_CheckParm("-noxmas")) // Christmas to New Years (by popular demand)
-				{
-					//D_AddFile("3drend.dll");
-					xmasmode = true;
-					xmasoverride = true;
-					modifiedgame = false;
-				}
-			}
-			else if (tptr->tm_mon == 3) // Easter changes every year, so just have it for all of April
-			{
-				if (tptr->tm_mday < 2)
-					introtoplay = 127; // ???
-
-				eastermode = true;
-				modifiedgame = false;
-			}
-		}
-	}
-#endif
-	if (!eastermode && M_CheckParm("-xmas"))
-	{
-		//D_AddFile("3drend.dll");
-		xmasmode = true;
-		xmasoverride = true;
-		modifiedgame = false;
-	}
-#ifdef NO_TIME
-	else if (M_CheckParm("-easter"))
-	{
-		eastermode = true; // Hunt for the eggs!
-		modifiedgame = false;
-	}
-#endif
-}
-
 //
 // D_SRB2Main
 //
@@ -1042,7 +986,6 @@ void D_SRB2Main(void)
 	G_LoadGameSettings();
 
 	// identify the main IWAD file to use
-	D_TimeWad();
 	IdentifyVersion();
 
 #ifndef _WIN32_WCE
@@ -1230,26 +1173,6 @@ void D_SRB2Main(void)
 	if (!W_InitMultipleFiles(startupwadfiles))
 		CONS_Error("A WAD file was not found or not valid\n");
 	D_CleanFile();
-
-	// Check MD5s of autoloaded files
-	W_VerifyFileMD5(0, "4d26f0d5ab5c5d7b4090367f95ea9f85"); // srb2.srb
-	W_VerifyFileMD5(1, "5b70614bd87bad9a9e11ea7190a108f7"); // sonic.plr
-	W_VerifyFileMD5(2, "e11f0ff56551ceca77d5859ee1f88a7d"); // tails.plr
-	W_VerifyFileMD5(3, "553d300a7af2382f9283007332a852f4"); // knux.plr
-	W_VerifyFileMD5(4, "260c573350ce0345617b88caffdbe88d"); // auto.wpn
-	W_VerifyFileMD5(5, "b69d4d6a7f6c1237087e20894e036121"); // bomb.wpn
-	W_VerifyFileMD5(6, "b10704b65ca11def64774105b02f38d0"); // home.wpn
-	W_VerifyFileMD5(7, "e00ca6ec8f9bfd0fdcac3c0cdd9d296d"); // rail.wpn
-	W_VerifyFileMD5(8, "075286244551bcd6eab3153af97f8d50"); // infn.wpn
-	W_VerifyFileMD5(9, "7d355827fa8f981482246d6c95f9bd48"); // drill.dta
-	W_VerifyFileMD5(10, "938cbc8141c316c911215ecb4072fade"); // soar.dta
-
-	// don't check music.dta because people like to modify it, and it doesn't matter if they do
-	// ...except it does if they slip maps in there, and that's what W_VerifyNMUSlumps is for.
-
-	// check 3drend.dll if needed
-	if (xmasmode)
-		W_VerifyFileMD5(12, "d2dc36f4442d22780f6ee32e7a61c800");
 
 	// Check and print which version is executed.
 	CONS_Printf(text[COMERCIAL_NUM]);

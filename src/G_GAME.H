@@ -31,10 +31,6 @@ extern char timeattackfolder[64];
 extern char player_names[MAXPLAYERS][MAXPLAYERNAME+1];
 extern char team_names[MAXPLAYERS][MAXPLAYERNAME+1];
 
-extern boolean xmasmode; // Xmas mode
-extern boolean xmasoverride;
-extern boolean mariomode; // Mario mode
-extern boolean eastermode; // Easter mode!
 
 extern player_t players[MAXPLAYERS];
 extern boolean playeringame[MAXPLAYERS];
