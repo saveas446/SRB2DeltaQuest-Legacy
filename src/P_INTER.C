@@ -920,6 +920,21 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 		case MT_EMMY:
 			P_SpawnMobj(special->x, special->y, special->z, MT_SPARK);
 			tokenlist += special->health;
+				// Check what emeralds the player has so you know which one to award next.
+				if (!(emeralds & EMERALD1))
+					emeralds |= EMERALD1;
+				else if ((emeralds & EMERALD1) && !(emeralds & EMERALD2))
+					emeralds |= EMERALD2;
+				else if ((emeralds & EMERALD2) && !(emeralds & EMERALD3))
+					emeralds |= EMERALD3;
+				else if ((emeralds & EMERALD3) && !(emeralds & EMERALD4))
+					emeralds |= EMERALD4;
+				else if ((emeralds & EMERALD4) && !(emeralds & EMERALD5))
+					emeralds |= EMERALD5;
+				else if ((emeralds & EMERALD5) && !(emeralds & EMERALD6))
+					emeralds |= EMERALD6;
+				else if ((emeralds & EMERALD6) && !(emeralds & EMERALD7))
+					emeralds |= EMERALD7;
 	
 			if (ALL7EMERALDS) // Got all 7
 			{
@@ -927,7 +942,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			}
 			break;
 	
-		case MT_EMERALD1:
+		/*case MT_EMERALD1:
 		case MT_EMERALD2:
 		case MT_EMERALD3:
 		case MT_EMERALD4:
@@ -942,7 +957,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 
 			if (special->info->deathsound != sfx_None)
 				sound = special->info->deathsound;
-			break;
+			break;*/
 	
 	// start bubble grab Tails 03-07-2000
 		case MT_EXTRALARGEBUBBLE:

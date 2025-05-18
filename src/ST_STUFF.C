@@ -594,6 +594,15 @@ static void ST_drawDebugInfo(void)
 	char smfstartdash[33];
 	char sjumping[33];
 	char sscoreadd[33];
+	
+	char emmys[33];
+	char emmy1[33];
+	char emmy2[33];
+	char emmy3[33];
+	char emmy4[33];
+	char emmy5[33];
+	char emmy6[33];
+	char emmy7[33];
 
 	sprintf(smomx, "%d", stplyr->rmomx >> FRACBITS);
 	sprintf(smomy, "%d", stplyr->rmomy >> FRACBITS);
@@ -618,6 +627,16 @@ static void ST_drawDebugInfo(void)
 	sprintf(smfstartdash, "%d", stplyr->mfstartdash);
 	sprintf(sjumping, "%d", stplyr->jumping);
 	sprintf(sscoreadd, "%d", stplyr->scoreadd);
+	
+	sprintf(emmys, "%d", emeralds);
+	sprintf(emmy1, "%d", emeralds & EMERALD1);
+	sprintf(emmy2, "%d", emeralds & EMERALD2);
+	sprintf(emmy3, "%d", emeralds & EMERALD3);
+	sprintf(emmy4, "%d", emeralds & EMERALD4);
+	sprintf(emmy5, "%d", emeralds & EMERALD5);
+	sprintf(emmy6, "%d", emeralds & EMERALD6);
+	sprintf(emmy7, "%d", emeralds & EMERALD7);
+	
 	V_DrawString(248, 0, 0, "MOMX =");
 	V_DrawString(296, 0, 0, smomx);
 	V_DrawString(248, 8, 0, "MOMY =");
@@ -626,24 +645,22 @@ static void ST_drawDebugInfo(void)
 	V_DrawString(296, 16, 0, smomz);
 	V_DrawString(240, 24, 0, "SPEED =");
 	V_DrawString(296, 24, 0, sspeed);
-	V_DrawString(232, 32, 0, "FLOORZ=");
-	V_DrawString(288, 32, 0, sfloorz);
-	V_DrawString(240, 40, 0, "CEILZ =");
-	V_DrawString(296, 40, 0, spmomz);
-	V_DrawString(216, 48, 0, "CABILITY =");
-	V_DrawString(296, 48, 0, scability);
-	V_DrawString(216, 56, 0, "CHARSPED =");
-	V_DrawString(296, 56, 0, scharsped);
-	V_DrawString(216, 64, 0, "CHARFLGS =");
-	V_DrawString(296, 64, 0, scharflags);
-	V_DrawString(216, 72, 0, "STRCOLOR =");
-	V_DrawString(296, 72, 0, sstrcolor);
-	V_DrawString(216, 80, 0, "ENDCOLOR =");
-	V_DrawString(296, 80, 0, sendcolor);
-	V_DrawString(216, 88, 0, "DEDTIMER =");
-	V_DrawString(296, 88, 0, sdedtimer);
-	V_DrawString(216, 96, 0, "JUMPFACT =");
-	V_DrawString(296, 96, 0, sjumpfact);
+	V_DrawString(224, 32, 0, "EMERALDS");
+	V_DrawString(288, 32, 0, emmys);
+	V_DrawString(240, 40, 0, "EMMY1");
+	V_DrawString(296, 40, 0, emmy1);
+	V_DrawString(240, 48, 0, "EMMY2");
+	V_DrawString(296, 48, 0, emmy2);
+	V_DrawString(240, 56, 0, "EMMY3");
+	V_DrawString(296, 56, 0, emmy3);
+	V_DrawString(240, 64, 0, "EMMY4");
+	V_DrawString(296, 64, 0, emmy4);
+	V_DrawString(240, 72, 0, "EMMY5");
+	V_DrawString(296, 72, 0, emmy5);
+	V_DrawString(240, 80, 0, "EMMY6");
+	V_DrawString(296, 80, 0, emmy6);
+	V_DrawString(240, 88, 0, "EMMY7");
+	V_DrawString(296, 88, 0, emmy7);
 	V_DrawString(240, 104, 0, "X =");
 	V_DrawString(264, 104, 0, sx);
 	V_DrawString(240, 112, 0, "Y =");

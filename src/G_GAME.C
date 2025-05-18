@@ -2141,31 +2141,6 @@ void G_DoCompleted(void)
 	if (nextmap >= 1100-1 && nextmap <= 1102-1 && gametype == GT_RACE)
 		nextmap = racestage_start-1;
 
-	if (gametype == GT_COOP && token)
-	{
-		if (!(emeralds & EMERALD1))
-			nextmap = sstage_start - 1; // Special Stage 1
-		else if (!(emeralds & EMERALD2))
-			nextmap = sstage_start; // Special Stage 2
-		else if (!(emeralds & EMERALD3))
-			nextmap = sstage_start + 1; // Special Stage 3
-		else if (!(emeralds & EMERALD4))
-			nextmap = sstage_start + 2; // Special Stage 4
-		else if (!(emeralds & EMERALD5))
-			nextmap = sstage_start + 3; // Special Stage 5
-		else if (!(emeralds & EMERALD6))
-			nextmap = sstage_start + 4; // Special Stage 6
-		else if (!(emeralds & EMERALD7))
-			nextmap = sstage_start + 5; // Special Stage 7
-		else
-		{
-			gottoken = false;
-			goto skipit;
-		}
-
-		token--;
-		gottoken = true;
-	}
 skipit:
 
 	if ((gamemap >= sstage_start && gamemap <= sstage_end) && !gottoken)
