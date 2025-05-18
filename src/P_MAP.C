@@ -1255,6 +1255,8 @@ boolean P_TryCameraMove(fixed_t x, fixed_t y, camera_t *thiscam)
 boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y, boolean allowdropoff)
 {
 	fixed_t oldx, oldy;
+	int side, oldside;
+	line_t* ld;
 
 	floatok = false;
 
@@ -1343,6 +1345,20 @@ boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y, boolean allowdropoff)
 		thing->eflags |= MF_ONGROUND;
 
 	P_SetThingPosition(thing);
+	
+	// Restore P_CrossSpecialLine Save 18-05-2025
+    while (numspechit--)
+    {
+        // see if the line was crossed
+        ld = lines + spechit[numspechit];
+        side = P_PointOnLineSide (thing->x, thing->y, ld);
+        oldside = P_PointOnLineSide (oldx, oldy, ld);
+        if (side != oldside)
+        {
+            if (ld->special)
+				P_CrossSpecialLine (ld-lines, oldside, thing);
+        }
+    }
 	return true;
 }
 

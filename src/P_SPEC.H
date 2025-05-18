@@ -34,6 +34,8 @@ void P_SpawnSpecials(void);
 
 // every tic
 void P_UpdateSpecials(void);
+void P_CrossSpecialLine(int linenum, int side, mobj_t* thing);
+  
 void P_PlayerInSpecialSector(player_t *player);
 
 int twoSided(int sector, int line);

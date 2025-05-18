@@ -3618,6 +3618,30 @@ static int axtoi(char *hexStg)
 	return intValue;
 }
 
+//
+// P_CrossSpecialLine - TRIGGER
+// Called every time a thing origin is about
+//  to cross a line with a non 0 special.
+// Ported from March02 Save 18-05-2025
+void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
+    line_t*     line;
+    int         ok;
+    int         forceuse; //SoM: 4/26/2000: ALLTRIGGER should allow monsters to use generalized types too!
+	
+	line = &lines[linenum];
+    forceuse = line->flags & ML_ALLTRIGGER;
+	
+    switch (line->special)
+    {
+		//l52 (Activates Once) Exit Level Save 18-05-2025
+		case 52:
+			// EXIT!
+			//if( cv_allowexitlevel.value ) don't care lol
+				G_ExitLevel ();
+        break;
+	}
+}
+
 /** After the map has loaded, scans for specials that spawn 3Dfloors and
   * thinkers.
   *
@@ -3628,11 +3652,12 @@ static int axtoi(char *hexStg)
 void P_SpawnSpecials(void)
 {
 	//PART 1: SETUP
-	sector_t*   sector;
-    int         i;
-	int			z; // Tails 08-26-2001
-    int         episode;
-	short   numlinespecials;
+	sector_t* sector;
+    int i;
+	int	z; // Tails 08-26-2001
+    int episode;
+	short numlinespecials;
+	int ffloorflags;
 	
     episode = 1;
     if (W_CheckNumForName("texture2") >= 0)
@@ -3794,7 +3819,6 @@ void P_SpawnSpecials(void)
 				ffloorflags = FF_EXISTS|FF_RENDERALL|FF_TRANSLUCENT|FF_EXTRA|FF_CUTEXTRA|FF_CUTSPRITES;
 				if (!(lines[i].flags & ML_NOCLIMB))
 					ffloorflags |= FF_NOSHADE;
-
 				P_AddFakeFloorsByLine(i, ffloorflags);
 			break;
 		}
