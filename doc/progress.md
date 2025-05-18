@@ -49,7 +49,7 @@
 
 ## Dark City Zone
 
-**DCZ1** - 30%
+**DCZ1** - 40%
 
 **DCZ2** - 20%
 
@@ -57,11 +57,11 @@
 
 ## Grand Eggship Zone
 
-**GEZ1** - 85%
+**GEZ1** - 100%
 
-**GEZ2** - 10%
+**GEZ2** - 15%
 
-**GEZ3** - 0%
+**GEZ3** - 5%
 
 ## Robotnirock Zone
 
