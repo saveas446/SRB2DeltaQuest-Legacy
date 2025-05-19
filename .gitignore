@@ -64,3 +64,4 @@ objs/*
 build/log.txt
 build/log.txt
 build/gamedata.dat
+*.idb
