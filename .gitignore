@@ -65,3 +65,6 @@ build/log.txt
 build/log.txt
 build/gamedata.dat
 *.idb
+
+# 2.2 folder, only added here because it keeps saying files added there are changed to the repo and i got tired of it
+2.2 (for reference)/
