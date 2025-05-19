@@ -2580,6 +2580,8 @@ static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean r
 
 	if (sector->special < 32)
 	{
+		
+		//! SECTOR SPECIAL CODE
 		// Has hitten ground.
 		switch (sector->special)
 		{
