@@ -80,8 +80,8 @@ static vmode_t specialmodes[NUMSPECIALMODES] =
 	{
 		NULL,
 		winmode1, // hehe
-		320, 200, //(200.0/320.0)*(320.0/240.0),
-		320, 1, // rowbytes, bytes per pixel
+		640, 400, //(200.0/320.0)*(320.0/240.0),
+		640, 1, // rowbytes, bytes per pixel
 		1, 2, // windowed (TRUE), numpages
 		NULL,
 		VID_SetWindowedDisplayMode, 0
@@ -277,7 +277,7 @@ void I_FinishUpdate(void)
 		if (!hDCMain || !bmiMain || !vid.buffer)
 			return;
 		// main game loop, still in a window (-win parm)
-		SetDIBitsToDevice(hDCMain, 0, 0, 320, 200, 0, 0, 0, 200, vid.buffer, bmiMain,
+		SetDIBitsToDevice(hDCMain, 0, 0, 640, 400, 0, 0, 0, 400, vid.buffer, bmiMain,
 			DIB_RGB_COLORS);
 	}
 	else
@@ -319,7 +319,7 @@ void I_LoadingScreen(LPCSTR msg)
 
 	GetClientRect(vid.WndParent, &rect);
 
-	SetDIBitsToDevice(hDCMain, 0, 0, 320, 200, 0, 0, 0, 200, vid.buffer, bmiMain, DIB_RGB_COLORS);
+	SetDIBitsToDevice(hDCMain, 0, 0, 640, 400, 0, 0, 0, 400, vid.buffer, bmiMain, DIB_RGB_COLORS);
 
 	if (msg)
 	{
