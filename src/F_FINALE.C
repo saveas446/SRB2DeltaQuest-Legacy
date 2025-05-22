@@ -1831,6 +1831,7 @@ static void F_DrawPatchCol(int x, patch_t *patch, int col, int yrepeat)
 	const byte *deststop;
 	size_t count;
 
+	
 	column = (column_t *)((byte *)patch + LONG(patch->columnofs[col]));
 	desttop = screens[0] + x*vid.dupx;
 	deststop = screens[0] + vid.width * vid.height * vid.bpp;
@@ -1893,15 +1894,23 @@ static void F_DrawPatchCol(int x, patch_t *patch, int col, int yrepeat)
 "BASEVIDWIDTH has changed. Update F_SkyScroll to deal with the change"
 #endif
 
+#define INCONVENIENCE
+
 //
 // F_SkyScroll
 //
-static void F_SkyScroll(void)
+static void F_SkyScroll
+(void)
 {
 	int scrolled, x, mx, fakedwidth;
 	patch_t *pat;
 
-	pat = W_CachePatchName("TITLESKY", PU_CACHE);
+	
+	#ifdef INCONVENIENCE
+	pat = W_CachePatchName("RSKY1", PU_CACHE);
+	#else
+	pat = W_CachePatchName("TITLESKY", PU_CACHE);	
+	#endif
 
 	animtimer = ((finalecount*((gamestate == GS_INTRO || gamestate == GS_INTRO2) ? titlescrollspeed*4 : titlescrollspeed))/16) % 320;
 
@@ -1924,7 +1933,7 @@ static void F_SkyScroll(void)
 		{
 			if (mx == 320)
 				mx = 0;
-
+			
 			if (mx + scrolled < 320)
 				F_DrawPatchCol(x, pat, mx + scrolled, yr);
 			else

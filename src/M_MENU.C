@@ -7441,6 +7441,8 @@ boolean M_Responder(event_t *ev)
 	return true;
 }
 
+#define DARKENEDMENU
+
 //
 // M_Drawer
 // Called after the view has been rendered,
@@ -7451,9 +7453,9 @@ void M_Drawer(void)
 	if (!menuactive)
 		return;
 
-	// now that's more readable with a faded background (yeah like Quake...)
-	// Stop right there! Save 18-05-2025
-	//V_DrawFadeScreen();
+	#ifdef DARKENEDMENU
+	V_DrawFadeScreen();
+	#endif
 
 	if (currentMenu->drawroutine)
 		currentMenu->drawroutine(); // call current menu Draw routine

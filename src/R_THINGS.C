@@ -227,13 +227,36 @@ static boolean R_AddSingleSpriteDef(const char *sprname, spritedef_t *spritedef,
 
             //----------------------------------------------------
 
-            R_InstallSpriteLump((wadnum<<16)+l, numspritelumps, frame, rotation, false);
-
+			// if sawnic was a developer xD
+			if (rotation <= 8 && frame < 64) {
+				R_InstallSpriteLump((wadnum<<16)+l, numspritelumps, frame, rotation, false);
+			} else {
+				if (frame >= 64) {
+				CONS_Printf("Eeeeek! Bad frame value! Making it 63.\n");
+				R_InstallSpriteLump((wadnum<<16)+l, numspritelumps, 63, rotation, false);		
+				}
+			 	if (rotation > 8) {
+				CONS_Printf("Eeeeek! Bad rotation value! Making it 8.\n");
+				R_InstallSpriteLump((wadnum<<16)+l, numspritelumps, frame, 8, false);
+				}	
+			}
             if (lumpinfo[l].name[6])
             {
                 frame = lumpinfo[l].name[6] - 'A';
                 rotation = lumpinfo[l].name[7] - '0';
-                R_InstallSpriteLump((wadnum<<16)+l, numspritelumps, frame, rotation, true);
+				// if sawnic was a developer xD
+				if (rotation <= 8 && frame < 64) {
+					R_InstallSpriteLump((wadnum<<16)+l, numspritelumps, frame, rotation, false);
+				} else {
+					if (frame >= 64) {
+					CONS_Printf("Eeeeek! Bad frame value! Making it 63.\n");
+					R_InstallSpriteLump((wadnum<<16)+l, numspritelumps, 63, rotation, false);		
+					}
+					if (rotation > 8) {
+					CONS_Printf("Eeeeek! Bad rotation value! Making it 8.\n");
+					R_InstallSpriteLump((wadnum<<16)+l, numspritelumps, frame, 8, false);
+					}	
+				}
             }
 
             if (++numspritelumps >= MAXSPRITELUMPS)
