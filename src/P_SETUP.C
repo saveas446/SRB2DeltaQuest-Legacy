@@ -1508,82 +1508,27 @@ static void P_CreateBlockMap(void)
 //
 // Levels might not have a blockmap, so if one does not exist
 // this should return false.
-static boolean P_LoadBlockMap(int lump)
+void P_LoadBlockMap(int lump)
 {
-	int count;
-	
-	bkdata = W_CacheLumpName("BKLUMP", PU_LEVEL);
+    int         i;
+    int         count;
 
-	// Check if the lump exists, and if it's named "BLOCKMAP"
-	if ((lump&0xffff) >= wadfiles[lump>>16]->numlumps
-		|| strcmp(W_CheckNameForNum(lump), "BLOCKMAP") != 0)
-	{
-		return false;
-	}
+    blockmaplump = W_CacheLumpNum (lump,PU_LEVEL);
+    blockmap = blockmaplump+4;
+    count = W_LumpLength (lump)/2;
 
-	count = W_LumpLength(lump);
+    for (i=0 ; i<count ; i++)
+        blockmaplump[i] = SHORT(blockmaplump[i]);
 
-	if (!count || count >= 0x20000)
-		return false;
+    bmaporgx = blockmaplump[0]<<FRACBITS;
+    bmaporgy = blockmaplump[1]<<FRACBITS;
+    bmapwidth = blockmaplump[2];
+    bmapheight = blockmaplump[3];
 
-	{
-		long i;
-		short *wadblockmaplump = malloc(count); //short *wadblockmaplump = W_CacheLumpNum (lump, PU_LEVEL);
-
-		if (wadblockmaplump) W_ReadLump(lump, wadblockmaplump);
-		else return false;
-		count /= 2;
-		blockmaplump = Z_Malloc(sizeof (*blockmaplump) * count, PU_LEVEL, 0);
-
-		// killough 3/1/98: Expand wad blockmap into larger internal one,
-		// by treating all offsets except -1 as unsigned and zero-extending
-		// them. This potentially doubles the size of blockmaps allowed,
-		// because Doom originally considered the offsets as always signed.
-
-		blockmaplump[0] = SHORT(wadblockmaplump[0]);
-		blockmaplump[1] = SHORT(wadblockmaplump[1]);
-		blockmaplump[2] = (long)(SHORT(wadblockmaplump[2])) & 0xffff;
-		blockmaplump[3] = (long)(SHORT(wadblockmaplump[3])) & 0xffff;
-
-		for (i = 4; i < count; i++)
-		{
-			short t = SHORT(wadblockmaplump[i]);          // killough 3/1/98
-			blockmaplump[i] = t == -1 ? -1l : (long) t & 0xffff;
-		}
-
-		free(wadblockmaplump);
-
-		bmaporgx = blockmaplump[0]<<FRACBITS;
-		bmaporgy = blockmaplump[1]<<FRACBITS;
-		bmapwidth = blockmaplump[2];
-		bmapheight = blockmaplump[3];
-	}
-
-	// clear out mobj chains
-	count = sizeof (*blocklinks)* bmapwidth*bmapheight;
-	blocklinks = Z_Malloc(count, PU_LEVEL, NULL);
-	memset (blocklinks, 0, count);
-	blockmap = blockmaplump+4;
-	return true;
-
-/* Original
-		blockmaplump = W_CacheLumpNum(lump, PU_LEVEL);
-		blockmap = blockmaplump+4;
-		count = W_LumpLength (lump)/2;
-
-		for (i = 0; i < count; i++)
-			blockmaplump[i] = SHORT(blockmaplump[i]);
-
-		bmaporgx = blockmaplump[0]<<FRACBITS;
-		bmaporgy = blockmaplump[1]<<FRACBITS;
-		bmapwidth = blockmaplump[2];
-		bmapheight = blockmaplump[3];
-	}
-
-	// clear out mobj chains
-	count = sizeof (*blocklinks)*bmapwidth*bmapheight;
-	blocklinks = Z_Malloc(count, PU_LEVEL, 0);
-	memset (blocklinks, 0, count);*/
+    // clear out mobj chains
+    count = sizeof(*blocklinks)* bmapwidth*bmapheight;
+    blocklinks = Z_Malloc (count,PU_LEVEL, 0);
+    memset (blocklinks, 0, count);
 }
 
 //
@@ -2056,7 +2001,7 @@ noscript:
 	globallevelskynum = levelskynum;
 
 	// note: most of this ordering is important
-	loadedbm = P_LoadBlockMap(lastloadedmaplumpnum + ML_BLOCKMAP);
+	P_LoadBlockMap(lastloadedmaplumpnum + ML_BLOCKMAP);
 
 	if (!modifiedgame && gamemap == 0x10)
 	{

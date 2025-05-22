@@ -300,7 +300,7 @@ static HWND OpenMainWindow (HINSTANCE hInstance, int nCmdShow, LPSTR wTitle)
 	wc.cbClsExtra    = 0;
 	wc.cbWndExtra    = 0;
 	wc.hInstance     = hInstance;
-	wc.hIcon         = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_DLICON1));
+	wc.hIcon         = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON2)); // Use our custom icon! Save 22-05-2025
 	windowCursor     = LoadCursor(NULL, IDC_WAIT); //LoadCursor(hInstance, MAKEINTRESOURCE(IDC_DLCURSOR1));
 	wc.hCursor       = windowCursor;
 	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);

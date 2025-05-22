@@ -1615,6 +1615,8 @@ void D_MapChange(int mapnum, int newgametype, skill_t skill, int resetplayers, i
 #undef MAPNAME
 }
 
+//#define NOMAPCMD
+
 // Warp to map code.
 // Called either from map <mapname> console command, or idclev cheat.
 //
@@ -1647,11 +1649,13 @@ static void Command_Map_f(void)
 		return;
 	}
 
+	#ifdef NOMAPCMD
 	if (!(netgame || multiplayer) && (!modifiedgame || savemoddata))
 	{
 		CONS_Printf("Sorry, map change disabled in single player.\n");
 		return;
 	}
+	#endif
 
 	newresetplayers = !COM_CheckParm("-noresetplayers");
 

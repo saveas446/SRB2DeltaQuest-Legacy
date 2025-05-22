@@ -1904,6 +1904,9 @@ static void F_SkyScroll
 {
 	int scrolled, x, mx, fakedwidth;
 	patch_t *pat;
+	
+	int column;
+	short width;
 
 	
 	#ifdef INCONVENIENCE
@@ -1912,13 +1915,18 @@ static void F_SkyScroll
 	pat = W_CachePatchName("TITLESKY", PU_CACHE);	
 	#endif
 
-	animtimer = ((finalecount*((gamestate == GS_INTRO || gamestate == GS_INTRO2) ? titlescrollspeed*4 : titlescrollspeed))/16) % 320;
+
+	// Get patch width so we don't try to draw nonexistent pixels and SIGSEGV
+	// Save 22-05-2025
+	width = pat->width;
+
+	animtimer = ((finalecount*((gamestate == GS_INTRO || gamestate == GS_INTRO2) ? titlescrollspeed*4 : titlescrollspeed))/16) % width;
 
 	fakedwidth = vid.width / vid.dupx;
 
-	scrolled = 320 - animtimer;
-	if (scrolled > 320)
-		scrolled = 320;
+	scrolled = width - animtimer;
+	if (scrolled > width)
+		scrolled = width;
 	if (scrolled < 0)
 		scrolled = 0;
 
@@ -1931,22 +1939,26 @@ static void F_SkyScroll
 
 		for (x = 0, mx = 0; x < fakedwidth; x++, mx++)
 		{
-			if (mx == 320)
+			if (mx == width)
 				mx = 0;
 			
-			if (mx + scrolled < 320)
-				F_DrawPatchCol(x, pat, mx + scrolled, yr);
-			else
-				F_DrawPatchCol(x, pat, mx + scrolled - 320, yr);
+			column = (mx + scrolled < width) ? mx + scrolled : mx + scrolled - width;
+			
+			// Prevent drawing columns that are beyond the width of the patch
+			// Yes, I know we already have a measure against this but just in case, yk?
+			if (column > width)
+				column %= width;
+			
+			F_DrawPatchCol(x, pat, column, yr);
 		}
 	}
 #ifdef HWRENDER
 	else if (rendermode != render_none) /// \note do equivalent for hw mode?
 	{
 		if (scrolled > 0)
-			V_DrawScaledPatch(320 - scrolled, 0, V_WRAPX, pat);
+			V_DrawScaledPatch(width - scrolled, 0, V_WRAPX, pat);
 
-		if (scrolled < 320)
+		if (scrolled < width)
 			V_DrawScaledPatch(-scrolled, 0, V_WRAPX, pat);
 	}
 #endif

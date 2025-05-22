@@ -363,7 +363,7 @@ int S_GetSfxLumpNum(sfxinfo_t *sfx)
 	if (sfxlump > 0)
 		return sfxlump;
 
-	return W_GetNumForName("dsthok");
+	return W_GetNumForName("dspdiehi");
 }
 
 //
