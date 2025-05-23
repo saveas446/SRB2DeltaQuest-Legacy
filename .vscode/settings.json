@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "P_SETUP.C": "cpp",
+        "CONSOLE.C": "cpp",
+        "G_GAME.C": "cpp",
+        "S_SOUND.C": "cpp",
+        "P_SPEC.C": "cpp"
+    }
+}

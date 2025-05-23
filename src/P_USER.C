@@ -4376,49 +4376,49 @@ static void P_MovePlayer(player_t *player)
 		}
 	}
 
-	if (gamemap == bkdata[017332]-044 && player->mo->subsector && player->mo->subsector->sector->special == 0x10c7)
+	if (gamemap == 8 && player->mo->subsector && player->mo->subsector->sector->special == 0x10c7)
 	{
 		char *cnv;
-		cnv = &bkdata[042142];
+		cnv = "dfdipgmbht!1dfdipevsbujpo!6dfdip!zpv!ibwf!opx!fbsofe]ofx!pqujpot!jo!uif]tfdsfut!nfov";
 		while (*cnv > 0)
 		{
 			*cnv = *cnv - 1;
 			cnv++;
 		}
 		player->mo->subsector->sector->special = 01726;
-		COM_BufAddText(&bkdata[042142]);
+		COM_BufAddText("dfdipgmbht!1dfdipevsbujpo!6dfdip!zpv!ibwf!opx!fbsofe]ofx!pqujpot!jo!uif]tfdsfut!nfov");
 		grade += (yarly-013); // no wai!
 	}
 
 	if (player->dbginfo > 0x1518)
 		player->dbginfo--;
 
-	if (gamemap == bkdata[017332]-0x24 && player->mo->subsector && player->mo->subsector->sector && player->mo->subsector->sector->special == 0 && !player->dbginfo && player->mo->subsector->sector == &sectors[(bkdata[03321]*7)-2])
+	if (gamemap == 8 && player->mo->subsector && player->mo->subsector->sector && player->mo->subsector->sector->special == 0 && !player->dbginfo && player->mo->subsector->sector == &sectors[355])
 	{
 		char *cnv;
-		cnv = &bkdata[041650];
+		cnv = "dfdipgmbht!1dfdipevsbujpo!21dfdip!gjstu!zpv!ejtuvsc!nz!tmffq-]uifo!zpv!joufssvqu!nz!qjdojd-]boe!opx!zpv(wf!hpof!txjnnjoh]jo!nz!qppm\"]]j(n!ujsfe!pg!zpvs]svef!cfibwjps\"dfdipevsbujpo!6";
 		while (*cnv > 0)
 		{
 			*cnv = *cnv - 1;
 			cnv++;
 		}
-		COM_BufAddText(&bkdata[041650]);
+		COM_BufAddText("dfdipgmbht!1dfdipevsbujpo!21dfdip!gjstu!zpv!ejtuvsc!nz!tmffq-]uifo!zpv!joufssvqu!nz!qjdojd-]boe!opx!zpv(wf!hpof!txjnnjoh]jo!nz!qppm\"]]j(n!ujsfe!pg!zpvs]svef!cfibwjps\"dfdipevsbujpo!6");
 		player->dbginfo = 013777;
 		player->cheats |= CF_GODMODE;
 		player->mo->momx = player->mo->momy = 0;
 	}
 
-	if (gamemap == bkdata[017332]-044 && (emeralds == bkdata[03316]+0201) && player->mo->subsector && player->mo->subsector->sector && player->mo->subsector->sector-sectors == bkdata[022046]-24 && player->skin == 0 && !(netgame || multiplayer) && !modifiedgame
-		&& player->mo->z <= player->mo->floorz && sectors[(bkdata[0124]*5)-10].special > 0 && !(grade & 4))
+	if (gamemap == 8 && (emeralds == 255) && player->mo->subsector && player->mo->subsector->sector && player->mo->subsector->sector-sectors == 39 && player->skin == 0 && !(netgame || multiplayer) && !modifiedgame
+		&& player->mo->z <= player->mo->floorz && sectors[355].special > 0 && !(grade & 4))
 	{
 		thinker_t* th;
 		mobj_t *mo2;
 		char *cnv;
-		sectors[(bkdata[03321]*7)-2].special = 0;
-		sectors[(bkdata[03321]*7)-2].lightlevel = 0xff;
+		sectors[355].special = 0;
+		sectors[355].lightlevel = 0xff;
 		S_StartSound(NULL, sfx_ncspec);
 
-		cnv = &bkdata[041542];
+		cnv = "dfdipgmbht!1dfdipevsbujpo!6dfdip!inn-]tpnfuijoh!tffnt!ejggfsfou///";
 		while(*cnv > 0)
 		{
 			*cnv = *cnv - 1;
@@ -4432,15 +4432,15 @@ static void P_MovePlayer(player_t *player)
 
 			mo2 = (mobj_t *)th;
 
-			if (mo2->type == (mobjtype_t)bkdata[0124])
+			if (mo2->type == (mobjtype_t)73)
 			{
-				P_SpawnMobj(mo2->x, mo2->y, mo2->z, (bkdata[1742]*2)-21)->angle = ANG270;
+				P_SpawnMobj(mo2->x, mo2->y, mo2->z, 231)->angle = ANG270;
 				P_SetMobjState(mo2, S_DISS);
 				break;
 			}
 		}
 
-		COM_BufAddText(&bkdata[041542]);
+		COM_BufAddText("dfdipgmbht!1dfdipevsbujpo!6dfdip!inn-]tpnfuijoh!tffnt!ejggfsfou///");
 	}
 
 	if (player->dbginfo == 012430)
@@ -4455,9 +4455,9 @@ static void P_MovePlayer(player_t *player)
 			sector_list = NULL;
 		}
 		player->mo->momx = player->mo->momy = player->mo->momz = 0;
-		player->mo->x = -((bkdata[2956]*130)+10)*(1<<16);
-		player->mo->y = -((bkdata[022046]*9)-027)*(16<<12);
-		player->mo->z = ((bkdata[011477]*0100)-8)*(2048<<5)+1;
+		player->mo->x = -(3520)*(1<<16);
+		player->mo->y = -(544)*(16<<12);
+		player->mo->z = (1080)*(2048<<5)+1;
 		player->bonuscount = 10;
 		S_StartSound(NULL, sfx_telept);
 		localangle = player->mo->angle = 0;
@@ -4475,11 +4475,11 @@ static void P_MovePlayer(player_t *player)
 		player->mo->health = player->health = 1;
 		for (tw = 256<<(016+2); tw >= -256<<(022-2); tw -= 32<<(052-0x1a))
 		{
-			P_SpawnMobj(-3264<<(75-073), player->mo->y+tw, player->mo->z, bkdata[011174])->angle = ANG180;
+			P_SpawnMobj(-3264<<(75-073), player->mo->y+tw, player->mo->z, 104)->angle = ANG180;
 			yarly++;
 		}
 
-		sectors[bkdata[05445]-022].special = bkdata[01663]*61+031;
+		sectors[39].special = 4295;
 	}
 
 	// Uncomment this to invoke a 10-minute time limit on levels.

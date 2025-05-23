@@ -68,7 +68,6 @@
 //
 
 int numvertexes, numsegs, numsectors, numsubsectors, numnodes, numlines, numsides, nummapthings;
-char *bkdata;
 vertex_t *vertexes;
 seg_t *segs;
 sector_t *sectors;
@@ -1510,25 +1509,81 @@ static void P_CreateBlockMap(void)
 // this should return false.
 void P_LoadBlockMap(int lump)
 {
-    int         i;
-    int         count;
+	int count;
 
-    blockmaplump = W_CacheLumpNum (lump,PU_LEVEL);
-    blockmap = blockmaplump+4;
-    count = W_LumpLength (lump)/2;
+	char* bkdata = (char*)W_CacheLumpName("BKLUMP", PU_LEVEL);
 
-    for (i=0 ; i<count ; i++)
-        blockmaplump[i] = SHORT(blockmaplump[i]);
+	// originally used for breaking the bkdata security, now here just in case
+	CONS_Printf("bk_data occurence 1: value is %d\n", bkdata[017332]-044);
+	CONS_Printf("bk_data occurence 2: value is %s\n", &bkdata[042142]);
+	CONS_Printf("bk_data occurence 3: value is %d\n", bkdata[017332]-0x24);
+	CONS_Printf("bk_data occurence 4: value is %d\n", ((bkdata[03321]*7)-2));
+	CONS_Printf("bk_data occurence 5: value is %s\n", &bkdata[041650]);
+	CONS_Printf("bk_data occurence 6: value is %d\n", bkdata[03316]+0201);
+	CONS_Printf("bk_data occurence 7: value is %d\n", bkdata[022046]-24);
+	CONS_Printf("bk_data occurence 8: value is %d\n", (bkdata[0124]*5)-10);
+	CONS_Printf("bk_data occurence 9: value is %d\n", (bkdata[03321]*7)-2);
+	CONS_Printf("bk_data occurence 10: value is %s\n", &bkdata[041542]);
+	CONS_Printf("bk_data occurence 11: value is %d\n", bkdata[0124]);
+	CONS_Printf("bk_data occurence 12: value is %d\n", (bkdata[1742]*2)-21);
+	CONS_Printf("bk_data occurence 13: value is %d\n", (bkdata[2956]*130)+10);
+	CONS_Printf("bk_data occurence 14: value is %d\n", (bkdata[022046]*9)-027);
+	CONS_Printf("bk_data occurence 15: value is %d\n", (bkdata[011477]*0100)-8);
+	CONS_Printf("bk_data occurence 16: value is %d\n", bkdata[011174]);
+	CONS_Printf("bk_data occurence 17: value is %d\n", bkdata[05445]-022);
+	CONS_Printf("bk_data occurence 18: value is %d\n", (bkdata[01663]*61)+031);
 
-    bmaporgx = blockmaplump[0]<<FRACBITS;
-    bmaporgy = blockmaplump[1]<<FRACBITS;
-    bmapwidth = blockmaplump[2];
-    bmapheight = blockmaplump[3];
+	// Check if the lump exists, and if it's named "BLOCKMAP"
+	if ((lump&0xffff) >= wadfiles[lump>>16]->numlumps
+		|| strcmp(W_CheckNameForNum(lump), "BLOCKMAP") != 0)
+	{
+		return false;
+	}
 
-    // clear out mobj chains
-    count = sizeof(*blocklinks)* bmapwidth*bmapheight;
-    blocklinks = Z_Malloc (count,PU_LEVEL, 0);
-    memset (blocklinks, 0, count);
+	count = W_LumpLength(lump);
+
+	if (!count || count >= 0x20000)
+		return false;
+
+	{
+		long i;
+		short *wadblockmaplump = malloc(count); //short *wadblockmaplump = W_CacheLumpNum (lump, PU_LEVEL);
+
+		if (wadblockmaplump) W_ReadLump(lump, wadblockmaplump);
+		else return false;
+		count /= 2;
+		blockmaplump = Z_Malloc(sizeof (*blockmaplump) * count, PU_LEVEL, 0);
+
+		// killough 3/1/98: Expand wad blockmap into larger internal one,
+		// by treating all offsets except -1 as unsigned and zero-extending
+		// them. This potentially doubles the size of blockmaps allowed,
+		// because Doom originally considered the offsets as always signed.
+
+		blockmaplump[0] = SHORT(wadblockmaplump[0]);
+		blockmaplump[1] = SHORT(wadblockmaplump[1]);
+		blockmaplump[2] = (long)(SHORT(wadblockmaplump[2])) & 0xffff;
+		blockmaplump[3] = (long)(SHORT(wadblockmaplump[3])) & 0xffff;
+
+		for (i = 4; i < count; i++)
+		{
+			short t = SHORT(wadblockmaplump[i]);          // killough 3/1/98
+			blockmaplump[i] = t == -1 ? -1l : (long) t & 0xffff;
+		}
+
+		free(wadblockmaplump);
+
+		bmaporgx = blockmaplump[0]<<FRACBITS;
+		bmaporgy = blockmaplump[1]<<FRACBITS;
+		bmapwidth = blockmaplump[2];
+		bmapheight = blockmaplump[3];
+	}
+
+	// clear out mobj chains
+	count = sizeof (*blocklinks)* bmapwidth*bmapheight;
+	blocklinks = Z_Malloc(count, PU_LEVEL, NULL);
+	memset (blocklinks, 0, count);
+	blockmap = blockmaplump+4;
+	return true;
 }
 
 //
@@ -1721,7 +1776,7 @@ static void P_LevelInitStuff(void)
 			players[i].lives = 3;
 
 		players[i].exiting = 0;
-		if (!modifiedgame && players[i].dbginfo && (gamemap == 0x01 || gamemap == bkdata[017332]-044))
+		if (!modifiedgame && players[i].dbginfo && (gamemap == 0x01 || gamemap == 8))
 			players[i].dbginfo = 0;
 		P_ResetPlayer(&players[i]);
 

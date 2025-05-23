@@ -51,7 +51,6 @@ int P_AddLevelFlat(const char *flatname, levelflat_t *levelflat);
 
 extern int nummapthings;
 extern mapthing_t *mapthings;
-extern char *bkdata;
 
 void P_SetupLevelSky(int skynum);
 void P_SpawnSecretItems(boolean loademblems);
