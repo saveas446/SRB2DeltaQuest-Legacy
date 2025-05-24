@@ -40,6 +40,8 @@
 #include "z_zone.h"
 #include "w_wad.h"
 
+#include "d2udef.h"
+
 #include "hardware/hw3sound.h"
 
 #ifdef HWRENDER
@@ -4726,9 +4728,10 @@ static void P_MovePlayer(player_t *player)
 						}
 						else // Otherwise, THOK!
 						{
-							//The return of multi-thok! Save
-							/*if (!player->thokked || (player->charflags & SF_MULTIABILITY))
-							{*/
+							#ifndef MULTITHOK
+							if (!player->thokked || (player->charflags & SF_MULTIABILITY))
+							{
+							#endif
 								// Catapult the player
 								if ((player->mo->eflags & MF_UNDERWATER))
 									P_InstaThrust(player->mo, player->mo->angle, (player->actionspd<<FRACBITS)/2);
@@ -4768,7 +4771,9 @@ static void P_MovePlayer(player_t *player)
 
 								player->mfspinning = player->mfstartdash = 0;
 								player->thokked = true;
-							//}
+							#ifndef MULTITHOK
+							}
+							#endif
 						}
 					}
 					break;

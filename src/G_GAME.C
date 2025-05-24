@@ -2076,8 +2076,13 @@ void G_DoCompleted(void)
 	S_StopSounds();
 
 	prevmap = gamemap-1;
+	
 
-	// go to next level
+	nextmap = gamemap; // Go to next map. Save 24-05-2025
+
+	//If Sam wants me to, I can restore this part.
+
+	/*// go to next level
 	// nextmap is 0-based, unlike gamemap
 	if (nextmapoverride != 0)
 		nextmap = nextmapoverride-1;
@@ -2129,7 +2134,7 @@ void G_DoCompleted(void)
 
 			nextmap = cm;
 		}
-	}
+	}*/
 
 	if (nextmap < 0 || (nextmap >= NUMMAPS && nextmap < 1100-1)
 		|| nextmap > 1102-1)

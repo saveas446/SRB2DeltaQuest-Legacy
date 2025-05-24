@@ -40,6 +40,8 @@
 #include "d_main.h"
 #include "m_menu.h"
 
+#include "d2udef.h"
+
 #ifdef _WINDOWS
 #include "win32/win_main.h"
 #endif
@@ -47,11 +49,6 @@
 #ifdef HWRENDER
 #include "hardware/hw_main.h"
 #endif
-
-// only here so we can claim that this exe has full compatibility with the demo 2 iwad
-// comment this out if you're not insane
-// Save 21-05-2025
-#define QUAKE_CONSBACK
 
 static boolean con_started = false; // console has been initialised
        boolean con_startup = false; // true at game startup, screen need refreshing
@@ -104,7 +101,7 @@ static int inputhist;    // line number of history input line to restore
 static size_t input_cx;  // position in current input line
 
 // console background picture, loaded static
-#ifdef QUAKE_CONSBACK
+#ifndef DEMO2ULTIMATE
 static pic_t *con_backpic;
 #else 
 static patch_t *con_backpic;
@@ -116,7 +113,7 @@ static void CON_RecalcSize(void);
 
 static void CONS_speed_Change(void);
 
-#ifdef QUAKE_CONSBACK
+#ifndef DEMO2ULTIMATE
 static void CON_DrawBackpic(pic_t *pic, int startx, int destwidth);
 #else
 static void CON_DrawBackpic(patch_t *pic, int startx, int destwidth);
@@ -338,7 +335,7 @@ void CON_Init(void)
 	// setup console input filtering
 	CON_InputInit();
 
-	#ifdef QUAKE_CONSBACK
+	#ifndef DEMO2ULTIMATE
 	con_backpic = (pic_t *)W_CacheLumpName("CONSBACK",PU_STATIC);
 	#else
 	// load console background pic
@@ -1133,7 +1130,7 @@ static void CON_DrawHudlines(void)
 //   startx, destwidth is resolution dependent
 // Used to draw console borders, console background.
 // The pic must be sized BASEVIDHEIGHT height.
-#ifdef QUAKE_CONSBACK	
+#ifndef DEMO2ULTIMATE
 static void CON_DrawBackpic(pic_t *pic, int startx, int destwidth)
 {
 	int x, y;
@@ -1206,10 +1203,11 @@ static void CON_DrawConsole(void)
 	// draw console background
 	if (cons_backpic.value || con_forcepic)
 	{
-		if (rendermode != render_soft)
+		#ifdef DEMO2ULTIMATE
 			V_DrawScaledPatch(0, 0, 0, con_backpic);
-		else if (rendermode != render_none)
+		#else
 			CON_DrawBackpic(con_backpic, 0, vid.width); // picture as background
+		#endif
 	}
 	else
 	{

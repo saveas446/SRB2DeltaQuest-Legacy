@@ -44,6 +44,8 @@
 #include "r_local.h"
 #include "p_local.h"
 
+#include "d2udef.h"
+
 typedef union
 {
 	struct
@@ -109,8 +111,13 @@ typedef union
 static y_data data;
 
 // graphics
+
+// Don't define these if we have it set to use no intermission background 
+#ifndef IS_NOBG
 static patch_t *bgpatch = NULL;     // INTERSCR
 static patch_t *widebgpatch = NULL; // INTERSCW
+#endif
+
 static patch_t *bgtile = NULL;      // SPECTILE/SRB2BACK
 static patch_t *interpic = NULL;    // custom picture defined in map header
 static boolean usetile;
@@ -155,19 +162,25 @@ void Y_IntermissionDrawer(void)
 	if (inttype == int_none || rendermode == render_none)
 		return;
 
-	V_DrawFill(0, 0, BASEVIDWIDTH, BASEVIDHEIGHT, 0);
+	
 
+	#ifndef IS_NOBG 
+	V_DrawFill(0, 0, BASEVIDWIDTH, BASEVIDHEIGHT, 0);
+	
 	if (useinterpic)
 		V_DrawScaledPatch(0, 0, 0, interpic);
 	else if (!usetile)
 	{
+		
 		if (widebgpatch && rendermode == render_soft && vid.width / vid.dupx == 400)
 			V_DrawScaledPatch(0, 0, V_SNAPTOLEFT, widebgpatch);
 		else
 			V_DrawScaledPatch(0, 0, 0, bgpatch);
+		
 	}
 	else
 		V_DrawPatchFill(bgtile);
+	#endif
 
 	if (inttype == int_coop)
 	{
@@ -767,9 +780,25 @@ void Y_StartIntermission(void)
 			else
 				data.coop.ttlnum = W_CachePatchName("TTL01", PU_STATIC);
 
+			
 			// get background patches
+			#ifdef IS_CHARBG
+			// Alternate between these four pics every level
+			// TODO: Remove these stupid brackets
+			if (prevmap % 4 == 0) {
+				widebgpatch = bgpatch = W_CachePatchName("SONICPIC", PU_LEVEL);
+			} else if (prevmap % 4 == 1) {
+				widebgpatch = bgpatch = W_CachePatchName("TAILSPIC", PU_LEVEL);
+			} else if (prevmap % 4 == 2) {
+				widebgpatch = bgpatch = W_CachePatchName("KNUXPIC", PU_LEVEL);
+			} else if (prevmap % 4 == 3) {
+				widebgpatch = bgpatch = W_CachePatchName("EGGPIC", PU_LEVEL);
+			}
+			#endif
+			#ifdef IS_FDBG
 			widebgpatch = W_CachePatchName("INTERSCW", PU_STATIC);
 			bgpatch = W_CachePatchName("INTERSCR", PU_STATIC);
+			#endif
 
 			// grab an interscreen if appropriate
 			if (mapheaderinfo[gamemap-1].interscreen[0] != '#')
@@ -1442,8 +1471,11 @@ static void Y_UnloadData(void)
 		return;
 
 	// unload the background patches
+
+	#ifndef IS_NOBG
 	UNLOAD(bgpatch);
 	UNLOAD(widebgpatch);
+	#endif
 	UNLOAD(bgtile);
 	UNLOAD(interpic);
 

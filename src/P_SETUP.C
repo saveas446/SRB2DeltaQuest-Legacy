@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*-
+// Emacs style mode select   -*- C -*-
 //-----------------------------------------------------------------------------
 //
 // Copyright (C) 1993-1996 by id Software, Inc.
@@ -1511,9 +1511,10 @@ void P_LoadBlockMap(int lump)
 {
 	int count;
 
-	char* bkdata = (char*)W_CacheLumpName("BKLUMP", PU_LEVEL);
-
 	// originally used for breaking the bkdata security, now here just in case
+	/*char* bkdata = (char*)W_CacheLumpName("BKLUMP", PU_LEVEL);
+
+	
 	CONS_Printf("bk_data occurence 1: value is %d\n", bkdata[017332]-044);
 	CONS_Printf("bk_data occurence 2: value is %s\n", &bkdata[042142]);
 	CONS_Printf("bk_data occurence 3: value is %d\n", bkdata[017332]-0x24);
@@ -1531,7 +1532,7 @@ void P_LoadBlockMap(int lump)
 	CONS_Printf("bk_data occurence 15: value is %d\n", (bkdata[011477]*0100)-8);
 	CONS_Printf("bk_data occurence 16: value is %d\n", bkdata[011174]);
 	CONS_Printf("bk_data occurence 17: value is %d\n", bkdata[05445]-022);
-	CONS_Printf("bk_data occurence 18: value is %d\n", (bkdata[01663]*61)+031);
+	CONS_Printf("bk_data occurence 18: value is %d\n", (bkdata[01663]*61)+031);*/
 
 	// Check if the lump exists, and if it's named "BLOCKMAP"
 	if ((lump&0xffff) >= wadfiles[lump>>16]->numlumps

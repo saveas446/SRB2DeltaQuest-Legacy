@@ -39,6 +39,8 @@
 #include "m_random.h"
 #include "y_inter.h"
 
+#include "d2udef.h"
+
 credit_t credits[19];
 
 // Stage of animation:
@@ -1894,8 +1896,6 @@ static void F_DrawPatchCol(int x, patch_t *patch, int col, int yrepeat)
 "BASEVIDWIDTH has changed. Update F_SkyScroll to deal with the change"
 #endif
 
-#define INCONVENIENCE
-
 //
 // F_SkyScroll
 //
@@ -1909,7 +1909,7 @@ static void F_SkyScroll
 	short width;
 
 	
-	#ifdef INCONVENIENCE
+	#ifndef DEMO2ULTIMATE
 	pat = W_CachePatchName("RSKY1", PU_CACHE);
 	#else
 	pat = W_CachePatchName("TITLESKY", PU_CACHE);	

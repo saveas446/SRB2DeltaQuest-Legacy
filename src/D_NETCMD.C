@@ -50,6 +50,8 @@
 #include "md5.h"
 #include "z_zone.h"
 
+#include "d2udef.h"
+
 #ifdef JOHNNYFUNCODE
 #define CV_JOHNNY CV_NETVAR
 #else
@@ -1614,8 +1616,6 @@ void D_MapChange(int mapnum, int newgametype, skill_t skill, int resetplayers, i
 	}
 #undef MAPNAME
 }
-
-//#define NOMAPCMD
 
 // Warp to map code.
 // Called either from map <mapname> console command, or idclev cheat.

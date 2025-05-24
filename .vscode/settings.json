@@ -1,9 +1,11 @@
 {
     "files.associations": {
-        "P_SETUP.C": "cpp",
-        "CONSOLE.C": "cpp",
-        "G_GAME.C": "cpp",
-        "S_SOUND.C": "cpp",
-        "P_SPEC.C": "cpp"
-    }
+        "P_SETUP.C": "c",
+        "CONSOLE.C": "c",
+        "G_GAME.C": "c",
+        "S_SOUND.C": "c",
+        "P_SPEC.C": "c",
+        "M_MENU.C": "c"
+    },
+    "C_Cpp.dimInactiveRegions": false
 }

@@ -66,6 +66,8 @@
 
 #include "f_finale.h"
 
+#include "d2udef.h"
+
 #ifdef HWRENDER
 #include "hardware/hw_main.h"
 #endif
@@ -2239,7 +2241,7 @@ enum
 
 menu_t SetupMultiPlayerDef =
 {
-	"M_PSETUP",
+	"M_MULTI",
 	"Multiplayer",
 	sizeof (SetupMultiPlayerMenu)/sizeof (menuitem_t),
 	&MultiPlayerDef,
@@ -3703,9 +3705,6 @@ static void M_ReplayTimeAttack(int choice)
 
 	timeattacking = true;
 }
-
-//comment this out to bypass the character select menu
-//#define CHARACTERSELECT
 
 static void M_ChooseSkill(int choice)
 {
@@ -7441,7 +7440,7 @@ boolean M_Responder(event_t *ev)
 	return true;
 }
 
-#define DARKENEDMENU
+
 
 //
 // M_Drawer

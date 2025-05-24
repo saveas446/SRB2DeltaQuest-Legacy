@@ -367,12 +367,13 @@ void ST_Init(void)
 	ST_LoadGraphics();
 
 	// cache the status bar overlay icons (fullscreen mode)
-	sborings = W_CachePatchName("SBORINGS", PU_STATIC);
-	sboscore = W_CachePatchName("SBOSCORE", PU_STATIC);
+
+	sborings = W_CachePatchName("SBOHEALT", PU_STATIC); // No more constantly red RINGS graphic! Save 24-05-2025
+	sboscore = W_CachePatchName("SBOFRAGS", PU_STATIC); // There's a different name for this in Demo 2
 	sboover = W_CachePatchName("SBOOVER", PU_STATIC);
 	timeover = W_CachePatchName("TIMEOVER", PU_STATIC);
 	stlivex = W_CachePatchName("STLIVEX", PU_STATIC);
-	rrings = W_CachePatchName("RRINGS", PU_STATIC);
+	rrings = W_CachePatchName("SBORINGS", PU_STATIC); // There's a different name for this in Demo 2
 	sbotime = W_CachePatchName("SBOTIME", PU_STATIC); // Time logo
 	sbocolon = W_CachePatchName("SBOCOLON", PU_STATIC); // Colon for time
 	getall = W_CachePatchName("GETALL", PU_STATIC); // Special Stage HUD
