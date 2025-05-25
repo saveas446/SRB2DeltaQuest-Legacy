@@ -440,7 +440,8 @@ int P_PrecacheLevelFlats(void)
 		lump = levelflats[i].lumpnum;
 		if (devparm)
 			flatmemory += W_LumpLength(lump);
-		R_GetFlat(lump);
+		if (lump != -1)
+			R_GetFlat(lump);
 	}
 	return flatmemory;
 }

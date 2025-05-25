@@ -1742,50 +1742,6 @@ static void Command_Map_f(void)
 			}
 		}
 	}
-
-	// don't use a gametype the map doesn't support
-	if (cv_debug || COM_CheckParm("-force") || cv_skipmapcheck.value)
-		;
-	else if (multiplayer)
-	{
-		short tol = mapheaderinfo[newmapnum-1].typeoflevel, tolflag = 0;
-
-		switch (newgametype)
-		{
-			case GT_MATCH: case GTF_TEAMMATCH: tolflag = TOL_MATCH; break;
-#ifdef CHAOSISNOTDEADYET
-			case GT_CHAOS: tolflag = TOL_CHAOS; break;
-#endif
-			case GT_COOP: tolflag = TOL_COOP; break;
-			case GT_RACE: case GTF_TIMEONLYRACE: tolflag = TOL_RACE; break;
-			case GT_CTF: tolflag = TOL_CTF; break;
-			case GT_TAG: tolflag = TOL_TAG; break;
-		}
-
-		if (!(tol & tolflag))
-		{
-			char gametypestring[32];
-
-			for (i = 0; gametype_cons_t[i].strvalue != NULL; i++)
-			{
-				if (gametype_cons_t[i].value == newgametype)
-				{
-					strcpy(gametypestring, gametype_cons_t[i].strvalue);
-					break;
-				}
-			}
-
-			CONS_Printf("That level doesn't support %s mode!\n(Use -force to override)\n",
-				gametypestring);
-			return;
-		}
-	}
-	else if (!(mapheaderinfo[newmapnum-1].typeoflevel & TOL_SP))
-	{
-		CONS_Printf("That level doesn't support Single Player mode!\n");
-		return;
-	}
-
 	fromlevelselect = false;
 	D_MapChange(newmapnum, newgametype, newskill, newresetplayers, 0, false, false);
 }

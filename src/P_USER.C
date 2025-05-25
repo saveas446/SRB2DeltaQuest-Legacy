@@ -324,17 +324,7 @@ byte P_FindLowestMare(void)
 			continue;
 
 		mo2 = (mobj_t *)th;
-
-		if (mo2->type == MT_EGGCAPSULE && mo2->health > 0)
-		{
-			const byte threshold = (byte)mo2->threshold;
-			if (mare == 255)
-				mare = threshold;
-			else if (threshold < mare)
-				mare = threshold;
-		}
 	}
-
 	if (cv_debug)
 		CONS_Printf("Lowest mare found: %d\n", mare);
 
