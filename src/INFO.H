@@ -526,6 +526,11 @@ typedef enum
 	S_BLTV1,
 	S_BLTV2,
 	S_BLTV3,
+	S_BLTV4,
+	S_BLTV5,
+	S_BLTV6,
+	S_BLTV7,
+	S_BLTV8,
 
 	S_YELLOWSPRING,
 	S_YELLOWSPRING2,
@@ -744,6 +749,11 @@ typedef enum
 	S_BKTV2,
 	S_BKTV3,
 	S_BKTV4,
+	S_BKTV5,
+	S_BKTV6,
+	S_BKTV7,
+	S_BKTV8,
+	S_BKTV9,
 
 	// Jump Shield Box
 	S_WHTV1,

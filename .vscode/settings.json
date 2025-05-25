@@ -7,7 +7,15 @@
         "P_SPEC.C": "c",
         "M_MENU.C": "c",
         "INFO.C": "c",
-        "P_MOBJ.C": "cpp"
+        "P_MOBJ.C": "cpp",
+        "cstddef": "c",
+        "limits": "c",
+        "memory": "c",
+        "system_error": "c",
+        "xiosbase": "c",
+        "xlocale": "c",
+        "xstring": "c",
+        "xutility": "c"
     },
     "C_Cpp.dimInactiveRegions": false
 }

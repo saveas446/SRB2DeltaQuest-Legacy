@@ -244,10 +244,15 @@ state_t states[NUMSTATES] =
 	{SPR_PINV, 1, 18, {A_Invincibility}, 0, 0, S_DISS}, // S_PINV4
 
 	// Water Shield Box
-	{SPR_BLTV, 0, 2, {NULL}, 0, 0, S_BLTV1},          // S_BLTV
-	{SPR_MTEX, 0, 1, {NULL}, 0, 0, S_BLTV},           // S_BLTV1
-	{SPR_BLTV, 1, 18, {A_MonitorPop}, 0, 0, S_BLTV3}, // S_BLTV2
-	{SPR_BLTV, 1, 18, {A_WaterShield}, 0, 0, S_DISS}, // S_BLTV3
+	{SPR_BLTV, 0, 1, {NULL}, 0, 0, S_BLTV1},          // S_BLTV1
+	{SPR_BLTV, 1, 2, {NULL}, 0, 0, S_BLTV},          // S_BLTV2
+	{SPR_BLTV, 2, 2, {A_Fall}, 0, 0, S_BLTV3}, // S_BLTV3
+	{SPR_BLTV, 3, 2, {A_Scream}, 0, 0, S_BLTV4}, // S_BLTV4
+	{SPR_BLTV, 4, 2, {NULL}, 0, 0, S_BLTV5}, // S_BLTV5
+	{SPR_BLTV, 5, 2, {NULL}, 0, 0, S_BLTV6}, // S_BLTV6
+	{SPR_BLTV, 6, 2, {NULL}, 0, 0, S_BLTV7}, // S_BLTV7
+	{SPR_BLTV, 6, 48, {A_WaterShield}, 0, 0, S_DISS},  // S_BLTV8
+	{SPR_BLTV, 7, -1, {NULL}, 0, 0, S_NULL}, // S_BLTV9
 
 	// Yellow Spring
 	{SPR_SPRY, 0, -1, {NULL}, 0, 0, S_NULL},           // S_YELLOWSPRING
@@ -469,10 +474,15 @@ state_t states[NUMSTATES] =
 	{SPR_PRUP, 1, 18, {A_ExtraLife}, 0, 0, S_DISS},   // S_PRUP4
 
 	// Bomb Shield Box
-	{SPR_BKTV, 0, 2, {NULL}, 0, 0, S_BKTV2},          // S_BKTV1
-	{SPR_MTEX, 0, 1, {NULL}, 0, 0, S_BKTV1},          // S_BKTV2
-	{SPR_BKTV, 1, 18, {A_MonitorPop}, 0, 0, S_BKTV4}, // S_BKTV3
-	{SPR_BKTV, 1, 18, {A_BombShield}, 0, 0, S_DISS},  // S_BKTV4
+	{SPR_BKTV, 0, 1, {NULL}, 0, 0, S_BKTV2},          // S_BKTV1
+	{SPR_BKTV, 1, 2, {NULL}, 0, 0, S_BKTV1},          // S_BKTV2
+	{SPR_BKTV, 2, 2, {A_Fall}, 0, 0, S_BKTV4}, // S_BKTV3
+	{SPR_BKTV, 3, 2, {A_Scream}, 0, 0, S_BKTV5}, // S_BKTV4
+	{SPR_BKTV, 4, 2, {NULL}, 0, 0, S_BKTV6}, // S_BKTV5
+	{SPR_BKTV, 5, 2, {NULL}, 0, 0, S_BKTV7}, // S_BKTV6
+	{SPR_BKTV, 6, 2, {NULL}, 0, 0, S_BKTV8}, // S_BKTV7
+	{SPR_BKTV, 6, 48, {A_BombShield}, 0, 0, S_DISS},  // S_BKTV8
+	{SPR_BKTV, 6, -1, {NULL}, 0, 0, S_NULL}, // S_BKTV7
 
 	// Jump Shield Box
 	{SPR_WHTV, 0, 2, {NULL}, 0, 0, S_WHTV2},          // S_WHTV1
