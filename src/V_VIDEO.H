@@ -105,9 +105,6 @@ void V_DrawString(int x, int y, int option, const char *string);
 void V_DrawCenteredString(int x, int y, int option, const char *string);
 void V_DrawRightAlignedString(int x, int y, int option, const char *string);
 
-// Find string width from lt_font chars
-int V_LevelNameWidth(const char *string);
-int V_LevelNameHeight(const char *string);
 
 void V_DrawCreditString(int x, int y, int option, const char *string);
 int V_CreditStringWidth(const char *string);

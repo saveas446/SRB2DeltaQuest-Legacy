@@ -190,8 +190,6 @@ typedef enum
 	SPR_RRNG, // Red Ring
 	SPR_TTAG, // Tag Sign
 	SPR_STEM, // Steam riser
-	SPR_RFLG, // Red CTF Flag
-	SPR_BFLG, // Blue CTF Flag
 	SPR_GFLG, // Got Flag sign
 	SPR_TOKE, // Special Stage Token
 	SPR_CEMG, // Chaos Emerald (intangible)
@@ -248,7 +246,6 @@ typedef enum
 	SPR_KOOP,
 	SPR_SHLL,
 	SPR_MAXE,
-	SPR_BFLM,
 	SPR_FBLL,
 	SPR_FFWR,
 
@@ -266,7 +263,6 @@ typedef enum
 	SPR_EGGN, // Boss 2
 	SPR_GOOP, // Boss 2 Goop
 	SPR_BPLD, // Boss Explosions
-	SPR_ALRM, // THZ2 Alarm
 
 	SPR_RDTV, // Fire shield
 	SPR_RORB, // Red orb
@@ -287,7 +283,6 @@ typedef enum
 	SPR_FWR4,
 
 	SPR_GOOM,
-	SPR_BGOM,
 	SPR_MUS1,
 	SPR_MUS2,
 	SPR_TOAD,
@@ -1013,10 +1008,6 @@ typedef enum
 	S_STEAM7,
 	S_STEAM8,
 
-	// CTF Flags
-	S_REDFLAG,
-	S_BLUEFLAG,
-
 	// Got Flag Sign
 	S_GOTFLAG1,
 	S_GOTFLAG2,
@@ -1463,9 +1454,6 @@ typedef enum
 	S_AXE1,
 	S_AXE2,
 	S_AXE3,
-	S_KOOPAFLAME1,
-	S_KOOPAFLAME2,
-	S_KOOPAFLAME3,
 	S_FIREBALL1,
 	S_FIREBALL2,
 	S_FIREBALL3,
@@ -1633,9 +1621,6 @@ typedef enum
 	S_BPLD6,
 	S_BPLD7,
 
-	// THZ Alarm
-	S_ALARM1,
-
 	// Emblem
 	S_EMBLEM1,
 
@@ -1706,17 +1691,6 @@ typedef enum
 	S_GOOMBA8,
 	S_GOOMBA9,
 	S_GOOMBA_DEAD,
-	S_BLUEGOOMBA1,
-	S_BLUEGOOMBA1B,
-	S_BLUEGOOMBA2,
-	S_BLUEGOOMBA3,
-	S_BLUEGOOMBA4,
-	S_BLUEGOOMBA5,
-	S_BLUEGOOMBA6,
-	S_BLUEGOOMBA7,
-	S_BLUEGOOMBA8,
-	S_BLUEGOOMBA9,
-	S_BLUEGOOMBA_DEAD,
 	S_MARIOBUSH1,
 	S_MARIOBUSH2,
 	S_TOAD,
@@ -2039,8 +2013,6 @@ typedef enum
 	MT_REDRING,
 	MT_TAG, // Tag Sign
 	MT_STEAM, // Steam riser
-	MT_REDFLAG, // Red CTF Flag
-	MT_BLUEFLAG, // Blue CTF Flag
 	MT_GOTFLAG, // Got Flag sign
 	MT_GOTFLAG2, // Got Flag sign
 	MT_TOKEN, // Special Stage Token
@@ -2115,7 +2087,6 @@ typedef enum
 	MT_KOOPA,
 	MT_SHELL,
 	MT_AXE,
-	MT_KOOPAFLAME,
 	MT_FIREBALL,
 	MT_FIREFLOWER,
 
@@ -2148,7 +2119,6 @@ typedef enum
 	MT_BOSSEXPLODE,
 	MT_EGGTRAP,
 	MT_CHAOSSPAWNER,
-	MT_ALARM,
 	MT_EMBLEM,
 	MT_EGGMANBOX,
 	MT_EGGMANICO,
@@ -2164,7 +2134,6 @@ typedef enum
 	MT_GFZFLOWER4,
 
 	MT_GOOMBA,
-	MT_BLUEGOOMBA,
 	MT_MARIOBUSH1,
 	MT_MARIOBUSH2,
 	MT_TOAD,

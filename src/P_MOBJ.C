@@ -488,9 +488,7 @@ void P_XYMovement(mobj_t *mo)
 	{
 		mo->fuse = 1; // Remove flingrings if in death pit.
 	}
-	else if ((mo->type == MT_REDFLAG || mo->type == MT_BLUEFLAG
-		|| (mo->flags & MF_PUSHABLE))
-		&& mo->z == mo->subsector->sector->floorheight
+	else if (mo->flags & MF_PUSHABLE && mo->z == mo->subsector->sector->floorheight 
 		&& (mo->subsector->sector->special == 16
 		|| mo->subsector->sector->special == 5
 		|| mo->subsector->sector->special == 7
@@ -3033,16 +3031,7 @@ static void P_KoopaThinker(mobj_t *koopa)
 	if (koopa->z > koopa->floorz)
 		koopa->momz += FRACUNIT/4;
 
-	if (P_Random() < 4)
-	{
-		mobj_t *flame;
-		flame = P_SpawnMobj(koopa->x - koopa->radius + 5*FRACUNIT, koopa->y, koopa->z + (P_Random()<<(FRACBITS-2)), MT_KOOPAFLAME);
-		if (!flame)
-			return;
-		flame->momx = -flame->info->speed;
-		S_StartSound(flame, sfx_koopfr);
-	}
-	else if (P_Random() > 250 && gameskill >= sk_hard)
+	if (P_Random() > 250 && gameskill >= sk_hard)
 	{
 		mobj_t *hammer;
 		hammer = P_SpawnMobj(koopa->x - koopa->radius, koopa->y, koopa->z + koopa->height, MT_HAMMER);
@@ -3440,15 +3429,6 @@ void P_MobjThinker(mobj_t *mobj)
 				mobj->flags2 &= ~MF2_FIRING;
 			}
 			break;
-		case MT_BLUEFLAG:
-		case MT_REDFLAG:
-			{
-				sector_t *sec2;
-				sec2 = P_ThingOnSpecial3DFloor(mobj);
-				if ((sec2 && sec2->special == 995) || (mobj->subsector->sector->special == 995))
-					mobj->fuse = 1; // Return to base.
-				break;
-			}
 		case MT_SPINFIRE:
 			mobj->z = mobj->floorz+1;
 			// THERE IS NO BREAK HERE ON PURPOSE
@@ -3508,38 +3488,6 @@ void P_MobjThinker(mobj_t *mobj)
 				byte prandom;
 
 				// gargoyle and snowman handled in P_PushableThinker, not here
-				case MT_BLUEFLAG:
-				case MT_REDFLAG:
-					if (mobj->spawnpoint)
-					{
-						x = mobj->spawnpoint->x << FRACBITS;
-						y = mobj->spawnpoint->y << FRACBITS;
-						ss = R_PointInSubsector(x, y);
-						z = ss->sector->floorheight;
-						if (mobj->spawnpoint->z)
-							z += mobj->spawnpoint->z << FRACBITS;
-						flagmo = P_SpawnMobj(x, y, z, mobj->type);
-						flagmo->spawnpoint = mobj->spawnpoint;
-
-						if (mobj->type == MT_REDFLAG)
-						{
-							if (!(mobj->flags2 & MF2_JUSTATTACKED))
-								CONS_Printf("The red flag has returned to base.\n");
-							
-							if (players[consoleplayer].ctfteam == 1)
-								S_StartSound(NULL, sfx_hoop1);
-						}
-						else // MT_BLUEFLAG
-						{
-							if (!(mobj->flags2 & MF2_JUSTATTACKED))
-								CONS_Printf("The blue flag has returned to base.\n");
-
-							if (players[consoleplayer].ctfteam == 2)
-								S_StartSound(NULL, sfx_hoop1);
-						}
-					}
-					P_SetMobjState(mobj, S_DISS);
-					break;
 				case MT_YELLOWTV: // Ring shield box
 				case MT_REDTV: // Fire shield box
 				case MT_BLUETV: // Water shield box
@@ -5072,9 +5020,6 @@ void P_SpawnMapThing(mapthing_t *mthing)
 		// Don't have rings/shields in Ultimate mode
 		return;
 	}
-
-	if ((i == MT_BLUEFLAG || i == MT_REDFLAG) && gametype != GT_CTF)
-		return; // Don't spawn flags if you aren't in CTF Mode!
 
 	if (i == MT_EMMY && (tokenbits == 30 || tokenlist & (1<<tokenbits) || gametype != GT_COOP))
 		return; // you already got this token, or there are too many, or the gametype's not right

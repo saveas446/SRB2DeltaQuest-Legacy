@@ -202,8 +202,6 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[RINGLIGHT_L],     // SPR_RRNG
 	&lspr[NOLIGHT],     // SPR_TTAG
 	&lspr[NOLIGHT],     // SPR_STEM
-	&lspr[REDBALL_L],     // SPR_RFLG
-	&lspr[BLUEBALL_L],     // SPR_BFLG
 	&lspr[NOLIGHT],     // SPR_GFLG
 	&lspr[BLUEBALL_L],     // SPR_TOKE
 	&lspr[GREENSHINE_L],     // SPR_CEMG
@@ -260,8 +258,7 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT],     // SPR_HAMM
 	&lspr[NOLIGHT],     // SPR_KOOP
 	&lspr[NOLIGHT],     // SPR_SHLL
-	&lspr[NOLIGHT],     // SPR_MAXE
-	&lspr[REDBALL_L],     // SPR_BFLM
+	&lspr[NOLIGHT],     // SPR_MAXE	
 	&lspr[SMALLREDBALL_L],     // SPR_FBLL
 	&lspr[NOLIGHT],     // SPR_FFWR
 
@@ -279,7 +276,6 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT],     // SPR_EGGN
 	&lspr[NOLIGHT],     // SPR_GOOP
 	&lspr[SUPERSPARK_L],     // SPR_BPLD
-	&lspr[REDBALL_L],     // SPR_ALRM
 	&lspr[NOLIGHT],     // SPR_RDTV
 	&lspr[REDSHIELD_L],     // SPR_RORB
 	&lspr[NOLIGHT],     // SPR_EGGB
@@ -294,7 +290,6 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[SMALLREDBALL_L], // SPR_TRLS
 	&lspr[NOLIGHT], // SPR_FWR4
 	&lspr[NOLIGHT], // SPR_GOOM
-	&lspr[NOLIGHT], // SPR_BGOM
 	&lspr[NOLIGHT], // SPR_MUS1
 	&lspr[NOLIGHT], // SPR_MUS2
 	&lspr[NOLIGHT], // SPR_TOAD

@@ -311,6 +311,10 @@ SOURCE=..\comptime.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\d2udef.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\D_clisrv.c
 # End Source File
 # Begin Source File

@@ -120,6 +120,16 @@ static patch_t *widebgpatch = NULL; // INTERSCW
 
 static patch_t *bgtile = NULL;      // SPECTILE/SRB2BACK
 static patch_t *interpic = NULL;    // custom picture defined in map header
+
+static patch_t* haspassed;
+static patch_t* soncpass; // SONIC letters Tails 11-15-2000
+static patch_t*	tailpass; // TAILS letters Tails 11-15-2000
+static patch_t*	knuxpass; // KNUCKLES letters Tails 11-15-2000
+static patch_t*	youpass; // YOU letters Tails 11-15-2000
+static patch_t* act1;
+static patch_t* act2;
+static patch_t* act3;
+
 static boolean usetile;
 static boolean useinterpic;
 static int timer;
@@ -159,6 +169,8 @@ static void Y_UnloadData(void);
 //
 void Y_IntermissionDrawer(void)
 {
+	static patch_t* act;
+
 	if (inttype == int_none || rendermode == render_none)
 		return;
 
@@ -201,12 +213,35 @@ void Y_IntermissionDrawer(void)
 			V_DrawScaledPatch(hudinfo[HUD_TIMECOLON].x, hudinfo[HUD_TIMECOLON].y, V_SNAPTOLEFT, sbocolon);
 		}
 
+
 		// draw the "got through act" lines and act number
-		V_DrawLevelTitle(data.coop.passedx1, 49, 0, data.coop.passed1);
-		V_DrawLevelTitle(data.coop.passedx2, 49+V_LevelNameHeight(data.coop.passed2)+2, 0, data.coop.passed2);
-		
-		if (mapheaderinfo[gamemap-1].actnum)
-			V_DrawScaledPatch(244, 57, 0, data.coop.ttlnum);
+
+		V_DrawScaledPatch(72,48, 0, haspassed); // Tails
+
+		if(players[consoleplayer].skin == 0)
+			V_DrawScaledPatch(88,48, 0, soncpass); // Tails
+		else if(players[consoleplayer].skin == 1)
+			V_DrawScaledPatch(88,48, 0, tailpass); // Tails
+		else if(players[consoleplayer].skin == 2)
+			V_DrawScaledPatch(40,48, 0, knuxpass); // Tails
+		else
+			V_DrawScaledPatch(96,48, 0, youpass); // Tails
+
+		if (gamemap % 3 == 1){
+			act = act1;
+		}
+		else if (gamemap % 3 == 2){
+			act = act2;
+		}
+		else if (gamemap % 3 == 3){
+			act = act3;
+		}
+
+		// cooking
+		if(!act)	
+			I_Error("Y_IntermissionDrawer(): Act number patch drawing error!");
+
+		V_DrawScaledPatch (244, 56, 0, act); // Draw the act numeral Tails 11-21-2000
 
 		V_DrawScaledPatch(68, 84 + 3*tallnum[0]->height/2, 0, data.coop.ptimebonus);
 		Y_DrawNum(BASEVIDWIDTH - 68, 85 + 3*tallnum[0]->height/2, data.coop.timebonus);
@@ -218,66 +253,7 @@ void Y_IntermissionDrawer(void)
 		if (gottimebonus && endtic != -1)
 			V_DrawCenteredString(BASEVIDWIDTH/2, 136, V_YELLOWMAP, "TIME BONUS UNLOCKED!");
 	}
-	else if (inttype == int_spec)
-	{
-		// draw the header
-		if (endtic != -1 && ALL7EMERALDS && data.spec.nowsuper != NULL)
-			V_DrawScaledPatch(48, 32, 0, data.spec.nowsuper);
-		else
-			V_DrawScaledPatch(data.spec.headx, 26, 0, data.spec.cemerald);
-
-		// draw the emeralds
-		if (intertic & 1)
-		{
-			if (emeralds & EMERALD1)
-				V_DrawScaledPatch(80, 92, 0, emerald1);
-			if (emeralds & EMERALD2)
-				V_DrawScaledPatch(104, 92, 0, emerald2);
-			if (emeralds & EMERALD3)
-				V_DrawScaledPatch(128, 92, 0, emerald3);
-			if (emeralds & EMERALD4)
-				V_DrawScaledPatch(152, 92, 0, emerald4);
-			if (emeralds & EMERALD5)
-				V_DrawScaledPatch(176, 92, 0, emerald5);
-			if (emeralds & EMERALD6)
-				V_DrawScaledPatch(200, 92, 0, emerald6);
-			if (emeralds & EMERALD7)
-				V_DrawScaledPatch(224, 92, 0, emerald7);
-			if (emeralds & EMERALD8)
-				V_DrawScaledPatch(248, 92, 0, emerald8);
-		}
-
-		V_DrawScaledPatch(80, 132, 0, data.spec.pringbonus);
-		Y_DrawNum(232, 133, data.spec.ringbonus);
-		V_DrawScaledPatch(80, 148, 0, data.spec.cscore);
-		Y_DrawNum(232, 149, data.spec.score);
-	}
-	else if (inttype == int_teammatch)
-	{
-		int scorelines;
-		int whiteplayer;
-		playersort_t tab[MAXPLAYERS];
-
-		whiteplayer = demoplayback ? displayplayer : consoleplayer;
-
-		// draw the header
-		V_DrawScaledPatch(112, 2, 0, data.match.result);
-
-		// draw the level name
-		V_DrawCenteredString(BASEVIDWIDTH/2, 24, 0, data.match.levelstring);
-
-		V_DrawFill(4, 42, 312, 1, 4);
-
-		scorelines = HU_CreateTeamScoresTbl(tab, NULL);
-
-		if (scorelines > 9)
-			scorelines = 9; // only show 10 best teams
-
-		// Code reuse - it's what OOP is all about, right?
-		HU_DrawTabRankings(40, 48, tab, scorelines, whiteplayer);
-	}
-	else if (inttype == int_match
-		|| inttype == int_timerace || inttype == int_ctf)
+	else if (inttype == int_match)
 	{
 		int i;
 		int x = 4;
@@ -402,87 +378,6 @@ void Y_IntermissionDrawer(void)
 				y = 48;
 				x += BASEVIDWIDTH/2;
 			}
-		}
-	}
-	else if (inttype == int_race)
-	{
-		char name[9] = "xxxxxxxx";
-		int i;
-
-		// draw the header
-		V_DrawScaledPatch(112, 8, 0, data.race.result);
-
-		// draw the level name
-		V_DrawCenteredString(BASEVIDWIDTH/2, 28, 0, data.race.levelstring);
-
-		// draw the category names
-		V_DrawString(8, 66, 0, "SCORE");
-		V_DrawString(8, 78, 0, "TIME");
-		V_DrawString(8, 90, 0, "RING");
-		V_DrawString(8, 102, 0, "TOT. RING");
-		V_DrawString(8, 114, 0, "ITEM BOX");
-		V_DrawString(0, 138, 0, "* TOTAL *");
-
-		// draw the W
-		V_DrawCharacter(304, 50, 'W');
-
-		// draw the winner in each category
-		V_DrawCenteredString(308, 66, V_YELLOWMAP, data.race.winnerstrings[0]);
-		V_DrawCenteredString(308, 78, V_YELLOWMAP, data.race.winnerstrings[1]);
-		V_DrawCenteredString(308, 90, V_YELLOWMAP, data.race.winnerstrings[2]);
-		V_DrawCenteredString(308, 102, V_YELLOWMAP, data.race.winnerstrings[3]);
-		V_DrawCenteredString(308, 114, V_YELLOWMAP, data.race.winnerstrings[4]);
-
-		// draw the overall winner
-		if (data.race.winner == -1)
-			V_DrawCenteredString(BASEVIDWIDTH/2, 163, V_YELLOWMAP, "TIED");
-		else
-		{
-			V_DrawCenteredString(BASEVIDWIDTH/2, 159, V_YELLOWMAP,
-				player_names[data.race.winner]);
-			V_DrawCenteredString(BASEVIDWIDTH/2, 167, V_YELLOWMAP, "WINS");
-		}
-
-		for (i = 0; i < data.race.numplayersshown; i++)
-		{
-			// draw the player's name (max 8 chars)
-			strlcpy(name, player_names[data.race.playersshown[i]], 9);
-			V_DrawRightAlignedString(104 + 64*i, 46, 0, name);
-
-			// draw 1P/2P/3P/4P
-			name[2] = '\0';
-			name[1] = 'P';
-			name[0] = (char)('1' + (char)i);
-			V_DrawRightAlignedString(104 + 64*i, 54, 0, name);
-
-			// draw score
-			snprintf(name, sizeof name, "%d", data.race.scores[i]);
-			V_DrawRightAlignedString(104 + 64*i, 66, 0, name);
-
-			// draw time
-			snprintf(name, sizeof name, "%d:%02d.%02d",
-				data.race.timemin[i], data.race.timesec[i],
-				data.race.timetic[i]);
-			V_DrawRightAlignedString(104 + 64*i, 78, 0, name);
-
-			// draw ring count
-			snprintf(name, sizeof name, "%d", data.race.rings[i]);
-			V_DrawRightAlignedString(104 + 64*i, 90, 0, name);
-
-			// draw total ring count
-			snprintf(name, sizeof name, "%d",
-				data.race.totalrings[i]);
-			V_DrawRightAlignedString(104 + 64*i, 102, 0, name);
-
-			// draw item box count
-			snprintf(name, sizeof name, "%d",
-				data.race.itemboxes[i]);
-			V_DrawRightAlignedString(104 + 64*i, 114, 0, name);
-
-			// draw total number of wins
-			snprintf(name, sizeof name, "%d",
-				data.race.totalwins[i]);
-			V_DrawRightAlignedString(104 + 64*i, 138, 0, name);
 		}
 	}
 
@@ -811,52 +706,28 @@ void Y_StartIntermission(void)
 			usetile = false;
 
 			// get single player specific patches
-			data.coop.ptotal = W_CachePatchName("YTOTAL", PU_STATIC);
-			data.coop.ptimebonus = W_CachePatchName("YTMBONUS", PU_STATIC);
-			data.coop.pringbonus = W_CachePatchName("YRINGBNS", PU_STATIC);
+			data.coop.ptotal = W_CachePatchName("WIOSTK", PU_STATIC);
+			data.coop.ptimebonus = W_CachePatchName("WIOSTI", PU_STATIC);
 
-			// set up the "got through act" message according to skin name
-			if (strlen(skins[players[consoleplayer].skin].name) <= 8)
-			{
-				snprintf(data.coop.passed1,
-					sizeof data.coop.passed1, "%s GOT",
-					skins[players[consoleplayer].skin].name);
-				if (mapheaderinfo[gamemap-1].actnum)
-				{
-					strcpy(data.coop.passed2, "THROUGH ACT");
-					data.coop.passedx1 = 62 + (176 - V_LevelNameWidth(data.coop.passed1))/2;
-					data.coop.passedx2 = 62 + (176 - V_LevelNameWidth(data.coop.passed2))/2;
-				}
-				else
-				{
-					strcpy(data.coop.passed2, "THROUGH THE ACT");
-					data.coop.passedx1 = (BASEVIDWIDTH - V_LevelNameWidth(data.coop.passed1))/2;
-					data.coop.passedx2 = (BASEVIDWIDTH - V_LevelNameWidth(data.coop.passed2))/2;
-				}
-				// The above value is not precalculated because it needs only be computed once
-				// at the start of intermission, and precalculating it would preclude mods
-				// changing the font to one of a slightly different width.
-			}
+			// tee hee
+			if(P_Random() & 1)
+				data.coop.pringbonus = W_CachePatchName("WIOSTS", PU_STATIC);
 			else
-			{
-				strcpy(data.coop.passed1, skins[players[consoleplayer].skin].name);
-				data.coop.passedx1 = 62 + (176 - V_LevelNameWidth(data.coop.passed1))/2;
-				if (mapheaderinfo[gamemap-1].actnum)
-				{
-					strcpy(data.coop.passed2, "PASSED ACT");
-					data.coop.passedx2 = 62 + (176 - V_LevelNameWidth(data.coop.passed2))/2;
-				}
-				else
-				{
-					strcpy(data.coop.passed2, "PASSED THE ACT");
-					data.coop.passedx2 = 62 + (240 - V_LevelNameWidth(data.coop.passed2))/2;
-				}
-			}
+				data.coop.pringbonus = W_CachePatchName("WISCRT2", PU_STATIC);
+
+			haspassed = W_CachePatchName("HPASSED", PU_STATIC);
+			soncpass = W_CachePatchName("SONCPASS", PU_STATIC);
+			knuxpass = W_CachePatchName("KNUXPASS", PU_STATIC); 
+			tailpass = W_CachePatchName("TAILPASS", PU_STATIC); 
+			youpass = W_CachePatchName("YOUPASS", PU_STATIC);
+			act1 = W_CachePatchName("TTLONE", PU_STATIC); 
+			act2 = W_CachePatchName("TTLTWO", PU_STATIC); 
+			act3 = W_CachePatchName("TTLTHREE", PU_STATIC);
+
 			break;
 		}
 
 		case int_match:
-		case int_teammatch:
 		{
 			// Calculate who won
 			Y_CalculateMatchWinners();
@@ -1487,6 +1358,15 @@ static void Y_UnloadData(void)
 			UNLOAD(data.coop.ptimebonus);
 			UNLOAD(data.coop.pringbonus);
 			UNLOAD(data.coop.ptotal);
+			UNLOAD(haspassed);
+			UNLOAD(soncpass);
+			UNLOAD(tailpass);
+			UNLOAD(knuxpass);
+			UNLOAD(youpass);
+			UNLOAD(haspassed);
+			UNLOAD(act1);
+			UNLOAD(act2);
+			UNLOAD(act3);
 			break;
 		case int_match:
 			UNLOAD(data.match.result);

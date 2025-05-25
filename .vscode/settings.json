@@ -5,7 +5,9 @@
         "G_GAME.C": "c",
         "S_SOUND.C": "c",
         "P_SPEC.C": "c",
-        "M_MENU.C": "c"
+        "M_MENU.C": "c",
+        "INFO.C": "c",
+        "P_MOBJ.C": "cpp"
     },
     "C_Cpp.dimInactiveRegions": false
 }

@@ -39,16 +39,16 @@ char sprnames[NUMSPRITES + 1][5] =
 	"IVSQ","DISS","BUBP","BUBO","BUBN","BUBM","CNTA","CNTB","CNTC","CNTD",
 	"CNTE","CNTF","POPP","PRUP","BKTV","SCRA","SCRB","SCRC","SCRD","SSPK",
 	"NBMP","YSPR","RSPR","YSUD","RSUD","SKIM","MINE","FISH","GARG","SPLH",
-	"THOK","THZP","SIGN","RRNG","TTAG","STEM","RFLG","BFLG","GFLG","TOKE",
+	"THOK","THZP","SIGN","RRNG","TTAG","STEM","GFLG","TOKE",
 	"CEMG","CEMO","CEMP","CEMB","CEMR","CEML","CEMY","JETB","JETG","JBUL",
 	"MOUS","DETN","XPLD","CHAN","CAPE","SNO1","SANT","EMER","EMES","EMET",
 	"SBLL","SPIK","CCOM","RAIN","DSPK","USPK","STPT","RNGM","RNGR","RNGS",
 	"RNGA","RNGE","TAEH","TAER","THER","TAHR","THOM","TAUT","TEXP","BUS1",
 	"BUS2","FWR2","FWR3","MIXU","QUES","MTEX","FLAM","PUMA","HAMM","KOOP",
-	"SHLL","MAXE","BFLM","FBLL","FFWR","NSPK","SUPE","SUPZ","NDRN","NDRL",
-	"SEED","JETF","HOOP","NSCR","NWNG","EGGN","GOOP","BPLD","ALRM","RDTV",
+	"SHLL","MAXE","FBLL","FFWR","NSPK","SUPE","SUPZ","NDRN","NDRL",
+	"SEED","JETF","HOOP","NSCR","NWNG","EGGN","GOOP","BPLD","RDTV",
 	"RORB","EGGB","SFLM","TNKA","TNKB","SPNK","TFOG","EEGG","LITE","TRET",
-	"TRLS","FWR4","GOOM","BGOM","MUS1","MUS2","TOAD","COIN","CPRK","XMS1",
+	"TRLS","FWR4","GOOM","MUS1","MUS2","TOAD","COIN","CPRK","XMS1",
 	"XMS2","XMS3","CAPS","SUPT","ROIA","ROIB","ROIC","ROID","ROIE","ROIF",
 	"ROIG","ROIH","ROII","ROIJ","ROIK","ROIL","ROIM","ROIN","ROIO","ROIP",
 	"NPRA","NPRB","NPRC","REDX","SPRB","BUZZ","RBUZ","CEMK","WHTV","WORB",
@@ -735,10 +735,6 @@ state_t states[NUMSTATES] =
 	{SPR_STEM, 6, 2, {NULL}, 0, 0, S_STEAM8},              // S_STEAM7
 	{SPR_STEM, 7, 18, {NULL}, 0, 0, S_STEAM1},             // S_STEAM8
 
-	// CTF Flags
-	{SPR_RFLG, 0, -1, {NULL}, 0, 0, S_NULL}, // S_REDFLAG
-	{SPR_BFLG, 0, -1, {NULL}, 0, 0, S_NULL}, // S_BLUEFLAG
-
 	// CTF Sign
 	{SPR_GFLG, 0, 1, {NULL}, 0, 0, S_GOTFLAG2}, // S_GOTFLAG1
 	{SPR_GFLG, 1, 1, {NULL}, 0, 0, S_DISS},     // S_GOTFLAG2
@@ -1203,10 +1199,6 @@ state_t states[NUMSTATES] =
 	{SPR_MAXE, 1, 3, {NULL}, 0, 0, S_AXE3}, // S_AXE2
 	{SPR_MAXE, 2, 3, {NULL}, 0, 0, S_AXE1}, // S_AXE3
 
-	{SPR_BFLM, 0, 3,{NULL}, 0, 0, S_KOOPAFLAME2}, // S_KOOPAFLAME1
-	{SPR_BFLM, 1, 3,{NULL}, 0, 0, S_KOOPAFLAME3}, // S_KOOPAFLAME2
-	{SPR_BFLM, 2, 3,{NULL}, 0, 0, S_KOOPAFLAME1}, // S_KOOPAFLAME3
-
 	// Thrown Mario Fireball
 	{SPR_FBLL, 32768, 3, {NULL}, 0, 0, S_FIREBALL2},    // S_FIREBALL1
 	{SPR_FBLL, 32769, 3, {NULL}, 0, 0, S_FIREBALL3},    // S_FIREBALL2
@@ -1386,9 +1378,6 @@ state_t states[NUMSTATES] =
 	{SPR_BPLD, 32773, 5, {NULL}, 0, 0, S_BPLD7}, // S_BPLD6
 	{SPR_BPLD, 32774, 5, {NULL}, 0, 0, S_DISS},  // S_BPLD7
 
-	// THZ Alarm
-	{SPR_ALRM, 32768, 35, {A_Scream}, 0, 0, S_ALARM1}, // S_ALARM1
-
 	// Emblem
 	{SPR_NWNG, 0, -1, {NULL}, 0, 0, S_NULL}, // S_EMBLEM1
 
@@ -1461,19 +1450,6 @@ state_t states[NUMSTATES] =
 	{SPR_GOOM, 1, 3, {A_Chase}, 0, 0, S_GOOMBA9}, // S_GOOMBA8
 	{SPR_GOOM, 1, 3, {A_Chase}, 0, 0, S_GOOMBA2}, // S_GOOMBA9
 	{SPR_GOOM, 2, 16, {A_Scream}, 0, 0, S_DISS},  // S_GOOMBA_DEAD
-
-	// Blue Goomba
-	{SPR_BGOM, 0, 6, {A_Look}, 0, 0, S_BLUEGOOMBA1B}, // BLUEGOOMBA1
-	{SPR_BGOM, 1, 6, {A_Look}, 0, 0, S_BLUEGOOMBA1},  // BLUEGOOMBA1B
-	{SPR_BGOM, 0, 3, {A_Chase}, 0, 0, S_BLUEGOOMBA3}, // S_BLUEGOOMBA2
-	{SPR_BGOM, 0, 3, {A_Chase}, 0, 0, S_BLUEGOOMBA4}, // S_BLUEGOOMBA3
-	{SPR_BGOM, 1, 3, {A_Chase}, 0, 0, S_BLUEGOOMBA5}, // S_BLUEGOOMBA4
-	{SPR_BGOM, 1, 3, {A_Chase}, 0, 0, S_BLUEGOOMBA6}, // S_BLUEGOOMBA5
-	{SPR_BGOM, 0, 3, {A_Chase}, 0, 0, S_BLUEGOOMBA7}, // S_BLUEGOOMBA6
-	{SPR_BGOM, 0, 3, {A_Chase}, 0, 0, S_BLUEGOOMBA8}, // S_BLUEGOOMBA7
-	{SPR_BGOM, 1, 3, {A_Chase}, 0, 0, S_BLUEGOOMBA9}, // S_BLUEGOOMBA8
-	{SPR_BGOM, 1, 3, {A_Chase}, 0, 0, S_BLUEGOOMBA2}, // S_BLUEGOOMBA9
-	{SPR_BGOM, 2, 16, {A_Scream}, 0, 0, S_DISS},      // S_BLUEGOOMBA_DEAD
 
 	{SPR_MUS1, 0, -1, {NULL}, 0, 0, S_NULL}, // S_MARIOBUSH1
 	{SPR_MUS2, 0, -1, {NULL}, 0, 0, S_NULL}, // S_MARIOBUSH2
@@ -3731,59 +3707,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SOLID,       // flags
 		S_NULL          // raisestate
 	},
-
-	{           // MT_REDFLAG
-		31,             // doomednum
-		S_REDFLAG,      // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		8,              // speed
-		24*FRACUNIT,    // radius
-		64*FRACUNIT,    // height
-		16,             // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_SPECIAL,     // flags
-		S_NULL          // raisestate
-	},
-
-	{           // MT_BLUEFLAG
-		34,             // doomednum
-		S_BLUEFLAG,     // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		8,              // speed
-		24*FRACUNIT,    // radius
-		64*FRACUNIT,    // height
-		16,             // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_SPECIAL,     // flags
-		S_NULL          // raisestate
-	},
-
 	{           // MT_GOTFLAG
 		-1,             // doomednum
 		S_GOTFLAG1,     // spawnstate
@@ -5662,33 +5585,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SPECIAL,     // flags
 		S_NULL          // raisestate
 	},
-
-	{           // MT_KOOPAFLAME
-		-1,             // doomednum
-		S_KOOPAFLAME1,  // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		0,              // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_DISS,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		5*FRACUNIT,     // speed
-		8*FRACUNIT,     // radius
-		8*FRACUNIT,     // height
-		100,            // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_NOGRAVITY|MF_MISSILE|MF_FIRE, // flags
-		S_NULL          // raisestate
-	},
-
 	{           // MT_FIREBALL
 		-1,             // doomednum
 		S_FIREBALL1,    // spawnstate
@@ -6469,33 +6365,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOBLOCKMAP|MF_NOSECTOR|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
-
-	{           // MT_ALARM
-		2006,           // doomednum
-		S_ALARM1,       // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_alarm,      // deathsound
-		1,              // speed
-		8*FRACUNIT,     // radius
-		16*FRACUNIT,    // height
-		4,              // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_NOBLOCKMAP|MF_NOCLIP|MF_SPAWNCEILING|MF_NOGRAVITY, // flags
-		S_NULL          // raisestate
-	},
-
 	{           // MT_EMBLEM
 		-1,             // doomednum
 		S_EMBLEM1,      // spawnstate
@@ -6859,33 +6728,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE, // flags
 		S_NULL          // raisestate
 	},
-
-	{           // MT_BLUEGOOMBA
-		10001,             // doomednum
-		S_BLUEGOOMBA1,     // spawnstate
-		1,                 // spawnhealth
-		S_BLUEGOOMBA2,     // seestate
-		0,                 // seesound
-		32,                // reactiontime
-		0,                 // attacksound
-		S_NULL,            // painstate
-		170,               // painchance
-		0,                 // painsound
-		0,                 // meleestate
-		S_NULL,            // missilestate
-		S_BLUEGOOMBA_DEAD, // deathstate
-		S_NULL,            // xdeathstate
-		sfx_pop,           // deathsound
-		6,                 // speed
-		24*FRACUNIT,       // radius
-		32*FRACUNIT,       // height
-		100,               // mass
-		0,                 // damage
-		0,                 // activesound
-		MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE, // flags
-		S_NULL             // raisestate
-	},
-
 	{           // MT_MARIOBUSH1
 		10002,          // doomednum
 		S_MARIOBUSH1,   // spawnstate

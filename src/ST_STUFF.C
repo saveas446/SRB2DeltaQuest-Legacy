@@ -109,6 +109,26 @@ static patch_t *nbracket;
 static patch_t *nhud[12];
 static patch_t *narrow[9];
 static patch_t *minicaps;
+static patch_t *lvlttl1; // GFZ
+static patch_t *lvlttl2; // THZ
+static patch_t *lvlttl3; // DSZ
+static patch_t *lvlttl4; // MMZ
+static patch_t *lvlttl5; // RMZ
+static patch_t *lvlttl6; // RVZ
+static patch_t *lvlttl7; // DCZ
+static patch_t *lvlttl8; // GEZ
+static patch_t *lvlttl9; // RRZ
+static patch_t *lvlttl10; // FFZ
+static patch_t *lvlttl11; // WDZ
+static patch_t *lvlttl12; // DHZ
+static patch_t *lvlttl13; // SHZ
+static patch_t *lvlttl14; // HPZ
+static patch_t *lvlttl15; // STZ
+static patch_t *lvlttl16; // CCZ
+static patch_t *lvlttl17; // EFZ
+static patch_t *lvlttl18; // SVZ
+static patch_t *lvlttl19; // FSZ
+static patch_t *ttlzone; // ZONE
 
 static boolean facefreed[MAXPLAYERS];
 static boolean prefixfreed[MAXPLAYERS];
@@ -214,10 +234,9 @@ void ST_doPaletteStuff(void)
 #endif
 		if (rendermode != render_none)
 		{
-			if (palette >= STARTBONUSPALS && palette <= STARTBONUSPALS + NUMBONUSPALS)
-				V_SetPaletteLump("FLASHPAL");
-			else
-				V_SetPaletteLump("PLAYPAL");
+			// No more FLASHPAL, it doesn't exist in Demo 2.
+			// Save 25-05-2025
+			V_SetPaletteLump("PLAYPAL");
 
 			if (!cv_splitscreen.value || !palette)
 				V_SetPalette(palette);
@@ -400,6 +419,28 @@ void ST_Init(void)
 	bombshield = W_CachePatchName("BKTVB0", PU_STATIC);
 	invincibility = W_CachePatchName("PINVB0", PU_STATIC);
 	sneakers = W_CachePatchName("SHTVB0", PU_STATIC);
+
+	lvlttl1 = W_CachePatchName ("LVLTTL1", PU_STATIC);
+	lvlttl2 = W_CachePatchName ("LVLTTL2", PU_STATIC);
+	lvlttl3 = W_CachePatchName ("LVLTTL3", PU_STATIC);
+	lvlttl4 = W_CachePatchName ("LVLTTL4", PU_STATIC);
+	lvlttl5 = W_CachePatchName ("LVLTTL5", PU_STATIC);
+	lvlttl6 = W_CachePatchName ("LVLTTL6", PU_STATIC);
+	lvlttl7 = W_CachePatchName ("LVLTTL7", PU_STATIC);
+	lvlttl8 = W_CachePatchName ("LVLTTL8", PU_STATIC);
+	lvlttl9 = W_CachePatchName ("LVLTTL9", PU_STATIC);
+	lvlttl10 = W_CachePatchName ("LVLTTL10", PU_STATIC);
+	lvlttl11 = W_CachePatchName ("LVLTTL11", PU_STATIC);
+	lvlttl12 = W_CachePatchName ("LVLTTL12", PU_STATIC);
+	lvlttl13 = W_CachePatchName ("LVLTTL13", PU_STATIC);
+	lvlttl14 = W_CachePatchName ("LVLTTL14", PU_STATIC);
+	lvlttl15 = W_CachePatchName ("LVLTTL15", PU_STATIC);
+	lvlttl16 = W_CachePatchName ("LVLTTL16", PU_STATIC);
+	lvlttl17 = W_CachePatchName ("LVLTTL17", PU_STATIC);
+	lvlttl18 = W_CachePatchName ("LVLTTL18", PU_STATIC);
+	lvlttl19 = W_CachePatchName ("LVLTTL19", PU_STATIC);
+
+	ttlzone = W_CachePatchName ("TTLZONE", PU_STATIC);
 
 	// NiGHTS HUD things
 	bluestat = W_CachePatchName("BLUESTAT", PU_STATIC);
@@ -693,13 +734,99 @@ static void ST_drawEggsNeeded(void)
 
 static void ST_drawLevelTitle(void)
 {
-#define ZONE "ZONE"
-	char *lvlttl = mapheaderinfo[gamemap-1].lvlttl;
+
 	int lvlttlxpos;
 	int ttlnumxpos;
 	int zonexpos;
 	int actnum = mapheaderinfo[gamemap-1].actnum;
 	boolean nonumber = false;
+
+	patch_t* lvlttl; // Patch that will point to whatever patch is appropriate for this level
+
+	// shoot me in the head
+	// this could really use some pointers or some shit like that but i don't care
+	switch(gamemap) {
+		case 1:
+		case 2:
+		case 3:
+			lvlttl = lvlttl1;
+			break;
+		case 4:
+		case 5:
+		case 6:
+			lvlttl = lvlttl2;
+			break;
+		case 7:
+		case 8:
+		case 9:
+			lvlttl = lvlttl3;
+			break;
+		case 10:
+		case 11:
+		case 12:
+			lvlttl = lvlttl4;
+			break;
+		case 13:
+		case 14:
+		case 15:
+			lvlttl = lvlttl5;
+			break;
+		case 16:
+		case 17:
+		case 18:
+			lvlttl = lvlttl6;
+			break;
+		case 19:
+		case 20:
+		case 21:
+			lvlttl = lvlttl7;
+			break;
+		case 22:
+		case 23:
+		case 24:
+			lvlttl = lvlttl8;
+			break;
+		case 25:
+		case 26:
+		case 27:
+			lvlttl = lvlttl9;
+			break;
+		case 28:
+			lvlttl = lvlttl10;
+			break;
+		case 29:
+			lvlttl = lvlttl11;
+			break;
+		case 30:
+			lvlttl = lvlttl12;
+			break;
+		case 31:
+			lvlttl = lvlttl13;
+			break;
+		case 32:
+			lvlttl = lvlttl14;
+			break;
+		case 33:
+			lvlttl = lvlttl15;
+			break;
+		case 34:
+			lvlttl = lvlttl16;
+			break;
+		case 35:
+			lvlttl = lvlttl17;
+			break;
+		case 36:
+			lvlttl = lvlttl18;
+			break;
+		case 37:
+			lvlttl = lvlttl19;
+			break;
+		default:
+			lvlttl = lvlttl1;
+			break;
+	}
+
+
 
 	if (!(timeinmap > 1 && timeinmap < 111))
 		return;
@@ -707,135 +834,96 @@ static void ST_drawLevelTitle(void)
 	if (actnum > 0)
 	{
 		ttlnum = W_CachePatchName(va("TTL%.2d", actnum), PU_CACHE);
-		lvlttlxpos = ((BASEVIDWIDTH/2) - (V_LevelNameWidth(lvlttl)/2)) - ttlnum->width;
+		lvlttlxpos = ((BASEVIDWIDTH/2) - ((lvlttl->width))) - ttlnum->width;
 	}
 	else
 	{
 		nonumber = true;
-		lvlttlxpos = ((BASEVIDWIDTH/2) - (V_LevelNameWidth(lvlttl)/2));
+		lvlttlxpos = ((BASEVIDWIDTH/2) - (lvlttl->width/2));
 	}
 
-	ttlnumxpos = lvlttlxpos + V_LevelNameWidth(lvlttl);
-	zonexpos = ttlnumxpos - V_LevelNameWidth(ZONE);
+	ttlnumxpos = lvlttlxpos + lvlttl->width;
+	zonexpos = ttlnumxpos - ttlzone->width;
 
-	if (timeinmap == 2)
+	// I TAKE IT BACK WHAT IS THIS CODE SSN
+	if(leveltime == 1)
 	{
-		if (!nonumber)
-			V_DrawScaledPatch(SCX(ttlnumxpos), SCY(200), V_NOSCALESTART, ttlnum);
-		V_DrawLevelTitle(lvlttlxpos, 0, 0, lvlttl);
-
-		if (!mapheaderinfo[gamemap-1].nozone)
-			V_DrawLevelTitle(zonexpos, 200, 0, ZONE);
+	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(0), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(zonexpos),SCY(200), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
+	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(200), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
-	else if (timeinmap == 3)
+	else if (leveltime == 2)
 	{
-		if (!nonumber)
-			V_DrawScaledPatch(SCX(ttlnumxpos), SCY(188), V_NOSCALESTART, ttlnum);
-		V_DrawLevelTitle(lvlttlxpos, 12, 0, lvlttl);
-
-		if (!mapheaderinfo[gamemap-1].nozone)
-			V_DrawLevelTitle(zonexpos, 188, 0, ZONE);
+	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(12), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(zonexpos),SCY(188), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
+	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(188), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
-	else if (timeinmap == 4)
+	else if (leveltime == 3)
 	{
-		if (!nonumber)
-			V_DrawScaledPatch(SCX(0), SCY(176), V_NOSCALESTART, ttlnum);
-		V_DrawLevelTitle(lvlttlxpos, 24, 0, lvlttl);
-
-		if (!mapheaderinfo[gamemap-1].nozone)
-			V_DrawLevelTitle(zonexpos, 176, 0, ZONE);
+	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(24), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(zonexpos),SCY(176), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
+	//V_DrawScaledPatch (SCX(0),SCY(176), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
-	else if (timeinmap == 5)
+	else if (leveltime == 4)
 	{
-		if (!nonumber)
-			V_DrawScaledPatch(SCX(ttlnumxpos), SCY(164), V_NOSCALESTART, ttlnum);
-		V_DrawLevelTitle(lvlttlxpos, 36, 0, lvlttl);
-
-		if (!mapheaderinfo[gamemap-1].nozone)
-			V_DrawLevelTitle(zonexpos, 164, 0, ZONE);
+	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(36), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(zonexpos),SCY(164), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
+	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(164), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
-	else if (timeinmap == 6)
+	else if (leveltime == 5)
 	{
-		if (!nonumber)
-			V_DrawScaledPatch(SCX(ttlnumxpos), SCY(152), V_NOSCALESTART, ttlnum);
-		V_DrawLevelTitle(lvlttlxpos, 48, 0, lvlttl);
-
-		if (!mapheaderinfo[gamemap-1].nozone)
-			V_DrawLevelTitle(zonexpos, 152, 0, ZONE);
+	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(48), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(zonexpos),SCY(152), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
+	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(152), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
-	else if (timeinmap == 7)
+	else if (leveltime == 6)
 	{
-		if (!nonumber)
-			V_DrawScaledPatch(SCX(ttlnumxpos), SCY(140), V_NOSCALESTART, ttlnum);
-		V_DrawLevelTitle(lvlttlxpos, 60, 0, lvlttl);
-
-		if (!mapheaderinfo[gamemap-1].nozone)
-			V_DrawLevelTitle(zonexpos, 140, 0, ZONE);
+	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(60), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(zonexpos),SCY(140), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
+	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(140), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
-	else if (timeinmap == 8)
+	else if (leveltime == 7)
 	{
-		if (!nonumber)
-			V_DrawScaledPatch(SCX(ttlnumxpos), SCY(128), V_NOSCALESTART, ttlnum);
-		V_DrawLevelTitle(lvlttlxpos, 72, 0, lvlttl);
-
-		if (!mapheaderinfo[gamemap-1].nozone)
-			V_DrawLevelTitle(zonexpos, 128, 0, ZONE);
+	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(72), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(zonexpos),SCY(128), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
+	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(128), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
-	else if (timeinmap == 106)
+	else if (leveltime > 7 && leveltime < 105)
 	{
-		if (!nonumber)
-			V_DrawScaledPatch(SCX(ttlnumxpos), SCY(80), V_NOSCALESTART, ttlnum);
-		V_DrawLevelTitle(lvlttlxpos, 104, 0, lvlttl);
-
-		if (!mapheaderinfo[gamemap-1].nozone)
-			V_DrawLevelTitle(zonexpos, 80, 0, ZONE);
+	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(80), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(zonexpos),SCY(104), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
+	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(104), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
-	else if (timeinmap == 107)
+	else if (leveltime == 105)
 	{
-		if (!nonumber)
-			V_DrawScaledPatch(SCX(ttlnumxpos), SCY(56), V_NOSCALESTART, ttlnum);
-		V_DrawLevelTitle(lvlttlxpos, 128, 0, lvlttl);
-
-		if (!mapheaderinfo[gamemap-1].nozone)
-			V_DrawLevelTitle(zonexpos, 56, 0, ZONE);
+	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(104), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(zonexpos),SCY(80), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
+	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(80), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
-	else if (timeinmap == 108)
+	else if (leveltime == 106)
 	{
-		if (!nonumber)
-			V_DrawScaledPatch(SCX(ttlnumxpos), SCY(32), V_NOSCALESTART, ttlnum);
-		V_DrawLevelTitle(lvlttlxpos, 152, 0, lvlttl);
-
-		if (!mapheaderinfo[gamemap-1].nozone)
-			V_DrawLevelTitle(zonexpos, 32, 0, ZONE);
+	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(128), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(zonexpos),SCY(56), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
+	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(56), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
-	else if (timeinmap == 109)
+	else if (leveltime == 107)
 	{
-		if (!nonumber)
-			V_DrawScaledPatch(SCX(ttlnumxpos), SCY(8), V_NOSCALESTART, ttlnum);
-		V_DrawLevelTitle(lvlttlxpos, 176, 0, lvlttl);
-
-		if (!mapheaderinfo[gamemap-1].nozone)
-			V_DrawLevelTitle(zonexpos, 8, 0, ZONE);
+	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(152), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(zonexpos),SCY(32), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
+	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(32), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
-	else if (timeinmap == 110)
+	else if (leveltime == 108)
 	{
-		if (!nonumber)
-			V_DrawScaledPatch(SCX(ttlnumxpos), SCY(0), V_NOSCALESTART, ttlnum);
-		V_DrawLevelTitle(lvlttlxpos, 200, 0, lvlttl);
-
-		if (!mapheaderinfo[gamemap-1].nozone)
-			V_DrawLevelTitle(zonexpos, 0, 0, ZONE);
+	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(176), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(zonexpos),SCY(8), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
+	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(8), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
-	else
+	else if (leveltime == 109)
 	{
-		if (!nonumber)
-			V_DrawScaledPatch(SCX(ttlnumxpos), SCY(104), V_NOSCALESTART, ttlnum);
-		V_DrawLevelTitle(lvlttlxpos, 80, 0, lvlttl);
-
-		if (!mapheaderinfo[gamemap-1].nozone)
-			V_DrawLevelTitle(zonexpos, 104, 0, ZONE);
+	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(200), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(zonexpos),SCY(0), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
+	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(0), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
-#undef ZONE
 }
 
 static void ST_drawFirstPersonHUD(void)
@@ -1579,37 +1667,6 @@ static void ST_overlayDrawer(void)
 		V_DrawCenteredString(BASEVIDWIDTH/2, STRINGY(176), 0, scountdown);
 	}
 
-	// Tag HUD Stuff
-	if (gametype == GT_TAG)
-		ST_drawTagHUD();
-	// CTF HUD Stuff
-	else if (gametype == GT_CTF)
-		ST_drawCTFHUD();
-	// Chaos HUD Stuff
-#ifdef CHAOSISNOTDEADYET
-	else if (gametype == GT_CHAOS)
-		ST_drawChaosHUD();
-#endif
-
-	// Special Stage HUD
-	if (gamemap >= sstage_start && gamemap <= sstage_end)
-		ST_drawSpecialStageHUD();
-
-	// Emerald Hunt Indicators
-	if (hunt1 && hunt1->health)
-		ST_drawEmeraldHuntIcon(hunt1, HUD_HUNTPIC1);
-	if (hunt2 && hunt2->health)
-		ST_drawEmeraldHuntIcon(hunt2, HUD_HUNTPIC2);
-	if (hunt3 && hunt3->health)
-		ST_drawEmeraldHuntIcon(hunt3, HUD_HUNTPIC3);
-
-	if (stplyr->lightdashallowed)
-	{
-		V_DrawFill(hudinfo[HUD_LIGHTDASHBOX].x, hudinfo[HUD_LIGHTDASHBOX].y, 72, 12, 119);
-		V_DrawCenteredString(hudinfo[HUD_LIGHTDASHSTRING1].x, hudinfo[HUD_LIGHTDASHSTRING1].y, V_TRANSLUCENT, "ACTIVATE");
-		V_DrawCenteredString(hudinfo[HUD_LIGHTDASHSTRING2].x, hudinfo[HUD_LIGHTDASHSTRING2].y, V_TRANSLUCENT, "LIGHT DASH");
-	}
-
 	// This is where we draw all the fun cheese if you have the chasecam off!
 	if ((stplyr == &players[consoleplayer] && !cv_chasecam.value)
 		|| ((cv_splitscreen.value && stplyr == &players[secondarydisplayplayer])
@@ -1619,8 +1676,7 @@ static void ST_overlayDrawer(void)
 	}
 
 	// draw level title Tails
-	if (*mapheaderinfo[gamemap-1].lvlttl != '\0')
-		ST_drawLevelTitle();
+	ST_drawLevelTitle();
 
 	if (netgame && gametype == GT_RACE && stplyr->lives <= 0 && displayplayer == consoleplayer && countdown != 1)
 		V_DrawCenteredString(BASEVIDWIDTH/2, BASEVIDHEIGHT/3, 0, "Press F12 to watch another player.");

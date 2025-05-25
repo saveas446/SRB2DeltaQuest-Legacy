@@ -778,7 +778,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 		case MT_PUMA:
 		case MT_HAMMER:
 		case MT_KOOPA:
-		case MT_KOOPAFLAME:
 			P_DamageMobj(toucher, special, special, 1);
 			return;
 		case MT_SHELL:
@@ -978,101 +977,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			}
 			break;
 	// end bubble grab Tails 03-07-2000
-	
-		case MT_REDFLAG:
-			if (player->powers[pw_flashing])
-				return;
-			if (!special->spawnpoint)
-				return;
-			if (special->fuse == 1)
-				return;
-			if (special->momz > 0)
-				return;
-			if (player->ctfteam == 1) // Player is on the Red Team
-			{
-				short spawnheight;
-
-				if (!special->spawnpoint->z)
-					spawnheight = (short)(special->floorz >> FRACBITS);
-				else
-					spawnheight = special->spawnpoint->z;
-
-				if (special->x >> FRACBITS != special->spawnpoint->x
-				   || special->y >> FRACBITS != special->spawnpoint->y
-				   || special->z >> FRACBITS != spawnheight)
-				{
-					special->fuse = 1;
-	
-					if (player->specialsector != 988)
-					{
-						CONS_Printf("%s returned the red flag to base.\n", player_names[player-players]);
-
-						if (players[consoleplayer].ctfteam == player->ctfteam)
-							S_StartSound(NULL, sfx_hoop1);
-					}
-				}
-			}
-			else if (player->ctfteam == 2) // Player is on the Blue Team
-			{
-				player->gotflag |= MF_REDFLAG;
-				rflagpoint = special->spawnpoint;
-				S_StartSound (player->mo, sfx_lvpass);
-				P_SetMobjState(special, S_DISS);
-				CONS_Printf("%s picked up the red flag!\n", player_names[player-players]);
-				player->gliding = 0;
-				player->climbing = 0;
-				if (player->powers[pw_tailsfly])
-					player->powers[pw_tailsfly] = 1;
-			}
-			return;
-	
-		case MT_BLUEFLAG:
-			if (player->powers[pw_flashing])
-				return;
-			if (!special->spawnpoint)
-				return;
-			if (special->fuse == 1)
-				return;
-			if (special->momz > 0)
-				return;
-			if (player->ctfteam == 2) // Player is on the Blue Team
-			{
-				short spawnheight;
-
-				if (!special->spawnpoint->z)
-					spawnheight = (short)(special->floorz >> FRACBITS);
-				else
-					spawnheight = special->spawnpoint->z;
-
-				if (special->x >> FRACBITS != special->spawnpoint->x
-				   || special->y >> FRACBITS != special->spawnpoint->y
-				   || special->z >> FRACBITS != spawnheight)
-					{
-						special->fuse = 1;
-
-						if (player->specialsector != 989)
-						{
-							CONS_Printf("%s returned the blue flag to base.\n", player_names[player-players]);
-
-							if (players[consoleplayer].ctfteam == player->ctfteam)
-								S_StartSound(NULL, sfx_hoop1);
-						}
-					}
-			}
-			else if (player->ctfteam == 1) // Player is on the Red Team
-			{
-				player->gotflag |= MF_BLUEFLAG;
-				bflagpoint = special->spawnpoint;
-				S_StartSound (player->mo, sfx_lvpass);
-				P_SetMobjState(special, S_DISS);
-				CONS_Printf("%s picked up the blue flag!\n", player_names[player-players]);
-				player->gliding = 0;
-				player->climbing = 0;
-				if (player->powers[pw_tailsfly])
-					player->powers[pw_tailsfly] = 1;
-			}
-			return;
-	
 		case MT_DISS:
 			break;
 	
@@ -1492,7 +1396,6 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source)
 						score = 100*source->player->scoreadd;
 						break;
 					case MT_REDCRAWLA:
-					case MT_BLUEGOOMBA:
 						score = 150*source->player->scoreadd;
 						break;
 					case MT_JETTBOMBER:
@@ -2584,14 +2487,6 @@ void P_PlayerFlagBurst(player_t *player, boolean toss)
 	angle_t fa;
 	mobjtype_t type;
 
-	if (!(player->gotflag & MF_REDFLAG || player->gotflag & MF_BLUEFLAG))
-		return;
-
-	if (player->gotflag & MF_REDFLAG)
-		type = MT_REDFLAG;
-	else
-		type = MT_BLUEFLAG;
-
 	flag = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, type);
 
 	if (toss)
@@ -2609,23 +2504,9 @@ void P_PlayerFlagBurst(player_t *player, boolean toss)
 	flag->momy = FixedMul(finesine[fa], (6 * FRACUNIT));
 	flag->momz = 8*FRACUNIT;
 
-	if (type == MT_REDFLAG)
-	{
-		flag->spawnpoint = rflagpoint;
-		rflagpoint = NULL;
-	}
-	else
-	{
-		flag->spawnpoint = bflagpoint;
-		bflagpoint = NULL;
-	}
-
 	flag->fuse = cv_flagtime.value * TICRATE;
 
 	if (toss)
-		CONS_Printf("%s tossed the %s flag.\n", player_names[player-players], (type == MT_REDFLAG ? "red" : "blue"));
-	else
-		CONS_Printf("%s dropped the %s flag.\n", player_names[player-players], (type == MT_REDFLAG ? "red" : "blue"));
 
 	player->gotflag = 0;
 	return;

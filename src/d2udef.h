@@ -7,13 +7,14 @@
 //#define DEMO2ULTIMATE // Disables stuff that's only there for the sake of D2 IWAD compatibility
 //#define DEMO // Enables public demo build functionality
 //#define NOMAPCMD // Disables map command for singleplayer
-#define DARKENEDMENU // Darkens menu
+//#define DARKENEDMENU // Darkens menu
 //#define CHARACTERSELECT // Enables the character select menu
 #define MULTITHOK // If enabled, Sonic can multi-thok
 
 // What background does the intermission use?
 //#define IS_NOBG // No background, currently pretty incomplete but it kinda works
 #define IS_CHARBG // Rotating character backgrounds, demo style
+//#define IS_BLACKBG // Massive TODO
 //#define IS_FDBG // INTERSCR or INTERSCW, like in vanilla Final Demo
 
 // "This could be done with an enum!!!!" Well yeah but that wasn't fucking working
