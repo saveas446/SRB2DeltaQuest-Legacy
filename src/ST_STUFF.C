@@ -40,6 +40,7 @@
 #include "i_system.h"
 #include "m_menu.h"
 
+
 #ifdef HWRENDER
 #include "hardware/hw_main.h"
 #endif
@@ -129,6 +130,9 @@ static patch_t *lvlttl17; // EFZ
 static patch_t *lvlttl18; // SVZ
 static patch_t *lvlttl19; // FSZ
 static patch_t *ttlzone; // ZONE
+static patch_t *act1;
+static patch_t *act2;
+static patch_t *act3;
 
 static boolean facefreed[MAXPLAYERS];
 static boolean prefixfreed[MAXPLAYERS];
@@ -442,6 +446,10 @@ void ST_Init(void)
 
 	ttlzone = W_CachePatchName ("TTLZONE", PU_STATIC);
 
+	act1 = W_CachePatchName ("TTLONE", PU_STATIC);
+	act2 = W_CachePatchName ("TTLTWO", PU_STATIC);
+	act3 = W_CachePatchName ("TTLTHREE", PU_STATIC);
+
 	// NiGHTS HUD things
 	bluestat = W_CachePatchName("BLUESTAT", PU_STATIC);
 	byelstat = W_CachePatchName("BYELSTAT", PU_STATIC);
@@ -734,14 +742,13 @@ static void ST_drawEggsNeeded(void)
 
 static void ST_drawLevelTitle(void)
 {
-
 	int lvlttlxpos;
 	int ttlnumxpos;
 	int zonexpos;
 	int actnum = mapheaderinfo[gamemap-1].actnum;
 	boolean nonumber = false;
-
-	patch_t* lvlttl; // Patch that will point to whatever patch is appropriate for this level
+	patch_t* lvlttl; // Patch that will point to whatever level title is appropriate for this level
+	patch_t* ttlnum;
 
 	// shoot me in the head
 	// this could really use some pointers or some shit like that but i don't care
@@ -827,6 +834,7 @@ static void ST_drawLevelTitle(void)
 	}
 
 
+	// trust the process
 
 	if (!(timeinmap > 1 && timeinmap < 111))
 		return;
@@ -845,84 +853,98 @@ static void ST_drawLevelTitle(void)
 	ttlnumxpos = lvlttlxpos + lvlttl->width;
 	zonexpos = ttlnumxpos - ttlzone->width;
 
+	
+	if (gamemap % 3 == 1) {
+		ttlnum = act1;
+	} else if (gamemap % 3 == 2) {
+		ttlnum = act2;
+	} else if (gamemap % 3 == 3) {
+		ttlnum = act3;
+	}
+	
 	// I TAKE IT BACK WHAT IS THIS CODE SSN
 	if(leveltime == 1)
 	{
 	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(0), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
 	V_DrawScaledPatch (SCX(zonexpos),SCY(200), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(200), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(200), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
 	else if (leveltime == 2)
 	{
 	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(12), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
 	V_DrawScaledPatch (SCX(zonexpos),SCY(188), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(188), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(188), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
 	else if (leveltime == 3)
 	{
 	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(24), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
 	V_DrawScaledPatch (SCX(zonexpos),SCY(176), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	//V_DrawScaledPatch (SCX(0),SCY(176), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(0),SCY(176), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
 	else if (leveltime == 4)
 	{
 	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(36), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
 	V_DrawScaledPatch (SCX(zonexpos),SCY(164), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(164), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(164), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
 	else if (leveltime == 5)
 	{
 	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(48), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
 	V_DrawScaledPatch (SCX(zonexpos),SCY(152), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(152), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(152), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
 	else if (leveltime == 6)
 	{
 	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(60), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
 	V_DrawScaledPatch (SCX(zonexpos),SCY(140), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(140), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(140), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
 	else if (leveltime == 7)
 	{
 	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(72), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
 	V_DrawScaledPatch (SCX(zonexpos),SCY(128), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(128), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(128), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
 	else if (leveltime > 7 && leveltime < 105)
 	{
 	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(80), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
 	V_DrawScaledPatch (SCX(zonexpos),SCY(104), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(104), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(104), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
 	else if (leveltime == 105)
 	{
 	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(104), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
 	V_DrawScaledPatch (SCX(zonexpos),SCY(80), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(80), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(80), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
 	else if (leveltime == 106)
 	{
 	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(128), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
 	V_DrawScaledPatch (SCX(zonexpos),SCY(56), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(56), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(56), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
 	else if (leveltime == 107)
 	{
 	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(152), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
 	V_DrawScaledPatch (SCX(zonexpos),SCY(32), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(32), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(32), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
 	else if (leveltime == 108)
 	{
 	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(176), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
 	V_DrawScaledPatch (SCX(zonexpos),SCY(8), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(8), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(8), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
 	}
 	else if (leveltime == 109)
 	{
 	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(200), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
 	V_DrawScaledPatch (SCX(zonexpos),SCY(0), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	//V_DrawScaledPatch (SCX(ttlnumxpos),SCY(0), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
+	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(0), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
+	}
+	else
+	{
+		nonumber = true;
+		lvlttlxpos = ((BASEVIDWIDTH/2) - (lvlttl->width/2));
 	}
 }
 
