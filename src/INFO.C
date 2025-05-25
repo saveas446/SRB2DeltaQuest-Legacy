@@ -23,6 +23,7 @@
 #include "p_mobj.h"
 #include "z_zone.h"
 #include "d_player.h"
+#include "d2udef.h"
 #ifdef HWRENDER
 #include "hardware/hw_light.h"
 #endif
@@ -46,7 +47,11 @@ char sprnames[NUMSPRITES + 1][5] =
 	"RNGA","RNGE","TAEH","TAER","THER","TAHR","THOM","TAUT","TEXP","BUS1",
 	"BUS2","FWR2","FWR3","MIXU","QUES","MTEX","FLAM","PUMA","HAMM","KOOP",
 	"SHLL","MAXE","FBLL","FFWR","NSPK","SUPE","SUPZ","NDRN","NDRL",
-	"SEED","JETF","HOOP","NSCR","NWNG","EGGN","GOOP","BPLD","RDTV",
+	"SEED","JETF","HOOP","NSCR","NWNG","EGGN","GOOP",
+	#ifdef TH_TOLERANCE1
+	"BPLD",
+	#endif
+	"RDTV",
 	"RORB","EGGB","SFLM","TNKA","TNKB","SPNK","TFOG","EEGG","LITE","TRET",
 	"TRLS","FWR4","GOOM","MUS1","MUS2","TOAD","COIN","CPRK","XMS1",
 	"XMS2","XMS3","CAPS","SUPT","ROIA","ROIB","ROIC","ROID","ROIE","ROIF",
@@ -1379,6 +1384,8 @@ state_t states[NUMSTATES] =
 	{SPR_GOOP, 32769, 2, {NULL}, 0, 0, S_GOOP1}, // S_GOOP2
 	{SPR_GOOP, 32770, -1, {NULL}, 0, 0, S_DISS}, // S_GOOP3
 
+	
+	#ifdef TH_TOLERANCE1
 	// Boss Explosion
 	{SPR_BPLD, 32768, 5, {NULL}, 0, 0, S_BPLD2}, // S_BPLD1
 	{SPR_BPLD, 32769, 5, {NULL}, 0, 0, S_BPLD3}, // S_BPLD2
@@ -1387,6 +1394,7 @@ state_t states[NUMSTATES] =
 	{SPR_BPLD, 32772, 5, {NULL}, 0, 0, S_BPLD6}, // S_BPLD5
 	{SPR_BPLD, 32773, 5, {NULL}, 0, 0, S_BPLD7}, // S_BPLD6
 	{SPR_BPLD, 32774, 5, {NULL}, 0, 0, S_DISS},  // S_BPLD7
+	#endif
 
 	// Emblem
 	{SPR_NWNG, 0, -1, {NULL}, 0, 0, S_NULL}, // S_EMBLEM1
@@ -6297,7 +6305,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SPECIAL,     // flags
 		S_NULL          // raisestate
 	},
-
+	#ifdef TH_TOLERANCE1
 	{           // MT_BOSSEXPLODE
 		-1,             // doomednum
 		S_BPLD1,        // spawnstate
@@ -6323,6 +6331,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOBLOCKMAP|MF_NOCLIP|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
+	#endif
 
 	{           // MT_EGGTRAP
 		2049,           // doomednum

@@ -275,7 +275,9 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT],     // SPR_NWNG
 	&lspr[NOLIGHT],     // SPR_EGGN
 	&lspr[NOLIGHT],     // SPR_GOOP
+	#ifdef TH_TOLERANCE1
 	&lspr[SUPERSPARK_L],     // SPR_BPLD
+	#endif
 	&lspr[NOLIGHT],     // SPR_RDTV
 	&lspr[REDSHIELD_L],     // SPR_RORB
 	&lspr[NOLIGHT],     // SPR_EGGB

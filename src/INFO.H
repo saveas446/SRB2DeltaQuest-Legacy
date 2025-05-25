@@ -262,7 +262,9 @@ typedef enum
 	SPR_NWNG, // NiGHTS Wing collectable item.
 	SPR_EGGN, // Boss 2
 	SPR_GOOP, // Boss 2 Goop
+	#ifdef TH_TOLERANCE1
 	SPR_BPLD, // Boss Explosions
+	#endif
 
 	SPR_RDTV, // Fire shield
 	SPR_RORB, // Red orb
@@ -1622,6 +1624,7 @@ typedef enum
 	S_GOOP2,
 	S_GOOP3,
 
+	#ifdef TH_TOLERANCE1
 	// Boss Explosion
 	S_BPLD1,
 	S_BPLD2,
@@ -1630,6 +1633,7 @@ typedef enum
 	S_BPLD5,
 	S_BPLD6,
 	S_BPLD7,
+	#endif
 
 	// Emblem
 	S_EMBLEM1,
@@ -2126,7 +2130,9 @@ typedef enum
 	MT_BOSSFLYPOINT,
 	MT_EGGMOBILE2,
 	MT_GOOP,
+	#ifdef TH_TOLERANCE1
 	MT_BOSSEXPLODE,
+	#endif
 	MT_EGGTRAP,
 	MT_CHAOSSPAWNER,
 	MT_EMBLEM,

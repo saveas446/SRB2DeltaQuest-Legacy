@@ -16,6 +16,7 @@
 #define IS_CHARBG // Rotating character backgrounds, demo style
 //#define IS_BLACKBG // Massive TODO
 //#define IS_FDBG // INTERSCR or INTERSCW, like in vanilla Final Demo
-
 // "This could be done with an enum!!!!" Well yeah but that wasn't fucking working
+
+//#define TH_TOLERANCE1 // Enable some possibly useful things that break compatibility with the Demo 2 IWAD
 
