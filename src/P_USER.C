@@ -3705,10 +3705,6 @@ static void P_MovePlayer(player_t *player)
 					continue;
 
 				mo2 = (mobj_t *)th;
-
-				if (mo2->type == MT_EGGCAPSULE
-					&& mo2->threshold == player->mare)
-					player->capsule = mo2;
 			}
 		}
 		else if (player->capsule && player->capsule->reactiontime > 0 && player == &players[player->capsule->reactiontime-1])

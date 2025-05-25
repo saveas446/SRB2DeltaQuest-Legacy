@@ -301,7 +301,6 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT], // SPR_XMS1
 	&lspr[NOLIGHT], // SPR_XMS2
 	&lspr[NOLIGHT], // SPR_XMS3
-	&lspr[NOLIGHT], // SPR_CAPS
 	&lspr[SUPERSONIC_L], // SPR_SUPT
 	&lspr[NOLIGHT], // SPR_ROIA
 	&lspr[NOLIGHT], // SPR_ROIB

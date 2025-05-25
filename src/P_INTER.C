@@ -363,25 +363,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 				G_SaveGameData();
 			}
 			return;
-		case MT_EGGCAPSULE:
-			if (!(toucher->player->health > 1))
-				return;
-	
-			if (toucher->player->nightsmode && !(toucher->target))
-				return;
-	
-			if (toucher->player->mare != special->threshold)
-				return;
-	
-			// Mark the player as 'pull into the capsule'
-			toucher->player->capsule = special;
-	
-			for (i = 0; i < MAXPLAYERS; i++)
-			{
-				if (&players[i] == toucher->player)
-					toucher->player->capsule->reactiontime = i+1;
-			}
-			return;
 		case MT_NIGHTSBUMPER:
 			if (player->bumpertime < TICRATE/4)
 			{

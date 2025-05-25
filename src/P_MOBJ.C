@@ -3251,7 +3251,6 @@ void P_MobjThinker(mobj_t *mobj)
 				P_SetMobjState(mobj, S_DISS);
 			}
 			break;
-		case MT_EGGCAPSULE:
 		case MT_HAMMER:
 			if (mobj->z <= mobj->floorz)
 				P_SetMobjState(mobj,S_DISS);
@@ -5115,11 +5114,6 @@ void P_SpawnMapThing(mapthing_t *mthing)
 			z = R_PointInSubsector(x, y)->sector->floorheight + ((mthing->options >> 5) << FRACBITS);
 
 		mthing->z = (short)(z >> FRACBITS);
-	}
-	else if (mobj->type == MT_EGGCAPSULE)
-	{
-		mobj->health = mthing->angle & 1023;
-		mobj->threshold = mthing->angle >> 10;
 	}
 	else if (mobj->type == MT_TUBEWAYPOINT)
 	{

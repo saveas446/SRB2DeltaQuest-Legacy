@@ -296,8 +296,6 @@ typedef enum
 	SPR_XMS2,
 	SPR_XMS3,
 
-	SPR_CAPS, // Capsule thingy for NiGHTS
-
 	SPR_SUPT, // Super Sonic Transformation
 
 	// Crumbly rocks
@@ -1720,8 +1718,6 @@ typedef enum
 	S_CANDYCANE,
 	S_SNOWMAN,
 
-	S_EGGCAPSULE,
-
 	S_SUPERTRANS1,
 	S_SUPERTRANS2,
 	S_SUPERTRANS3,
@@ -2160,7 +2156,6 @@ typedef enum
 	MT_XMASPOLE,
 	MT_CANDYCANE,
 	MT_SNOWMAN,
-	MT_EGGCAPSULE,
 
 	MT_SUPERTRANS,
 

@@ -57,7 +57,7 @@ char sprnames[NUMSPRITES + 1][5] =
 	"RDTV",
 	"RORB","EGGB","SFLM","TNKA","TNKB","SPNK","TFOG","EEGG","LITE","TRET",
 	"TRLS","FWR4","GOOM","MUS1","MUS2","TOAD","COIN","CPRK","XMS1",
-	"XMS2","XMS3","CAPS","SUPT","ROIA","ROIB","ROIC","ROID","ROIE","ROIF",
+	"XMS2","XMS3","SUPT","ROIA","ROIB","ROIC","ROID","ROIE","ROIF",
 	"ROIG","ROIH","ROII","ROIJ","ROIK","ROIL","ROIM","ROIN","ROIO","ROIP",
 	"NPRA","NPRB","NPRC","REDX","SPRB",
 	#if TH_TOLERANCE >= 0
@@ -1494,7 +1494,6 @@ state_t states[NUMSTATES] =
 	{SPR_XMS2, 0, -1, {NULL}, 0, 0, S_NULL}, // S_CANDYCANE
 	{SPR_XMS3, 0, -1, {NULL}, 0, 0, S_NULL}, // S_SNOWMAN
 
-	{SPR_CAPS, 0, -1, {NULL}, 0, 0, S_NULL}, // S_EGGCAPSULE
 
 	{SPR_SUPT, 0, 4, {NULL}, 0, 0, S_SUPERTRANS2},     // S_SUPERTRANS1
 	{SPR_SUPT, 1, 4, {NULL}, 0, 0, S_SUPERTRANS3},     // S_SUPERTRANS2
@@ -6961,32 +6960,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SLIDEME|MF_SOLID|MF_PUSHABLE, // flags
 		S_NULL          // raisestate
 	},
-	{           // MT_EGGCAPSULE
-		40,             // doomednum
-		S_EGGCAPSULE,   // spawnstate
-		20,             // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		0,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		0,              // speed
-		72*FRACUNIT,    // radius
-		144*FRACUNIT,   // height
-		100,            // mass
-		1,              // damage
-		sfx_None,       // activesound
-		MF_NOGRAVITY|MF_FLOAT|MF_SPECIAL, // flags
-		S_NULL          // raisestate
-	},
-
 	{           // MT_SUPERTRANS
 		-1,             // doomednum
 		S_SUPERTRANS1,  // spawnstate
