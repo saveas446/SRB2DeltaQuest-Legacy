@@ -3030,7 +3030,7 @@ static void P_KoopaThinker(mobj_t *koopa)
 
 	if (koopa->z > koopa->floorz)
 		koopa->momz += FRACUNIT/4;
-
+		
 	if (P_Random() > 250 && gameskill >= sk_hard)
 	{
 		mobj_t *hammer;

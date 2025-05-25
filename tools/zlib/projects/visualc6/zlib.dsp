@@ -220,7 +220,7 @@ InputPath=..\..\contrib\masmx86\gvmat32.asm
 InputName=gvmat32
 
 "$(IntDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	ml.exe /nologo /c /coff /Cx /Zi /Fo"$(IntDir)\$(InputName).obj" "$(InputPath)"
+	X:\tools\masm_6.15\masm\bin\ml.exe /nologo /c /coff /Cx /Zi /Fo"$(IntDir)\$(InputName).obj" "$(InputPath)"
 
 # End Custom Build
 
@@ -256,7 +256,7 @@ InputPath=..\..\contrib\masmx86\inffas32.asm
 InputName=inffas32
 
 "$(IntDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	ml.exe /nologo /c /coff /Cx /Zi /Fo"$(IntDir)\$(InputName).obj" "$(InputPath)"
+	X:\tools\masm_6.15\masm\bin\ml.exe /nologo /c /coff /Cx /Zi /Fo"$(IntDir)\$(InputName).obj" "$(InputPath)"
 
 # End Custom Build
 
