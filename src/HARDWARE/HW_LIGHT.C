@@ -218,7 +218,6 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT],     // SPR_DETN
 	&lspr[NOLIGHT],     // SPR_XPLD
 	&lspr[NOLIGHT],     // SPR_CHAN
-	&lspr[NOLIGHT],     // SPR_CAPE
 	&lspr[NOLIGHT],     // SPR_SNO1
 	&lspr[NOLIGHT],     // SPR_SANT
 	&lspr[NOLIGHT],     // SPR_EMER
@@ -244,8 +243,10 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[RINGLIGHT_L],     // SPR_THOM
 	&lspr[RINGLIGHT_L],     // SPR_TAUT
 	&lspr[RINGLIGHT_L],     // SPR_TEXP
+	#if TH_TOLERANCE >= 0
 	&lspr[NOLIGHT],     // SPR_BUS1
 	&lspr[NOLIGHT],     // SPR_BUS2
+	#endif
 	&lspr[NOLIGHT],     // SPR_FWR2
 	&lspr[NOLIGHT],     // SPR_FWR3
 	&lspr[NOLIGHT],     // SPR_MIXU
@@ -275,7 +276,7 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT],     // SPR_NWNG
 	&lspr[NOLIGHT],     // SPR_EGGN
 	&lspr[NOLIGHT],     // SPR_GOOP
-	#ifdef TH_TOLERANCE1
+	#if TH_TOLERANCE >= 1
 	&lspr[SUPERSPARK_L],     // SPR_BPLD
 	#endif
 	&lspr[NOLIGHT],     // SPR_RDTV
@@ -323,8 +324,10 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT], // SPR_NPRC
 	&lspr[NOLIGHT], // SPR_REDX
 	&lspr[NOLIGHT], // SPR_SPRB Graue 01-08-2004
+	#if TH_TOLERANCE >= 0
 	&lspr[NOLIGHT], // SPR_BUZZ Graue 03-10-2004
 	&lspr[NOLIGHT], // SPR_RBUZ Graue 03-10-2004
+	#endif
 	&lspr[GREYSHINE_L], // SPR_CEMK, // 8th Emerald
 	&lspr[NOLIGHT],     // SPR_WHTV
 	&lspr[WHITESHIELD_L],     // SPR_WORB

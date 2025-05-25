@@ -42,13 +42,16 @@ char sprnames[NUMSPRITES + 1][5] =
 	"NBMP","YSPR","RSPR","YSUD","RSUD","SKIM","MINE","FISH","GARG","SPLH",
 	"THOK","THZP","SIGN","RRNG","TTAG","STEM","GFLG","TOKE",
 	"CEMG","CEMO","CEMP","CEMB","CEMR","CEML","CEMY","JETB","JETG","JBUL",
-	"MOUS","DETN","XPLD","CHAN","CAPE","SNO1","SANT","EMER","EMES","EMET",
+	"MOUS","DETN","XPLD","CHAN","SNO1","SANT","EMER","EMES","EMET",
 	"SBLL","SPIK","CCOM","RAIN","DSPK","USPK","STPT","RNGM","RNGR","RNGS",
-	"RNGA","RNGE","TAEH","TAER","THER","TAHR","THOM","TAUT","TEXP","BUS1",
-	"BUS2","FWR2","FWR3","MIXU","QUES","MTEX","FLAM","PUMA","HAMM","KOOP",
+	"RNGA","RNGE","TAEH","TAER","THER","TAHR","THOM","TAUT","TEXP",
+	#if TH_TOLERANCE >= 0
+	"BUS1","BUS2",
+	#endif
+	"FWR2","FWR3","MIXU","QUES","MTEX","FLAM","PUMA","HAMM","KOOP",
 	"SHLL","MAXE","FBLL","FFWR","NSPK","SUPE","SUPZ","NDRN","NDRL",
 	"SEED","JETF","HOOP","NSCR","NWNG","EGGN","GOOP",
-	#ifdef TH_TOLERANCE1
+	#if TH_TOLERANCE >= 1
 	"BPLD",
 	#endif
 	"RDTV",
@@ -56,7 +59,11 @@ char sprnames[NUMSPRITES + 1][5] =
 	"TRLS","FWR4","GOOM","MUS1","MUS2","TOAD","COIN","CPRK","XMS1",
 	"XMS2","XMS3","CAPS","SUPT","ROIA","ROIB","ROIC","ROID","ROIE","ROIF",
 	"ROIG","ROIH","ROII","ROIJ","ROIK","ROIL","ROIM","ROIN","ROIO","ROIP",
-	"NPRA","NPRB","NPRC","REDX","SPRB","BUZZ","RBUZ","CEMK","WHTV","WORB",
+	"NPRA","NPRB","NPRC","REDX","SPRB",
+	#if TH_TOLERANCE >= 0
+	"BUZZ","RBUZ",
+	#endif
+	"CEMK","WHTV","WORB",
 	"TURR",
 };
 
@@ -817,10 +824,6 @@ state_t states[NUMSTATES] =
 	// CEZ Chain
 	{SPR_CHAN, 0, -1, {NULL}, 0, 0, S_NULL}, // S_CEZCHAIN
 
-	// Super Sonic Cape
-	{SPR_CAPE, 0, 1, {A_CapeChase}, 0, 0, S_CAPE2}, // S_CAPE1
-	{SPR_CAPE, 0, 1, {A_CapeChase}, 0, 0, S_CAPE1}, // S_CAPE2
-
 	// Snowflake
 	{SPR_SNO1, 0, -1, {NULL}, 0, 0, S_NULL}, // S_SNOW1
 	{SPR_SNO1, 1, -1, {NULL}, 0, 0, S_NULL}, // S_SNOW2
@@ -1153,9 +1156,11 @@ state_t states[NUMSTATES] =
 
 	{SPR_DISS, 0, 1, {A_RingExplode}, MT_REDRING, 0, S_XPLD1}, // S_RINGEXPLODE
 
+	#if TH_TOLERANCE >= 0
 	// Greenflower Scenery
 	{SPR_BUS1, 0, -1, {NULL}, 0, 0, S_NULL},       // S_BERRYBUSH
 	{SPR_BUS2, 0, -1, {NULL}, 0, 0, S_NULL},       // S_BUSH
+	#endif
 	{SPR_FWR2, 0, 7, {NULL}, 0, 0, S_GFZFLOWERB2}, // S_GFZFLOWERB1
 	{SPR_FWR2, 1, 7, {NULL}, 0, 0, S_GFZFLOWERB1}, // S_GFZFLOWERB1
 	{SPR_FWR3, 0, -1, {NULL}, 0, 0, S_NULL},       // S_GFZFLOWERC1
@@ -1385,7 +1390,7 @@ state_t states[NUMSTATES] =
 	{SPR_GOOP, 32770, -1, {NULL}, 0, 0, S_DISS}, // S_GOOP3
 
 	
-	#ifdef TH_TOLERANCE1
+	#if TH_TOLERANCE >= 1
 	// Boss Explosion
 	{SPR_BPLD, 32768, 5, {NULL}, 0, 0, S_BPLD2}, // S_BPLD1
 	{SPR_BPLD, 32769, 5, {NULL}, 0, 0, S_BPLD3}, // S_BPLD2
@@ -1632,6 +1637,7 @@ state_t states[NUMSTATES] =
 	{SPR_SPRB, 2, 1, {NULL}, 0, 0, S_BLUESPRING5},   // S_BLUESPRING4
 	{SPR_SPRB, 1, 1, {NULL}, 0, 0, S_BLUESPRING},    // S_BLUESPRING5
 
+	#if TH_TOLERANCE >= 0
 	// Gold Buzz
 	{SPR_BUZZ, 0, 2, {A_Look}, 0, 0, S_BUZZLOOK2},   // S_BUZZLOOK1
 	{SPR_BUZZ, 1, 2, {A_Look}, 0, 0, S_BUZZLOOK1},   // S_BUZZLOOK2
@@ -1643,6 +1649,7 @@ state_t states[NUMSTATES] =
 	{SPR_RBUZ, 1, 2, {A_Look}, 0, 0, S_RBUZZLOOK1},   // S_RBUZZLOOK2
 	{SPR_RBUZ, 0, 2, {A_BuzzFly}, 0, 0, S_RBUZZFLY2}, // S_RBUZZFLY1
 	{SPR_RBUZ, 1, 2, {A_BuzzFly}, 0, 0, S_RBUZZFLY1}, // S_RBUZZFLY2
+	#endif
 
 	// 8th Emerald
 	{SPR_CEMK, 32768, -1, {NULL}, 0, 0, S_NULL}, // S_CEMK
@@ -4169,32 +4176,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL          // raisestate
 	},
 
-	{           // MT_CAPE
-		-1,             // doomednum
-		S_CAPE1,        // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		8,              // speed
-		4*FRACUNIT,     // radius
-		4*FRACUNIT,     // height
-		16,             // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_NOGRAVITY|MF_NOBLOCKMAP|MF_SCENERY, // flags
-		S_NULL          // raisestate
-	},
-
 	{           // MT_SNOWFLAKE
 		-1,             // doomednum
 		S_SNOW1,        // spawnstate
@@ -4981,7 +4962,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOBLOCKMAP|MF_MISSILE|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
-
+	#if TH_TOLERANCE >= 0
 	{           // MT_BERRYBUSH
 		74,             // doomednum
 		S_BERRYBUSH,    // spawnstate
@@ -5007,7 +4988,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOCLIP|MF_SCENERY, // flags
 		S_NULL          // raisestate
 	},
-
+	
 	{           // MT_BUSH
 		75,             // doomednum
 		S_BUSH,         // spawnstate
@@ -5033,7 +5014,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOCLIP|MF_SCENERY, // flags
 		S_NULL          // raisestate
 	},
-
+	#endif
 	{           // MT_GFZFLOWER2
 		70,             // doomednum
 		S_GFZFLOWERB1,  // spawnstate
@@ -6305,7 +6286,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SPECIAL,     // flags
 		S_NULL          // raisestate
 	},
-	#ifdef TH_TOLERANCE1
+	#if TH_TOLERANCE >= 1
 	{           // MT_BOSSEXPLODE
 		-1,             // doomednum
 		S_BPLD1,        // spawnstate
@@ -7629,7 +7610,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SPECIAL,     // flags
 		S_NULL          // raisestate
 	},
-
+	#if TH_TOLERANCE >= 0
 	{           // MT_GOLDBUZZ
 		5005,           // doomednum
 		S_BUZZLOOK1,    // spawnstate
@@ -7681,6 +7662,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SLIDEME|MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
+	#endif
 	{           // MT_EMERALD1
 		420,            // doomednum
 		S_CEMG,         // spawnstate

@@ -14,9 +14,11 @@
 // What background does the intermission use?
 //#define IS_NOBG // No background, currently pretty incomplete but it kinda works
 #define IS_CHARBG // Rotating character backgrounds, demo style
-//#define IS_BLACKBG // Massive TODO
 //#define IS_FDBG // INTERSCR or INTERSCW, like in vanilla Final Demo
 // "This could be done with an enum!!!!" Well yeah but that wasn't fucking working
 
-//#define TH_TOLERANCE1 // Enable some possibly useful things that break compatibility with the Demo 2 IWAD
+//#define TH_TOLERANCE 0
+// Undefined: Strict, ONLY things that were in the original Demo 2 IWAD are allowed
+// 0: Enable some very useful stuff that isn't in the Demo 2 IWAD, but we will need for D2U
+// 1: Enable some possibly useful things that break compatibility with the Demo 2 IWAD
 

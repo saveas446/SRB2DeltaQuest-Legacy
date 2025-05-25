@@ -206,7 +206,6 @@ typedef enum
 	SPR_DETN, // Deton
 	SPR_XPLD, // Robot Explosion
 	SPR_CHAN, // CEZ Chain
-	SPR_CAPE, // Fake little Super Sonic cape
 	SPR_SNO1, // Snowflake
 	SPR_SANT, // Santa
 	SPR_EMER, // Emerald Hunt 1
@@ -231,8 +230,10 @@ typedef enum
 	SPR_THOM, // Thrown Homing Ring
 	SPR_TAUT, // Thrown Automatic Ring
 	SPR_TEXP, // Thrown Explosion Ring
+	#if TH_TOLERANCE >= 0
 	SPR_BUS1, // GFZ Bush w/ berries
 	SPR_BUS2, // GFZ Bush w/o berries
+	#endif
 	SPR_FWR2, // GFZ Sunflower
 	SPR_FWR3, // GFZ budding flower
 	SPR_MIXU, // Player mixing monitor
@@ -262,7 +263,7 @@ typedef enum
 	SPR_NWNG, // NiGHTS Wing collectable item.
 	SPR_EGGN, // Boss 2
 	SPR_GOOP, // Boss 2 Goop
-	#ifdef TH_TOLERANCE1
+	#if TH_TOLERANCE >= 1
 	SPR_BPLD, // Boss Explosions
 	#endif
 
@@ -1087,10 +1088,6 @@ typedef enum
 	// CEZ Chain
 	S_CEZCHAIN,
 
-	// Super Sonic Cape
-	S_CAPE1,
-	S_CAPE2,
-
 	// Snowflake
 	S_SNOW1,
 	S_SNOW2,
@@ -1414,9 +1411,11 @@ typedef enum
 	S_THROWNEXPLOSION7,
 	S_RINGEXPLODE,
 
+	#if TH_TOLERANCE >= 0
 	// Greenflower Scenery
 	S_BERRYBUSH,
 	S_BUSH,
+	#endif
 	S_GFZFLOWERB1,
 	S_GFZFLOWERB2,
 	S_GFZFLOWERC1,
@@ -1624,7 +1623,7 @@ typedef enum
 	S_GOOP2,
 	S_GOOP3,
 
-	#ifdef TH_TOLERANCE1
+	#if TH_TOLERANCE >= 1
 	// Boss Explosion
 	S_BPLD1,
 	S_BPLD2,
@@ -1864,6 +1863,7 @@ typedef enum
 	S_BLUESPRING4,
 	S_BLUESPRING5,
 
+	#if TH_TOLERANCE >= 0
 	// Buzz (Gold)
 	S_BUZZLOOK1,
 	S_BUZZLOOK2,
@@ -1875,6 +1875,7 @@ typedef enum
 	S_RBUZZLOOK2,
 	S_RBUZZFLY1,
 	S_RBUZZFLY2,
+	#endif
 
 	// 8th Emerald
 	S_CEMK,
@@ -2044,7 +2045,6 @@ typedef enum
 	MT_DETON, // Deton
 	MT_EXPLODE, // Robot Explosion
 	MT_CHAIN, // CEZ Chain
-	MT_CAPE, // Fake little Super Sonic cape
 	MT_SNOWFLAKE, // Snowflake
 	MT_SANTA, // Santa
 	MT_EMERHUNT, // Emerald Hunt 1
@@ -2130,7 +2130,7 @@ typedef enum
 	MT_BOSSFLYPOINT,
 	MT_EGGMOBILE2,
 	MT_GOOP,
-	#ifdef TH_TOLERANCE1
+	#if TH_TOLERANCE >= 1
 	MT_BOSSEXPLODE,
 	#endif
 	MT_EGGTRAP,
@@ -2194,8 +2194,10 @@ typedef enum
 
 	MT_REDXVI, // He's BACK!
 
+	#if TH_TOLERANCE >= 0
 	MT_GOLDBUZZ,
 	MT_REDBUZZ,
+	#endif
 
 	MT_EMERALD1,
 	MT_EMERALD2,

@@ -3630,6 +3630,8 @@ static void P_MovePlayer(player_t *player)
 
 			// Sonic steps out of the phone booth...
 //			P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height, MT_CAPE)->target = player->mo; // A cape... "Super" Sonic, get it? Ha...ha...
+// 			GET OUT
+
 
 			if (emeralds & EMERALD8) // 'Hyper' Sonic
 			{

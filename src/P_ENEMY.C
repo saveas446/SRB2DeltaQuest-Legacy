@@ -1011,7 +1011,7 @@ void A_BossScream(mobj_t *actor)
 	y = actor->y + FixedMul(finesine[fa],actor->radius);
 
 	z = actor->z - 8*FRACUNIT + (P_Random()<<(FRACBITS-2));
-	#ifdef TH_TOLERANCE1
+	#if TH_TOLERANCE >= 1
 	if (actor->info->deathsound) S_StartSound(P_SpawnMobj(x, y, z, MT_BOSSEXPLODE), actor->info->deathsound);
 	#else
 	if (actor->info->deathsound) 
