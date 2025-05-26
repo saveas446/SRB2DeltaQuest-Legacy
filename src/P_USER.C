@@ -3753,7 +3753,7 @@ static void P_MovePlayer(player_t *player)
 					player->capsule->health--;
 
 					// Spawn a 'pop' for each ring you deposit
-					S_StartSound(P_SpawnMobj(player->capsule->x + ((P_SignedRandom()/3)<<FRACBITS), player->capsule->y + ((P_SignedRandom()/3)<<FRACBITS), player->capsule->z + (player->capsule->height/2) + ((P_SignedRandom()/3)<<FRACBITS), MT_EXPLODE), sfx_pop);
+					S_StartSound(P_SpawnMobj(player->capsule->x + ((P_SignedRandom()/3)<<FRACBITS), player->capsule->y + ((P_SignedRandom()/3)<<FRACBITS), player->capsule->z + (player->capsule->height/2) + ((P_SignedRandom()/3)<<FRACBITS), MT_EXPLODE), sfx_slop);
 
 					if (player->capsule->health <= 0)
 					{
@@ -4298,11 +4298,11 @@ static void P_MovePlayer(player_t *player)
 		}
 
 		if (player->powers[pw_underwater] == 25*TICRATE + 1)
-			S_StartSound(NULL, sfx_wtrdng);
+			S_StartSound(NULL, sfx_sawhit);
 		else if (player->powers[pw_underwater] == 20*TICRATE + 1)
-			S_StartSound(NULL, sfx_wtrdng);
+			S_StartSound(NULL, sfx_sawhit);
 		else if (player->powers[pw_underwater] == 15*TICRATE + 1)
-			S_StartSound(NULL, sfx_wtrdng);
+			S_StartSound(NULL, sfx_sawhit);
 	}
 
 
@@ -4339,7 +4339,7 @@ static void P_MovePlayer(player_t *player)
 
 			// Tails Put-Put noise
 			if (player->charability == 1 && leveltime % 10 == 0)
-				S_StartSound(player->mo, sfx_putput);
+				S_StartSound(player->mo, sfx_sawidl);
 			
 			// Descend
 			if (cmd->buttons & BT_USE)
@@ -4359,7 +4359,7 @@ static void P_MovePlayer(player_t *player)
 			if (player->charability == 1 && (leveltime % 10 == 0)
 				&& player->mo->state >= &states[S_PLAY_SPC1]
 				&& player->mo->state <= &states[S_PLAY_SPC4])
-				S_StartSound(player->mo, sfx_pudpud);
+				S_StartSound(player->mo, sfx_sawful);
 		}
 	}
 
@@ -4611,7 +4611,7 @@ static void P_MovePlayer(player_t *player)
 
 			if ((leveltime % (TICRATE/10)) == 0)
 			{
-				S_StartSound(player->mo, sfx_spndsh); // Make the rev sound!
+				S_StartSound(player->mo, sfx_noway); // Make the rev sound!
 				// Now spawn the color thok circle.
 				if (player->skincolor != 0)
 				{
@@ -4646,7 +4646,7 @@ static void P_MovePlayer(player_t *player)
 			P_ResetScore(player);
 			player->mfspinning = 1;
 			P_SetPlayerMobjState(player->mo, S_PLAY_ATK1);
-			S_StartSound(player->mo, sfx_spin);
+			S_StartSound(player->mo, sfx_sawup);
 			player->usedown = true;
 		}
 	}
@@ -4674,7 +4674,7 @@ static void P_MovePlayer(player_t *player)
 	{
 		player->mfstartdash = 0;
 		P_InstaThrust(player->mo, player->mo->angle, player->dashspeed); // catapult forward ho!!
-		S_StartSound(player->mo, sfx_zoom);
+		S_StartSound(player->mo, sfx_punch);
 		player->dashspeed = 0;
 	}
 
@@ -5092,9 +5092,9 @@ static void P_MovePlayer(player_t *player)
 	if (player->blackow)
 	{
 		if (player->blackow == 2)
-			S_StartSound (player->mo, sfx_zoom);
+			S_StartSound (player->mo, sfx_punch);
 		else
-			S_StartSound (player->mo, sfx_bkpoof); // Sound the BANG!
+			S_StartSound (player->mo, sfx_skeatk); // Sound the BANG!
 
 		for (i = 0; i < MAXPLAYERS; i++)
 			if (playeringame[i] && P_AproxDistance(player->mo->x - players[i].mo->x,

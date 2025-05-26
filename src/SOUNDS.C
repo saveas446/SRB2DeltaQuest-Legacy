@@ -129,23 +129,22 @@ sfxinfo_t S_sfx[NUMSFX] =
 //               |      priority(U) volume  |
 //               |        |  link   |   data|
   { "none"     , false,   0, 0, -1, -1, 0, -1, -1, -1, NULL},
-
   { "pistol"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "shotgn"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
-  { "chchng"   , false,  120, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "sgcock"   , false,  120, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "dshtgn"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "dbopn\0"  , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "dbcls\0"  , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "dbload"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
-  { "plasma"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  //{ "plasma"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "bfg\0\0\0", false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
-  { "spin\0\0"  , false,  64, 0, -1, -1, 0, SKSSPIN, -1, -1, NULL},
-  { "putput"   , false,  64, 0, -1, -1, 0, SKSPUTPUT, -1, -1, NULL}, // not as high a priority
-  { "pudpud"   , false,  64, 0, -1, -1, 0, SKSPUDPUD, -1, -1, NULL},
-  { "wtrdng"   , true,  120, 0, -1, -1, 0, -1, -1, -1, NULL}, // make sure you can hear the DING DING! Tails 03-08-2000
+  { "sawup"  , false,  64, 0, -1, -1, 0, SKSSPIN, -1, -1, NULL},
+  { "sawidl"   , false,  64, 0, -1, -1, 0, SKSPUTPUT, -1, -1, NULL}, // not as high a priority
+  { "sawful"   , false,  64, 0, -1, -1, 0, SKSPUDPUD, -1, -1, NULL},
+  { "sawhit"   , true,  120, 0, -1, -1, 0, -1, -1, -1, NULL}, // make sure you can hear the DING DING! Tails 03-08-2000
   { "rlaunc"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "rxplod"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
-  { "lvpass"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "firsht"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "firxpl"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "pstart"   , false, 100, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "pstop\0"  , false, 100, 0, -1, -1, 0, -1, -1, -1, NULL},
@@ -160,10 +159,10 @@ sfxinfo_t S_sfx[NUMSFX] =
   { "vipain"   , false,  96, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "mnpain"   , false,  96, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "pepain"   , false,  96, 0, -1, -1, 0, -1, -1, -1, NULL},
-  { "pop\0\0\0" , false,  78, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "slop\0\0" , false,  78, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "itemup"   ,  true,  78, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "wpnup"    ,  true,  78, 0, -1, -1, 0, -1, -1, -1, NULL},
-  { "spring",	false,  96, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "oof",	false,  96, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "telept"   , false,  32, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "posit1"   ,  true,  120, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "posit2"   ,  true,  120, 0, -1, -1, 0, -1, -1, -1, NULL},
@@ -187,7 +186,7 @@ sfxinfo_t S_sfx[NUMSFX] =
   { "claw\0\0" , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "skeswg"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "pldeth"   , false,  32, 0, -1, -1, 0, -1, -1, -1, NULL},
-  { "thok\0\0"   , false,  32, 0, -1, -1, 0, SKSTHOK, -1, -1, NULL},
+  { "pdiehi"   , false,  32, 0, -1, -1, 0, SKSTHOK, -1, -1, NULL},
   { "podth1"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "podth2"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "podth3"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
@@ -212,7 +211,7 @@ sfxinfo_t S_sfx[NUMSFX] =
   { "vilact"   ,  true, 100, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "noway"  , false,  78, 0, -1, -1, 0, SKSSPNDSH, -1, -1, NULL},
   { "barexp"   , false,  60, 0, -1, -1, 0, -1, -1, -1, NULL},
-  { "zoom\0\0"  , false,  64, 0, -1, -1, 0, SKSZOOM, -1, -1, NULL},
+  { "punch\0"  , false,  64, 0, -1, -1, 0, SKSZOOM, -1, -1, NULL},
   { "hoof\0\0" , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "metal\0"  , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "chgun\0"  , false,  64, &S_sfx[sfx_pistol], 150, 0, 0, -1, -1, -1, NULL},
@@ -222,7 +221,7 @@ sfxinfo_t S_sfx[NUMSFX] =
   { "itmbk\0"  , false, 100, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "flame\0"  , false,  32, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "flamst"   , false,  32, 0, -1, -1, 0, -1, -1, -1, NULL},
-  { "shield"   , false,  60, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "getpow"   , false,  60, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "bospit"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "boscub"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "bossit"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
@@ -236,11 +235,12 @@ sfxinfo_t S_sfx[NUMSFX] =
   { "keendt"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "skeact"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "skesit"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
-  { "bkpoof"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "skeatk"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "radio\0"  , false,  60, 0, -1, -1, 0, SKSRADIO, -1, -1, NULL},
 
   //added:22-02-98: sound when the player avatar jumps in air 'hmpf!'
   { "jump\0\0" , false,  60, 0, -1, -1, 0, SKSJUMP, -1, -1, NULL},
+  { "ouch\0\0" , false,  60, 0, -1, -1, 0, SKSOUCH, -1, -1, NULL},
   { "gasp\0\0" , false,  64, 0, -1, -1, 0, SKSGASP, -1, -1, NULL},
 
   //added:09-08-98:test water sounds
@@ -259,9 +259,6 @@ sfxinfo_t S_sfx[NUMSFX] =
   { "amwtr9"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "splish"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL}, // Splish Tails 12-08-2000
   { "wslap\0"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL}, // Water Slap Tails 12-13-2000
-  { "steam1"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL}, // Tails 06-19-2001
-  { "steam2"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL}, // Tails 06-19-2001
-  { "cgot\0\0"   , true,  120, 0, -1, -1, 0, -1, -1, -1, NULL}, // Got Emerald! Tails 09-02-2001
   // skin sounds free slots to add sounds at run time (Boris HACK!!!)
   // initialized to NULL
 };

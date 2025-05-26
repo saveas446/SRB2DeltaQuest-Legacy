@@ -2136,11 +2136,6 @@ int EV_MarioBlock(sector_t *sec, sector_t *roversector, fixed_t topheight,
 			// "Thunk!" sound
 			S_StartSound(puncher, sfx_tink); // Puncher is "close enough"
 		}
-		else
-		{
-			// "Powerup rise" sound
-			S_StartSound(puncher, sfx_cgot); // Puncher is "close enough"
-		}
 
 		if ((thing->flags & MF_MONITOR))
 		{

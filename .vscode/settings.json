@@ -15,7 +15,8 @@
         "xiosbase": "c",
         "xlocale": "c",
         "xstring": "c",
-        "xutility": "c"
+        "xutility": "c",
+        "P_FLOOR.C": "cpp"
     },
     "C_Cpp.dimInactiveRegions": false
 }

@@ -344,7 +344,7 @@ void P_ExplodeMissile(mobj_t *mo)
 		explodemo = P_SpawnMobj(mo->x, mo->y, mo->z, MT_EXPLODE);
 		explodemo->momx += (P_Random() % 32) * FRACUNIT/8;
 		explodemo->momy += (P_Random() % 32) * FRACUNIT/8;
-		S_StartSound(explodemo, sfx_pop);
+		S_StartSound(explodemo, sfx_slop);
 		explodemo = P_SpawnMobj(mo->x, mo->y, mo->z, MT_EXPLODE);
 		explodemo->momx += (P_Random() % 64) * FRACUNIT/8;
 		explodemo->momy -= (P_Random() % 64) * FRACUNIT/8;
@@ -352,7 +352,7 @@ void P_ExplodeMissile(mobj_t *mo)
 		explodemo = P_SpawnMobj(mo->x, mo->y, mo->z, MT_EXPLODE);
 		explodemo->momx -= (P_Random() % 128) * FRACUNIT/8;
 		explodemo->momy += (P_Random() % 128) * FRACUNIT/8;
-		S_StartSound(explodemo, sfx_pop);
+		S_StartSound(explodemo, sfx_slop);
 		explodemo = P_SpawnMobj(mo->x, mo->y, mo->z, MT_EXPLODE);
 		explodemo->momx -= (P_Random() % 96) * FRACUNIT/8;
 		explodemo->momy -= (P_Random() % 96) * FRACUNIT/8;
@@ -3617,7 +3617,7 @@ void P_MobjThinker(mobj_t *mobj)
 							if (i&1)
 							{
 								P_SpawnMobj(x, y, z, MT_BIRD);
-								S_StartSound(mo2, sfx_pop);
+								S_StartSound(mo2, sfx_slop);
 							}
 							else if (i < 16)
 								P_SpawnMobj(x, y, z, MT_SQRL);

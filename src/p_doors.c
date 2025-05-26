@@ -367,7 +367,7 @@ EV_DoLockedDoor
         if (!(p->cards & it_bluecard) && !(p->cards & it_blueskull))
         {
             p->message = PD_BLUEO;
-            S_StartSound(p->mo,sfx_spring);  //SoM: 3/6/200: killough's idea
+            S_StartSound(p->mo,sfx_oof);  //SoM: 3/6/200: killough's idea
             return 0;
         }
         break;
@@ -377,7 +377,7 @@ EV_DoLockedDoor
         if (!(p->cards & it_redcard) && !(p->cards & it_redskull))
         {
             p->message = PD_REDO;
-            S_StartSound(p->mo,sfx_spring);  //SoM: 3/6/200: killough's idea
+            S_StartSound(p->mo,sfx_oof);  //SoM: 3/6/200: killough's idea
             return 0;
         }
         break;
@@ -388,7 +388,7 @@ EV_DoLockedDoor
             !(p->cards & it_yellowskull))
         {
             p->message = PD_YELLOWO;
-            S_StartSound(p->mo,sfx_spring);   //SoM: 3/6/200: killough's idea
+            S_StartSound(p->mo,sfx_oof);   //SoM: 3/6/200: killough's idea
             return 0;
         }
         break;
@@ -511,7 +511,7 @@ EV_VerticalDoor
         if (!(player->cards & it_bluecard) && !(player->cards & it_blueskull))
         {
             player->message = PD_BLUEK;
-            S_StartSound(player->mo,sfx_spring);   //SoM: 3/6/2000: Killough's idea
+            S_StartSound(player->mo,sfx_oof);   //SoM: 3/6/2000: Killough's idea
             return 0;
         }
         break;
@@ -525,7 +525,7 @@ EV_VerticalDoor
             !(player->cards & it_yellowskull))
         {
             player->message = PD_YELLOWK;
-            S_StartSound(player->mo,sfx_spring); //SoM: 3/6/2000: Killough's idea
+            S_StartSound(player->mo,sfx_oof); //SoM: 3/6/2000: Killough's idea
             return 0;
         }
         break;
@@ -538,7 +538,7 @@ EV_VerticalDoor
         if (!(player->cards & it_redcard) && !(player->cards & it_redskull))
         {
             player->message = PD_REDK;
-            S_StartSound(player->mo,sfx_spring); //SoM: 3/6/2000: Killough's idea
+            S_StartSound(player->mo,sfx_oof); //SoM: 3/6/2000: Killough's idea
             return 0;
         }
         break;
@@ -547,7 +547,7 @@ EV_VerticalDoor
     // if the wrong side of door is pushed, give oof sound
     if (line->sidenum[1]==-1)                     // killough
     {
-      S_StartSound(player->mo,sfx_spring);           // killough 3/20/98
+      S_StartSound(player->mo,sfx_oof);           // killough 3/20/98
       return 0;
     }
 

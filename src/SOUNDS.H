@@ -48,6 +48,7 @@ typedef enum
 	SKSRADIO,
 	SKSGASP,
 	SKSJUMP,
+    SKSOUCH,
 	NUMSKINSOUNDS
 } skinsound_t;
 
@@ -218,20 +219,19 @@ typedef enum
 	sfx_None,
     sfx_pistol,
     sfx_shotgn,
-    sfx_chchng,
+    sfx_sgcock,
     sfx_dshtgn,
     sfx_dbopn,
     sfx_dbcls,
     sfx_dbload,
-    sfx_plasma,
     sfx_bfg,
-    sfx_spin,
-    sfx_putput,
-    sfx_pudpud,
-    sfx_wtrdng,
+    sfx_sawup,
+    sfx_sawidl,
+    sfx_sawful,
+    sfx_sawhit,
     sfx_rlaunc,
     sfx_rxplod,
-    sfx_lvpass,
+    sfx_firsht,
     sfx_firxpl,
     sfx_pstart,
     sfx_pstop,
@@ -242,14 +242,14 @@ typedef enum
     sfx_swtchx,
     sfx_plpain,
     sfx_dmpain,
-    sfx_popain,
+    sfx_slopain,
     sfx_vipain,
     sfx_mnpain,
     sfx_pepain,
-    sfx_pop,
+    sfx_slop,
     sfx_itemup,
     sfx_wpnup,
-    sfx_spring,
+    sfx_oof,
     sfx_telept,
     sfx_posit1,
     sfx_posit2,
@@ -273,7 +273,7 @@ typedef enum
     sfx_claw,
     sfx_skeswg,
     sfx_pldeth,
-    sfx_thok,
+    sfx_pdiehi,
     sfx_podth1,
     sfx_podth2,
     sfx_podth3,
@@ -296,9 +296,9 @@ typedef enum
     sfx_bspact,
     sfx_bspwlk,
     sfx_vilact,
-    sfx_spndsh,
+    sfx_noway,
     sfx_barexp,
-    sfx_zoom,
+    sfx_punch,
     sfx_hoof,
     sfx_metal,
     sfx_chgun,
@@ -308,7 +308,7 @@ typedef enum
     sfx_itmbk,
     sfx_flame,
     sfx_flamst,
-    sfx_shield,
+    sfx_getpow,
     sfx_bospit,
     sfx_boscub,
     sfx_bossit,
@@ -322,12 +322,12 @@ typedef enum
     sfx_keendt,
     sfx_skeact,
     sfx_skesit,
-    sfx_bkpoof,
+    sfx_skeatk,
     sfx_radio,
     //added:22-02-98: player avatar jumps
     sfx_jump,
     //added:22-02-98: player hits something hard and says 'ouch!'
-    sfx_gasp,
+    sfx_ouch,
     //test water
     sfx_gloop,
     sfx_splash,
@@ -343,9 +343,6 @@ typedef enum
     sfx_amwtr9, // Tails
 	sfx_splish, // Tails 12-08-2000
 	sfx_wslap, // Water Slap Tails 12-13-2000
-	sfx_steam1, // Tails 06-19-2001
-	sfx_steam2, // Tails 06-19-2001
-	sfx_cgot, // Got Emerald! Tails 09-02-2001
 
 	// free slots for S_AddSoundFx() at run-time --------------------
 	sfx_freeslot0,

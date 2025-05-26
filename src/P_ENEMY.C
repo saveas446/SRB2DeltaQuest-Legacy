@@ -2485,8 +2485,8 @@ void A_DetonChase(mobj_t *actor)
 		if (xyspeed < 1)
 			xyspeed = 1;
 
-		if (leveltime % xyspeed == 0)
-			S_StartSound(actor, sfx_deton);
+		/*if (leveltime % xyspeed == 0)
+			S_StartSound(actor, sfx_deton);*/
 	}
 }
 

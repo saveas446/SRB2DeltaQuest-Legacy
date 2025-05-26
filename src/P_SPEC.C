@@ -2126,7 +2126,7 @@ static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean r
 				P_ResetScore(player);
 				player->mfspinning = 1;
 				P_SetPlayerMobjState(player->mo, S_PLAY_ATK1);
-				S_StartAttackSound(player->mo, sfx_spin);
+				S_StartAttackSound(player->mo, sfx_sawup);
 
 				if ((player->rmomx < 5*FRACUNIT/NEWTICRATERATIO
 				&& player->rmomx > -5*FRACUNIT/NEWTICRATERATIO)
@@ -2331,7 +2331,7 @@ static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean r
 				if (!(player->mo->state >= &states[S_PLAY_ATK1] && player->mo->state <= &states[S_PLAY_ATK4]))
 				{
 					P_SetPlayerMobjState(player->mo, S_PLAY_ATK1);
-					S_StartSound(player->mo, sfx_spin);
+					S_StartSound(player->mo, sfx_sawup);
 				}
 			}
 			return;
@@ -2401,7 +2401,7 @@ static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean r
 				if (!(player->mo->state >= &states[S_PLAY_ATK1] && player->mo->state <= &states[S_PLAY_ATK4]))
 				{
 					P_SetPlayerMobjState(player->mo, S_PLAY_ATK1);
-					S_StartSound(player->mo, sfx_spin);
+					S_StartSound(player->mo, sfx_sawup);
 				}
 			}
 			return;

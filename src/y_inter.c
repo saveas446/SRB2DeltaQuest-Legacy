@@ -482,7 +482,7 @@ void Y_Ticker(void)
 			if (!data.coop.timebonus && !data.coop.ringbonus)
 			{
 				endtic = intertic + 3*TICRATE; // 3 second pause after end of tally
-				S_StartSound(NULL, sfx_chchng); // cha-ching!
+				S_StartSound(NULL, sfx_sgcock); // cha-ching!
 			}
 
 			if (data.coop.score % 50000 < 222) // just passed a 50000 point mark
@@ -494,7 +494,7 @@ void Y_Ticker(void)
 		else
 		{
 			endtic = intertic + 3*TICRATE; // 3 second pause after end of tally
-			S_StartSound(NULL, sfx_chchng); // cha-ching!
+			S_StartSound(NULL, sfx_sgcock); // cha-ching!
 		}
 	}
 	else if (inttype == int_spec) // coop or single player, special stage
@@ -540,7 +540,7 @@ void Y_Ticker(void)
 			if (!data.spec.ringbonus)
 			{
 				endtic = intertic + 3*TICRATE; // 3 second pause after end of tally
-				S_StartSound(NULL, sfx_chchng); // cha-ching!
+				S_StartSound(NULL, sfx_sgcock); // cha-ching!
 			}
 
 			if (data.spec.score % 50000 < 222 && skip == false) // just passed a 50000 point mark
@@ -552,7 +552,7 @@ void Y_Ticker(void)
 		else
 		{
 			endtic = intertic + 3*TICRATE; // 3 second pause after end of tally
-			S_StartSound(NULL, sfx_chchng); // cha-ching!
+			S_StartSound(NULL, sfx_sgcock); // cha-ching!
 		}
 	}
 	else if (inttype == int_match || inttype == int_ctf || inttype == int_teammatch) // match

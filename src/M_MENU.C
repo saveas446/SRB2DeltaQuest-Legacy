@@ -6615,14 +6615,14 @@ void M_EndGame(int choice)
 //
 static int quitsounds2[8] =
 {
-	sfx_spring, // Tails 11-09-99
+	sfx_oof, // Tails 11-09-99
 	sfx_itemup, // Tails 11-09-99
 	sfx_jump, // Tails 11-09-99
-	sfx_pop,
+	sfx_slop,
 	sfx_gloop, // Tails 11-09-99
 	sfx_splash, // Tails 11-09-99
 	sfx_floush, // Tails 11-09-99
-	sfx_chchng // Tails 11-09-99
+	sfx_sgcock // Tails 11-09-99
 };
 
 void M_ExitGameResponse(int ch)

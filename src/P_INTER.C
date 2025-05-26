@@ -689,7 +689,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 					players[i].exiting = (14*TICRATE)/5 + 1;
 					players[i].snowbuster = true;
 				}
-				S_StartSound(NULL, sfx_lvpass);
+				S_StartSound(NULL, sfx_firsht);
 			}
 			return;
 	
@@ -727,7 +727,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 	
 					players[i].exiting = (14*TICRATE)/5 + 1;
 				}
-				S_StartSound(NULL, sfx_lvpass);
+				S_StartSound(NULL, sfx_firsht);
 			}
 			return;
 	
@@ -925,7 +925,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 	
 				P_SpawnMobj (special->x,special->y,special->z, MT_POP);
 				player->message = NULL;
-				sound = sfx_gasp;
+				sound = sfx_ouch;
 				P_SetPlayerMobjState(player->mo, S_PLAY_GASP);
 				P_ResetPlayer(player);
 				player->mo->momx = player->mo->momy = player->mo->momz = 0;
