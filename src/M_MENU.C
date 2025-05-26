@@ -2481,7 +2481,7 @@ static void M_HandleConnectIP(int choice)
 	switch (choice)
 	{
 		case KEY_ENTER:
-			S_StartSound(NULL,sfx_menu1); // Tails
+			S_StartSound(NULL,sfx_pistol); // Tails
 			M_ClearMenus (true);
 			M_ConnectIP(1);
 			break;
@@ -2493,7 +2493,7 @@ static void M_HandleConnectIP(int choice)
 		case KEY_BACKSPACE:
 			if ((l = strlen(setupm_ip))!=0 && itemOn == 0)
 			{
-				S_StartSound(NULL,sfx_menu1); // Tails
+				S_StartSound(NULL,sfx_pistol); // Tails
 				setupm_ip[l-1] =0;
 			}
 			break;
@@ -2502,7 +2502,7 @@ static void M_HandleConnectIP(int choice)
 			l = strlen(setupm_ip);
 			if (l < 16-1 && (choice == 46 || (choice >= 48 && choice <= 57))) // Rudimentary number and period enforcing
 			{
-				S_StartSound(NULL,sfx_menu1); // Tails
+				S_StartSound(NULL,sfx_pistol); // Tails
 				setupm_ip[l] =(char)choice;
 				setupm_ip[l+1] =0;
 			}
@@ -2532,14 +2532,14 @@ static void M_HandleSetupMultiPlayer(int choice)
 	switch (choice)
 	{
 		case KEY_DOWNARROW:
-			S_StartSound(NULL,sfx_menu1); // Tails
+			S_StartSound(NULL,sfx_pistol); // Tails
 			if (itemOn+1 >= SetupMultiPlayerDef.numitems)
 				itemOn = 0;
 			else itemOn++;
 			break;
 
 		case KEY_UPARROW:
-			S_StartSound(NULL,sfx_menu1); // Tails
+			S_StartSound(NULL,sfx_pistol); // Tails
 			if (!itemOn)
 				itemOn = (short)(SetupMultiPlayerDef.numitems-1);
 			else itemOn--;
@@ -2548,7 +2548,7 @@ static void M_HandleSetupMultiPlayer(int choice)
 		case KEY_LEFTARROW:
 			if (itemOn == 2)       //player skin
 			{
-				S_StartSound(NULL,sfx_menu1); // Tails
+				S_StartSound(NULL,sfx_pistol); // Tails
 				myskin--;
 			}
 			break;
@@ -2556,13 +2556,13 @@ static void M_HandleSetupMultiPlayer(int choice)
 		case KEY_RIGHTARROW:
 			if (itemOn == 2)       //player skin
 			{
-				S_StartSound(NULL,sfx_menu1); // Tails
+				S_StartSound(NULL,sfx_pistol); // Tails
 				myskin++;
 			}
 			break;
 
 		case KEY_ENTER:
-			S_StartSound(NULL,sfx_menu1); // Tails
+			S_StartSound(NULL,sfx_pistol); // Tails
 			exitmenu = true;
 		break;
 
@@ -2573,7 +2573,7 @@ static void M_HandleSetupMultiPlayer(int choice)
 		case KEY_BACKSPACE:
 			if ((l = strlen(setupm_name))!=0 && itemOn == 0)
 			{
-				S_StartSound(NULL,sfx_menu1); // Tails
+				S_StartSound(NULL,sfx_pistol); // Tails
 				setupm_name[l-1] =0;
 			}
 			break;
@@ -2584,7 +2584,7 @@ static void M_HandleSetupMultiPlayer(int choice)
 			l = strlen(setupm_name);
 			if (l < MAXPLAYERNAME-1)
 			{
-				S_StartSound(NULL,sfx_menu1); // Tails
+				S_StartSound(NULL,sfx_pistol); // Tails
 				setupm_name[l] =(char)choice;
 				setupm_name[l+1] =0;
 			}
@@ -2697,21 +2697,21 @@ static void M_HandleSetupChoosePlayer(int choice)
 	switch (choice)
 	{
 		case KEY_DOWNARROW:
-			S_StartSound(NULL,sfx_menu1); // Tails
+			S_StartSound(NULL,sfx_pistol); // Tails
 			if (itemOn+1 >= SetupMultiPlayerDef.numitems)
 				itemOn = 0;
 			else itemOn++;
 			break;
 
 		case KEY_UPARROW:
-			S_StartSound(NULL,sfx_menu1); // Tails
+			S_StartSound(NULL,sfx_pistol); // Tails
 			if (!itemOn)
 				itemOn = (short)(SetupMultiPlayerDef.numitems-1);
 			else itemOn--;
 			break;
 
 		case KEY_ENTER:
-			S_StartSound(NULL,sfx_menu1); // Tails
+			S_StartSound(NULL,sfx_pistol); // Tails
 			exitmenu = true;
 			break;
 
@@ -5990,21 +5990,21 @@ static void M_HandleVideoMode(int ch)
 	switch (ch)
 	{
 		case KEY_DOWNARROW:
-			S_StartSound(NULL, sfx_menu1);
+			S_StartSound(NULL, sfx_pistol);
 			vidm_current++;
 			if (vidm_current >= vidm_nummodes)
 				vidm_current = 0;
 			break;
 
 		case KEY_UPARROW:
-			S_StartSound(NULL, sfx_menu1);
+			S_StartSound(NULL, sfx_pistol);
 			vidm_current--;
 			if (vidm_current < 0)
 				vidm_current = vidm_nummodes - 1;
 			break;
 
 		case KEY_LEFTARROW:
-			S_StartSound(NULL, sfx_menu1);
+			S_StartSound(NULL, sfx_pistol);
 			vidm_current -= vidm_column_size;
 			if (vidm_current < 0)
 				vidm_current = (vidm_column_size*3) + vidm_current;
@@ -6013,7 +6013,7 @@ static void M_HandleVideoMode(int ch)
 			break;
 
 		case KEY_RIGHTARROW:
-			S_StartSound(NULL, sfx_menu1);
+			S_StartSound(NULL, sfx_pistol);
 			vidm_current += vidm_column_size;
 			if (vidm_current >= (vidm_column_size*3))
 				vidm_current %= vidm_column_size;
@@ -6022,7 +6022,7 @@ static void M_HandleVideoMode(int ch)
 			break;
 
 		case KEY_ENTER:
-			S_StartSound(NULL, sfx_menu1);
+			S_StartSound(NULL, sfx_pistol);
 			if (!setmodeneeded) // in case the previous setmode was not finished
 				setmodeneeded = modedescs[vidm_current].modenum + 1;
 			break;
@@ -6531,13 +6531,6 @@ static void M_QuickSaveResponse(int ch)
 
 static inline void M_QuickSave(void)
 {
-	// Graue 06-18-2004
-	if (demoplayback || demorecording || (gamemap >= sstage_start && gamemap <= sstage_end))
-	{
-		S_StartSound(NULL,sfx_lose);
-		return;
-	}
-
 	if (gamestate != GS_LEVEL || (netgame && !server) || gametype != GT_COOP ||
 	 (!netgame && !multiplayer && players[consoleplayer].lives <= 0))
 		return;
@@ -7299,7 +7292,7 @@ boolean M_Responder(event_t *ev)
 					itemOn++;
 			} while ((currentMenu->menuitems[itemOn].status & IT_TYPE) == IT_SPACE);
 
-			S_StartSound(NULL, sfx_menu1);
+			S_StartSound(NULL, sfx_pistol);
 			return true;
 
 		case KEY_UPARROW:
@@ -7311,14 +7304,14 @@ boolean M_Responder(event_t *ev)
 					itemOn--;
 			} while ((currentMenu->menuitems[itemOn].status & IT_TYPE) == IT_SPACE);
 
-			S_StartSound(NULL, sfx_menu1);
+			S_StartSound(NULL, sfx_pistol);
 			return true;
 
 		case KEY_LEFTARROW:
 			if (routine && ((currentMenu->menuitems[itemOn].status & IT_TYPE) == IT_ARROWS
 				|| (currentMenu->menuitems[itemOn].status & IT_TYPE) == IT_CVAR))
 			{
-				S_StartSound(NULL, sfx_menu1);
+				S_StartSound(NULL, sfx_pistol);
 				routine(0);
 			}
 			return true;
@@ -7327,7 +7320,7 @@ boolean M_Responder(event_t *ev)
 			if (routine && ((currentMenu->menuitems[itemOn].status & IT_TYPE) == IT_ARROWS
 				|| (currentMenu->menuitems[itemOn].status & IT_TYPE) == IT_CVAR))
 			{
-				S_StartSound(NULL, sfx_menu1);
+				S_StartSound(NULL, sfx_pistol);
 				routine(1);
 			}
 			return true;
@@ -7341,16 +7334,16 @@ boolean M_Responder(event_t *ev)
 					case IT_CVAR:
 					case IT_ARROWS:
 						routine(1); // right arrow
-						S_StartSound(NULL, sfx_menu1);
+						S_StartSound(NULL, sfx_pistol);
 						break;
 					case IT_CALL:
 						routine(itemOn);
-						S_StartSound(NULL, sfx_menu1);
+						S_StartSound(NULL, sfx_pistol);
 						break;
 					case IT_SUBMENU:
 						currentMenu->lastOn = itemOn;
 						M_SetupNextMenu((menu_t *)currentMenu->menuitems[itemOn].itemaction);
-						S_StartSound(NULL, sfx_menu1);
+						S_StartSound(NULL, sfx_pistol);
 						break;
 				}
 			}
@@ -7424,14 +7417,14 @@ boolean M_Responder(event_t *ev)
 				if (currentMenu->menuitems[i].alphaKey == ch && !(currentMenu->menuitems[i].status & IT_DISABLED))
 				{
 					itemOn = (short)i;
-					S_StartSound(NULL, sfx_menu1);
+					S_StartSound(NULL, sfx_pistol);
 					return true;
 				}
 			for (i = 0; i <= itemOn; i++)
 				if (currentMenu->menuitems[i].alphaKey == ch && !(currentMenu->menuitems[i].status & IT_DISABLED))
 				{
 					itemOn = (short)i;
-					S_StartSound(NULL, sfx_menu1);
+					S_StartSound(NULL, sfx_pistol);
 					return true;
 				}*/
 			break;
@@ -7791,22 +7784,22 @@ static void M_HandleFogColor(int choice)
 	switch (choice)
 	{
 		case KEY_DOWNARROW:
-			S_StartSound(NULL, sfx_menu1);
+			S_StartSound(NULL, sfx_pistol);
 			itemOn++;
 			break;
 
 		case KEY_UPARROW:
-			S_StartSound(NULL, sfx_menu1);
+			S_StartSound(NULL, sfx_pistol);
 			itemOn--;
 			break;
 
 		case KEY_ESCAPE:
-			S_StartSound(NULL, sfx_menu1);
+			S_StartSound(NULL, sfx_pistol);
 			exitmenu = true;
 			break;
 
 		case KEY_BACKSPACE:
-			S_StartSound(NULL, sfx_menu1);
+			S_StartSound(NULL, sfx_pistol);
 			strcpy(temp, cv_grfogcolor.string);
 			strcpy(cv_grfogcolor.zstring, "000000");
 			l = strlen(temp)-1;
@@ -7818,7 +7811,7 @@ static void M_HandleFogColor(int choice)
 			if ((choice >= '0' && choice <= '9') || (choice >= 'a' && choice <= 'f')
 				|| (choice >= 'A' && choice <= 'F'))
 			{
-				S_StartSound(NULL, sfx_menu1);
+				S_StartSound(NULL, sfx_pistol);
 				strcpy(temp, cv_grfogcolor.string);
 				strcpy(cv_grfogcolor.zstring, "000000");
 				l = strlen(temp);

@@ -1381,7 +1381,7 @@ static void Command_RTeleport_f(void)
 	if (!P_TeleportMove(p->mo, p->mo->x+intx*FRACUNIT, p->mo->y+inty*FRACUNIT, intz))
 		CONS_Printf("Unable to teleport to that spot!\n");
 	else
-		S_StartSound(p->mo, sfx_mixup);
+		S_StartSound(p->mo, sfx_telept);
 }
 
 static void Command_Teleport_f(void)
@@ -1454,7 +1454,7 @@ static void Command_Teleport_f(void)
 	if (!P_TeleportMove(p->mo, intx*FRACUNIT, inty*FRACUNIT, intz))
 		CONS_Printf("Unable to teleport to that spot!\n");
 	else
-		S_StartSound(p->mo, sfx_mixup);
+		S_StartSound(p->mo, sfx_telept);
 }
 
 // ========================================================================

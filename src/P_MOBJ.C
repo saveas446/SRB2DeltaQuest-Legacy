@@ -932,16 +932,6 @@ static void P_ZMovement(mobj_t *mo)
 				if (mo->threshold == 42) // Don't make pop sound.
 					break;
 
-				if (prandom <= 51)
-					S_StartSound(mo, sfx_bubbl1);
-				else if (prandom <= 102)
-					S_StartSound(mo, sfx_bubbl2);
-				else if (prandom <= 153)
-					S_StartSound(mo, sfx_bubbl3);
-				else if (prandom <= 204)
-					S_StartSound(mo, sfx_bubbl4);
-				else
-					S_StartSound(mo, sfx_bubbl5);
 			}
 			break;
 		case MT_MEDIUMBUBBLE:
@@ -1564,17 +1554,6 @@ static void P_SceneryZMovement(mobj_t *mo)
 					break;
 
 				prandom = P_Random();
-
-				if (prandom <= 51)
-					S_StartSound(mo, sfx_bubbl1);
-				else if (prandom <= 102)
-					S_StartSound(mo, sfx_bubbl2);
-				else if (prandom <= 153)
-					S_StartSound(mo, sfx_bubbl3);
-				else if (prandom <= 204)
-					S_StartSound(mo, sfx_bubbl4);
-				else
-					S_StartSound(mo, sfx_bubbl5);
 			}
 			break;
 		case MT_MEDIUMBUBBLE:
@@ -3130,17 +3109,6 @@ void P_MobjThinker(mobj_t *mobj)
 						break;
 
 					prandom = P_Random();
-
-					if (prandom <= 51)
-						S_StartSound(mobj, sfx_bubbl1);
-					else if (prandom <= 102)
-						S_StartSound(mobj, sfx_bubbl2);
-					else if (prandom <= 153)
-						S_StartSound(mobj, sfx_bubbl3);
-					else if (prandom <= 204)
-						S_StartSound(mobj, sfx_bubbl4);
-					else
-						S_StartSound(mobj, sfx_bubbl5);
 				}
 				break;
 			case MT_ZERO:
@@ -4500,35 +4468,15 @@ void P_RespawnSpecials(void)
 			else if (volume > 255)
 				volume = 255;
 
-			if (!(curWeather == PRECIP_STORM_NORAIN) && (!leveltime || leveltime % 80 == 1))
-				S_StartSoundAtVolume(players[displayplayer].mo, sfx_rainin, volume);
-
 			if (curWeather == PRECIP_STORM || curWeather == PRECIP_STORM_NORAIN)
 			{
 				if (spawnlightning)
 				{
 					i = M_Random(); // This doesn't need to use P_Random().
-
-					if (i < 128 && leveltime & 1)
-						S_StartSoundAtVolume(players[displayplayer].mo, sfx_litng1, volume);
-					else if (i < 128)
-						S_StartSoundAtVolume(players[displayplayer].mo, sfx_litng2, volume);
-					else if (leveltime & 1)
-						S_StartSoundAtVolume(players[displayplayer].mo, sfx_litng3, volume);
-					else
-						S_StartSoundAtVolume(players[displayplayer].mo, sfx_litng4, volume);
 				}
 				else if (leveltime & 1)
 				{
 					byte mrandom = M_Random(); // This doesn't need to use P_Random().
-
-					if (mrandom > 253)
-					{
-						if (mrandom & 1)
-							S_StartSoundAtVolume(players[displayplayer].mo, sfx_athun1, volume);
-						else
-							S_StartSoundAtVolume(players[displayplayer].mo, sfx_athun2, volume);
-					}
 				}
 			}
 		}

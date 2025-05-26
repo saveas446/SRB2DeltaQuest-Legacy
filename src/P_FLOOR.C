@@ -1151,7 +1151,6 @@ void T_ThwompSector(elevator_t *elevator)
 		if (res == pastdest)
 		{
 			mobj_t *mp = (void *)&elevator->actionsector->soundorg;
-			S_StartSound(mp, sfx_thwomp);
 			elevator->direction = 1; // start heading back up
 			elevator->distance = TICRATE; // but only after a small delay
 		}
@@ -1886,8 +1885,6 @@ void EV_CrumbleChain(sector_t *sec, ffloor_t *rover)
 	fixed_t topy, bottomy;
 	fixed_t topz;
 	fixed_t a, b, c;
-
-	S_StartSound(&sec->soundorg, sfx_crumbl);
 
 	// Find the leftmost vertex in the subsector.
 	leftmostvertex = 0;

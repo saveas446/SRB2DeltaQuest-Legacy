@@ -330,9 +330,6 @@ void S_Init(int sfxVolume, int digMusicVolume, int midiMusicVolume)
 	for (i = 1; i < NUMSFX; i++)
 		S_sfx[i].lumpnum = S_sfx[i].usefulness = -1; // for I_GetSfx()
 
-	// precache sounds if requested by cmdline, or precachesound var true
-	if (!nosound && (M_CheckParm("-precachesound") || precachesound.value))
-	{
 		// Initialize external data (all sounds) at start, keep static.
 		CONS_Printf("Loading sounds... ");
 
@@ -341,7 +338,6 @@ void S_Init(int sfxVolume, int digMusicVolume, int midiMusicVolume)
 				S_sfx[i].data = I_GetSfx(&S_sfx[i]);
 
 		CONS_Printf(" pre-cached all sound data\n");
-	}
 }
 
 // Retrieve the lump number of sfx

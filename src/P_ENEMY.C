@@ -1028,9 +1028,7 @@ void A_BossScream(mobj_t *actor)
 //
 void A_Scream(mobj_t *actor)
 {
-	if (actor->tracer && (actor->tracer->type == MT_SHELL || actor->tracer->type == MT_FIREBALL))
-		S_StartScreamSound(actor, sfx_lose);
-	else if (actor->info->deathsound)
+	if (actor->info->deathsound)
 		S_StartScreamSound(actor, actor->info->deathsound);
 }
 
@@ -2969,7 +2967,7 @@ void A_MixUp(mobj_t *actor)
 	}
 
 	// Play the 'bowrwoosh!' sound
-	S_StartSound(NULL, sfx_mixup);
+	S_StartSound(NULL, sfx_telept);
 }
 
 // Function A_PumaJump

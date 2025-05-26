@@ -110,9 +110,6 @@ musicinfo_t S_music[NUMMUSIC] =
 // Information about all the sfx
 //
 
-sfxinfo_t S_sfx[NUMSFX] =
-{
-
 /*****
     Legacy doesn't use the PITCH variable, so now it is used to set
 	which sound effects shouldn't be played together. If their pitch
@@ -124,179 +121,147 @@ sfxinfo_t S_sfx[NUMSFX] =
 *****/
   // S_sfx[0] needs to be a dummy for odd reasons. (don't modify this comment)
 //  name, singularity, priority, pitch, volume, data, length, skinsound, usefulness, lumpnum, zname
-  {"none" , false,   0,  0, -1, NULL, 0, -1,         -1, -1, NULL},
 
-  {"menu1", true,   64,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"shotgn", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"chchng", false, 120,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"plasma", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"spin" , false,  64,  0, -1, NULL, 0, SKSSPIN,    -1, -1, NULL},
-  {"putput", false,  64,  0, -1, NULL, 0, SKSPUTPUT,  -1, -1, NULL}, // not as high a priority
-  {"pudpud", false,  64,  0, -1, NULL, 0, SKSPUDPUD,  -1, -1, NULL},
-  {"wtrdng", true,  120,  0, -1, NULL, 0, -1,         -1, -1, NULL}, // make sure you can hear the DING DING! Tails 03-08-2000
-  {"strpst", true,  120,  0, -1, NULL, 0, -1,         -1, -1, NULL}, // Starpost Sound Tails 07-04-2002
-  {"rlaunc", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"rxplod", false,  70,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"dmpain", false,  96,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"lvpass", false,  70,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"firxpl", false,  70,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"pstart", false, 100,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"pstop", false, 100,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"doropn", false, 100,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"dorcls", false, 100,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"stnmov", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"swtchn", false,  78,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"swtchx", false,  78,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"pop"  , false,  78,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"itemup", true,   78,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"wpnup", true,   78,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"spring", false,  96,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"telept", false,  32,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"thok" , false,  32,  0, -1, NULL, 0, SKSTHOK,    -1, -1, NULL},
-  {"cybdth", false,  32,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"spndsh", false,  64,  1, -1, NULL, 0, SKSSPNDSH,  -1, -1, NULL},
-  {"zoom" , false, 120,  1, -1, NULL, 0, SKSZOOM,    -1, -1, NULL},
-  {"tink" , false,  60,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"bdopn", false, 100,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"bdcls", false, 100,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"shield", false,  60,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"bkpoof", false,  70,  8, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"radio", false,  60,  0, -1, NULL, 0, SKSRADIO,   -1, -1, NULL},
+sfxinfo_t S_sfx[NUMSFX] =
+{
+  // S_sfx[0] needs to be a dummy for odd reasons.
+//         singularity(U)        pitch      skinsound   (U) for UNUSED
+//               |      priority(U) volume  |
+//               |        |  link   |   data|
+  { "none"     , false,   0, 0, -1, -1, 0, -1, -1, -1, NULL},
 
-  //added : 22-02-98: sound when the player avatar jumps in air 'hmpf!'
-  {"jump" , false,  60,  0, -1, NULL, 0, SKSJUMP,    -1, -1, NULL},
-  {"gasp" , false,  64,  0, -1, NULL, 0, SKSGASP,    -1, -1, NULL},
+  { "pistol"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "shotgn"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "chchng"   , false,  120, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "dshtgn"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "dbopn\0"  , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "dbcls\0"  , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "dbload"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "plasma"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "bfg\0\0\0", false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "spin\0\0"  , false,  64, 0, -1, -1, 0, SKSSPIN, -1, -1, NULL},
+  { "putput"   , false,  64, 0, -1, -1, 0, SKSPUTPUT, -1, -1, NULL}, // not as high a priority
+  { "pudpud"   , false,  64, 0, -1, -1, 0, SKSPUDPUD, -1, -1, NULL},
+  { "wtrdng"   , true,  120, 0, -1, -1, 0, -1, -1, -1, NULL}, // make sure you can hear the DING DING! Tails 03-08-2000
+  { "rlaunc"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "rxplod"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "lvpass"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "firxpl"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "pstart"   , false, 100, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "pstop\0"  , false, 100, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "doropn"   , false, 100, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "dorcls"   , false, 100, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "stnmov"   , false, 64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "swtchn"   , false,  78, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "swtchx"   , false,  78, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "plpain"   , false,  96, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "dmpain"   , false,  96, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "popain"   , false,  96, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "vipain"   , false,  96, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "mnpain"   , false,  96, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "pepain"   , false,  96, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "pop\0\0\0" , false,  78, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "itemup"   ,  true,  78, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "wpnup"    ,  true,  78, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "spring",	false,  96, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "telept"   , false,  32, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "posit1"   ,  true,  120, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "posit2"   ,  true,  120, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "posit3"   ,  true,  98, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "bgsit1"   ,  true,  98, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "bgsit2"   ,  true,  98, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "sgtsit"   ,  true,  98, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "cacsit"   ,  true,  98, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "brssit"   ,  true,  94, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "cybsit"   ,  true,  92, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "spisit"   ,  true,  90, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "bspsit"   ,  true,  90, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "kntsit"   ,  true,  90, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "vilsit"   ,  true,  90, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "mansit"   ,  true,  90, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "pesit\0"  ,  true,  90, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "sklatk"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "sgtatk"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "skepch"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "vilatk"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "claw\0\0" , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "skeswg"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "pldeth"   , false,  32, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "thok\0\0"   , false,  32, 0, -1, -1, 0, SKSTHOK, -1, -1, NULL},
+  { "podth1"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "podth2"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "podth3"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "bgdth1"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "bgdth2"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "sgtdth"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "cacdth"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "skldth"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "brsdth"   , false,  32, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "cybdth"   , false,  32, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "spidth"   , false,  32, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "bspdth"   , false,  32, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "vildth"   , false,  32, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "kntdth"   , false,  32, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "pedth\0"  , false,  32, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "skedth"   , false,  32, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "posact"   ,  true, 120, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "bgact\0"  ,  true, 120, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "dmact\0"  ,  true, 120, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "bspact"   ,  true, 100, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "bspwlk"   ,  true, 100, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "vilact"   ,  true, 100, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "noway"  , false,  78, 0, -1, -1, 0, SKSSPNDSH, -1, -1, NULL},
+  { "barexp"   , false,  60, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "zoom\0\0"  , false,  64, 0, -1, -1, 0, SKSZOOM, -1, -1, NULL},
+  { "hoof\0\0" , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "metal\0"  , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "chgun\0"  , false,  64, &S_sfx[sfx_pistol], 150, 0, 0, -1, -1, -1, NULL},
+  { "tink\0\0" , false,  60, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "bdopn\0"  , false, 100, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "bdcls\0"  , false, 100, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "itmbk\0"  , false, 100, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "flame\0"  , false,  32, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "flamst"   , false,  32, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "shield"   , false,  60, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "bospit"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "boscub"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "bossit"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "bospn\0"  , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "bosdth"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "manatk"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "mandth"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "sssit\0"  , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "ssdth\0"  , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "keenpn"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "keendt"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "skeact"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "skesit"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "bkpoof"   , false,  70, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "radio\0"  , false,  60, 0, -1, -1, 0, SKSRADIO, -1, -1, NULL},
 
-  //added : 09-08-98 : test water sounds
-  {"gloop", false,  60,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"splash", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"floush", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL},
+  //added:22-02-98: sound when the player avatar jumps in air 'hmpf!'
+  { "jump\0\0" , false,  60, 0, -1, -1, 0, SKSJUMP, -1, -1, NULL},
+  { "gasp\0\0" , false,  64, 0, -1, -1, 0, SKSGASP, -1, -1, NULL},
+
+  //added:09-08-98:test water sounds
+  { "gloop\0"  , false,  60, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "splash"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "floush"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
   //Ambient Water Sounds Tails 06-10-2000
-  {"amwtr1", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"amwtr2", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"amwtr3", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"amwtr4", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"amwtr5", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"amwtr6", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"amwtr7", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"amwtr8", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"amwtr9", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"splish", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL}, // Splish Tails 12-08-2000
-  {"wslap", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL}, // Water Slap Tails 12-13-2000
-  {"steam1", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL}, // Tails 06-19-2001
-  {"steam2", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL}, // Tails 06-19-2001
-  {"cgot" , true,  120,  0, -1, NULL, 0, -1,         -1, -1, NULL}, // Got Emerald! Tails 09-02-2001
-  {"crumbl", true,  127,  0, -1, NULL, 0, -1,         -1, -1, NULL}, // Platform Crumble Tails 03-16-2001
-
-  // Ambient/Active lightning Tails 08-25-2002
-  {"litng1", false, 126,  2, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"litng2", false, 126,  2, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"litng3", false, 126,  2, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"litng4", false, 126,  2, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"athun1", false, 126,  2, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"athun2", false, 126,  2, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"rainin", true,  127,  4, -1, NULL, 0, -1,         -1, -1, NULL},
-
-  // Bubble pops Tails 08-25-2002
-  {"bubbl1", false,  48,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"bubbl2", false,  48,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"bubbl3", false,  48,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"bubbl4", false,  48,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"bubbl5", false,  48,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-
-  // Teleporter mixup sound Tails 08-28-2002
-  {"mixup", true,  127,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-
-  // Demo end talking Tails 09-01-2002
-  {"annon1", true,  127,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"annon2", true,  127,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"annon3", true,  127,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"annon4", true,  127,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"annon5", true,  127,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-
-  // Some new sounds Tails 09-06-2002
-  {"supert", false, 127,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"lose" , false, 127,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"drown", false, 127,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"spkdth", false, 127,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-
-  // Player taunts/alternate msgs Tails 09-06-2002
-  {"taunt1", false,  48, 24, -1, NULL, 0, SKSPLTNT1,  -1, -1, NULL},
-  {"taunt2", false,  48, 24, -1, NULL, 0, SKSPLTNT2,  -1, -1, NULL},
-  {"taunt3", false,  48, 24, -1, NULL, 0, SKSPLTNT3,  -1, -1, NULL},
-  {"taunt4", false,  48, 24, -1, NULL, 0, SKSPLTNT4,  -1, -1, NULL},
-
-  {"altow1", false,  48, 16, -1, NULL, 0, SKSPLPAN1,  -1, -1, NULL},
-  {"altow2", false,  48, 16, -1, NULL, 0, SKSPLPAN2,  -1, -1, NULL},
-  {"altow3", false,  48, 16, -1, NULL, 0, SKSPLPAN3,  -1, -1, NULL},
-  {"altow4", false,  48, 16, -1, NULL, 0, SKSPLPAN4,  -1, -1, NULL},
-
-  {"victr1", false,  48, 16, -1, NULL, 0, SKSPLVCT1,  -1, -1, NULL},
-  {"victr2", false,  48, 16, -1, NULL, 0, SKSPLVCT2,  -1, -1, NULL},
-  {"victr3", false,  48, 16, -1, NULL, 0, SKSPLVCT3,  -1, -1, NULL},
-  {"victr4", false,  48, 16, -1, NULL, 0, SKSPLVCT4,  -1, -1, NULL},
-
-  {"altdi1", false,  64, 16, -1, NULL, 0, SKSPLDET1,  -1, -1, NULL},
-  {"altdi2", false,  64, 16, -1, NULL, 0, SKSPLDET2,  -1, -1, NULL},
-  {"altdi3", false,  64, 16, -1, NULL, 0, SKSPLDET3,  -1, -1, NULL},
-  {"altdi4", false,  64, 16, -1, NULL, 0, SKSPLDET4,  -1, -1, NULL},
-
-  {"shldls", false,  64,  0, -1, NULL, 0, -1,        -1, -1, NULL},
-
-  {"drill1", false,  64,  0, -1, NULL, 0, -1,        -1, -1, NULL},
-  {"drill2", false,  64,  0, -1, NULL, 0, -1,        -1, -1, NULL},
-
-  {"hoop1", false,  64,  0, -1, NULL, 0, -1,        -1, -1, NULL},
-  {"hoop2", false,  64,  0, -1, NULL, 0, -1,        -1, -1, NULL},
-  {"hoop3", false,  64,  0, -1, NULL, 0, -1,        -1, -1, NULL},
-  {"ncitem", false,  64,  0, -1, NULL, 0, -1,        -1, -1, NULL},
-
-  {"ideya", false, 127,  0, -1, NULL, 0, -1,        -1, -1, NULL},
-  {"hidden", false,  64,  0, -1, NULL, 0, -1,        -1, -1, NULL},
-  {"nbmper", false, 127,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"ngskid", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"prloop", false, 127,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"nghurt", false, 127,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-  {"ngdone", true,  127,  0, -1, NULL, 0, -1,         -1, -1, NULL},
-
-  {"pogo" , false,  64,  0, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"gspray", false,  64,  0, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"ghit" , false,  64,  0, -1, NULL, 0,  -1,        -1, -1, NULL},
-
-  {"alarm", false, 127,  0, -1, NULL, 0,  -1,        -1, -1, NULL},
-
-  {"fizzle", false, 127,  8, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"pop"  , false, 127,  8, -1, NULL, 0,  -1,        -1, -1, NULL},
-
-  {"trfire", true,  127,  8, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"turhit", false, 127,  8, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"trpowr", true,  127,  8, -1, NULL, 0,  -1,        -1, -1, NULL},
-
-  {"mario1", false,  60,  0, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"mario2", false, 127,  0, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"mario3", false,  60,  0, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"mario4", true,   78,  0, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"mario5", false,  78,  0, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"mario6", false,  60,  0, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"mario7", false,  32,  0, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"mario8", false,  48,  8, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"mario9", true,  120,  0, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"marioa", true,  127,  0, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"thwomp", true,  127,  8, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"koopfr", true,  127,  8, -1, NULL, 0,  -1,        -1, -1, NULL},
-
-  {"ambint", true,  127,  8, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"sahitg", false,  72,  0, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"spdpad", false, 127,  0, -1, NULL, 0,  -1,        -1, -1, NULL},
-
-  {"ncspec", false,  64,  0, -1, NULL, 0,  -1,        -1, -1, NULL}, // Tails 12-15-2003
-  {"wdjump", false,  60,  0, -1, NULL, 0,  -1,        -1, -1, NULL},
-
-  {"rumble", false,  64, 24, -1, NULL, 0,  -1,        -1, -1, NULL},
-  {"ambin2", false,  64,  8, -1, NULL, 0,  -1,        -1, -1, NULL},
-
-  {"deton", true,    64,  0, -1, NULL, 0,  -1,        -1, -1, NULL},
-
+  { "amwtr1"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "amwtr2"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "amwtr3"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "amwtr4"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "amwtr5"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "amwtr6"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "amwtr7"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "amwtr8"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "amwtr9"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
+  { "splish"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL}, // Splish Tails 12-08-2000
+  { "wslap\0"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL}, // Water Slap Tails 12-13-2000
+  { "steam1"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL}, // Tails 06-19-2001
+  { "steam2"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL}, // Tails 06-19-2001
+  { "cgot\0\0"   , true,  120, 0, -1, -1, 0, -1, -1, -1, NULL}, // Got Emerald! Tails 09-02-2001
   // skin sounds free slots to add sounds at run time (Boris HACK!!!)
   // initialized to NULL
 };

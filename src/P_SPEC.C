@@ -1530,7 +1530,7 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 				{
 					P_Teleport(mo, dest->x, dest->y, dest->z, (line->flags & ML_NOCLIMB) ?  mo->angle : dest->angle, true, (line->flags & ML_PASSUSE));
 					// Play the 'bowrwoosh!' sound
-					S_StartSound(dest, sfx_mixup);
+					S_StartSound(dest, sfx_telept);
 				}
 			}
 			break;
@@ -2106,7 +2106,7 @@ static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean r
 				}
 
 				player->powers[pw_flashing] = TICRATE/3;
-				S_StartSound(player->mo, sfx_spdpad);
+				//S_StartSound(player->mo, sfx_spdpad);
 			}
 			return;
 		case 978: // Ring drainer: lose one ring per 15 tics
@@ -2480,7 +2480,7 @@ static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean r
 
 					P_ResetPlayer(player);
 
-					S_StartSound(player->mo, sfx_shldls); // Ba-Dum! Shield loss.
+					S_StartSound(player->mo, sfx_pldeth); // Ba-Dum! Shield loss.
 
 					if (gametype == GT_CTF && (player->gotflag & MF_REDFLAG || player->gotflag & MF_BLUEFLAG))
 						P_PlayerFlagBurst(player, false);

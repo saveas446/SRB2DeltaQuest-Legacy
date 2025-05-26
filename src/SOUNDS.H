@@ -216,171 +216,136 @@ typedef enum
 typedef enum
 {
 	sfx_None,
-	sfx_menu1,
-	sfx_shotgn,
-	sfx_chchng,
-	sfx_plasma,
-	sfx_spin,
-	sfx_putput,
-	sfx_pudpud,
-	sfx_wtrdng,
-	sfx_strpst,
-	sfx_rlaunc,
-	sfx_rxplod,
-	sfx_dmpain,
-	sfx_lvpass,
-	sfx_firxpl,
-	sfx_pstart,
-	sfx_pstop,
-	sfx_doropn,
-	sfx_dorcls,
-	sfx_stnmov,
-	sfx_swtchn,
-	sfx_swtchx,
-	sfx_pop,
-	sfx_itemup,
-	sfx_wpnup,
-	sfx_spring,
-	sfx_telept,
-	sfx_thok,
-	sfx_cybdth,
-	sfx_spndsh,
-	sfx_zoom,
-	sfx_tink,
-	sfx_bdopn,
-	sfx_bdcls,
-	sfx_shield,
-	sfx_bkpoof,
-	sfx_radio,
-	sfx_jump,
-	sfx_gasp,
-	//test water
-	sfx_gloop,
-	sfx_splash,
-	sfx_floush,
-	sfx_amwtr1, // Tails
-	sfx_amwtr2, // Tails
-	sfx_amwtr3, // Tails
-	sfx_amwtr4, // Tails
-	sfx_amwtr5, // Tails
-	sfx_amwtr6, // Tails
-	sfx_amwtr7, // Tails
-	sfx_amwtr8, // Tails
-	sfx_amwtr9, // Tails
+    sfx_pistol,
+    sfx_shotgn,
+    sfx_chchng,
+    sfx_dshtgn,
+    sfx_dbopn,
+    sfx_dbcls,
+    sfx_dbload,
+    sfx_plasma,
+    sfx_bfg,
+    sfx_spin,
+    sfx_putput,
+    sfx_pudpud,
+    sfx_wtrdng,
+    sfx_rlaunc,
+    sfx_rxplod,
+    sfx_lvpass,
+    sfx_firxpl,
+    sfx_pstart,
+    sfx_pstop,
+    sfx_doropn,
+    sfx_dorcls,
+    sfx_stnmov,
+    sfx_swtchn,
+    sfx_swtchx,
+    sfx_plpain,
+    sfx_dmpain,
+    sfx_popain,
+    sfx_vipain,
+    sfx_mnpain,
+    sfx_pepain,
+    sfx_pop,
+    sfx_itemup,
+    sfx_wpnup,
+    sfx_spring,
+    sfx_telept,
+    sfx_posit1,
+    sfx_posit2,
+    sfx_posit3,
+    sfx_bgsit1,
+    sfx_bgsit2,
+    sfx_sgtsit,
+    sfx_cacsit,
+    sfx_brssit,
+    sfx_cybsit,
+    sfx_spisit,
+    sfx_bspsit,
+    sfx_kntsit,
+    sfx_vilsit,
+    sfx_mansit,
+    sfx_pesit,
+    sfx_sklatk,
+    sfx_sgtatk,
+    sfx_skepch,
+    sfx_vilatk,
+    sfx_claw,
+    sfx_skeswg,
+    sfx_pldeth,
+    sfx_thok,
+    sfx_podth1,
+    sfx_podth2,
+    sfx_podth3,
+    sfx_bgdth1,
+    sfx_bgdth2,
+    sfx_sgtdth,
+    sfx_cacdth,
+    sfx_skldth,
+    sfx_brsdth,
+    sfx_cybdth,
+    sfx_spidth,
+    sfx_bspdth,
+    sfx_vildth,
+    sfx_kntdth,
+    sfx_pedth,
+    sfx_skedth,
+    sfx_posact,
+    sfx_bgact,
+    sfx_dmact,
+    sfx_bspact,
+    sfx_bspwlk,
+    sfx_vilact,
+    sfx_spndsh,
+    sfx_barexp,
+    sfx_zoom,
+    sfx_hoof,
+    sfx_metal,
+    sfx_chgun,
+    sfx_tink,
+    sfx_bdopn,
+    sfx_bdcls,
+    sfx_itmbk,
+    sfx_flame,
+    sfx_flamst,
+    sfx_shield,
+    sfx_bospit,
+    sfx_boscub,
+    sfx_bossit,
+    sfx_bospn,
+    sfx_bosdth,
+    sfx_manatk,
+    sfx_mandth,
+    sfx_sssit,
+    sfx_ssdth,
+    sfx_keenpn,
+    sfx_keendt,
+    sfx_skeact,
+    sfx_skesit,
+    sfx_bkpoof,
+    sfx_radio,
+    //added:22-02-98: player avatar jumps
+    sfx_jump,
+    //added:22-02-98: player hits something hard and says 'ouch!'
+    sfx_gasp,
+    //test water
+    sfx_gloop,
+    sfx_splash,
+    sfx_floush,
+    sfx_amwtr1, // Tails
+    sfx_amwtr2, // Tails
+    sfx_amwtr3, // Tails
+    sfx_amwtr4, // Tails
+    sfx_amwtr5, // Tails
+    sfx_amwtr6, // Tails
+    sfx_amwtr7, // Tails
+    sfx_amwtr8, // Tails
+    sfx_amwtr9, // Tails
 	sfx_splish, // Tails 12-08-2000
 	sfx_wslap, // Water Slap Tails 12-13-2000
 	sfx_steam1, // Tails 06-19-2001
 	sfx_steam2, // Tails 06-19-2001
 	sfx_cgot, // Got Emerald! Tails 09-02-2001
-	sfx_crumbl, // Platform Crumble Tails 03-16-2001
-
-	// Ambient/Active lightning Tails 08-25-2002
-	sfx_litng1,
-	sfx_litng2,
-	sfx_litng3,
-	sfx_litng4,
-	sfx_athun1,
-	sfx_athun2,
-	sfx_rainin,
-
-	// Bubble pops Tails 08-25-2002
-	sfx_bubbl1,
-	sfx_bubbl2,
-	sfx_bubbl3,
-	sfx_bubbl4,
-	sfx_bubbl5,
-
-	// Teleporter mixup sound Tails 08-28-2002
-	sfx_mixup,
-
-	// Demo end talking Tails 09-01-2002
-	sfx_annon1,
-	sfx_annon2,
-	sfx_annon3,
-	sfx_annon4,
-	sfx_annon5,
-
-	// Some new sounds Tails 09-06-2002
-	sfx_supert,
-	sfx_lose,
-	sfx_drown,
-	sfx_spkdth,
-
-	// Player taunts/alternate msgs Tails 09-06-2002
-	sfx_taunt1,
-	sfx_taunt2,
-	sfx_taunt3,
-	sfx_taunt4,
-
-	sfx_altow1,
-	sfx_altow2,
-	sfx_altow3,
-	sfx_altow4,
-
-	sfx_victr1,
-	sfx_victr2,
-	sfx_victr3,
-	sfx_victr4,
-
-	sfx_altdi1,
-	sfx_altdi2,
-	sfx_altdi3,
-	sfx_altdi4,
-
-	sfx_shldls, // Lost shield Tails 09-06-2002
-
-	// NiGHTS Sounds Tails
-	sfx_drill1,
-	sfx_drill2,
-	sfx_hoop1,
-	sfx_hoop2,
-	sfx_hoop3,
-	sfx_ncitem,
-	sfx_ideya,
-	sfx_hidden,
-	sfx_nbmper,
-	sfx_ngskid,
-	sfx_prloop,
-	sfx_nghurt,
-	sfx_ngdone,
-
-	sfx_pogo,
-	sfx_gspray,
-	sfx_ghit,
-
-	sfx_alarm,
-
-	sfx_fizzle,
-	sfx_turpop,
-	sfx_trfire,
-	sfx_turhit,
-	sfx_trpowr,
-
-	sfx_mario1,
-	sfx_mario2,
-	sfx_mario3,
-	sfx_mario4,
-	sfx_mario5,
-	sfx_mario6,
-	sfx_mario7,
-	sfx_mario8,
-	sfx_mario9,
-	sfx_marioa,
-	sfx_thwomp,
-	sfx_koopfr,
-
-	sfx_ambint,
-	sfx_sahitg,
-	sfx_spdpad,
-
-	sfx_ncspec, // Tails 12-15-2003
-
-	sfx_wdjump, // Wind shield jump
-
-	sfx_rumble, // Rumbling
-	sfx_ambin2, // Another ambient sound
-
-	sfx_deton, // Deton chase sound
 
 	// free slots for S_AddSoundFx() at run-time --------------------
 	sfx_freeslot0,

@@ -1737,7 +1737,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		56*FRACUNIT,    // height
 		1000,           // mass
 		MT_THOK,        // damage
-		sfx_sahitg,     // activesound
+		0,     // activesound
 		MF_SOLID|MF_SHOOTABLE, // flags
 		MT_THOK         // raisestate
 	},
@@ -3166,7 +3166,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NIGHTSBUMPER1,// spawnstate
 		1,              // spawnhealth
 		S_NULL,         // seestate
-		sfx_nbmper,     // seesound
+		0,     // seesound
 		8,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
@@ -4114,7 +4114,8 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_DETON2,       // seestate
 		0,              // seesound
 		1,              // reactiontime
-		sfx_deton,      // attacksound
+		//sfx_deton,      // attacksound
+		0,
 		S_NULL,         // painstate
 		3072,           // painchance
 		0,              // painsound
@@ -4412,7 +4413,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // missilestate
 		S_DISS,         // deathstate
 		S_NULL,         // xdeathstate
-		sfx_crumbl,     // deathsound
+		0,     // deathsound
 		3,              // speed
 		1*FRACUNIT,     // radius
 		1*FRACUNIT,     // height
@@ -4619,7 +4620,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,       // attacksound
 		S_STARPOST4,    // painstate
 		0,              // painchance
-		sfx_strpst,     // painsound
+		0,     // painsound
 		S_NULL,         // meleestate
 		S_NULL,         // missilestate
 		S_NULL,         // deathstate
@@ -6252,7 +6253,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_EGGMOBILE2_STND, // seestate
 		0,                 // seesound
 		8,                 // reactiontime
-		sfx_gspray,        // attacksound
+		0,        // attacksound
 		S_EGGMOBILE2_PAIN, // painstate
 		MT_GOOP,           // painchance
 		sfx_dmpain,        // painsound
@@ -6266,7 +6267,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		48*FRACUNIT,       // height
 		0,                 // mass
 		2,                 // damage
-		sfx_pogo,          // activesound
+		0,          // activesound
 		MF_SPECIAL|MF_SHOOTABLE|MF_NOGRAVITY|MF_BOSS, // flags
 		S_EGGMOBILE2_POGO1 // raisestate
 	},
@@ -6281,7 +6282,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
 		0,              // painchance
-		sfx_ghit,       // painsound
+		0,       // painsound
 		S_GOOP3,        // meleestate
 		S_NULL,         // missilestate
 		S_NULL,         // deathstate
@@ -6642,21 +6643,21 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // seestate
 		sfx_None,       // seesound
 		8,              // reactiontime
-		sfx_trfire,     // attacksound
+		sfx_rlaunc,     // attacksound
 		0,              // painstate
 		0,              // painchance
-		sfx_fizzle,     // painsound
+		0,     // painsound
 		S_NULL,         // meleestate
 		S_NULL,         // missilestate
 		S_TURRETSHOCK1, // deathstate
 		S_NULL,         // xdeathstate
-		sfx_turpop,     // deathsound
+		sfx_podth3,     // deathsound
 		0,              // speed
 		16*FRACUNIT,    // radius
 		32*FRACUNIT,    // height
 		MT_TURRETLASER, // mass
 		1,              // damage
-		sfx_trpowr,     // activesound
+		0,     // activesound
 		MF_NOBLOCKMAP,  // flags
 		S_NULL          // raisestate
 	},
@@ -6676,7 +6677,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // missilestate
 		S_TURRETLASEREXPLODE1, // deathstate
 		S_NULL,         // xdeathstate
-		sfx_turhit,     // deathsound
+		0,     // deathsound
 		50*FRACUNIT,    // speed
 		12*FRACUNIT,    // radius
 		24*FRACUNIT,    // height
@@ -7002,7 +7003,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // spawnstate
 		1075,           // spawnhealth: repeat speed
 		S_NULL,         // seestate
-		sfx_ambint,     // seesound
+		0,     // seesound
 		0,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
@@ -7028,7 +7029,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_ROCKCRUMBLEA1,// spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
-		sfx_ambint,     // seesound
+		0,     // seesound
 		0,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
@@ -7054,7 +7055,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_ROCKCRUMBLEB1, // spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
-		sfx_ambint,     // seesound
+		0,     // seesound
 		0,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
@@ -7080,7 +7081,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_ROCKCRUMBLEC1,// spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
-		sfx_ambint,     // seesound
+		0,     // seesound
 		0,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
@@ -7106,7 +7107,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_ROCKCRUMBLED1,// spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
-		sfx_ambint,     // seesound
+		0,     // seesound
 		0,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
@@ -7132,7 +7133,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_ROCKCRUMBLEE1,// spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
-		sfx_ambint,     // seesound
+		0,     // seesound
 		0,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
@@ -7158,7 +7159,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_ROCKCRUMBLEF1,// spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
-		sfx_ambint,     // seesound
+		0,     // seesound
 		0,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
@@ -7184,7 +7185,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_ROCKCRUMBLEG1,// spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
-		sfx_ambint,     // seesound
+		0,     // seesound
 		0,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
@@ -7210,7 +7211,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_ROCKCRUMBLEH1,// spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
-		sfx_ambint,     // seesound
+		0,     // seesound
 		0,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
@@ -7236,7 +7237,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_ROCKCRUMBLEI1,// spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
-		sfx_ambint,     // seesound
+		0,     // seesound
 		0,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
@@ -7262,7 +7263,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_ROCKCRUMBLEJ1,// spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
-		sfx_ambint,     // seesound
+		0,     // seesound
 		0,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
@@ -7288,7 +7289,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_ROCKCRUMBLEK1,// spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
-		sfx_ambint,     // seesound
+		0,     // seesound
 		0,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
@@ -7314,7 +7315,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_ROCKCRUMBLEL1,// spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
-		sfx_ambint,     // seesound
+		0,     // seesound
 		0,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
@@ -7340,7 +7341,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_ROCKCRUMBLEM1,// spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
-		sfx_ambint,     // seesound
+		0,     // seesound
 		0,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
@@ -7366,7 +7367,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_ROCKCRUMBLEN1,// spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
-		sfx_ambint,     // seesound
+		0,     // seesound
 		0,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
@@ -7392,7 +7393,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_ROCKCRUMBLEO1,// spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
-		sfx_ambint,     // seesound
+		0,     // seesound
 		0,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
@@ -7418,7 +7419,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_ROCKCRUMBLEP1,// spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
-		sfx_ambint,     // seesound
+		0,     // seesound
 		0,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
@@ -7879,7 +7880,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_TURRETPOPUP1, // seestate
 		sfx_None,       // seesound
 		0,              // reactiontime
-		sfx_trfire,     // attacksound
+		sfx_rlaunc,     // attacksound
 		S_NULL,         // painstate
 		1024,           // painchance
 		sfx_None,       // painsound
@@ -7902,7 +7903,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // spawnstate
 		220,           // spawnhealth: repeat speed
 		S_NULL,         // seestate
-		sfx_ambin2,     // seesound
+		0,     // seesound
 		0,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate

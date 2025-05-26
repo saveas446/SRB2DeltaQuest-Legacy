@@ -370,7 +370,7 @@ static int addsfx(int sfxid, int volume, int step, int seperation)
 #if 0
 	|| sfxid == sfx_sawup || sfxid == sfx_sawidl || sfxid == sfx_sawful || sfxid == sfx_sawhit || sfxid == sfx_pistol
 #else
-	|| ( sfx_litng1 <= sfxid && sfxid <= sfx_rainin) || sfxid == sfx_trfire || sfxid == sfx_alarm || sfxid == sfx_spin
+	|| sfxid == sfx_rlaunc || sfxid == sfx_spin
 #endif
 	 )
 	{

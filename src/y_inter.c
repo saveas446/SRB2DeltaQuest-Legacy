@@ -436,7 +436,7 @@ void Y_Ticker(void)
 			boolean skip = false;
 
 			if (!(intertic & 1))
-				S_StartSound(NULL, sfx_menu1); // tally sound effect
+				S_StartSound(NULL, sfx_pistol); // tally sound effect
 
 			for (i = 0; i < MAXPLAYERS; i++)
 			{
@@ -511,7 +511,7 @@ void Y_Ticker(void)
 			boolean skip = false;
 
 			if (!(intertic & 1))
-				S_StartSound(NULL, sfx_menu1); // tally sound effect
+				S_StartSound(NULL, sfx_pistol); // tally sound effect
 
 			for (i = 0; i < MAXPLAYERS; i++)
 			{

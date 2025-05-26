@@ -1173,28 +1173,29 @@ void F_DemoEndTicker(void)
 				timetonext = 7*TICRATE;
 				mouthframe++;
 				mouthtics = mouthframe->tics;
-				S_StartSound(NULL, sfx_annon2);
+				//S_StartSound(NULL, sfx_annon2);
 				break;
 			case 3:
 				finalecount = 0;
 				timetonext = 7*TICRATE;
 				mouthframe++;
 				mouthtics = mouthframe->tics;
-				S_StartSound(NULL, sfx_annon3);
+				//S_StartSound(NULL, sfx_annon3);
 				break;
 			case 4:
 				finalecount = 0;
 				timetonext = (9*TICRATE);
 				mouthframe++;
 				mouthtics = mouthframe->tics;
-				S_StartSound(NULL, sfx_annon4);
+				//S_StartSound(NULL, sfx_annon4);
 				break;
 			case 5:
 				finalecount = 0;
 				timetonext = 11*TICRATE;
 				mouthframe++;
 				mouthtics = mouthframe->tics;
-				S_StartSound(NULL, sfx_annon5);
+				// Did you get all those chaos emeralds?
+				//S_StartSound(NULL, sfx_annon5);
 				break;
 			case 6:
 				finalecount = 0;
@@ -2058,9 +2059,6 @@ void F_DemoEndDrawer(void)
 	finalecount++;
 	finaletextcount++;
 
-	if (finalestage == 1 && finalecount == 2)
-		S_StartSound(NULL, sfx_annon1);
-
 	V_DrawFill(0, 0, 184, 200, *((byte *)colormaps + 0xd7)); // Orange
 	V_DrawFill(184, 0, 136, 200, *((byte *)colormaps + 0x04)); // White
 
@@ -2247,7 +2245,7 @@ void F_GameEvaluationDrawer(void)
 			if (!(emblemlocations[MAXEMBLEMS-2].collected))
 			{
 				emblemlocations[MAXEMBLEMS-2].collected = true; // For completing the game.
-				S_StartSound(NULL, sfx_ncitem);
+				//S_StartSound(NULL, sfx_itemup);
 				alreadyplayed = true;
 				drawemblem = true;
 			}
@@ -2262,8 +2260,8 @@ void F_GameEvaluationDrawer(void)
 					{
 						emblemlocations[MAXEMBLEMS-1].collected = true;
 
-						if (!alreadyplayed)
-							S_StartSound(NULL, sfx_ncitem);
+						/*if (!alreadyplayed)
+							S_StartSound(NULL, sfx_itemup);*/
 
 						drawchaosemblem = true;
 					}

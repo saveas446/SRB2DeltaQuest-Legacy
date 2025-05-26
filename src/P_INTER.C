@@ -332,7 +332,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 					return;
 				P_SetMobjState(special, S_DISS);
 				P_SpawnMobj(special->x, special->y, special->z, MT_SPARK);
-				S_StartSound(toucher, sfx_ncitem);
+				//S_StartSound(touchersfx_itemupem);
 				emblemlocations[special->health-1].collected = true;
 
 				if (!modifiedgame || savemoddata)
@@ -355,7 +355,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 				return;
 			P_SetMobjState(special, S_DISS);
 			P_SpawnMobj(special->x, special->y, special->z, MT_SPARK);
-			S_StartSound(toucher, sfx_ncitem);
+			//S_StartSound(touchersfx_itemupem);
 			foundeggs |= special->health;
 			if (foundeggs == 4095)
 			{
@@ -422,23 +422,20 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			return;
 		case MT_NIGHTSSUPERLOOP:
 			player->powers[pw_superparaloop] = paralooptics;
-			S_StartSound(toucher, sfx_ncspec);
 			P_SetMobjState(special, S_DISS);
 			return;
 		case MT_NIGHTSDRILLREFILL:
 			player->drillmeter = 96*20;
-			S_StartSound(toucher, sfx_ncspec);
 			P_SetMobjState(special, S_DISS);
 			return;
 		case MT_NIGHTSHELPER:
 			player->powers[pw_nightshelper] = helpertics;
-			S_StartSound(toucher, sfx_ncspec);
 			P_SetMobjState(special, S_DISS);
 			return;
 		case MT_NIGHTSWING:
 			P_SpawnMobj(special->x, special->y, special->z, MT_SPARK);
 	
-			S_StartSound(toucher, sfx_ncitem);
+			//S_StartSound(touchersfx_itemupem);
 
 			P_DoNightsScore(toucher->player);
 	
@@ -463,13 +460,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			// Play hoop sound -- pick one depending on the current link.
 			P_DoNightsScore(player);
 
-			if (player->linkcount < 5)
-				S_StartSound(toucher, sfx_hoop1);
-			else if (player->linkcount < 10)
-				S_StartSound(toucher, sfx_hoop2);
-			else
-				S_StartSound(toucher, sfx_hoop3);
-
 			return;
 		case MT_NIGHTSDRONE:
 			if (player->bonustime && !player->exiting)
@@ -486,7 +476,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 				}
 	
 				P_NightserizePlayer(player, special->health);
-				S_StartSound(toucher, sfx_ideya);
 				return;
 			}
 			if (!player->nightsmode)
@@ -497,7 +486,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 					special->tracer = toucher;
 				}
 	
-				S_StartSound(toucher, sfx_supert);
 				toucher->tracer = P_SpawnMobj(toucher->x, toucher->y, toucher->z, MT_NIGHTSCHAR);
 				P_NightserizePlayer(player, special->health);
 			}
@@ -562,9 +550,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 	
 				for (d = 0; d < 16; d++)
 					P_SpawnParaloop(x, y, z, gatherradius, 16, MT_NIGHTSPARKLE, d*(ANGLE_45/2));
-	
-				S_StartSound(toucher, sfx_prloop);
-	
 				// Now we RE-scan all the thinkers to find close objects to pull
 				// in from the paraloop. Isn't this just so efficient?
 				for (th = thinkercap.next; th != &thinkercap; th = th->next)
@@ -593,7 +578,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 						{
 							P_SetMobjState(mo2, mo2->info->seestate);
 							mo2->flags |= MF_SPECIAL;
-							S_StartSound(toucher, sfx_hidden);
 							continue;
 						}
 					}
@@ -608,15 +592,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			}
 			return;
 		case MT_STARPOST:
-			// In circuit, player must have touched all previous starposts
-			if (circuitmap
-				&& special->health - player->starpostnum > 1)
-			{
-				if (!S_SoundPlaying(special, -1))
-					S_StartSound(special, sfx_lose);
-				return;
-			}
-
 			if (special->health > 32)
 			{
 				CONS_Printf("Bad Starpost Number!\n");
@@ -767,7 +742,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 				// Kick that sucker around!
 				special->angle = toucher->angle;
 				P_InstaThrust(special, special->angle, special->info->speed);
-				S_StartSound(toucher, sfx_lose);
 				P_SetMobjState(special, S_SHELL1);
 				special->target = toucher;
 				special->threshold = (3*TICRATE)/2;
@@ -847,7 +821,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			P_GivePlayerRings(player, 1, false);
 			P_SpawnMobj (special->x,special->y,special->z, MT_SPARK);
 			player->powers[pw_homingring] += special->health;
-			sound = sfx_ncitem;
+			sound = sfx_itemup;
 			break;
 		case MT_RAILRING:
 			if (!(P_CanPickupItem(toucher->player)))
@@ -855,7 +829,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			P_GivePlayerRings(player, 1, false);
 			P_SpawnMobj (special->x,special->y,special->z, MT_SPARK);
 			player->powers[pw_railring] += special->health;
-			sound = sfx_ncitem;
+			sound = sfx_itemup;
 			break;
 		case MT_INFINITYRING:
 			if (!(P_CanPickupItem(toucher->player)))
@@ -863,7 +837,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			P_GivePlayerRings(player, 1, false);
 			P_SpawnMobj (special->x,special->y,special->z, MT_SPARK);
 			player->powers[pw_infinityring] += special->health;
-			sound = sfx_ncitem;
+			sound = sfx_itemup;
 			break;
 		case MT_AUTOMATICRING:
 			if (!(P_CanPickupItem(toucher->player)))
@@ -871,7 +845,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			P_GivePlayerRings(player, 1, false);
 			P_SpawnMobj (special->x,special->y,special->z, MT_SPARK);
 			player->powers[pw_automaticring] += special->health;
-			sound = sfx_ncitem;
+			sound = sfx_itemup;
 			break;
 		case MT_EXPLOSIONRING:
 			if (!(P_CanPickupItem(toucher->player)))
@@ -879,7 +853,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			P_GivePlayerRings(player, 1, false);
 			P_SpawnMobj(special->x, special->y, special->z, MT_SPARK);
 			player->powers[pw_explosionring] += special->health;
-			sound = sfx_ncitem;
+			sound = sfx_itemup;
 			break;
 	
 		     // Special Stage Token
@@ -1572,18 +1546,7 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source)
   */
 void P_PlayRinglossSound(mobj_t *source)
 {
-	int prandom;
-
-	prandom = P_Random();
-
-	if (prandom <= 63)
-		S_StartSound(source, sfx_altow1);
-	else if (prandom <= 127)
-		S_StartSound(source, sfx_altow2);
-	else if (prandom <= 191)
-		S_StartSound(source, sfx_altow3);
-	else
-		S_StartSound(source, sfx_altow4);
+	S_StartSound(source, sfx_plpain);
 }
 
 /** Plays an object's death sound.
@@ -1597,18 +1560,7 @@ void P_PlayRinglossSound(mobj_t *source)
   */
 void P_PlayDeathSound(mobj_t *source)
 {
-	int prandom;
-
-	prandom = P_Random();
-
-	if (prandom <= 63)
-		S_StartSound(source, sfx_altdi1);
-	else if (prandom <= 127)
-		S_StartSound(source, sfx_altdi2);
-	else if (prandom <= 191)
-		S_StartSound(source, sfx_altdi3);
-	else
-		S_StartSound(source, sfx_altdi4);
+	S_StartSound(source, sfx_pldeth);
 }
 
 /** Plays an object's victory sound.
@@ -1625,15 +1577,6 @@ void P_PlayVictorySound(mobj_t *source)
 	int prandom;
 
 	prandom = P_Random();
-
-	if (prandom <= 63)
-		S_StartSound(source, sfx_victr1);
-	else if (prandom <= 127)
-		S_StartSound(source, sfx_victr2);
-	else if (prandom <= 191)
-		S_StartSound(source, sfx_victr3);
-	else
-		S_StartSound(source, sfx_victr4);
 }
 
 /** Plays an object's taunt sound.
@@ -1651,14 +1594,6 @@ void P_PlayTauntSound(mobj_t *source)
 
 	prandom = P_Random();
 
-	if (prandom <= 63)
-		S_StartSound(source, sfx_taunt1);
-	else if (prandom <= 127)
-		S_StartSound(source, sfx_taunt2);
-	else if (prandom <= 191)
-		S_StartSound(source, sfx_taunt3);
-	else
-		S_StartSound(source, sfx_taunt4);
 
 	// In the future... taunt animation?
 }
@@ -1832,7 +1767,6 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 				P_SetThingPosition(target);
 				player->powers[pw_flashing] = flashingtics;
 				P_SetMobjState(target->tracer, S_NIGHTSHURT1);
-				S_StartSound(target, sfx_nghurt);
 			}
 			return true;
 		}
@@ -1923,7 +1857,7 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 					target->player->powers[pw_ringshield] = false;
 					target->player->powers[pw_bombshield] = false;
 					target->player->powers[pw_watershield] = false;
-					S_StartSound(target, sfx_shldls);
+					S_StartSound(target, sfx_pldeth);
 					return true;
 				}
 
@@ -2010,7 +1944,7 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 			P_ForceFeed(player, 40, 10, TICRATE, 40 + min(damage, 100)*2);
 
 			if (source && source->type == MT_DISS && source->threshold == 42) // drowned
-				S_StartSound(target, sfx_drown);
+				S_StartSound(target, sfx_pldeth);
 			else
 				P_PlayDeathSound(target);
 
@@ -2130,9 +2064,9 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 			P_ResetPlayer(player);
 
 			if (source && (source->type == MT_DISS || source->type == MT_FLOORSPIKE || source->type == MT_CEILINGSPIKE) && source->threshold == 43) // spikes
-				S_StartSound(target, sfx_spkdth);
+				S_StartSound(target, sfx_pldeth);
 			else
-				S_StartSound (target, sfx_shldls); // Ba-Dum! Shield loss.
+				S_StartSound (target, sfx_pldeth); // Ba-Dum! Shield loss.
 
 			if (gametype == GT_CTF && (player->gotflag & MF_REDFLAG || player->gotflag & MF_BLUEFLAG))
 			{
@@ -2189,7 +2123,7 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 			P_ResetPlayer(player);
 
 			if (source && (source->type == MT_DISS || source->type == MT_FLOORSPIKE || source->type == MT_CEILINGSPIKE) && source->threshold == 43) // spikes
-				S_StartSound(target, sfx_spkdth);
+				S_StartSound(target, sfx_pldeth);
 
 			// Ring loss sound plays despite hitting spikes
 			P_PlayRinglossSound(target); // Ringledingle!
@@ -2218,7 +2152,7 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 			P_ResetPlayer(player);
 
 			if (source && (source->type == MT_DISS || source->type == MT_FLOORSPIKE || source->type == MT_CEILINGSPIKE) && source->threshold == 43) // Spikes
-				S_StartSound(target, sfx_spkdth);
+				S_StartSound(target, sfx_pldeth);
 			else
 				P_PlayDeathSound(target);
 

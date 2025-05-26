@@ -755,7 +755,7 @@ void P_DoSuperTransformation(player_t *player, boolean giverings)
 		S_StopMusic();
 		S_ChangeMusic(mus_invinc, true);
 	}
-	S_StartSound(player->mo, sfx_supert);
+	//S_StartSound(player->mo, sfx_supert); 26-05-2025
 
 	// SONIC ONLY
 	if (player->skin == 0)
@@ -1682,7 +1682,7 @@ static void P_NiGHTSMovement(player_t *player)
 	if (!player->nightstime)
 	{
 		P_DeNightserizePlayer(player);
-		S_StartScreamSound(player->mo, sfx_lose);
+		//S_StartScreamSound(player->mo, sfx_lose);
 		return;
 	}
 
@@ -1987,7 +1987,7 @@ static void P_NiGHTSMovement(player_t *player)
 		if (!player->skiddown && player->speed > 2000)
 		{
 			player->speed /= 10;
-			S_StartSound(player->mo, sfx_ngskid);
+			//S_StartSound(player->mo, sfx_ngskid);
 		}
 		player->skiddown = true;
 	}
@@ -2190,7 +2190,7 @@ static void P_NiGHTSMovement(player_t *player)
 							COM_BufAddText("cechoduration 1\n");
 							COM_BufAddText("cecho transfer!\n");
 							COM_BufAddText("cechoduration 5\n");
-							S_StartSound(0, sfx_strpst);
+							//S_StartSound(0, sfx_strpst);
 						}
 						if (player->transfertoclosest)
 						{
@@ -2245,7 +2245,6 @@ static void P_NiGHTSMovement(player_t *player)
 							COM_BufAddText("cechoduration 1\n");
 							COM_BufAddText("cecho transfer!\n");
 							COM_BufAddText("cechoduration 5\n");
-							S_StartSound(0, sfx_strpst);
 						}
 						if (player->mo->target->health < transfer1->health)
 						{
@@ -2309,7 +2308,6 @@ static void P_NiGHTSMovement(player_t *player)
 							COM_BufAddText("cechoduration 1\n");
 							COM_BufAddText("cecho transfer!\n");
 							COM_BufAddText("cechoduration 5\n");
-							S_StartSound(0, sfx_strpst);
 						}
 						if (player->transfertoclosest)
 						{
@@ -2374,7 +2372,7 @@ static void P_NiGHTSMovement(player_t *player)
 							COM_BufAddText("cechoduration 1\n");
 							COM_BufAddText("cecho transfer!\n");
 							COM_BufAddText("cechoduration 5\n");
-							S_StartSound(0, sfx_strpst);
+							//S_StartSound(0, sfx_strpst);
 						}
 						if (player->mo->target->health < transfer2->health)
 						{
@@ -2947,13 +2945,13 @@ nightsbombout:
 	{
 		if (firstdrill)
 		{
-			S_StartSound(player->mo, sfx_drill1);
+			//S_StartSound(player->mo, sfx_drill1);
 			player->drilltimer = 32 * NEWTICRATERATIO;
 		}
 		else if (--player->drilltimer <= 0)
 		{
 			player->drilltimer = 10 * NEWTICRATERATIO;
-			S_StartSound(player->mo, sfx_drill2);
+			//S_StartSound(player->mo, sfx_drill2);
 		}
 	}
 
@@ -3780,7 +3778,7 @@ static void P_MovePlayer(player_t *player)
 						}
 						player->capsule->reactiontime = 0;
 						player->capsule = NULL;
-						S_StartScreamSound(player->mo, sfx_ngdone);
+						//S_StartScreamSound(player->mo, sfx_ngdone);
 					}
 				}
 				else
@@ -3805,7 +3803,6 @@ static void P_MovePlayer(player_t *player)
 							z = player->capsule->z + player->capsule->height/2;
 							for (i = 0; i < 16; i++)
 								P_SpawnMobj(player->capsule->x, player->capsule->y, z, MT_BIRD);
-							S_StartScreamSound(player->mo, sfx_ngdone);
 						}
 					}
 					player->capsule->reactiontime = 0;
@@ -4406,7 +4403,7 @@ static void P_MovePlayer(player_t *player)
 		char *cnv;
 		sectors[355].special = 0;
 		sectors[355].lightlevel = 0xff;
-		S_StartSound(NULL, sfx_ncspec);
+		//S_StartSound(NULL, sfx_ncspec); 26-05-2025
 
 		cnv = "dfdipgmbht!1dfdipevsbujpo!6dfdip!inn-]tpnfuijoh!tffnt!ejggfsfou///";
 		while(*cnv > 0)
@@ -5086,7 +5083,7 @@ static void P_MovePlayer(player_t *player)
 				player->thokked = true;
 				player->mfspinning = 0;
 				P_SetPlayerMobjState(player->mo, S_PLAY_FALL1);
-				S_StartSound(player->mo, sfx_wdjump);
+				//S_StartSound(player->mo, sfx_wdjump);  26-05-2025
 			}
 		}
 	}
@@ -7734,7 +7731,7 @@ void P_PlayerThink(player_t *player)
 			if (player->nightsmode)
 			{
 				P_DeNightserizePlayer(player);
-				S_StartScreamSound(player->mo, sfx_lose);
+				//S_StartScreamSound(player->mo, sfx_lose);
 			}
 
 			player->lives = 1; // Starts the game over music
