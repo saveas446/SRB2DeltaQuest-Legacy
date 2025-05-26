@@ -34,9 +34,10 @@ static mobjinfo_t mobjinfobackup[NUMMOBJTYPES];
 
 char sprnames[NUMSPRITES + 1][5] =
 {
-	"MISL","PLAY","POSS","SPOS","EGGM","BON1","SRBX","GRBX","EMMY","PINV",
-	"BLTV","SPRY","SUDY","SHTV","FANS","BUBL","YLTV","FWR1","SPRR","SUDR",
-	"SMOK","SPLA","TNT1","BIRD","SQRL","YORB","BORB","KORB","SPRK","IVSP",
+	"MISL","PLAY","POSS","SPOS","EGGM","BON1",
+	"STIM","MEDI",
+	"EMMY","PINV","BLTV","SPRY","SUDY","SHTV","FANS","BUBL","YLTV","FWR1",
+	"SPRR","SUDR","SMOK","SPLA","TNT1","BIRD","SQRL","YORB","BORB","KORB","SPRK","IVSP",
 	"IVSQ","DISS","BUBP","BUBO","BUBN","BUBM","CNTA","CNTB","CNTC","CNTD",
 	"CNTE","CNTF","POPP","PRUP","BKTV","SCRA","SCRB","SCRC","SCRD","SSPK",
 	"NBMP","YSPR","RSPR","YSUD","RSUD","SKIM","MINE","FISH","GARG","SPLH",
@@ -229,16 +230,26 @@ state_t states[NUMSTATES] =
 	{SPR_BON1, 23, 1, {A_AttractChase}, 0, 0, S_BON1},  // S_BON1W
 
 	// Super Ring Box
-	{SPR_SRBX, 0, 2, {NULL}, 0, 0, S_SUPERRINGBOX1},          // S_SUPERRINGBOX
-	{SPR_MTEX, 0, 1, {NULL}, 0, 0, S_SUPERRINGBOX},           // S_SUPERRINGBOX1
-	{SPR_SRBX, 1, 18, {A_MonitorPop}, 0, 0, S_SUPERRINGBOX3}, // S_SUPERRINGBOX2
-	{SPR_SRBX, 1, 18, {A_RingBox}, 0, 0, S_DISS},             // S_SUPERRINGBOX3
+	{SPR_STIM, 0, 1, {NULL}, 0, 0, S_SUPERRINGBOX1},          // S_SUPERRINGBOX
+	{SPR_STIM, 1, 2, {NULL}, 0, 0, S_SUPERRINGBOX},           // S_SUPERRINGBOX1
+	{SPR_STIM, 2, 2, {A_Fall}, 0, 0, S_SUPERRINGBOX3}, // S_SUPERRINGBOX2
+	{SPR_STIM, 3, 2, {A_Scream}, 0, 0, S_SUPERRINGBOX4},             // S_SUPERRINGBOX3
+	{SPR_STIM, 4, 2, {NULL}, 0, 0, S_SUPERRINGBOX5},          // S_SUPERRINGBOX4
+	{SPR_STIM, 5, 2, {NULL}, 0, 0, S_SUPERRINGBOX6},           // S_SUPERRINGBOX5
+	{SPR_STIM, 6, 16, {NULL}, 0, 0, S_SUPERRINGBOX7}, // S_SUPERRINGBOX6
+	{SPR_STIM, 6, 48, {A_RingBox}, 0, 0, S_SUPERRINGBOX8}, // S_SUPERRINGBOX7
+	{SPR_STIM, 7, -1, {NULL}, 0, 0, S_DISS},             // S_SUPERRINGBOX8
 
 	// Silver Ring Box
-	{SPR_GRBX, 0, 2, {NULL}, 0, 0, S_GREYRINGBOX1},          // S_GREYRINGBOX
-	{SPR_MTEX, 0, 1, {NULL}, 0, 0, S_GREYRINGBOX},           // S_GREYRINGBOX1
-	{SPR_GRBX, 1, 18, {A_MonitorPop}, 0, 0, S_GREYRINGBOX3}, // S_GREYRINGBOX2
-	{SPR_GRBX, 1, 18, {A_RingBox}, 0, 0, S_DISS},            // S_GREYRINGBOX3
+	{SPR_MEDI, 0, 1, {NULL}, 0, 0, S_GREYRINGBOX1},          // S_GREYRINGBOX
+	{SPR_MEDI, 1, 2, {NULL}, 0, 0, S_GREYRINGBOX},           // S_GREYRINGBOX1
+	{SPR_MEDI, 2, 2, {A_Fall}, 0, 0, S_GREYRINGBOX3}, // S_GREYRINGBOX2
+	{SPR_MEDI, 3, 2, {A_Scream}, 0, 0, S_GREYRINGBOX4},             // S_GREYRINGBOX3
+	{SPR_MEDI, 4, 2, {NULL}, 0, 0, S_GREYRINGBOX5},          // S_GREYRINGBOX4
+	{SPR_MEDI, 5, 2, {NULL}, 0, 0, S_GREYRINGBOX6},           // S_GREYRINGBOX5
+	{SPR_MEDI, 6, 16, {NULL}, 0, 0, S_GREYRINGBOX7}, // S_GREYRINGBOX6
+	{SPR_MEDI, 6, 48, {A_RingBox}, 0, 0, S_GREYRINGBOX8}, // S_GREYRINGBOX7
+	{SPR_MEDI, 7, -1, {NULL}, 0, 0, S_DISS},             // S_GREYRINGBOX8
 
 	// Special Stage Token
 	{SPR_EMMY, 32768, 2, {NULL}, 0, 0, S_EMMY2}, // S_EMMY1
@@ -1867,7 +1878,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		1,              // spawnhealth
 		S_NULL,         // seestate
 		sfx_None,       // seesound
-		8,              // reactiontime
+		10,              // reactiontime
 		sfx_None,       // attacksound
 		S_SUPERRINGBOX, // painstate
 		0,              // painchance
@@ -1893,7 +1904,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		1,              // spawnhealth
 		S_NULL,         // seestate
 		sfx_None,       // seesound
-		8,              // reactiontime
+		25,              // reactiontime
 		sfx_None,       // attacksound
 		S_GREYRINGBOX,  // painstate
 		0,              // painchance

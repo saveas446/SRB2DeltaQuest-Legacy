@@ -142,8 +142,8 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT],     // SPR_SPOS
 	&lspr[NOLIGHT],     // SPR_EGGM
 	&lspr[NOLIGHT],     // SPR_BON1
-	&lspr[NOLIGHT],     // SPR_SRBX
-	&lspr[NOLIGHT],     // SPR_GRBX
+	&lspr[NOLIGHT],     // SPR_STIM
+	&lspr[NOLIGHT],     // SPR_MEDI
 	&lspr[NOLIGHT],     // SPR_EMMY
 	&lspr[NOLIGHT],     // SPR_PINV
 	&lspr[NOLIGHT],     // SPR_GRTV

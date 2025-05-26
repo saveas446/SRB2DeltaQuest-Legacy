@@ -98,6 +98,7 @@ static const char *pagename = "MAP1PIC";
 static char *startupwadfiles[MAX_WADFILES];
 
 boolean devparm = false; // started game with -devparm
+boolean devmode = false; // started game with -devmode
 
 boolean singletics = false; // timedemo
 
@@ -997,6 +998,10 @@ void D_SRB2Main(void)
 #endif
 
 	devparm = M_CheckParm("-debug");
+	devmode = M_CheckParm("-devmode");
+	if (devmode) {
+		cv_debug = true;
+	}
 
 	// for dedicated server
 #if !defined (_WINDOWS) //already check in win_main.c
