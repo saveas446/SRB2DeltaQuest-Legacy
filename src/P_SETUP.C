@@ -1737,7 +1737,7 @@ static void P_LevelInitStuff(void)
 	for (i = 0; i < MAXPLAYERS; i++)
 	{
 		// Initialize the player state duration table.
-		for (j = 0; j < S_PLAY_SUPERHIT+1; j++)
+		for (j = 0; j < S_PLAY_FALL2+1; j++)
 			playerstatetics[i][j] = states[j].tics;
 
 		if (netgame || multiplayer)

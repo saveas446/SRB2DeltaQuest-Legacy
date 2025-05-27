@@ -384,14 +384,6 @@ typedef enum
 	S_PLAY_TEETER2,
 	S_PLAY_FALL1,
 	S_PLAY_FALL2,
-	S_PLAY_CARRY,
-	S_PLAY_SUPERSTAND,
-	S_PLAY_SUPERWALK1,
-	S_PLAY_SUPERWALK2,
-	S_PLAY_SUPERFLY1,
-	S_PLAY_SUPERFLY2,
-	S_PLAY_SUPERTEETER,
-	S_PLAY_SUPERHIT, // This has special significance in the code. If you add more frames, search for it and make the appropriate changes.
 
 	// Blue Crawla
 	S_POSS_STND,

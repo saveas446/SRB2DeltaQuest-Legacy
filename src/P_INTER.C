@@ -1994,11 +1994,8 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 					fallbackspeed = 4*FRACUNIT; // the usual amount of force
 
 				P_InstaThrust(target, ang, fallbackspeed);
-
-				if (player->charflags & SF_SUPERANIMS)
-					P_SetPlayerMobjState(target, S_PLAY_SUPERHIT);
-				else
-					P_SetPlayerMobjState(target, S_PLAY_PAIN);
+				
+				P_SetPlayerMobjState(target, S_PLAY_PAIN);
 
 				P_ResetPlayer(player);
 				return true;

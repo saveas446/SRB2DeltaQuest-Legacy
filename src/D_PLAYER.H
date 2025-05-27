@@ -63,8 +63,8 @@ typedef enum
 	PST_REBORN
 } playerstate_t;
 
-// If more player frames are added after S_PLAY_SUPERHIT, update this.
-extern long playerstatetics[MAXPLAYERS][S_PLAY_SUPERHIT+1];
+// If more player frames are added after S_PLAY_FALL2, update this.
+extern long playerstatetics[MAXPLAYERS][S_PLAY_FALL2+1];
 
 //
 // Player internal flags, for cheats and debug.

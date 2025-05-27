@@ -46,7 +46,7 @@ consvar_t cv_viewheight = {"viewheight", VIEWHEIGHTS, 0, viewheight_cons_t, NULL
 
 consvar_t cv_splats = {"splats", "On", CV_SAVE, CV_OnOff, NULL, 0, NULL, NULL, 0, 0, NULL};
 
-long playerstatetics[MAXPLAYERS][S_PLAY_SUPERHIT+1];
+long playerstatetics[MAXPLAYERS][S_PLAY_FALL2+1];
 
 static const fixed_t FloatBobOffsets[64] =
 {
@@ -139,40 +139,7 @@ boolean P_SetPlayerMobjState(mobj_t *mobj, statenum_t state)
 
 	if (mobj->player)
 	{
-		// Catch state changes for Super Sonic
-		if (mobj->player->powers[pw_super] && (mobj->player->charflags & SF_SUPERANIMS))
-		{
-			switch (state)
-			{
-			case S_PLAY_STND:
-			case S_PLAY_GASP:
-			case S_PLAY_CARRY:
-				P_SetPlayerMobjState(mobj, S_PLAY_SUPERSTAND);
-				return true;
-				break;
-			case S_PLAY_FALL1:
-			case S_PLAY_PLG1:
-			case S_PLAY_RUN1:
-				P_SetPlayerMobjState(mobj, S_PLAY_SUPERWALK1);
-				return true;
-				break;
-			case S_PLAY_SPD1:
-				P_SetPlayerMobjState(mobj, S_PLAY_SUPERFLY1);
-				return true;
-				break;
-			case S_PLAY_TEETER1:
-				P_SetPlayerMobjState(mobj, S_PLAY_SUPERTEETER);
-				return true;
-				break;
-			case S_PLAY_ATK1:
-				if (!(mobj->player->charflags & SF_SUPERSPIN))
-					return true;
-				break;
-			default:
-				break;
-			}
-		}
-		else if (mobj->state == &states[S_PLAY_PAIN] && mobj->player->powers[pw_flashing] == flashingtics)
+		if (mobj->state == &states[S_PLAY_PAIN] && mobj->player->powers[pw_flashing] == flashingtics)
 			mobj->player->powers[pw_flashing] = flashingtics-1;
 	}
 
@@ -1277,7 +1244,7 @@ static void P_PlayerZMovement(mobj_t *mo)
 			goto nightsdone;
 		}
 		// Get up if you fell.
-		if (mo->state == &states[S_PLAY_PAIN] || mo->state == &states[S_PLAY_SUPERHIT])
+		if (mo->state == &states[S_PLAY_PAIN] || mo->state == &states[S_PLAY_FALL2])
 			P_SetPlayerMobjState(mo, S_PLAY_STND);
 
 		mo->z = mo->floorz;

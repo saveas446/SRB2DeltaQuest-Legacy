@@ -3876,13 +3876,12 @@ static void P_MovePlayer(player_t *player)
 
 	// Flag variables so it's easy to check
 	// what state the player is in.
-	if (player->mo->state == &states[S_PLAY_RUN1] || player->mo->state == &states[S_PLAY_RUN2] || player->mo->state == &states[S_PLAY_RUN3] || player->mo->state == &states[S_PLAY_RUN4] || player->mo->state == &states[S_PLAY_RUN5] || player->mo->state == &states[S_PLAY_RUN6] || player->mo->state == &states[S_PLAY_RUN7] || player->mo->state == &states[S_PLAY_RUN8]
-		|| player->mo->state == &states[S_PLAY_SUPERWALK1] || player->mo->state == &states[S_PLAY_SUPERWALK2])
+	if (player->mo->state == &states[S_PLAY_RUN1] || player->mo->state == &states[S_PLAY_RUN2] || player->mo->state == &states[S_PLAY_RUN3] || player->mo->state == &states[S_PLAY_RUN4] || player->mo->state == &states[S_PLAY_RUN5] || player->mo->state == &states[S_PLAY_RUN6] || player->mo->state == &states[S_PLAY_RUN7] || player->mo->state == &states[S_PLAY_RUN8])
 	{
 		player->walking = 1;
 		player->running = player->spinning = 0;
 	}
-	else if (player->mo->state == &states[S_PLAY_SPD1] || player->mo->state == &states[S_PLAY_SPD2] || player->mo->state == &states[S_PLAY_SPD3] || player->mo->state == &states[S_PLAY_SPD4] || player->mo->state == &states[S_PLAY_SUPERFLY1] || player->mo->state == &states[S_PLAY_SUPERFLY2])
+	else if (player->mo->state == &states[S_PLAY_SPD1] || player->mo->state == &states[S_PLAY_SPD2] || player->mo->state == &states[S_PLAY_SPD3] || player->mo->state == &states[S_PLAY_SPD4])
 	{
 		player->running = 1;
 		player->walking = player->spinning = 0;
@@ -3903,7 +3902,7 @@ static void P_MovePlayer(player_t *player)
 			P_SetPlayerMobjState (player->mo, S_PLAY_SPD1);
 
 		// Otherwise, just walk.
-		else if ((player->rmomx || player->rmomy) && (player->mo->state == &states[S_PLAY_STND] || player->mo->state == &states[S_PLAY_CARRY] || player->mo->state == &states[S_PLAY_TAP1] || player->mo->state == &states[S_PLAY_TAP2] || player->mo->state == &states[S_PLAY_TEETER1] || player->mo->state == &states[S_PLAY_TEETER2] || player->mo->state == &states[S_PLAY_SUPERSTAND] || player->mo->state == &states[S_PLAY_SUPERTEETER]))
+		else if ((player->rmomx || player->rmomy) && (player->mo->state == &states[S_PLAY_STND]))
 			P_SetPlayerMobjState (player->mo, S_PLAY_RUN1);
 	}
 
@@ -3962,7 +3961,7 @@ static void P_MovePlayer(player_t *player)
 		P_SetPlayerMobjState(player->mo, S_PLAY_FALL1);
 
 	// If Springing but on the ground, change back!
-	else if (onground && (player->mo->state == &states[S_PLAY_PLG1] || player->mo->state == &states[S_PLAY_FALL1] || player->mo->state == &states[S_PLAY_FALL2] || player->mo->state == &states[S_PLAY_CARRY]) && !player->mo->momz)
+	else if (onground && (player->mo->state == &states[S_PLAY_PLG1] || player->mo->state == &states[S_PLAY_FALL1] || player->mo->state == &states[S_PLAY_FALL2]) && !player->mo->momz)
 		P_SetPlayerMobjState(player->mo, S_PLAY_STND);
 
 	// If you are stopped and are still walking, stand still!
@@ -5054,9 +5053,6 @@ static void P_MovePlayer(player_t *player)
 	{
 		if (player->skin == 0 && player->powers[pw_super] && player->speed > 5 && player->mo->momz <= 0)
 		{
-			if (player->mo->state >= &states[S_PLAY_ATK1]
-				&& player->mo->state <= &states[S_PLAY_ATK4])
-				P_SetPlayerMobjState(player->mo, S_PLAY_SUPERWALK1);
 
 			player->mo->momz = 0;
 			player->mfspinning = 0;
@@ -5445,7 +5441,7 @@ static void P_MovePlayer(player_t *player)
 		player->bustercount = 0;
 
 	// Make sure you're not teetering when you shouldn't be.
-	if ((player->mo->state == &states[S_PLAY_TEETER1] || player->mo->state == &states[S_PLAY_TEETER2] || player->mo->state == &states[S_PLAY_SUPERTEETER])
+	if ((player->mo->state == &states[S_PLAY_TEETER1] || player->mo->state == &states[S_PLAY_TEETER2])
 		&& (player->mo->momx || player->mo->momy || player->mo->momz))
 		P_SetPlayerMobjState(player->mo, S_PLAY_STND);
 
@@ -5453,8 +5449,7 @@ static void P_MovePlayer(player_t *player)
 	if (!player->mo->momz &&
 		((!(player->mo->momx && player->mo->momy) && (player->mo->state == &states[S_PLAY_STND]
 		|| player->mo->state == &states[S_PLAY_TAP1] || player->mo->state == &states[S_PLAY_TAP2]
-		|| player->mo->state == &states[S_PLAY_TEETER1] || player->mo->state == &states[S_PLAY_TEETER2]
-		|| player->mo->state == &states[S_PLAY_SUPERSTAND] || player->mo->state == &states[S_PLAY_SUPERTEETER]))))
+		|| player->mo->state == &states[S_PLAY_TEETER1] || player->mo->state == &states[S_PLAY_TEETER2]))))
 	{
 		boolean teeter = false;
 		boolean roverfloor; // solid 3d floors?
@@ -5626,10 +5621,10 @@ static void P_MovePlayer(player_t *player)
 
 		if (teeter)
 		{
-			if ((player->mo->state == &states[S_PLAY_STND] || player->mo->state == &states[S_PLAY_TAP1] || player->mo->state == &states[S_PLAY_TAP2] || player->mo->state == &states[S_PLAY_SUPERSTAND]))
-				P_SetPlayerMobjState(player->mo, S_PLAY_TEETER1);
+			//if ((player->mo->state == &states[S_PLAY_STND] || player->mo->state == &states[S_PLAY_TAP1] || player->mo->state == &states[S_PLAY_TAP2]))
+				//P_SetPlayerMobjState(player->mo, S_PLAY_TEETER1);
 		}
-		else if (checkedforteeter && (player->mo->state == &states[S_PLAY_TEETER1] || player->mo->state == &states[S_PLAY_TEETER2] || player->mo->state == &states[S_PLAY_SUPERTEETER]))
+		else if (checkedforteeter && (player->mo->state == &states[S_PLAY_TEETER1] || player->mo->state == &states[S_PLAY_TEETER2]))
 			P_SetPlayerMobjState(player->mo, S_PLAY_STND);
 	}
 dontteeter:
@@ -6103,8 +6098,7 @@ dontteeter:
 	}
 
 	// Less height while spinning. Good for spinning under things...?
-	if ((player->mo->state == &states[S_PLAY_PAIN]
-		|| player->mo->state == &states[S_PLAY_SUPERHIT])
+	if ((player->mo->state == &states[S_PLAY_PAIN])
 		|| ((player->charflags & SF_SPINALLOWED) && ((player->mfspinning) || (player->mfjumped && !(player->charflags & SF_NOJUMPSPIN))))
 		|| (player->powers[pw_tailsfly])
 		|| (player->gliding) || (player->charability == 1
@@ -6214,8 +6208,6 @@ dontteeter:
 
 		if (P_AproxDistance(player->mo->x - player->mo->tracer->x, player->mo->y - player->mo->tracer->y) > player->mo->radius)
 			player->carried = false;
-
-		P_SetPlayerMobjState(player->mo, S_PLAY_CARRY);
 	}
 
 #ifdef FLOORSPLATS

@@ -2249,7 +2249,7 @@ static void P_NetArchiveMisc(void)
 	WRITEULONG(save_p, pig);
 
 	for (i = 0; i < MAXPLAYERS; i++)
-		for (j = 0; j < S_PLAY_SUPERHIT+1; j++)
+		for (j = 0; j < S_PLAY_FALL2+1; j++)
 			WRITELONG(save_p, playerstatetics[i][j]);
 
 	WRITEULONG(save_p, leveltime);
@@ -2303,7 +2303,7 @@ static boolean P_NetUnArchiveMisc(void)
 	// the "\2" instead of NULL is a hackishly hackish hack to avoid loading precipitation
 
 	for (i = 0; i < MAXPLAYERS; i++)
-		for (j = 0; j < S_PLAY_SUPERHIT+1; j++)
+		for (j = 0; j < S_PLAY_FALL2+1; j++)
 			playerstatetics[i][j] = READLONG(save_p);
 
 	// get the time
