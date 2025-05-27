@@ -16,7 +16,8 @@
         "xlocale": "c",
         "xstring": "c",
         "xutility": "c",
-        "P_FLOOR.C": "cpp"
+        "P_FLOOR.C": "cpp",
+        "xtr1common": "c"
     },
     "C_Cpp.dimInactiveRegions": false
 }

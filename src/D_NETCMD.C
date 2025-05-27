@@ -915,24 +915,13 @@ static void SendNameAndColor(void)
 	p = buf;
 
 	// normal player colors in single player
-	if (!multiplayer && !netgame && gamestate != GS_INTRO && gamestate != GS_INTRO2)
+	/*if (!multiplayer && !netgame && gamestate != GS_INTRO && gamestate != GS_INTRO2)
 		if (cv_playercolor.value != players[consoleplayer].prefcolor)
-			CV_StealthSetValue(&cv_playercolor, players[consoleplayer].prefcolor);
-
-	// normal player colors in CTF
-	if (gametype == GT_CTF)
-	{
-		if (players[consoleplayer].ctfteam == 1 && cv_playercolor.value != 6)
-			CV_StealthSetValue(&cv_playercolor, 6); // Red
-		else if (players[consoleplayer].ctfteam == 2 && cv_playercolor.value != 7)
-			CV_StealthSetValue(&cv_playercolor, 7); // Blue
-		else if (!players[consoleplayer].ctfteam && cv_playercolor.value != 1)
-			CV_StealthSetValue(&cv_playercolor, 1); // Grey
-	}
+			CV_StealthSetValue(&cv_playercolor, players[consoleplayer].prefcolor);*/
 
 	extrainfo = (byte)(extrainfo + (byte)cv_playercolor.value);
 
-	// If you're not in a netgame, merely update the skin, color, and name.
+	/*// If you're not in a netgame, merely update the skin, color, and name.
 	if (!netgame)
 	{
 		int foundskin;
@@ -972,7 +961,7 @@ static void SendNameAndColor(void)
 		}
 
 		return;
-	}
+	}*/
 
 	snacpending++;
 
@@ -1172,34 +1161,21 @@ static void Got_NameAndColor(char **cp, int playernum)
 	if (strcasecmp(player_names[playernum], str) != 0)
 		SetPlayerName(playernum, str);
 
-	// moving players cannot change colors
-	if (P_PlayerMoving(playernum) && p->skincolor != (extrainfo&31))
-	{
+	// Moving players CAN change skins!
+
+
 		if (playernum == consoleplayer)
 			CV_StealthSetValue(&cv_playercolor, p->skincolor);
 		else if (cv_splitscreen.value && playernum == secondarydisplayplayer)
 			CV_StealthSetValue(&cv_playercolor2, p->skincolor);
-	}
-	else
-	{
 		p->skincolor = (extrainfo&31) % MAXSKINCOLORS;
 
 		// a copy of color
 		if (p->mo)
 			p->mo->flags = (p->mo->flags & ~MF_TRANSLATION) | ((p->skincolor)<<MF_TRANSSHIFT);
-	}
 
-	str = (char *)*cp; // moving players cannot change skins
+	str = (char *)*cp;
 	SKIPSTRING(*cp);
-	if (P_PlayerMoving(playernum)
-		&& strcasecmp(skins[players[playernum].skin].name, str) != 0)
-	{
-		if (playernum == consoleplayer)
-			CV_StealthSet(&cv_skin, skins[players[consoleplayer].skin].name);
-		else if (cv_splitscreen.value && playernum == secondarydisplayplayer)
-			CV_StealthSet(&cv_skin2, skins[players[secondarydisplayplayer].skin].name);
-		return;
-	}
 
 	// skin
 	if (cv_forceskin.value) // Server wants everyone to use the same player
@@ -3421,10 +3397,8 @@ static void ForceSkin_OnChange(void)
   */
 static void Skin_OnChange(void)
 {
-	if (!P_PlayerMoving(consoleplayer))
-		SendNameAndColor();
-	else
-		CV_StealthSet(&cv_skin, skins[players[consoleplayer].skin].name);
+	CONS_Printf("Skin_OnChange\n");
+	SendNameAndColor();
 }
 
 /** Sends a skin change for the secondary splitscreen player, unless that
@@ -3434,10 +3408,7 @@ static void Skin_OnChange(void)
   */
 static void Skin2_OnChange(void)
 {
-	if (!P_PlayerMoving(secondarydisplayplayer))
 		SendNameAndColor2();
-	else
-		CV_StealthSet(&cv_skin2, skins[players[secondarydisplayplayer].skin].name);
 }
 
 /** Sends a color change for the console player, unless that player is moving.
@@ -3446,11 +3417,7 @@ static void Skin2_OnChange(void)
   */
 static void Color_OnChange(void)
 {
-	if (!P_PlayerMoving(consoleplayer))
 		SendNameAndColor();
-	else
-		CV_StealthSetValue(&cv_playercolor,
-			players[consoleplayer].skincolor);
 }
 
 /** Sends a color change for the secondary splitscreen player, unless that
@@ -3460,11 +3427,7 @@ static void Color_OnChange(void)
   */
 static void Color2_OnChange(void)
 {
-	if (!P_PlayerMoving(secondarydisplayplayer))
 		SendNameAndColor2();
-	else
-		CV_StealthSetValue(&cv_playercolor2,
-			players[secondarydisplayplayer].skincolor);
 }
 
 /** Displays the result of the chat being muted or unmuted.

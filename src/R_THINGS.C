@@ -663,7 +663,10 @@ static void R_DrawVisSprite(vissprite_t *vis, int x1, int x2)
 			I_Error("R_DrawSpriteRange: bad texturecolumn");
 #endif
 		column = (column_t *)((byte *)patch + LONG(patch->columnofs[texturecolumn]));
-		R_DrawMaskedColumn(column);
+
+		// Really bad way of preventing invalid stuff being drawn, but oh well.
+		if (!(patch->width == 0 || patch->width > 512 || patch->height == 0 || patch->height > 512))
+			R_DrawMaskedColumn(column);
 	}
 
 	colfunc = basecolfunc;
@@ -2361,7 +2364,7 @@ void R_AddSkins(int wadnum)
 	char *stoken;
 	char *value;
 	int i, size;
-	boolean boxindexset;
+	boolean boxindexset, tails, knuckles;
 
 	//
 	// search for all skin markers in pwad
@@ -2369,6 +2372,8 @@ void R_AddSkins(int wadnum)
 
 	while ((lumpnum = W_CheckForSkinMarkerInPwad(wadnum, lastlump)) != -1)
 	{
+		tails = false;
+		knuckles = false;
 		if (numskins > MAXSKINS)
 		{
 			CONS_Printf("ignored skin (%d skins maximum)\n", MAXSKINS);
@@ -2388,10 +2393,11 @@ void R_AddSkins(int wadnum)
 
 		// set defaults
 		Sk_SetDefaultValue(&skins[numskins]);
-		snprintf(skins[numskins].name,
-			sizeof skins[numskins].name, "skin %d", numskins);
+
+		snprintf(skins[numskins].name, sizeof skins[numskins].name, "skin %d", numskins);
 
 		boxindexset = false;
+
 
 		// parse
 		stoken = strtok (buf2, "\r\n= ");
@@ -2409,6 +2415,7 @@ void R_AddSkins(int wadnum)
 			if (!value)
 				I_Error("R_AddSkins: syntax error in S_SKIN lump# %d(%s) in WAD %s\n", lumpnum&0xFFFF,W_CheckNameForNum(lumpnum), wadfiles[wadnum]->filename);
 
+
 			if (!stricmp(stoken, "name"))
 			{
 				// the skin name must uniquely identify a single skin
@@ -2418,11 +2425,7 @@ void R_AddSkins(int wadnum)
 				{
 					STRBUFCPY(skins[numskins].name, value);
 					strlwr(skins[numskins].name);
-				}
-				// I'm not lazy, so if the name is already used I make the name 'namex'
-				// using the default skin name's number set above
-				else
-				{
+				} else {
 					const int stringspace =
 						strlen(value) + sizeof (numskins) + 1;
 					char *value2 = Z_Malloc(stringspace, PU_STATIC, NULL);
@@ -2436,52 +2439,94 @@ void R_AddSkins(int wadnum)
 					}
 					Z_Free(value2);
 				}
+
+				// If we're loading the Tails and Knuckles skins from the IWAD, fill in some info for those characters that's not present in the Demo 2 IWAD
+				if (wadnum == 0) {
+					if (!stricmp(skins[numskins].name, "tails")) {
+						CONS_Printf("Tails detected!\n");
+						tails = true;
+					}
+					if (!stricmp(skins[numskins].name, "knuckles")) {
+						CONS_Printf("Knuckles detected!\n");
+						knuckles = true;
+					}
+				} 
+
 			}
-// Macro to use for a lot of repeated code:
-// str is the string used in the skin config file,
-// field is the field in skin_t.
-#define GETSKINATTRIB(str,field)				\
-	else if (!stricmp(stoken, str))				\
-	{							\
-		STRBUFCPY(skins[numskins].field, value);	\
-		strupr(skins[numskins].field);			\
-	}
 
-// For those with the same name for the config file and internal field.
-#define GETSKINATTRIB_(field) GETSKINATTRIB(#field, field)
+				if (!tails && !knuckles) {
+					// Macro to use for a lot of repeated code:
+					// str is the string used in the skin config file,
+					// field is the field in skin_t.
+					#define GETSKINATTRIB(str,field)				\
+						if (!stricmp(stoken, str))				\
+						{							\
+							STRBUFCPY(skins[numskins].field, value);	\
+							strupr(skins[numskins].field);			\
+						}
 
-			GETSKINATTRIB("face", faceprefix)
-			GETSKINATTRIB("facename", nameprefix) // Life icon name
+					// For those with the same name for the config file and internal field.
+					#define GETSKINATTRIB_(field) GETSKINATTRIB(#field, field)
 
-			// character type identification
-			GETSKINATTRIB_(ability)
+					GETSKINATTRIB("face", faceprefix)
+					GETSKINATTRIB("facename", nameprefix) // Life icon name
 
-			GETSKINATTRIB_(runspeed)
-			GETSKINATTRIB_(normalspeed)
-			GETSKINATTRIB_(thrustfactor)
-			GETSKINATTRIB_(accelstart)
-			GETSKINATTRIB_(acceleration)
-			GETSKINATTRIB_(spin)
-			GETSKINATTRIB("allowsuper", super)
-			GETSKINATTRIB_(superanims)
-			GETSKINATTRIB_(superspin)
-			GETSKINATTRIB_(supercolor)
-			GETSKINATTRIB_(runonwater)
-			GETSKINATTRIB_(nojumpspin)
-			GETSKINATTRIB_(multiability)
-			GETSKINATTRIB_(lightdash)
-			GETSKINATTRIB_(homing)
-			GETSKINATTRIB_(ringslinger)
-			GETSKINATTRIB_(slingitem)
-			GETSKINATTRIB_(thokitem)
-			GETSKINATTRIB_(spinitem)
-			GETSKINATTRIB_(waterskip)
-			GETSKINATTRIB_(actionspd)
-			GETSKINATTRIB_(mindash)
-			GETSKINATTRIB_(maxdash)
+					// character type identification
+					GETSKINATTRIB_(ability)
+
+					GETSKINATTRIB_(runspeed)
+					GETSKINATTRIB_(normalspeed)
+					GETSKINATTRIB_(thrustfactor)
+					GETSKINATTRIB_(accelstart)
+					GETSKINATTRIB_(acceleration)
+					GETSKINATTRIB_(spin)
+					GETSKINATTRIB("allowsuper", super)
+					GETSKINATTRIB_(superanims)
+					GETSKINATTRIB_(superspin)
+					GETSKINATTRIB_(supercolor)
+					GETSKINATTRIB_(runonwater)
+					GETSKINATTRIB_(nojumpspin)
+					GETSKINATTRIB_(multiability)
+					GETSKINATTRIB_(lightdash)
+					GETSKINATTRIB_(homing)
+					GETSKINATTRIB_(ringslinger)
+					GETSKINATTRIB_(slingitem)
+					GETSKINATTRIB_(thokitem)
+					GETSKINATTRIB_(spinitem)
+					GETSKINATTRIB_(waterskip)
+					GETSKINATTRIB_(actionspd)
+					GETSKINATTRIB_(mindash)
+					GETSKINATTRIB_(maxdash)
+				} else {
+					if (tails) {
+						// Hardcoded tails data :))))))
+						STRBUFCPY(skins[numskins].faceprefix, "SBOTLIFE");
+						STRBUFCPY(skins[numskins].nameprefix, "STTAILSN");
+						STRBUFCPY(skins[numskins].ability, "1");
+						STRBUFCPY(skins[numskins].normalspeed, "26");
+						STRBUFCPY(skins[numskins].thrustfactor, "3");
+						STRBUFCPY(skins[numskins].accelstart, "192");
+						STRBUFCPY(skins[numskins].acceleration, "50");
+						STRBUFCPY(skins[numskins].spin, "1");
+						STRBUFCPY(skins[numskins].starttranscolor, "112");
+						STRBUFCPY(skins[numskins].endtranscolor, "127");
+						STRBUFCPY(skins[numskins].prefcolor, "5");
+						STRBUFCPY(skins[numskins].jumpfactor, "100");
+						STRBUFCPY(skins[numskins].boxindex, "2");
+						STRBUFCPY(skins[numskins].runonwater, "1");
+						STRBUFCPY(skins[numskins].super, "0");
+						STRBUFCPY(skins[numskins].actionspd, "1");
+						STRBUFCPY(skins[numskins].mindash, "15");
+						STRBUFCPY(skins[numskins].maxdash, "60");
+						STRBUFCPY(skins[numskins].waterskip, "1");
+					}
+					if (knuckles) {
+
+					}
+				}
 
 			// custom translation table
-			else if (!stricmp(stoken, "startcolor"))
+			if (!stricmp(stoken, "startcolor"))
 			{
 				byte colorval;
 

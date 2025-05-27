@@ -872,8 +872,8 @@ static void IdentifyVersion(void)
 
 	// Add the players
 	//D_AddFile(va(pandf,srb2waddir,"sonic.plr")); //sonic.plr
-	D_AddFile(va(pandf,srb2waddir,"tails.plr")); //tails.plr
-	D_AddFile(va(pandf,srb2waddir,"knux.plr")); //knux.plr
+	//D_AddFile(va(pandf,srb2waddir,"tails.plr")); //tails.plr
+	//D_AddFile(va(pandf,srb2waddir,"knux.plr")); //knux.plr
 
 	// Add the weapons
 	D_AddFile(va(pandf,srb2waddir,"auto.wpn")); //auto.wpn

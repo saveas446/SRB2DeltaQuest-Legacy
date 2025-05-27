@@ -2346,6 +2346,7 @@ static void M_SetupMultiPlayer(int choice)
 	SetupMultiPlayerMenu[setupmultiplayer_color].itemaction = &cv_playercolor;
 	setupm_player = &players[consoleplayer];
 	setupm_cvskin = &cv_skin;
+	CONS_Printf("Updated preview color\n");
 	setupm_cvcolor = &cv_playercolor;
 	setupm_cvname = &cv_playername;
 	M_SetupNextMenu (&SetupMultiPlayerDef);
@@ -2417,6 +2418,7 @@ static void M_DrawSetupMultiPlayerMenu(void)
 	spritedef_t *sprdef;
 	spriteframe_t *sprframe;
 	patch_t *patch;
+	byte* colormap;
 
 	mx = SetupMultiPlayerDef.x;
 	my = SetupMultiPlayerDef.y;
@@ -2466,7 +2468,8 @@ static void M_DrawSetupMultiPlayerMenu(void)
 	}
 	else
 	{
-		byte *colormap = (byte *)translationtables[setupm_player->skin] - 256
+		CONS_Printf("drew player sprite\n");
+		colormap = (byte *)translationtables[setupm_player->skin] - 256
 			+ (setupm_cvcolor->value<<8);
 		V_DrawMappedPatch(mx + 98 + (PLBOXW*8/2), my + 16 + (PLBOXH*8) - 8, 0, patch, colormap);
 	}
@@ -2523,91 +2526,92 @@ static void M_HandleConnectIP(int choice)
 //
 static void M_HandleSetupMultiPlayer(int choice)
 {
-	size_t      l;
-	boolean  exitmenu = false;  // exit to previous menu and send name change
-	int      myskin;
+    int      l;
+    boolean  exitmenu = false;  // exit to previous menu and send name change
+    int      myskin;
 
-	myskin  = setupm_cvskin->value;
+    myskin  = setupm_cvskin->value;
 
-	switch (choice)
-	{
-		case KEY_DOWNARROW:
-			S_StartSound(NULL,sfx_pistol); // Tails
-			if (itemOn+1 >= SetupMultiPlayerDef.numitems)
-				itemOn = 0;
-			else itemOn++;
-			break;
+    switch( choice )
+    {
+      case KEY_DOWNARROW:
+        S_StartSound(NULL,sfx_pistol); // Tails
+        if (itemOn+1 >= SetupMultiPlayerDef.numitems)
+            itemOn = 0;
+        else itemOn++;
+        break;
 
-		case KEY_UPARROW:
-			S_StartSound(NULL,sfx_pistol); // Tails
-			if (!itemOn)
-				itemOn = (short)(SetupMultiPlayerDef.numitems-1);
-			else itemOn--;
-			break;
+      case KEY_UPARROW:
+        S_StartSound(NULL,sfx_pistol); // Tails
+        if (!itemOn)
+            itemOn = SetupMultiPlayerDef.numitems-1;
+        else itemOn--;
+        break;
 
-		case KEY_LEFTARROW:
-			if (itemOn == 2)       //player skin
-			{
-				S_StartSound(NULL,sfx_pistol); // Tails
-				myskin--;
-			}
-			break;
+      case KEY_LEFTARROW:
+        if (itemOn==2)       //player skin
+        {
+            S_StartSound(NULL,sfx_pistol); // Tails
+            myskin--;
+        }
+        break;
 
-		case KEY_RIGHTARROW:
-			if (itemOn == 2)       //player skin
-			{
-				S_StartSound(NULL,sfx_pistol); // Tails
-				myskin++;
-			}
-			break;
+      case KEY_RIGHTARROW:
+        if (itemOn==2)       //player skin
+        {
+            S_StartSound(NULL,sfx_pistol); // Tails
+            myskin++;
+        }
+        break;
 
-		case KEY_ENTER:
-			S_StartSound(NULL,sfx_pistol); // Tails
-			exitmenu = true;
-		break;
+      case KEY_ENTER:
+        S_StartSound(NULL,sfx_pistol); // Tails
+        exitmenu = true;
+        break;
 
-		case KEY_ESCAPE:
-			exitmenu = true;
-			break;
+      case KEY_ESCAPE:
+// Tails        S_StartSound(NULL,sfx_swtchx);
+        exitmenu = true;
+        break;
 
-		case KEY_BACKSPACE:
-			if ((l = strlen(setupm_name))!=0 && itemOn == 0)
-			{
-				S_StartSound(NULL,sfx_pistol); // Tails
-				setupm_name[l-1] =0;
-			}
-			break;
+      case KEY_BACKSPACE:
+        if ( (l=strlen(setupm_name))!=0 && itemOn==0)
+        {
+            S_StartSound(NULL,sfx_stnmov);
+            setupm_name[l-1]=0;
+        }
+        break;
 
-		default:
-			if (choice < 32 || choice > 127 || itemOn != 0)
-				break;
-			l = strlen(setupm_name);
-			if (l < MAXPLAYERNAME-1)
-			{
-				S_StartSound(NULL,sfx_pistol); // Tails
-				setupm_name[l] =(char)choice;
-				setupm_name[l+1] =0;
-			}
-			break;
-	}
+      default:
+        if (choice < 32 || choice > 127 || itemOn!=0)
+            break;
+        l = strlen(setupm_name);
+        if (l<MAXPLAYERNAME-1)
+        {
+            S_StartSound(NULL,sfx_stnmov);
+            setupm_name[l]=choice;
+            setupm_name[l+1]=0;
+        }
+        break;
+    }
 
-	// check skin
-	if (myskin <0)
-		myskin = numskins-1;
-	if (myskin >numskins-1)
-		myskin = 0;
+    // check skin
+    if (myskin <0)
+        myskin = numskins-1;
+    if (myskin >numskins-1)
+        myskin = 0;
 
-	// check skin change
-	if (myskin != setupm_player->skin)
-		COM_BufAddText (va("%s \"%s\"",setupm_cvskin->name,skins[myskin].name));
+    // check skin change
+    if (myskin != setupm_player->skin)
+        COM_BufAddText ( va("%s \"%s\"",setupm_cvskin->name ,skins[myskin].name));
 
-	if (exitmenu)
-	{
-		if (currentMenu->prevMenu)
-			M_SetupNextMenu (currentMenu->prevMenu);
-		else
-			M_ClearMenus (true);
-	}
+    if (exitmenu)
+    {
+        if (currentMenu->prevMenu)
+            M_SetupNextMenu (currentMenu->prevMenu);
+        else
+            M_ClearMenus (true);
+    }
 }
 
 static boolean M_QuitMultiPlayerMenu(void)
