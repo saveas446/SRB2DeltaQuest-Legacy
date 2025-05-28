@@ -326,18 +326,20 @@ void S_Init(int sfxVolume, int digMusicVolume, int midiMusicVolume)
 	// no sounds are playing, and they are not mus_paused
 	mus_paused = 0;
 
-	// Note that sounds have not been cached (yet).
-	for (i = 1; i < NUMSFX; i++)
-		S_sfx[i].lumpnum = S_sfx[i].usefulness = -1; // for I_GetSfx()
-
-		// Initialize external data (all sounds) at start, keep static.
-		CONS_Printf("Loading sounds... ");
-
+	if (!nosound) {
+		// Note that sounds have not been cached (yet).
 		for (i = 1; i < NUMSFX; i++)
-			if (S_sfx[i].name)
-				S_sfx[i].data = I_GetSfx(&S_sfx[i]);
+			S_sfx[i].lumpnum = S_sfx[i].usefulness = -1; // for I_GetSfx()
 
-		CONS_Printf(" pre-cached all sound data\n");
+			// Initialize external data (all sounds) at start, keep static.
+			CONS_Printf("Loading sounds... ");
+
+			for (i = 1; i < NUMSFX; i++)
+				if (S_sfx[i].name)
+					S_sfx[i].data = I_GetSfx(&S_sfx[i]);
+
+			CONS_Printf(" pre-cached all sound data\n");
+	}
 }
 
 // Retrieve the lump number of sfx
