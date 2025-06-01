@@ -41,7 +41,11 @@ char sprnames[NUMSPRITES + 1][5] =
 	"IVSQ","DISS","BUBP","BUBO","BUBN","BUBM","CNTA","CNTB","CNTC","CNTD",
 	"CNTE","CNTF","POPP","PRUP","BKTV","SCRA","SCRB","SCRC","SCRD","SSPK",
 	"NBMP","YSPR","RSPR","YSUD","RSUD","SKIM","MINE","FISH","GARG","SPLH",
-	"THOK","THZP","SIGN","RRNG","TTAG","STEM","GFLG","TOKE",
+	"THOK","THZP","SIGN","RRNG","TTAG",
+	# if TH_TOLERANCE >= 0
+	"STEM",
+	#endif
+	"GFLG","TOKE",
 	"CEMG","CEMO","CEMP","CEMB","CEMR","CEML","CEMY","JETB","JETG","JBUL",
 	"MOUS","DETN","XPLD","CHAN","SNO1","SANT","EMER","EMES","EMET",
 	"SBLL","SPIK","CCOM","RAIN","DSPK","USPK","STPT","RNGM","RNGR","RNGS",
@@ -749,6 +753,7 @@ state_t states[NUMSTATES] =
 
 	{SPR_TTAG, 32768, 2, {NULL}, 0, 0, S_DISS}, // S_TTAG1
 
+	#if TH_TOLERANCE >= 0
 	// Steam Riser
 	{SPR_STEM, 0, 2, {A_SetSolidSteam}, 0, 0, S_STEAM2},   // S_STEAM1
 	{SPR_STEM, 1, 2, {A_UnsetSolidSteam}, 0, 0, S_STEAM3}, // S_STEAM2
@@ -758,6 +763,7 @@ state_t states[NUMSTATES] =
 	{SPR_STEM, 5, 2, {NULL}, 0, 0, S_STEAM7},              // S_STEAM6
 	{SPR_STEM, 6, 2, {NULL}, 0, 0, S_STEAM8},              // S_STEAM7
 	{SPR_STEM, 7, 18, {NULL}, 0, 0, S_STEAM1},             // S_STEAM8
+	#endif
 
 	// CTF Sign
 	{SPR_GFLG, 0, 1, {NULL}, 0, 0, S_GOTFLAG2}, // S_GOTFLAG1

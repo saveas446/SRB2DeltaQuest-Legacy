@@ -867,6 +867,8 @@ static void IdentifyVersion(void)
 	if (srb2wad2)
 		free(srb2wad2);
 
+	// 1984 NO NIGHTS GAMEMODE 1984 NO MATCH WEAPONS 1984 NO SEPARATE FILES FOR CHARACTER SPRITES 1984 NO TAG 1984 NO CTF GAMEMODE 1984 NO FUN
+
 	// if you change the ordering of this or add/remove a file, be sure to update the md5
 	// checking in D_SRB2Main
 
@@ -883,8 +885,9 @@ static void IdentifyVersion(void)
 	D_AddFile(va(pandf,srb2waddir,"infn.wpn")); //infn.wpn
 
 	// Add... nights?
-	D_AddFile(va(pandf,srb2waddir,"drill.dta")); //drill.dta
-	D_AddFile(va(pandf,srb2waddir,"soar.dta")); //soar.dta
+	
+	/*D_AddFile(va(pandf,srb2waddir,"drill.dta")); //drill.dta
+	D_AddFile(va(pandf,srb2waddir,"soar.dta")); //soar.dta*/
 
 //And music.dta is dead!
 /*

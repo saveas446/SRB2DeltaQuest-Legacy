@@ -137,6 +137,7 @@ typedef enum
 	XD_RANDOMSEED,  // 17
 	XD_ORDERPIZZA,  // 18
 	XD_RUNSOC,      // 19
+	XD_LTG,			// 20
 	MAXNETXCMD
 } netxcmd_t;
 

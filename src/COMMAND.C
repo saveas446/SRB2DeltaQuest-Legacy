@@ -1183,14 +1183,12 @@ void CV_Set(consvar_t *var, const char *value)
 	if (!stricmp(var->string, value))
 		return; // no changes
 
-	// Don't allow skin/color changes in single player
-	if ((var == &cv_skin || var == &cv_playercolor) &&
-		!(cv_debug || devparm) && !(multiplayer || netgame)
-		&& (gamestate == GS_LEVEL || gamestate == GS_INTERMISSION
-		|| gamestate == GS_FINALE))
+	/*// Allow skin/color changes on title screen or intermission or something, but not live in game
+	// I would allow this, but I'm too stupid to get it working live in game
+	if ((var == &cv_skin || var == &cv_playercolor) && (gamestate == GS_LEVEL))
 	{
 		return;
-	}
+	}*/
 
 	if (var->flags & CV_NETVAR)
 	{

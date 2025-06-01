@@ -73,6 +73,7 @@ static void Got_Pause(char **cp, int playernum);
 static void Got_RandomSeed(char **cp, int playernum);
 static void Got_PizzaOrder(char **cp, int playernum);
 static void Got_RunSOCcmd(char **cp, int playernum);
+static void Got_LTG(char **cp, int playernum);
 static void Got_Teamchange(char **cp, int playernum);
 static void Got_Clearscores(char **cp, int playernum);
 
@@ -137,6 +138,7 @@ static void Command_Showmap_f(void);
 static void Command_Load_f(void);
 static void Command_Save_f(void);
 
+static void Command_LTG_f(void);
 static void Command_Teamchange_f(void);
 static void Command_Teamchange2_f(void);
 static void Command_ServerTeamChange_f(void);
@@ -214,10 +216,10 @@ consvar_t cv_racetype = {"racetype", "Full", CV_NETVAR, racetype_cons_t, NULL, 0
 consvar_t cv_raceitemboxes = {"race_itemboxes", "Random", CV_NETVAR, raceitemboxes_cons_t, NULL, 0, NULL, NULL, 0, 0, NULL};
 
 // these two are just meant to be saved to the config
-consvar_t cv_playername = {"name", "Sonic", CV_CALL|CV_NOINIT, NULL, SendNameAndColor, 0, NULL, NULL, 0, 0, NULL};
-consvar_t cv_playercolor = {"color", "Blue", CV_CALL|CV_NOINIT, Color_cons_t, Color_OnChange, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_playername = {"name"                ,"sonic"       ,CV_CALL | CV_NOINIT,NULL,SendNameAndColor};
+consvar_t cv_playercolor = {"color"               ,"7"        ,CV_CALL | CV_NOINIT,Color_cons_t,SendNameAndColor}; // Don't save Tails 03-26-2001
 // player's skin, saved for commodity, when using a favorite skins wad..
-consvar_t cv_skin = {"skin", DEFAULTSKIN, CV_CALL|CV_NOINIT, NULL, Skin_OnChange, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_skin = {"skin"                ,DEFAULTSKIN,CV_CALL | CV_NOINIT,NULL /*skin_cons_t*/,SendNameAndColor}; // Don't save Tails 03-26-2001
 consvar_t cv_autoaim = {"autoaim", "On", CV_CALL|CV_NOINIT, CV_OnOff, SendWeaponPref, 0, NULL, NULL, 0, 0, NULL};
 consvar_t cv_autoaim2 = {"autoaim2", "On", CV_CALL|CV_NOINIT, CV_OnOff, SendWeaponPref, 0, NULL, NULL, 0, 0, NULL};
 // secondary player for splitscreen mode
@@ -396,6 +398,7 @@ void D_RegisterServerCommands(void)
 
 	COM_AddCommand("motd", Command_MotD_f);
 
+	RegisterNetXCmd(XD_LTG, Got_LTG);
 	RegisterNetXCmd(XD_TEAMCHANGE, Got_Teamchange);
 	COM_AddCommand("serverchangeteam", Command_ServerTeamChange_f);
 
@@ -554,6 +557,8 @@ void D_RegisterClientCommands(void)
 
 	if (dedicated)
 		return;
+
+	COM_AddCommand("ltg", Command_LTG_f);
 
 	COM_AddCommand("changeteam", Command_Teamchange_f);
 	COM_AddCommand("changeteam2", Command_Teamchange2_f);
@@ -909,6 +914,8 @@ static void SendNameAndColor(void)
 	char *p;
 	byte extrainfo = 0; // color and (if applicable) CTF team
 
+	CONS_Printf("SendNameAndColor");
+
 	if (netgame && !addedtogame)
 		return;
 
@@ -1102,6 +1109,8 @@ static void Got_NameAndColor(char **cp, int playernum)
 	int i;
 	char *str;
 	byte extrainfo;
+
+	CONS_Printf("Got_NameAndColor");
 
 #ifdef PARANOIA
 	if (playernum < 0 || playernum > MAXPLAYERS)
@@ -1807,17 +1816,6 @@ static void Got_Mapcmd(char **cp, int playernum)
 	CON_ToggleOff();
 	if (timingdemo)
 		G_DoneLevelLoad();
-
-	if (timeattacking)
-	{
-		SetPlayerSkinByNum(0, cv_chooseskin.value-1);
-		players[0].skincolor = (atoi(skins[cv_chooseskin.value-1].prefcolor)) % MAXSKINCOLORS;
-		CV_StealthSetValue(&cv_playercolor, players[0].skincolor);
-
-		// a copy of color
-		if (players[0].mo)
-			players[0].mo->flags = (players[0].mo->flags & ~MF_TRANSLATION) | ((players[0].skincolor)<<MF_TRANSSHIFT);
-	}
 }
 
 static void Command_Pause(void)
@@ -1948,6 +1946,13 @@ static void Got_Clearscores(char **cp, int playernum)
 
 	CONS_Printf("Scores have been reset by the server.\n");
 }
+
+static void Command_LTG_f(void)
+{
+	CONS_Printf("...now!\n");
+	SendNetXCmd(XD_LTG, NULL, 1);
+}
+
 
 static void Command_Teamchange_f(void)
 {
@@ -2151,6 +2156,12 @@ static void Got_Teamchange(char **cp, int playernum)
 	else if (playernum == secondarydisplayplayer)
 		CV_SetValue(&cv_playercolor2, newteam + 5);
 }
+
+static void Got_LTG(char **cp, int playernum)
+{
+	P_KillMobj(players[playernum].mo, NULL, NULL);
+}
+
 
 // Remote Administration
 static void Command_Changepassword_f(void)
@@ -3417,7 +3428,8 @@ static void Skin2_OnChange(void)
   */
 static void Color_OnChange(void)
 {
-		SendNameAndColor();
+	CONS_Printf("color change recieved\n");
+	SendNameAndColor();
 }
 
 /** Sends a color change for the secondary splitscreen player, unless that
