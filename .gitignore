@@ -70,3 +70,5 @@ build/gamedata.dat
 2.2 (for reference)/
 *.idb
 *.idb
+playtest build 1.7z
+dev/load this into the launcher.xml
