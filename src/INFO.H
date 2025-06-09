@@ -528,9 +528,14 @@ typedef enum
 
 	// Invincibility Box
 	S_PINV,
+	S_PINV1,
 	S_PINV2,
 	S_PINV3,
 	S_PINV4,
+	S_PINV5,
+	S_PINV6,
+	S_PINV7,
+	S_PINV8,
 
 	// Water Shield Box
 	S_BLTV,

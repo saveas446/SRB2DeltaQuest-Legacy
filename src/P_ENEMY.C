@@ -1462,6 +1462,7 @@ void A_Invincibility(mobj_t *actor)
 	player = actor->target->player;
 	player->powers[pw_invulnerability] = invulntics + 1;
 
+
 	if (P_IsLocalPlayer(player) && !player->powers[pw_super])
 	{
 		S_StopMusic();
@@ -3301,8 +3302,6 @@ void A_EggmanBox(mobj_t *actor)
 {
 	player_t *player;
 
-	CONS_Printf("eggman box\n");
-
 	if (!actor->target || !actor->target->player)
 	{
 		if(cv_debug)
@@ -3315,7 +3314,6 @@ void A_EggmanBox(mobj_t *actor)
 	P_DamageMobj(actor->target, actor, actor, 1); // Ow!
 	if (actor->info->seesound)
 		S_StartSound(player->mo, actor->info->seesound);
-	P_SetMobjState(actor, S_DISS);
 }
 
 // Function: A_TurretFire

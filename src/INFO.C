@@ -271,10 +271,15 @@ state_t states[NUMSTATES] =
 	{SPR_EMMY, 32774, 2, {NULL}, 0, 0, S_EMMY1}, // S_EMMY7
 
 	// Invincibility Box
-	{SPR_PINV, 0, 2, {NULL}, 0, 0, S_PINV2},            // S_PINV
-	{SPR_MTEX, 0, 1, {NULL}, 0, 0, S_PINV},             // S_PINV2
-	{SPR_PINV, 1, 18, {A_MonitorPop}, 0, 0, S_PINV4},   // S_PINV3
-	{SPR_PINV, 1, 18, {A_Invincibility}, 0, 0, S_DISS}, // S_PINV4
+	{SPR_PINV, 0, 1, {NULL}, 0, 0, S_PINV1},          // S_PINV
+	{SPR_PINV, 1, 2, {NULL}, 0, 0, S_PINV},           // S_PINV1
+	{SPR_PINV, 2, 2, {A_Fall}, 0, 0, S_PINV3}, // S_PINV2
+	{SPR_PINV, 3, 2, {A_Scream}, 0, 0, S_PINV4},             // S_PINV3
+	{SPR_PINV, 4, 2, {NULL}, 0, 0, S_PINV5},          // S_PINV4
+	{SPR_PINV, 5, 2, {NULL}, 0, 0, S_PINV6},           // S_PINV5
+	{SPR_PINV, 6, 16, {NULL}, 0, 0, S_PINV7}, // S_PINV6
+	{SPR_PINV, 6, 48, {A_Invincibility}, 0, 0, S_PINV8}, // S_PINV7
+	{SPR_PINV, 7, -1, {NULL}, 0, 0, S_DISS},             // S_PINV8
 
 	// Water Shield Box
 	{SPR_BLTV, 0, 1, {NULL}, 0, 0, S_BLTV1},          // S_BLTV1
@@ -1969,7 +1974,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,       // painsound
 		S_NULL,         // meleestate
 		S_NULL,         // missilestate
-		S_PINV3,        // deathstate
+		S_PINV2,        // deathstate
 		S_NULL,         // xdeathstate
 		sfx_slop,        // deathsound
 		MT_MONITOREXPLOSION, // speed
@@ -6412,18 +6417,18 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{           // MT_EGGMANBOX
 		2005,           // doomednum
-		S_EGGTV1,       // spawnstate
+		S_EGGTV,       // spawnstate
 		1,              // spawnhealth
 		S_NULL,         // seestate
 		sfx_None,       // seesound
 		8,              // reactiontime
 		sfx_None,       // attacksound
-		S_EGGTV1,       // painstate
+		S_EGGTV,       // painstate
 		0,              // painchance
 		sfx_None,       // painsound
 		S_NULL,         // meleestate
 		S_NULL,         // missilestate
-		S_EGGTV3,       // deathstate
+		S_EGGTV2,       // deathstate
 		S_NULL,         // xdeathstate
 		sfx_slop,        // deathsound
 		MT_MONITOREXPLOSION, // speed
