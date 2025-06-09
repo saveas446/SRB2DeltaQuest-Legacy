@@ -47,7 +47,9 @@ char sprnames[NUMSPRITES + 1][5] =
 	#endif
 	"GFLG","TOKE",
 	"CEMG","CEMO","CEMP","CEMB","CEMR","CEML","CEMY","JETB","JETG","JBUL",
-	"MOUS","DETN","XPLD","CHAN","SNO1","SANT","EMER","EMES","EMET",
+	"MOUS",
+	"PAIN", // Demo 2 uses "PAIN" instead of "DETN" for some reason
+	"XPLD","CHAN","SNO1","SANT","EMER","EMES","EMET",
 	"SBLL","SPIK",
 	#if TH_TOLERANCE >= 1
 	"CCOM",
