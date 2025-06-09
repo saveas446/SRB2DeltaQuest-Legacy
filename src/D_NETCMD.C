@@ -1112,7 +1112,7 @@ static void Got_NameAndColor(char **cp, int playernum)
 	char *str;
 	byte extrainfo;
 
-	CONS_Printf("Got_NameAndColor");
+	//CONS_Printf("Got_NameAndColor\n");
 
 #ifdef PARANOIA
 	if (playernum < 0 || playernum > MAXPLAYERS)
@@ -2625,15 +2625,16 @@ static void Command_Version_f(void)
 
 #ifndef TH_TOLERANCE
 #define TH_TOLERANCE_STR "Thing tolerance: Strict\n"
-#endif 
+#else
 
-#if TH_TOLERANCE == 0
-#define TH_TOLERANCE_STR "Thing tolerance: Intermediate\n"
-#endif 
+	#if TH_TOLERANCE == 0
+	#define TH_TOLERANCE_STR "Thing tolerance: Intermediate\n"
+	#endif 
 
-#if TH_TOLERANCE == 1
-#define TH_TOLERANCE_STR "Thing tolerance: Loose\n"
-#endif 
+	#if TH_TOLERANCE == 1
+	#define TH_TOLERANCE_STR "Thing tolerance: Loose\n"
+	#endif 
+#endif
 
 
 static void Command_BuildSettings_f(void)

@@ -189,7 +189,9 @@ typedef enum
 	SPR_SIGN, // Level end sign
 	SPR_RRNG, // Red Ring
 	SPR_TTAG, // Tag Sign
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	SPR_STEM, // Steam riser
+	#endif
 	SPR_GFLG, // Got Flag sign
 	SPR_TOKE, // Special Stage Token
 	SPR_CEMG, // Chaos Emerald (intangible)
@@ -213,11 +215,11 @@ typedef enum
 	SPR_EMET, // Emerald Hunt 3
 	SPR_SBLL, // Snow Ball for Snow Buster
 	SPR_SPIK, // Spike Ball
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	SPR_CCOM, // Crawla Commander
 	#endif
 	SPR_RAIN, // Rain
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	SPR_DSPK, // Ceiling spike
 	SPR_USPK, // Floor spike
 	#endif
@@ -234,7 +236,7 @@ typedef enum
 	SPR_THOM, // Thrown Homing Ring
 	SPR_TAUT, // Thrown Automatic Ring
 	SPR_TEXP, // Thrown Explosion Ring
-	#if TH_TOLERANCE >= 0
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	SPR_BUS1, // GFZ Bush w/ berries
 	SPR_BUS2, // GFZ Bush w/o berries
 	#endif
@@ -267,7 +269,7 @@ typedef enum
 	SPR_NWNG, // NiGHTS Wing collectable item.
 	SPR_EGGN, // Boss 2
 	SPR_GOOP, // Boss 2 Goop
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	SPR_BPLD, // Boss Explosions
 	#endif
 
@@ -325,8 +327,10 @@ typedef enum
 	SPR_REDX, // He's BACK!
 
 	SPR_SPRB, // Blue springs
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	SPR_BUZZ, // Buzz (Gold)
 	SPR_RBUZ, // Buzz (Red)
+	#endif
 
 	SPR_CEMK, // 8th Emerald
 
@@ -1012,6 +1016,7 @@ typedef enum
 	// Tag Sign
 	S_TTAG1,
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	// Steam Riser
 	S_STEAM1,
 	S_STEAM2,
@@ -1021,6 +1026,7 @@ typedef enum
 	S_STEAM6,
 	S_STEAM7,
 	S_STEAM8,
+	#endif
 
 	// Got Flag Sign
 	S_GOTFLAG1,
@@ -1116,7 +1122,7 @@ typedef enum
 	S_SPIKEBALL7,
 	S_SPIKEBALL8,
 
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	// Crawla Commander
 	S_CCOMMAND1,
 	S_CCOMMAND2,
@@ -1136,10 +1142,11 @@ typedef enum
 	// Rain
 	S_RAIN1,
 	S_RAINRETURN,
-
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	// Spikes
 	S_CEILINGSPIKE,
 	S_FLOORSPIKE,
+	#endif
 
 	// Starpost
 	S_STARPOST1,
@@ -1414,7 +1421,7 @@ typedef enum
 	S_THROWNEXPLOSION7,
 	S_RINGEXPLODE,
 
-	#if TH_TOLERANCE >= 0
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	// Greenflower Scenery
 	S_BERRYBUSH,
 	S_BUSH,
@@ -1626,7 +1633,7 @@ typedef enum
 	S_GOOP2,
 	S_GOOP3,
 
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	// Boss Explosion
 	S_BPLD1,
 	S_BPLD2,
@@ -1856,7 +1863,7 @@ typedef enum
 	S_BLUESPRING4,
 	S_BLUESPRING5,
 
-	#if TH_TOLERANCE >= 0
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	// Buzz (Gold)
 	S_BUZZLOOK1,
 	S_BUZZLOOK2,
@@ -2020,7 +2027,9 @@ typedef enum
 	MT_SIGN, // Level end sign
 	MT_REDRING,
 	MT_TAG, // Tag Sign
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	MT_STEAM, // Steam riser
+	#endif
 	MT_GOTFLAG, // Got Flag sign
 	MT_GOTFLAG2, // Got Flag sign
 	MT_TOKEN, // Special Stage Token
@@ -2045,7 +2054,7 @@ typedef enum
 	MT_EMETHUNT, // Emerald Hunt 3
 	MT_SNOWBALL, // Snow Ball for Snow Buster
 	MT_SPIKEBALL, // Spike Ball
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	MT_CRAWLACOMMANDER, // Crawla Commander
 	#endif
 	MT_CRUMBLEOBJ, // Sound generator for crumbling platform
@@ -2125,7 +2134,7 @@ typedef enum
 	MT_BOSSFLYPOINT,
 	MT_EGGMOBILE2,
 	MT_GOOP,
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	MT_BOSSEXPLODE,
 	#endif
 	MT_EGGTRAP,
@@ -2185,7 +2194,7 @@ typedef enum
 
 	MT_REDXVI, // He's BACK!
 
-	#if TH_TOLERANCE >= 0
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	MT_GOLDBUZZ,
 	MT_REDBUZZ,
 	#endif

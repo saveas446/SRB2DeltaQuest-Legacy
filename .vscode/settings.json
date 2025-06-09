@@ -17,7 +17,10 @@
         "xstring": "c",
         "xutility": "c",
         "P_FLOOR.C": "cpp",
-        "xtr1common": "c"
+        "xtr1common": "c",
+        "WIN_VID.C": "cpp",
+        "R_BSP.C": "cpp",
+        "P_FAB.C": "cpp"
     },
     "C_Cpp.dimInactiveRegions": false
 }

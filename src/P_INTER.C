@@ -1101,7 +1101,7 @@ static void P_DeathMessages(mobj_t *target, mobj_t *inflictor, mobj_t *source)
 					if (netgame)
 						str = "%s%s%s was killed by a jetty-syn bomber!\n";
 					break;
-				#if TH_TOLERANCE >= 1
+				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 				case MT_CRAWLACOMMANDER:
 					if (netgame)
 						str = "%s%s%s was killed by a crawla commander!\n";
@@ -1350,7 +1350,7 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source)
 					case MT_JETTGUNNER:
 						score = 500*source->player->scoreadd;
 						break;
-					#if TH_TOLERANCE >= 1
+					#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 					case MT_CRAWLACOMMANDER:
 						score = 300*source->player->scoreadd;
 						break;
@@ -1494,7 +1494,9 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source)
 			switch (target->type)
 			{
 				case MT_REDCRAWLA:
+				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 				case MT_GOLDBUZZ:
+				#endif
 				case MT_SKIM:
 					item = MT_SQRL;
 					break;
@@ -1506,10 +1508,12 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source)
 					break;
 
 				case MT_JETTGUNNER:
-				#if TH_TOLERANCE >= 1
+				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 				case MT_CRAWLACOMMANDER:
 				#endif
+				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 				case MT_REDBUZZ:
+				#endif
 					item = MT_MOUSE;
 					break;
 
@@ -1657,7 +1661,7 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 			return false;
 	}
 
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	// Special case for Crawla Commander
 	if (target->type == MT_CRAWLACOMMANDER)
 	{
@@ -2057,8 +2061,12 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 								| ((player->skincolor)<<MF_TRANSSHIFT);
 
 			P_ResetPlayer(player);
-
-			if (source && (source->type == MT_DISS || source->type == MT_FLOORSPIKE || source->type == MT_CEILINGSPIKE) && source->threshold == 43) // spikes
+			
+			if (source && (source->type == MT_DISS 
+				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+				|| source->type == MT_FLOORSPIKE || source->type == MT_CEILINGSPIKE
+				#endif
+				) && source->threshold == 43) // spikes
 				S_StartSound(target, sfx_pldeth);
 			else
 				S_StartSound (target, sfx_pldeth); // Ba-Dum! Shield loss.
@@ -2117,7 +2125,11 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 
 			P_ResetPlayer(player);
 
-			if (source && (source->type == MT_DISS || source->type == MT_FLOORSPIKE || source->type == MT_CEILINGSPIKE) && source->threshold == 43) // spikes
+			if (source && (source->type == MT_DISS 
+				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+				|| source->type == MT_FLOORSPIKE || source->type == MT_CEILINGSPIKE
+				#endif
+				) && source->threshold == 43) // spikes
 				S_StartSound(target, sfx_pldeth);
 
 			// Ring loss sound plays despite hitting spikes
@@ -2146,7 +2158,11 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 
 			P_ResetPlayer(player);
 
-			if (source && (source->type == MT_DISS || source->type == MT_FLOORSPIKE || source->type == MT_CEILINGSPIKE) && source->threshold == 43) // Spikes
+			if (source && (source->type == MT_DISS 
+				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+				|| source->type == MT_FLOORSPIKE || source->type == MT_CEILINGSPIKE
+				#endif
+				) && source->threshold == 43) // spikess
 				S_StartSound(target, sfx_pldeth);
 			else
 				P_PlayDeathSound(target);

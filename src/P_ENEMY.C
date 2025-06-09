@@ -1011,7 +1011,7 @@ void A_BossScream(mobj_t *actor)
 	y = actor->y + FixedMul(finesine[fa],actor->radius);
 
 	z = actor->z - 8*FRACUNIT + (P_Random()<<(FRACBITS-2));
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	if (actor->info->deathsound) S_StartSound(P_SpawnMobj(x, y, z, MT_BOSSEXPLODE), actor->info->deathsound);
 	#else
 	if (actor->info->deathsound) 
@@ -3283,7 +3283,9 @@ void A_Boss2PogoSFX(mobj_t *actor)
 // var1 = unused
 // var2 = unused
 //
-void A_EggmanBox(mobj_t *actor)
+
+//old
+/*void A_EggmanBox(mobj_t *actor)
 {
 	if (!actor->target || !actor->target->player)
 	{
@@ -3293,6 +3295,27 @@ void A_EggmanBox(mobj_t *actor)
 	}
 
 	P_DamageMobj(actor->target, actor, actor, 1); // Ow!
+}*/
+
+void A_EggmanBox(mobj_t *actor)
+{
+	player_t *player;
+
+	CONS_Printf("eggman box\n");
+
+	if (!actor->target || !actor->target->player)
+	{
+		if(cv_debug)
+			CONS_Printf("ERROR: Powerup has no target!\n");
+		return;
+	}
+
+	player = actor->target->player;
+
+	P_DamageMobj(actor->target, actor, actor, 1); // Ow!
+	if (actor->info->seesound)
+		S_StartSound(player->mo, actor->info->seesound);
+	P_SetMobjState(actor, S_DISS);
 }
 
 // Function: A_TurretFire

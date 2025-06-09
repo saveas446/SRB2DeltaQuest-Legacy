@@ -666,7 +666,7 @@ void P_XYMovement(mobj_t *mo)
 			return;
 		}
 	}
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	if (mo->z > mo->floorz && mo->type != MT_CRAWLACOMMANDER && mo->type != MT_EGGMOBILE && mo->type != MT_EGGMOBILE2)
 		return; // no friction when airborne
 	#endif
@@ -941,7 +941,7 @@ static void P_ZMovement(mobj_t *mo)
 
 	if (mo->flags & MF_FLOAT && mo->target && mo->health && !(mo->type == MT_DETON ||
 		mo->type == MT_JETTBOMBER || mo->type == MT_JETTGUNNER || 
-		#if TH_TOLERANCE >= 1 
+		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1) 
 		mo->type == MT_CRAWLACOMMANDER ||
 		#endif
 		mo->type == MT_EGGMOBILE2) && mo->target->health > 0)
@@ -1026,7 +1026,10 @@ static void P_ZMovement(mobj_t *mo)
 			}
 			if ((mo->z <= mo->floorz) && (!(tmfloorthing) || (((tmfloorthing->flags & MF_PUSHABLE)
 				|| (tmfloorthing->flags2 & MF2_STANDONME)) || tmfloorthing->type == MT_PLAYER
-				|| tmfloorthing->type == MT_FLOORSPIKE)))
+				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+				|| tmfloorthing->type == MT_FLOORSPIKE
+				#endif
+				)))
 			{
 				if (!tmfloorthing || mo->momz)
 					mo->eflags |= MF_JUSTHITFLOOR;
@@ -1045,12 +1048,17 @@ static void P_ZMovement(mobj_t *mo)
 				else
 					mo->momz = -FixedMul(mo->momz,(17*FRACUNIT)/20);
 			}
-			else if (!(tmfloorthing) || (((tmfloorthing->flags & MF_PUSHABLE) || (tmfloorthing->flags2 & MF2_STANDONME)) || tmfloorthing->type == MT_PLAYER || tmfloorthing->type == MT_FLOORSPIKE))
+			else if (!(tmfloorthing) || (((tmfloorthing->flags & MF_PUSHABLE) || (tmfloorthing->flags2 & MF2_STANDONME)) || tmfloorthing->type == MT_PLAYER 
+			#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+			|| tmfloorthing->type == MT_FLOORSPIKE
+			#endif
+			))
 				mo->momz = 0;
 		}
-
+		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 		if (mo->type == MT_STEAM)
 			return;
+		#endif
 
 		mo->z = mo->floorz;
 	}
@@ -1102,13 +1110,15 @@ static void P_ZMovement(mobj_t *mo)
 		if (!mo->momz) // mobj at stop, no floor, so feel the push of gravity!
 			gravityadd <<= 1;
 
+		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 		if (mo->type == MT_CEILINGSPIKE)
 		{
 			gravityadd *= -1; // Reverse gravity for ceiling spikes
 			if (mo->z + mo->height >= mo->ceilingz)
 				gravityadd = 0;
 		}
-
+		#endif
+		
 		mo->momz += gravityadd/NEWTICRATERATIO;
 		if (mo->type == MT_SKIM && mo->z + mo->momz <= mo->watertop && mo->z >= mo->watertop)
 		{
@@ -1276,7 +1286,10 @@ static void P_PlayerZMovement(mobj_t *mo)
 			}
 			if ((mo->z <= mo->floorz) && (!(tmfloorthing) || (((tmfloorthing->flags & MF_PUSHABLE)
 				|| (tmfloorthing->flags2 & MF2_STANDONME)) || tmfloorthing->type == MT_PLAYER
-				|| tmfloorthing->type == MT_FLOORSPIKE))) // Spin Attack
+				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+				|| tmfloorthing->type == MT_FLOORSPIKE
+				#endif
+			))) // Spin Attack
 			{
 				if ((tmfloorthing && mo->momz) || !tmfloorthing)
 					mo->eflags |= MF_JUSTHITFLOOR; // Spin Attack
@@ -1340,7 +1353,11 @@ static void P_PlayerZMovement(mobj_t *mo)
 			if (mo->player && !mo->player->mfspinning)
 				mo->player->mfstartdash = 0; // dashing stuff
 
-			if (!(tmfloorthing) || (((tmfloorthing->flags & MF_PUSHABLE) || (tmfloorthing->flags2 & MF2_STANDONME)) || tmfloorthing->type == MT_PLAYER || tmfloorthing->type == MT_FLOORSPIKE))
+			if (!(tmfloorthing) || (((tmfloorthing->flags & MF_PUSHABLE) || (tmfloorthing->flags2 & MF2_STANDONME)) || tmfloorthing->type == MT_PLAYER 
+			#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+			|| tmfloorthing->type == MT_FLOORSPIKE
+			#endif
+			))
 				mo->momz = 0;
 		}
 	}
@@ -1556,7 +1573,10 @@ static void P_SceneryZMovement(mobj_t *mo)
 		{
 			if ((!(tmfloorthing) || (((tmfloorthing->flags & MF_PUSHABLE)
 				|| (tmfloorthing->flags2 & MF2_STANDONME)) || tmfloorthing->type == MT_PLAYER
-				|| tmfloorthing->type == MT_FLOORSPIKE)))
+				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+				|| tmfloorthing->type == MT_FLOORSPIKE
+				#endif
+			)))
 			{
 				if (!tmfloorthing || mo->momz)
 					mo->eflags |= MF_JUSTHITFLOOR; // Spin Attack
@@ -3420,6 +3440,10 @@ void P_MobjThinker(mobj_t *mobj)
 			{
 				byte prandom;
 
+			#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+				case MT_EGGMANBOX:
+			#endif
+
 				// gargoyle and snowman handled in P_PushableThinker, not here
 				case MT_YELLOWTV: // Ring shield box
 				case MT_REDTV: // Fire shield box
@@ -3432,7 +3456,6 @@ void P_MobjThinker(mobj_t *mobj)
 				case MT_INV: // Invincibility box
 				case MT_MIXUPBOX: // Teleporter Mixup box
 				case MT_PRUP: // 1up!
-				case MT_EGGMANBOX:
 					P_SetMobjState(mobj, S_DISS); // make sure they disappear
 
 					if (mobj->flags & MF_AMBUSH)
@@ -3641,7 +3664,7 @@ void P_MobjThinker(mobj_t *mobj)
 							numchoices++;
 						}
 					}
-					#if TH_TOLERANCE >= 1
+					#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 					if (cv_chaos_crawlacommander.value
 						&& space >= mobjinfo[MT_CRAWLACOMMANDER].height + 33*FRACUNIT)
 					{
@@ -4861,7 +4884,9 @@ void P_SpawnMapThing(mapthing_t *mthing)
 			if (i == MT_SUPERRINGBOX && !cv_superring.value) return;
 			if (i == MT_GREYRINGBOX && !cv_silverring.value) return;
 			if (i == MT_INV && !cv_invincibility.value) return;
+			#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 			if (i == MT_EGGMANBOX && !cv_eggmanbox.value) return;
+			#endif
 			if (i == MT_MIXUPBOX && !cv_teleporters.value) return;
 			if (i == MT_QUESTIONBOX && !cv_questionbox.value) return;
 		}
@@ -4898,7 +4923,9 @@ void P_SpawnMapThing(mapthing_t *mthing)
 				if (i == MT_SUPERRINGBOX && !cv_superring.value) return;
 				if (i == MT_GREYRINGBOX && !cv_silverring.value) return;
 				if (i == MT_INV && !cv_invincibility.value) return;
+				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 				if (i == MT_EGGMANBOX && !cv_eggmanbox.value) return;
+				#endif
 				if (i == MT_MIXUPBOX && !cv_teleporters.value) return;
 				if (i == MT_QUESTIONBOX) return; // don't spawn in Non-Random
 
@@ -4917,7 +4944,9 @@ void P_SpawnMapThing(mapthing_t *mthing)
 			if (i == MT_SUPERRINGBOX && !cv_superring.value) return;
 			if (i == MT_GREYRINGBOX && !cv_silverring.value) return;
 			if (i == MT_INV && !cv_invincibility.value) return;
+			#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 			if (i == MT_EGGMANBOX && !cv_eggmanbox.value) return;
+			#endif
 			if (i == MT_MIXUPBOX && !cv_teleporters.value) return;
 			if (i == MT_QUESTIONBOX && !cv_questionbox.value) return;
 		}
@@ -4928,7 +4957,7 @@ void P_SpawnMapThing(mapthing_t *mthing)
 
 	if ((i == MT_SUPERRINGBOX || i == MT_GREYRINGBOX || i == MT_REDTV
 		|| i == MT_YELLOWTV || i == MT_BLUETV || i == MT_BLACKTV || i == MT_WHITETV)
-		&& gameskill == sk_insane && !(gamemap >= sstage_start && gamemap <= sstage_end))
+		&& gameskill == sk_insane)
 	{
 		// Don't have rings/shields in Ultimate mode
 		return;
@@ -4967,14 +4996,16 @@ void P_SpawnMapThing(mapthing_t *mthing)
 		}
 		else if (mthing->options >> 4)
 			z = ss->sector->floorheight + ((mthing->options >> 4) << FRACBITS);
-		#if TH_TOLERANCE >= 1
+		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 		else if (i == MT_CRAWLACOMMANDER || i == MT_DETON || i == MT_JETTBOMBER || i == MT_JETTGUNNER || i == MT_EGGMOBILE || i == MT_EGGMOBILE2)
 		#else
 		else if (i == MT_DETON || i == MT_JETTBOMBER || i == MT_JETTGUNNER || i == MT_EGGMOBILE || i == MT_EGGMOBILE2)
 		#endif
 			z = ss->sector->floorheight + 33*FRACUNIT;
+		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 		else if (i == MT_GOLDBUZZ || i == MT_REDBUZZ)
 			z = ss->sector->floorheight + 288*FRACUNIT;
+		#endif
 		else
 			z = ONFLOORZ;
 

@@ -889,8 +889,9 @@ static void R_ProjectSprite(mobj_t *thing)
 #ifdef PARANOIA
     //heretic hack
     if (!sprframe)
-        I_Error("sprframes NULL for sprite %d\n", thing->sprite);
+        I_Error("sprframes NULL for sprite %s\n", sprnames[thing->sprite]);
 #endif
+
 
     if (sprframe->rotate)
     {
@@ -1128,8 +1129,8 @@ static void R_ProjectPrecipitationSprite(precipmobj_t *thing)
 
 #ifdef PARANOIA
 	//heretic hack
-	if (!sprframe)
-		I_Error("sprframes NULL for sprite %d\n", thing->sprite);
+    if (!sprframe)
+        I_Error("sprframes NULL for sprite %s\n", sprnames[thing->sprite]);
 #endif
 
 	// use single rotation for all views

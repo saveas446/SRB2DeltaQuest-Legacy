@@ -201,7 +201,9 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT],     // SPR_SIGN
 	&lspr[RINGLIGHT_L],     // SPR_RRNG
 	&lspr[NOLIGHT],     // SPR_TTAG
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	&lspr[NOLIGHT],     // SPR_STEM
+	#endif
 	&lspr[NOLIGHT],     // SPR_GFLG
 	&lspr[BLUEBALL_L],     // SPR_TOKE
 	&lspr[GREENSHINE_L],     // SPR_CEMG
@@ -225,8 +227,11 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT],     // SPR_EMET
 	&lspr[NOLIGHT],     // SPR_SBLL
 	&lspr[NOLIGHT],     // SPR_SPIK
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+	&lspr[NOLIGHT],     // SPR_CCOM
+	#endif
 	&lspr[NOLIGHT],     // SPR_RAIN
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	&lspr[NOLIGHT],     // SPR_DSPK
 	&lspr[NOLIGHT],     // SPR_USPK
 	#endif
@@ -244,7 +249,7 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[RINGLIGHT_L],     // SPR_THOM
 	&lspr[RINGLIGHT_L],     // SPR_TAUT
 	&lspr[RINGLIGHT_L],     // SPR_TEXP
-	#if TH_TOLERANCE >= 0
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	&lspr[NOLIGHT],     // SPR_BUS1
 	&lspr[NOLIGHT],     // SPR_BUS2
 	#endif
@@ -277,7 +282,7 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT],     // SPR_NWNG
 	&lspr[NOLIGHT],     // SPR_EGGN
 	&lspr[NOLIGHT],     // SPR_GOOP
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	&lspr[SUPERSPARK_L],     // SPR_BPLD
 	#endif
 	&lspr[NOLIGHT],     // SPR_RDTV
@@ -321,7 +326,7 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT], // SPR_NPRC
 	&lspr[NOLIGHT], // SPR_REDX
 	&lspr[NOLIGHT], // SPR_SPRB Graue 01-08-2004
-	#if TH_TOLERANCE >= 0
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	&lspr[NOLIGHT], // SPR_BUZZ Graue 03-10-2004
 	&lspr[NOLIGHT], // SPR_RBUZ Graue 03-10-2004
 	#endif

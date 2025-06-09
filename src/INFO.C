@@ -42,7 +42,7 @@ char sprnames[NUMSPRITES + 1][5] =
 	"CNTE","CNTF","POPP","PRUP","BKTV","SCRA","SCRB","SCRC","SCRD","SSPK",
 	"NBMP","YSPR","RSPR","YSUD","RSUD","SKIM","MINE","FISH","GARG","SPLH",
 	"THOK","THZP","SIGN","RRNG","TTAG",
-	#if TH_TOLERANCE >= 0
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"STEM",
 	#endif
 	"GFLG","TOKE",
@@ -51,22 +51,22 @@ char sprnames[NUMSPRITES + 1][5] =
 	"PAIN", // Demo 2 uses "PAIN" instead of "DETN" for some reason
 	"XPLD","CHAN","SNO1","SANT","EMER","EMES","EMET",
 	"SBLL","SPIK",
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	"CCOM",
 	#endif
 	"RAIN",
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	"DSPK","USPK",
 	#endif
 	"STPT","RNGM","RNGR","RNGS",
 	"RNGA","RNGE","TAEH","TAER","THER","TAHR","THOM","TAUT","TEXP",
-	#if TH_TOLERANCE >= 0
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"BUS1","BUS2",
 	#endif
 	"FWR2","FWR3","MIXU","QUES","MTEX","FLAM","PUMA","HAMM","KOOP",
 	"SHLL","MAXE","FBLL","FFWR","NSPK","SUPE","SUPZ","NDRN","NDRL",
 	"SEED","JETF","HOOP","NSCR","NWNG","EGGN","GOOP",
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	"BPLD",
 	#endif
 	"RDTV",
@@ -75,7 +75,7 @@ char sprnames[NUMSPRITES + 1][5] =
 	"XMS2","XMS3","SUPT","ROIA","ROIB","ROIC","ROID","ROIE","ROIF",
 	"ROIG","ROIH","ROII","ROIJ","ROIK","ROIL","ROIM","ROIN","ROIO","ROIP",
 	"NPRA","NPRB","NPRC","REDX","SPRB",
-	#if TH_TOLERANCE >= 0
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"BUZZ","RBUZ",
 	#endif
 	"CEMK","WHTV","WORB",
@@ -763,7 +763,7 @@ state_t states[NUMSTATES] =
 
 	{SPR_TTAG, 32768, 2, {NULL}, 0, 0, S_DISS}, // S_TTAG1
 
-	#if TH_TOLERANCE >= 0
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	// Steam Riser
 	{SPR_STEM, 0, 2, {A_SetSolidSteam}, 0, 0, S_STEAM2},   // S_STEAM1
 	{SPR_STEM, 1, 2, {A_UnsetSolidSteam}, 0, 0, S_STEAM3}, // S_STEAM2
@@ -869,7 +869,7 @@ state_t states[NUMSTATES] =
 	{SPR_SPIK, 6, 1, {A_RotateSpikeBall}, 0, 0, S_SPIKEBALL8}, // S_SPIKEBALL7
 	{SPR_SPIK, 7, 1, {A_RotateSpikeBall}, 0, 0, S_SPIKEBALL1}, // S_SPIKEBALL8
 
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	// Crawla Commander
 	{SPR_CCOM, 0, 1, {A_CrawlaCommanderThink}, 0, 15*FRACUNIT, S_CCOMMAND2}, // S_CCOMMAND1
 	{SPR_CCOM, 1, 1, {A_CrawlaCommanderThink}, 0, 15*FRACUNIT, S_CCOMMAND1}, // S_CCOMMAND2
@@ -889,7 +889,7 @@ state_t states[NUMSTATES] =
 	// Rain
 	{SPR_RAIN, 32768, -1, {NULL}, 0, 0, S_NULL}, // S_RAIN1
 	{SPR_RAIN, 32768, 1, {NULL}, 0, 0, S_RAIN1}, // S_RAINRETURN
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	// Ceiling Spike
 	{SPR_DSPK, 0, -1, {NULL}, 0, 0, S_NULL}, // S_CEILINGSPIKE
 	// Floor Spike
@@ -1176,7 +1176,7 @@ state_t states[NUMSTATES] =
 
 	{SPR_DISS, 0, 1, {A_RingExplode}, MT_REDRING, 0, S_XPLD1}, // S_RINGEXPLODE
 
-	#if TH_TOLERANCE >= 0
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	// Greenflower Scenery
 	{SPR_BUS1, 0, -1, {NULL}, 0, 0, S_NULL},       // S_BERRYBUSH
 	{SPR_BUS2, 0, -1, {NULL}, 0, 0, S_NULL},       // S_BUSH
@@ -1410,7 +1410,7 @@ state_t states[NUMSTATES] =
 	{SPR_GOOP, 32770, -1, {NULL}, 0, 0, S_DISS}, // S_GOOP3
 
 	
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	// Boss Explosion
 	{SPR_BPLD, 32768, 5, {NULL}, 0, 0, S_BPLD2}, // S_BPLD1
 	{SPR_BPLD, 32769, 5, {NULL}, 0, 0, S_BPLD3}, // S_BPLD2
@@ -1642,7 +1642,7 @@ state_t states[NUMSTATES] =
 	{SPR_SPRB, 2, 1, {NULL}, 0, 0, S_BLUESPRING5},   // S_BLUESPRING4
 	{SPR_SPRB, 1, 1, {NULL}, 0, 0, S_BLUESPRING},    // S_BLUESPRING5
 
-	#if TH_TOLERANCE >= 0
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	// Gold Buzz
 	{SPR_BUZZ, 0, 2, {A_Look}, 0, 0, S_BUZZLOOK2},   // S_BUZZLOOK1
 	{SPR_BUZZ, 1, 2, {A_Look}, 0, 0, S_BUZZLOOK1},   // S_BUZZLOOK2
@@ -3711,7 +3711,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOBLOCKMAP|MF_NOCLIP|MF_NOGRAVITY|MF_SCENERY, // flags
 		S_NULL          // raisestate
 	},
-
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{           // MT_STEAM
 		30,             // doomednum
 		S_STEAM1,       // spawnstate
@@ -3737,6 +3737,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SOLID,       // flags
 		S_NULL          // raisestate
 	},
+	#endif
 	{           // MT_GOTFLAG
 		-1,             // doomednum
 		S_GOTFLAG1,     // spawnstate
@@ -4366,7 +4367,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SPECIAL|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	{           // MT_CRAWLACOMMANDER
 		21,             // doomednum
 		S_CCOMMAND1,    // spawnstate
@@ -4552,7 +4553,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOBLOCKMAP,  // flags
 		S_NULL          // raisestate
 	},
-
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	{           // MT_CEILINGSPIKE
 		67,             // doomednum
 		S_CEILINGSPIKE, // spawnstate
@@ -4604,7 +4605,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SOLID,       // flags
 		S_NULL          // raisestate
 	},
-
+	#endif
 	{           // MT_STARPOST
 		3006,           // doomednum
 		S_STARPOST1,    // spawnstate
@@ -4968,7 +4969,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOBLOCKMAP|MF_MISSILE|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
-	#if TH_TOLERANCE >= 0
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{           // MT_BERRYBUSH
 		74,             // doomednum
 		S_BERRYBUSH,    // spawnstate
@@ -6292,7 +6293,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SPECIAL,     // flags
 		S_NULL          // raisestate
 	},
-	#if TH_TOLERANCE >= 1
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	{           // MT_BOSSEXPLODE
 		-1,             // doomednum
 		S_BPLD1,        // spawnstate
@@ -7486,7 +7487,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SPECIAL,     // flags
 		S_NULL          // raisestate
 	},
-	#if TH_TOLERANCE >= 0
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{           // MT_GOLDBUZZ
 		5005,           // doomednum
 		S_BUZZLOOK1,    // spawnstate

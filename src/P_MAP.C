@@ -459,6 +459,7 @@ static boolean PIT_CheckThing(mobj_t *thing)
 		return !solid;
 	}
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	// Sprite Spikes!
 	if (tmthing->type == MT_CEILINGSPIKE)
 	{
@@ -487,6 +488,7 @@ static boolean PIT_CheckThing(mobj_t *thing)
 			P_DamageMobj(tmthing, thing, thing, 1);
 		}
 	}
+	#endif
 
 	if ((tmthing->flags & MF_PUSHABLE) && tmthing->z <= (thing->z + thing->height + FRACUNIT)
 		&& (tmthing->z + tmthing->height) >= thing->z)
@@ -601,6 +603,7 @@ static boolean PIT_CheckThing(mobj_t *thing)
 						#endif
 					}
 					break;
+				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 				case MT_STEAM: // Steam
 					if (tmthing->state == &states[S_STEAM1] && thing->z <= tmthing->z + 16*FRACUNIT) // Only when it bursts
 					{
@@ -615,6 +618,7 @@ static boolean PIT_CheckThing(mobj_t *thing)
 						#endif
 					}
 					break;
+				#endif
 				default:
 					break;
 			}
@@ -641,6 +645,7 @@ static boolean PIT_CheckThing(mobj_t *thing)
 						#endif
 					}
 					break;
+				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 				case MT_STEAM: // Steam
 					if (thing->state == &states[S_STEAM1] && tmthing->z <= thing->z + 16*FRACUNIT) // Only when it bursts
 					{
@@ -655,6 +660,7 @@ static boolean PIT_CheckThing(mobj_t *thing)
 						#endif
 					}
 					break;
+				#endif
 				default:
 					break;
 			}
