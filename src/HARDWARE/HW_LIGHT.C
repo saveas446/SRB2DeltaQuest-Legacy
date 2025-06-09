@@ -225,7 +225,6 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT],     // SPR_EMET
 	&lspr[NOLIGHT],     // SPR_SBLL
 	&lspr[NOLIGHT],     // SPR_SPIK
-	&lspr[NOLIGHT],     // SPR_CCOM
 	&lspr[NOLIGHT],     // SPR_RAIN
 	&lspr[NOLIGHT],     // SPR_DSPK
 	&lspr[NOLIGHT],     // SPR_USPK
@@ -296,8 +295,6 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT], // SPR_MUS1
 	&lspr[NOLIGHT], // SPR_MUS2
 	&lspr[NOLIGHT], // SPR_TOAD
-	&lspr[NOLIGHT], // SPR_COIN
-	&lspr[NOLIGHT], // SPR_CPRK
 	&lspr[NOLIGHT], // SPR_XMS1
 	&lspr[NOLIGHT], // SPR_XMS2
 	&lspr[NOLIGHT], // SPR_XMS3

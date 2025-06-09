@@ -213,7 +213,9 @@ typedef enum
 	SPR_EMET, // Emerald Hunt 3
 	SPR_SBLL, // Snow Ball for Snow Buster
 	SPR_SPIK, // Spike Ball
+	#if TH_TOLERANCE >= 1
 	SPR_CCOM, // Crawla Commander
+	#endif
 	SPR_RAIN, // Rain
 	SPR_DSPK, // Ceiling spike
 	SPR_USPK, // Floor spike
@@ -289,8 +291,6 @@ typedef enum
 	SPR_MUS1,
 	SPR_MUS2,
 	SPR_TOAD,
-	SPR_COIN,
-	SPR_CPRK,
 
 	SPR_XMS1,
 	SPR_XMS2,
@@ -1115,6 +1115,7 @@ typedef enum
 	S_SPIKEBALL7,
 	S_SPIKEBALL8,
 
+	#if TH_TOLERANCE >= 1
 	// Crawla Commander
 	S_CCOMMAND1,
 	S_CCOMMAND2,
@@ -1126,6 +1127,7 @@ typedef enum
 	S_CCOMMAND8,
 	S_CCOMMAND9,
 	S_CCOMMAND10,
+	#endif
 
 	S_CRUMBLE1,
 	S_CRUMBLE2,
@@ -1707,13 +1709,6 @@ typedef enum
 	S_MARIOBUSH1,
 	S_MARIOBUSH2,
 	S_TOAD,
-	S_COIN1,
-	S_COIN2,
-	S_COIN3,
-	S_COINSPARKLE1,
-	S_COINSPARKLE2,
-	S_COINSPARKLE3,
-	S_COINSPARKLE4,
 
 	// Xmas-specific stuff
 	S_XMASPOLE,
@@ -2050,7 +2045,9 @@ typedef enum
 	MT_EMETHUNT, // Emerald Hunt 3
 	MT_SNOWBALL, // Snow Ball for Snow Buster
 	MT_SPIKEBALL, // Spike Ball
+	#if TH_TOLERANCE >= 1
 	MT_CRAWLACOMMANDER, // Crawla Commander
+	#endif
 	MT_CRUMBLEOBJ, // Sound generator for crumbling platform
 	MT_YELLOWDIAGDOWN, // Yellow Diagonal Upside-Down Spring
 	MT_REDDIAGDOWN, // Red Diagonal Upside-Down Spring
@@ -2151,9 +2148,6 @@ typedef enum
 	MT_MARIOBUSH1,
 	MT_MARIOBUSH2,
 	MT_TOAD,
-	MT_COIN,
-	MT_COINSPARKLE,
-	MT_FLINGCOIN,
 
 	MT_XMASPOLE,
 	MT_CANDYCANE,

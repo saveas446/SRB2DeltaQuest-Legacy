@@ -577,7 +577,7 @@ static void P_DeNightserizePlayer(player_t *player)
 
 	if (player->mo->tracer)
 		P_SetMobjState(player->mo->tracer, S_DISS);
-	P_SetPlayerMobjState(player->mo, S_PLAY_FALL1);
+	P_SetPlayerMobjState(player->mo, S_PLAY_ATK1);
 	player->nightsfall = true;
 
 	// Check to see if the player should be killed.
@@ -3654,7 +3654,7 @@ static void P_MovePlayer(player_t *player)
 
 			mo2 = (mobj_t *)th;
 
-			if (!(mo2->type == MT_NIGHTSWING || mo2->type == MT_RING || mo2->type == MT_COIN))
+			if (!(mo2->type == MT_NIGHTSWING || mo2->type == MT_RING))
 				continue;
 
 			if (P_AproxDistance(P_AproxDistance(mo2->x - x, mo2->y - y), mo2->z - z) > 128*FRACUNIT)
@@ -3958,10 +3958,10 @@ static void P_MovePlayer(player_t *player)
 
 	// If Springing, but travelling DOWNWARD, change back!
 	if (player->mo->state == &states[S_PLAY_PLG1] && player->mo->momz < 0)
-		P_SetPlayerMobjState(player->mo, S_PLAY_FALL1);
+		P_SetPlayerMobjState(player->mo, S_PLAY_RUN1);
 
 	// If Springing but on the ground, change back!
-	else if (onground && (player->mo->state == &states[S_PLAY_PLG1] || player->mo->state == &states[S_PLAY_FALL1] || player->mo->state == &states[S_PLAY_FALL2]) && !player->mo->momz)
+	else if (onground && (player->mo->state == &states[S_PLAY_PLG1]) && !player->mo->momz)
 		P_SetPlayerMobjState(player->mo, S_PLAY_STND);
 
 	// If you are stopped and are still walking, stand still!
@@ -6705,7 +6705,7 @@ boolean P_RingNearby(player_t *player) // Is a ring in range?
 		if ((mo->health <= 0) || (mo->state == &states[S_DISS])) // Not a valid ring
 			continue;
 
-		if (!(mo->type == MT_RING || mo->type == MT_COIN))
+		if (!(mo->type == MT_RING))
 			continue;
 
 		if (P_AproxDistance(P_AproxDistance(player->mo->x-mo->x, player->mo->y-mo->y),
@@ -6747,7 +6747,7 @@ void P_LookForRings(player_t *player)
 		if ((mo->health <= 0) || (mo->state == &states[S_DISS])) // Not a valid ring
 			continue;
 
-		if (!(mo->type == MT_RING || mo->type == MT_COIN))
+		if (!(mo->type == MT_RING))
 			continue;
 
 		if (P_AproxDistance(P_AproxDistance(player->mo->x-mo->x, player->mo->y-mo->y),

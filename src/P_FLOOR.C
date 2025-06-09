@@ -2129,7 +2129,7 @@ int EV_MarioBlock(sector_t *sec, sector_t *roversector, fixed_t topheight,
 		P_SetThingPosition(thing);
 		if (thing->flags & MF_SHOOTABLE)
 			P_DamageMobj(thing, puncher, puncher, 1);
-		else if (thing->type == MT_RING || thing->type == MT_COIN)
+		else if (thing->type == MT_RING)
 		{
 			thing->momz = 3*FRACUNIT;
 			P_TouchSpecialThing(thing, puncher, false);

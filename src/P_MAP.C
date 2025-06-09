@@ -219,7 +219,7 @@ static void P_DoSpring(mobj_t *spring, mobj_t *object)
 		if (spring->info->speed > 0)
 			P_SetPlayerMobjState(object, S_PLAY_PLG1);
 		else
-			P_SetPlayerMobjState(object, S_PLAY_FALL1);
+			P_SetPlayerMobjState(object, S_PLAY_ATK1);
 
 		if (spring->info->painchance)
 		{
@@ -588,8 +588,8 @@ static boolean PIT_CheckThing(mobj_t *thing)
 					{
 						thing->momz = tmthing->info->speed;
 						P_ResetPlayer(thing->player);
-						if (!(thing->state == &states[S_PLAY_FALL1] || thing->state == &states[S_PLAY_FALL2]))
-							P_SetPlayerMobjState(thing, S_PLAY_FALL1);
+						if (!(thing->state == &states[S_PLAY_ATK1] || thing->state == &states[S_PLAY_ATK2] || thing->state == &states[S_PLAY_ATK3] || thing->state == &states[S_PLAY_ATK4]))
+							P_SetPlayerMobjState(thing, S_PLAY_ATK1);
 					}
 					break;
 				case MT_STEAM: // Steam
@@ -597,8 +597,8 @@ static boolean PIT_CheckThing(mobj_t *thing)
 					{
 						thing->momz = tmthing->info->speed;
 						P_ResetPlayer(thing->player);
-						if (!(thing->state == &states[S_PLAY_FALL1] || thing->state == &states[S_PLAY_FALL2]))
-							P_SetPlayerMobjState(thing, S_PLAY_FALL1);
+						if (!(thing->state == &states[S_PLAY_ATK1] || thing->state == &states[S_PLAY_ATK2] || thing->state == &states[S_PLAY_ATK3] || thing->state == &states[S_PLAY_ATK4]))
+							P_SetPlayerMobjState(thing, S_PLAY_ATK1);
 					}
 					break;
 				default:
@@ -618,8 +618,8 @@ static boolean PIT_CheckThing(mobj_t *thing)
 					{
 						tmthing->momz = thing->info->speed;
 						P_ResetPlayer(tmthing->player);
-						if (!(tmthing->state == &states[S_PLAY_FALL1] || tmthing->state == &states[S_PLAY_FALL2]))
-							P_SetPlayerMobjState(tmthing, S_PLAY_FALL1);
+						if (!(thing->state == &states[S_PLAY_ATK1] || thing->state == &states[S_PLAY_ATK2] || thing->state == &states[S_PLAY_ATK3] || thing->state == &states[S_PLAY_ATK4]))
+							P_SetPlayerMobjState(tmthing, S_PLAY_ATK1);
 					}
 					break;
 				case MT_STEAM: // Steam
@@ -627,8 +627,8 @@ static boolean PIT_CheckThing(mobj_t *thing)
 					{
 						tmthing->momz = thing->info->speed;
 						P_ResetPlayer(tmthing->player);
-						if (!(tmthing->state == &states[S_PLAY_FALL1] || tmthing->state == &states[S_PLAY_FALL2]))
-							P_SetPlayerMobjState(tmthing, S_PLAY_FALL1);
+						if (!(thing->state == &states[S_PLAY_ATK1] || thing->state == &states[S_PLAY_ATK2] || thing->state == &states[S_PLAY_ATK3] || thing->state == &states[S_PLAY_ATK4]))
+							P_SetPlayerMobjState(tmthing, S_PLAY_ATK1);
 					}
 					break;
 				default:
@@ -3213,7 +3213,7 @@ static void P_FakeZMovement(mobj_t *mo)
 	// adjust height
 	mo->z += mo->momz;
 	if (mo->flags & MF_FLOAT && mo->target && mo->type != MT_EGGMOBILE
-		&& mo->type != MT_EGGMOBILE2 && mo->type != MT_RING && mo->type != MT_COIN) // Tails
+		&& mo->type != MT_EGGMOBILE2 && mo->type != MT_RING) // Tails
 	{ // float down towards target if too close
 		if (!(mo->flags2&MF2_SKULLFLY) && !(mo->flags2&MF2_INFLOAT))
 		{

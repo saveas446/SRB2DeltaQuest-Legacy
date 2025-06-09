@@ -666,10 +666,10 @@ void P_XYMovement(mobj_t *mo)
 			return;
 		}
 	}
-
+	#if TH_TOLERANCE >= 1
 	if (mo->z > mo->floorz && mo->type != MT_CRAWLACOMMANDER && mo->type != MT_EGGMOBILE && mo->type != MT_EGGMOBILE2)
 		return; // no friction when airborne
-
+	#endif
 	P_XYFriction(mo, oldx, oldy);
 }
 
@@ -922,8 +922,6 @@ static void P_ZMovement(mobj_t *mo)
 			}
 			break;
 		case MT_RING: // Ignore still rings
-		case MT_COIN:
-		case MT_FLINGCOIN:
 		case MT_FLINGRING:
 		case MT_HOMINGRING:
 		case MT_AUTOMATICRING:
@@ -942,8 +940,11 @@ static void P_ZMovement(mobj_t *mo)
 		mo->momx = mo->momy = 0;
 
 	if (mo->flags & MF_FLOAT && mo->target && mo->health && !(mo->type == MT_DETON ||
-		mo->type == MT_JETTBOMBER || mo->type == MT_JETTGUNNER || mo->type == MT_CRAWLACOMMANDER
-		|| mo->type == MT_EGGMOBILE2) && mo->target->health > 0)
+		mo->type == MT_JETTBOMBER || mo->type == MT_JETTGUNNER || 
+		#if TH_TOLERANCE >= 1 
+		mo->type == MT_CRAWLACOMMANDER ||
+		#endif
+		mo->type == MT_EGGMOBILE2) && mo->target->health > 0)
 	{
 		// float down towards target if too close
 		if (!(mo->flags2 & MF2_SKULLFLY) && !(mo->flags2 & MF2_INFLOAT))
@@ -1033,7 +1034,6 @@ static void P_ZMovement(mobj_t *mo)
 
 			// Flingrings bounce
 			if (mo->type == MT_FLINGRING
-				|| mo->type == MT_FLINGCOIN
 				|| mo->type == MT_HOMINGRING
 				|| mo->type == MT_AUTOMATICRING
 				|| mo->type == MT_INFINITYRING
@@ -3334,7 +3334,6 @@ void P_MobjThinker(mobj_t *mobj)
 			}
 			break;
 		case MT_RING:
-		case MT_COIN:
 			// No need to check water. Who cares?
 			P_RingThinker(mobj);
 			if (mobj->flags2 & MF2_NIGHTSPULL)
@@ -3642,6 +3641,7 @@ void P_MobjThinker(mobj_t *mobj)
 							numchoices++;
 						}
 					}
+					#if TH_TOLERANCE >= 1
 					if (cv_chaos_crawlacommander.value
 						&& space >= mobjinfo[MT_CRAWLACOMMANDER].height + 33*FRACUNIT)
 					{
@@ -3653,6 +3653,7 @@ void P_MobjThinker(mobj_t *mobj)
 							numchoices++;
 						}
 					}
+					#endif
 					if (cv_chaos_jettysynbomber.value
 						&& airspace >= mobjinfo[MT_JETTBOMBER].height + 33*FRACUNIT)
 					{
@@ -3995,7 +3996,6 @@ mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
 				mobj->flags |= MF_NOBLOCKMAP;
 			break;
 		case MT_RING:
-		case MT_COIN:
 		case MT_HOMINGRING:
 		case MT_RAILRING:
 		case MT_INFINITYRING:
@@ -4028,7 +4028,7 @@ mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
 		// defaults onground
 		mobj->eflags |= MF_ONGROUND;
 
-		if ((mobj->type == MT_RING || mobj->type == MT_COIN) && mobj->flags & MF_AMBUSH)
+		if ((mobj->type == MT_RING) && mobj->flags & MF_AMBUSH)
 			mobj->z = mobj->floorz + 32*FRACUNIT;
 		else
 			mobj->z = mobj->floorz;
@@ -4157,7 +4157,6 @@ void P_RemoveMobj(mobj_t *mobj)
 	 mobj->spawnpoint &&
 	 (
 	  mobj->type == MT_RING
-	  || mobj->type == MT_COIN
 	  || mobj->type == MT_HOMINGRING
 	  || mobj->type == MT_RAILRING
 	  || mobj->type == MT_INFINITYRING
@@ -4968,7 +4967,11 @@ void P_SpawnMapThing(mapthing_t *mthing)
 		}
 		else if (mthing->options >> 4)
 			z = ss->sector->floorheight + ((mthing->options >> 4) << FRACBITS);
+		#if TH_TOLERANCE >= 1
 		else if (i == MT_CRAWLACOMMANDER || i == MT_DETON || i == MT_JETTBOMBER || i == MT_JETTGUNNER || i == MT_EGGMOBILE || i == MT_EGGMOBILE2)
+		#else
+		else if (i == MT_DETON || i == MT_JETTBOMBER || i == MT_JETTGUNNER || i == MT_EGGMOBILE || i == MT_EGGMOBILE2)
+		#endif
 			z = ss->sector->floorheight + 33*FRACUNIT;
 		else if (i == MT_GOLDBUZZ || i == MT_REDBUZZ)
 			z = ss->sector->floorheight + 288*FRACUNIT;
@@ -5436,37 +5439,6 @@ void P_SpawnHoopsAndRings(mapthing_t *mthing)
 				mthing->z = (short)(R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS)->sector->floorheight >> FRACBITS);
 
 			mobj = P_SpawnMobj(mthing->x << FRACBITS, mthing->y << FRACBITS,mthing->z << FRACBITS, MT_RING);
-			mobj->spawnpoint = mthing;
-
-			if (mobj->tics > 0)
-				mobj->tics = 1 + (P_Random() % mobj->tics);
-			mobj->angle = FixedAngle(mthing->angle*FRACUNIT);
-			mobj->flags |= MF_AMBUSH;
-			mthing->mobj = mobj;
-		}
-		else if (mthing->type == 10005) // Your basic coin.
-		{
-			unsigned int bit;
-
-			if (gameskill >= sk_nightmare)
-				bit = 4;
-			else
-				bit = 1<<((byte)gameskill-1);
-
-			if (!(mthing->options & bit))
-				return;
-
-			if (mthing->options & MTF_AMBUSH) // Special flag for rings
-			{
-				mthing->z = (short)((R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS)->sector->floorheight + 32*FRACUNIT) >> FRACBITS);
-				mthing->z = (short)(mthing->z + (mthing->options >> 4));
-			}
-			else if (mthing->options >> 4)
-				mthing->z = (short)((R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS)->sector->floorheight + ((mthing->options >> 4) << FRACBITS)) >> FRACBITS);
-			else
-				mthing->z = (short)(R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS)->sector->floorheight >> FRACBITS);
-
-			mobj = P_SpawnMobj(mthing->x << FRACBITS, mthing->y << FRACBITS,mthing->z << FRACBITS, MT_COIN);
 			mobj->spawnpoint = mthing;
 
 			if (mobj->tics > 0)

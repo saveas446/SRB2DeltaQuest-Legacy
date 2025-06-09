@@ -416,7 +416,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 
 					P_ResetPlayer(player);
 
-					P_SetPlayerMobjState(player->mo, S_PLAY_FALL1);
+					P_SetPlayerMobjState(player->mo, S_PLAY_ATK1);
 				}
 			}
 			return;
@@ -582,7 +582,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 						}
 					}
 	
-					if (!(mo2->type == MT_NIGHTSWING || mo2->type == MT_RING || mo2->type == MT_COIN))
+					if (!(mo2->type == MT_NIGHTSWING || mo2->type == MT_RING))
 						continue;
 	
 					// Yay! The thing's in reach! Pull it in!
@@ -772,20 +772,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 				P_SetMobjState(special, S_DISS);
 				return;
 			}
-		case MT_COIN:
-		case MT_FLINGCOIN:
-			if (!(P_CanPickupItem(toucher->player)))
-				return;
-			
-			P_SpawnMobj (special->x,special->y,special->z, MT_COINSPARKLE);
-			P_GivePlayerRings(player, 1, true);
-	
-			if (player->lightdash)
-				player->lightdash = TICRATE;
-	
-			if ((maptol & TOL_NIGHTS) || cv_timeattacked.value)
-				P_DoNightsScore(player);
-			break;
 	
 		case 231:
 			if (!modifiedgame && toucher->player->dbginfo == 3)
@@ -1112,10 +1098,12 @@ static void P_DeathMessages(mobj_t *target, mobj_t *inflictor, mobj_t *source)
 					if (netgame)
 						str = "%s%s%s was killed by a jetty-syn bomber!\n";
 					break;
+				#if TH_TOLERANCE >= 1
 				case MT_CRAWLACOMMANDER:
 					if (netgame)
 						str = "%s%s%s was killed by a crawla commander!\n";
 					break;
+				#endif
 				case MT_EGGMOBILE:
 					if (netgame)
 						str = "%s%s%s was killed by the Egg Mobile!\n";
@@ -1359,9 +1347,11 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source)
 					case MT_JETTGUNNER:
 						score = 500*source->player->scoreadd;
 						break;
+					#if TH_TOLERANCE >= 1
 					case MT_CRAWLACOMMANDER:
 						score = 300*source->player->scoreadd;
 						break;
+					#endif
 					default:
 						score = 100*source->player->scoreadd;
 						break;
@@ -1513,7 +1503,9 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source)
 					break;
 
 				case MT_JETTGUNNER:
+				#if TH_TOLERANCE >= 1
 				case MT_CRAWLACOMMANDER:
+				#endif
 				case MT_REDBUZZ:
 					item = MT_MOUSE;
 					break;
@@ -1662,6 +1654,7 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 			return false;
 	}
 
+	#if TH_TOLERANCE >= 1
 	// Special case for Crawla Commander
 	if (target->type == MT_CRAWLACOMMANDER)
 	{
@@ -1692,7 +1685,9 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 
 		P_InstaThrust(target, target->angle-ANG180, 5*FRACUNIT);
 	}
-	else if (target->flags & MF_BOSS)
+	else 
+	#endif 
+	if (target->flags & MF_BOSS)
 	{
 		if (target->health > 1)
 		{

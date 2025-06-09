@@ -2260,10 +2260,12 @@ static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean r
 		case 997: // Fan sector
 			player->mo->momz = mobjinfo[MT_FAN].speed;
 			P_ResetPlayer(player);
-			if (player->mo->state != &states[S_PLAY_FALL1]
-				&& player->mo->state != &states[S_PLAY_FALL2])
+			if (player->mo->state != &states[S_PLAY_ATK1]
+				&& player->mo->state != &states[S_PLAY_ATK2]
+				&& player->mo->state != &states[S_PLAY_ATK3]
+				&& player->mo->state != &states[S_PLAY_ATK4])
 			{
-				P_SetPlayerMobjState(player->mo, S_PLAY_FALL1);
+				P_SetPlayerMobjState(player->mo,S_PLAY_ATK1);
 			}
 			return;
 		case 998: // Zoom Tube Start

@@ -42,13 +42,17 @@ char sprnames[NUMSPRITES + 1][5] =
 	"CNTE","CNTF","POPP","PRUP","BKTV","SCRA","SCRB","SCRC","SCRD","SSPK",
 	"NBMP","YSPR","RSPR","YSUD","RSUD","SKIM","MINE","FISH","GARG","SPLH",
 	"THOK","THZP","SIGN","RRNG","TTAG",
-	# if TH_TOLERANCE >= 0
+	#if TH_TOLERANCE >= 0
 	"STEM",
 	#endif
 	"GFLG","TOKE",
 	"CEMG","CEMO","CEMP","CEMB","CEMR","CEML","CEMY","JETB","JETG","JBUL",
 	"MOUS","DETN","XPLD","CHAN","SNO1","SANT","EMER","EMES","EMET",
-	"SBLL","SPIK","CCOM","RAIN","DSPK","USPK","STPT","RNGM","RNGR","RNGS",
+	"SBLL","SPIK",
+	#if TH_TOLERANCE >= 1
+	"CCOM",
+	#endif
+	"RAIN","DSPK","USPK","STPT","RNGM","RNGR","RNGS",
 	"RNGA","RNGE","TAEH","TAER","THER","TAHR","THOM","TAUT","TEXP",
 	#if TH_TOLERANCE >= 0
 	"BUS1","BUS2",
@@ -61,7 +65,7 @@ char sprnames[NUMSPRITES + 1][5] =
 	#endif
 	"RDTV",
 	"RORB","EGGB","SFLM","TNKA","TNKB","SPNK","TFOG","EEGG","LITE","TRET",
-	"TRLS","FWR4","GOOM","MUS1","MUS2","TOAD","COIN","CPRK","XMS1",
+	"TRLS","FWR4","GOOM","MUS1","MUS2","TOAD","XMS1",
 	"XMS2","XMS3","SUPT","ROIA","ROIB","ROIC","ROID","ROIE","ROIF",
 	"ROIG","ROIH","ROII","ROIJ","ROIK","ROIL","ROIM","ROIN","ROIO","ROIP",
 	"NPRA","NPRB","NPRC","REDX","SPRB",
@@ -859,6 +863,7 @@ state_t states[NUMSTATES] =
 	{SPR_SPIK, 6, 1, {A_RotateSpikeBall}, 0, 0, S_SPIKEBALL8}, // S_SPIKEBALL7
 	{SPR_SPIK, 7, 1, {A_RotateSpikeBall}, 0, 0, S_SPIKEBALL1}, // S_SPIKEBALL8
 
+	#if TH_TOLERANCE >= 1
 	// Crawla Commander
 	{SPR_CCOM, 0, 1, {A_CrawlaCommanderThink}, 0, 15*FRACUNIT, S_CCOMMAND2}, // S_CCOMMAND1
 	{SPR_CCOM, 1, 1, {A_CrawlaCommanderThink}, 0, 15*FRACUNIT, S_CCOMMAND1}, // S_CCOMMAND2
@@ -870,6 +875,7 @@ state_t states[NUMSTATES] =
 	{SPR_CCOM, 0, 1, {A_CrawlaCommanderThink}, 0, 15*FRACUNIT, S_CCOMMAND2}, // S_CCOMMAND8
 	{SPR_CCOM, 0, 1, {A_CrawlaCommanderThink}, 0, 15*FRACUNIT, S_CCOMMAND2}, // S_CCOMMAND9
 	{SPR_CCOM, 0, 1, {A_CrawlaCommanderThink}, 0, 15*FRACUNIT, S_CCOMMAND2}, // S_CCOMMAND10
+	#endif
 
 	{SPR_DISS, 0, 35, {NULL}, 0, 0, S_CRUMBLE2},  // S_CRUMBLE1
 	{SPR_DISS, 0, 105, {A_Scream}, 0, 0, S_DISS}, // S_CRUMBLE2
@@ -1485,17 +1491,6 @@ state_t states[NUMSTATES] =
 	{SPR_MUS1, 0, -1, {NULL}, 0, 0, S_NULL}, // S_MARIOBUSH1
 	{SPR_MUS2, 0, -1, {NULL}, 0, 0, S_NULL}, // S_MARIOBUSH2
 	{SPR_TOAD, 0, -1, {NULL}, 0, 0, S_NULL}, // S_TOAD
-
-	// Coin
-	{SPR_COIN, 32768, 5, {A_AttractChase}, 0, 0, S_COIN2}, // S_COIN1
-	{SPR_COIN, 32769, 5, {A_AttractChase}, 0, 0, S_COIN3}, // S_COIN2
-	{SPR_COIN, 32770, 5, {A_AttractChase}, 0, 0, S_COIN1}, // S_COIN3
-
-	// Coin Sparkle
-	{SPR_CPRK, 32768, 5, {NULL}, 0, 0, S_COINSPARKLE2}, // S_COINSPARKLE1
-	{SPR_CPRK, 32769, 5, {NULL}, 0, 0, S_COINSPARKLE3}, // S_COINSPARKLE2
-	{SPR_CPRK, 32770, 5, {NULL}, 0, 0, S_COINSPARKLE4}, // S_COINSPARKLE3
-	{SPR_CPRK, 32771, 5, {NULL}, 0, 0, S_DISS},         // S_COINSPARKLE4
 
 	// Xmas-specific stuff
 	{SPR_XMS1, 0, -1, {NULL}, 0, 0, S_NULL}, // S_XMASPOLE
@@ -4368,7 +4363,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SPECIAL|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
-
+	#if TH_TOLERANCE >= 1
 	{           // MT_CRAWLACOMMANDER
 		21,             // doomednum
 		S_CCOMMAND1,    // spawnstate
@@ -4394,7 +4389,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SLIDEME|MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE, // flags
 		S_NULL          // raisestate
 	},
-
+	#endif
 	{           // MT_CRUMBLEOBJ
 		-1,             // doomednum
 		S_CRUMBLE1,     // spawnstate
@@ -6811,84 +6806,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		0,              // damage
 		sfx_None,       // activesound
 		MF_NOBLOCKMAP|MF_NOCLIP|MF_SCENERY, // flags
-		S_NULL          // raisestate
-	},
-
-	{           // MT_COIN
-		10005,          // doomednum
-		S_COIN1,        // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		MT_FLINGCOIN,   // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		60*FRACUNIT,    // speed
-		16*FRACUNIT,    // radius
-		24*FRACUNIT,    // height
-		100,            // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_SLIDEME|MF_SPECIAL|MF_COUNTITEM|MF_NOGRAVITY, // flags
-		S_NULL          // raisestate
-	},
-
-	{           // MT_COINSPARKLE
-		-1,             // doomednum
-		S_COINSPARKLE1, // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		8,              // speed
-		32*FRACUNIT,    // radius
-		32*FRACUNIT,    // height
-		16,             // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_NOBLOCKMAP|MF_NOCLIP|MF_NOGRAVITY|MF_SCENERY, // flags
-		S_NULL          // raisestate
-	},
-
-	{           // MT_FLINGCOIN
-		-1,             // doomednum
-		S_COIN1,        // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		MT_FLINGCOIN,   // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		MT_COIN,        // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		60*FRACUNIT,    // speed
-		16*FRACUNIT,    // radius
-		24*FRACUNIT,    // height
-		100,            // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_SLIDEME|MF_SPECIAL, // flags
 		S_NULL          // raisestate
 	},
 
