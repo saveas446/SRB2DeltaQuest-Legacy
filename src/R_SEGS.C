@@ -70,6 +70,8 @@ static short *maskedtexturecol;
 static short last_ceilingclip[MAXVIDWIDTH];
 static short last_floorclip[MAXVIDWIDTH];
 
+int bottomtexture_lasttime;
+
 static void R_DrawSplatColumn(column_t *column)
 {
 	int topscreen, bottomscreen;
@@ -1489,7 +1491,16 @@ void R_StoreWallRange(int start, int stop)
 			
 			//! NULL POINTER PROTECTION
 			if (texturetranslation != 0) 
-				bottomtexture = texturetranslation[sidedef->bottomtexture];
+
+        // fixing a kitchen fire by closing the door to the kitchen and HOPING FOR THE BEST!
+        if (sidedef->bottomtexture > numtextures) {
+          bottomtexture = bottomtexture_lasttime;
+        } else {
+          bottomtexture = texturetranslation[sidedef->bottomtexture];
+          bottomtexture_lasttime = bottomtexture;
+        }
+        
+        //CONS_Printf("sidedef->bottomtexture: 0x%8X\n", sidedef->bottomtexture);
 
             if (linedef->flags & ML_DONTPEGBOTTOM)
             {

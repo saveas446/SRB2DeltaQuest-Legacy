@@ -176,7 +176,7 @@ void Y_IntermissionDrawer(void)
 
 	
 
-	#if !INTERMISSION_BG != IS_NOBG
+	#if INTERMISSION_BG != IS_NOBG
 	V_DrawFill(0, 0, BASEVIDWIDTH, BASEVIDHEIGHT, 0);
 	
 	if (useinterpic)

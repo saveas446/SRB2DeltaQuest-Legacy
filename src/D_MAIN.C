@@ -238,7 +238,7 @@ static void D_Display(void)
 	// Used only by linux GGI version
 	I_UpdateNoBlit();
 
-	#if !INTERMISSION_BG != IS_NOBG
+	#if INTERMISSION_BG != IS_NOBG
 	// Fade to black first
 	if (rendermode == render_soft)
 	{

@@ -755,12 +755,18 @@ typedef enum
 	S_POP1, // Extra Large bubble goes POP!
 
 	// 1-Up Box
+	S_PRUP,
 	S_PRUP1,
 	S_PRUP2,
 	S_PRUP3,
 	S_PRUP4,
+	S_PRUP5,
+	S_PRUP6,
+	S_PRUP7,
+	S_PRUP8,
 
 	// Bomb Shield Box
+	S_BKTV,
 	S_BKTV1,
 	S_BKTV2,
 	S_BKTV3,
@@ -769,7 +775,6 @@ typedef enum
 	S_BKTV6,
 	S_BKTV7,
 	S_BKTV8,
-	S_BKTV9,
 
 	// Jump Shield Box
 	S_WHTV1,

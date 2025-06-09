@@ -506,21 +506,26 @@ state_t states[NUMSTATES] =
 	{SPR_POPP, 0, 16, {NULL}, 0, 0, S_DISS}, // S_POP1
 
 	// 1-Up Box
-	{SPR_PRUP, 0, 2, {A_1upThinker}, 0, 0, S_PRUP2},  // S_PRUP1
-	{SPR_MTEX, 0, 1, {NULL}, 0, 0, S_PRUP1},          // S_PRUP2
-	{SPR_PRUP, 1, 18, {A_MonitorPop}, 0, 0, S_PRUP4}, // S_PRUP3
-	{SPR_PRUP, 1, 18, {A_ExtraLife}, 0, 0, S_DISS},   // S_PRUP4
+	{SPR_PRUP, 0, 1, {NULL}, 0, 0, S_PRUP1},          // S_PRUP
+	{SPR_PRUP, 1, 2, {NULL}, 0, 0, S_PRUP},          // S_PRUP1
+	{SPR_PRUP, 2, 2, {A_Fall}, 0, 0, S_PRUP3}, // S_PRUP2
+	{SPR_PRUP, 3, 2, {A_Scream}, 0, 0, S_PRUP4}, // S_PRUP3
+	{SPR_PRUP, 4, 2, {NULL}, 0, 0, S_PRUP5}, // S_PRUP4
+	{SPR_PRUP, 5, 2, {NULL}, 0, 0, S_PRUP6}, // S_PRUP5
+	{SPR_PRUP, 6, 2, {NULL}, 0, 0, S_PRUP7}, // S_PRUP6
+	{SPR_PRUP, 6, 48, {A_ExtraLife}, 0, 0, S_DISS},  // S_PRUP7
+	{SPR_PRUP, 6, -1, {NULL}, 0, 0, S_NULL}, // S_PRUP8
 
 	// Bomb Shield Box
-	{SPR_BKTV, 0, 1, {NULL}, 0, 0, S_BKTV2},          // S_BKTV1
-	{SPR_BKTV, 1, 2, {NULL}, 0, 0, S_BKTV1},          // S_BKTV2
-	{SPR_BKTV, 2, 2, {A_Fall}, 0, 0, S_BKTV4}, // S_BKTV3
-	{SPR_BKTV, 3, 2, {A_Scream}, 0, 0, S_BKTV5}, // S_BKTV4
-	{SPR_BKTV, 4, 2, {NULL}, 0, 0, S_BKTV6}, // S_BKTV5
-	{SPR_BKTV, 5, 2, {NULL}, 0, 0, S_BKTV7}, // S_BKTV6
-	{SPR_BKTV, 6, 2, {NULL}, 0, 0, S_BKTV8}, // S_BKTV7
-	{SPR_BKTV, 6, 48, {A_BombShield}, 0, 0, S_DISS},  // S_BKTV8
-	{SPR_BKTV, 6, -1, {NULL}, 0, 0, S_NULL}, // S_BKTV7
+	{SPR_BKTV, 0, 1, {NULL}, 0, 0, S_BKTV1},          // S_BKTV
+	{SPR_BKTV, 1, 2, {NULL}, 0, 0, S_BKTV},          // S_BKTV1
+	{SPR_BKTV, 2, 2, {A_Fall}, 0, 0, S_BKTV3}, // S_BKTV2
+	{SPR_BKTV, 3, 2, {A_Scream}, 0, 0, S_BKTV4}, // S_BKTV3
+	{SPR_BKTV, 4, 2, {NULL}, 0, 0, S_BKTV5}, // S_BKTV4
+	{SPR_BKTV, 5, 2, {NULL}, 0, 0, S_BKTV6}, // S_BKTV5
+	{SPR_BKTV, 6, 2, {NULL}, 0, 0, S_BKTV7}, // S_BKTV6
+	{SPR_BKTV, 6, 48, {A_BombShield}, 0, 0, S_DISS},  // S_BKTV7
+	{SPR_BKTV, 6, -1, {NULL}, 0, 0, S_NULL}, // S_BKTV8
 
 	// Jump Shield Box
 	{SPR_WHTV, 0, 2, {NULL}, 0, 0, S_WHTV2},          // S_WHTV1
@@ -2960,18 +2965,18 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 	// 1-up box
 	{           // MT_PRUP
 		41,             // doomednum
-		S_PRUP1,        // spawnstate
+		S_PRUP,        // spawnstate
 		1,              // spawnhealth
 		S_NULL,         // seestate
 		sfx_None,       // seesound
 		8,              // reactiontime
 		sfx_None,       // attacksound
-		S_PRUP1,        // painstate
+		S_PRUP,        // painstate
 		0,              // painchance
 		sfx_None,       // painsound
 		S_NULL,         // meleestate
 		S_NULL,         // missilestate
-		S_PRUP3,        // deathstate
+		S_PRUP2,        // deathstate
 		S_NULL,         // xdeathstate
 		sfx_slop,        // deathsound
 		MT_MONITOREXPLOSION, // speed
