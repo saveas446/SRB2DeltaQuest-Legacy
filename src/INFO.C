@@ -54,7 +54,11 @@ char sprnames[NUMSPRITES + 1][5] =
 	#if TH_TOLERANCE >= 1
 	"CCOM",
 	#endif
-	"RAIN","DSPK","USPK","STPT","RNGM","RNGR","RNGS",
+	"RAIN",
+	#if TH_TOLERANCE >= 1
+	"DSPK","USPK",
+	#endif
+	"STPT","RNGM","RNGR","RNGS",
 	"RNGA","RNGE","TAEH","TAER","THER","TAHR","THOM","TAUT","TEXP",
 	#if TH_TOLERANCE >= 0
 	"BUS1","BUS2",
@@ -885,12 +889,12 @@ state_t states[NUMSTATES] =
 	// Rain
 	{SPR_RAIN, 32768, -1, {NULL}, 0, 0, S_NULL}, // S_RAIN1
 	{SPR_RAIN, 32768, 1, {NULL}, 0, 0, S_RAIN1}, // S_RAINRETURN
-
+	#if TH_TOLERANCE >= 1
 	// Ceiling Spike
 	{SPR_DSPK, 0, -1, {NULL}, 0, 0, S_NULL}, // S_CEILINGSPIKE
-
 	// Floor Spike
 	{SPR_USPK, 0,-1, {NULL}, 0, 0, S_NULL}, // S_FLOORSPIKE
+	#endif
 
 	// Starpost
 	{SPR_STPT, 0, -1, {NULL}, 0, 0, S_NULL},       // S_STARPOST1

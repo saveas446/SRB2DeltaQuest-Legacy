@@ -217,8 +217,10 @@ typedef enum
 	SPR_CCOM, // Crawla Commander
 	#endif
 	SPR_RAIN, // Rain
+	#if TH_TOLERANCE >= 1
 	SPR_DSPK, // Ceiling spike
 	SPR_USPK, // Floor spike
+	#endif
 	SPR_STPT, // Starpost
 	SPR_RNGM, // Homing Ring
 	SPR_RNGR, // Rail Ring

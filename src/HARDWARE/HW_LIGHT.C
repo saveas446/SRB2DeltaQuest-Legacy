@@ -226,8 +226,10 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT],     // SPR_SBLL
 	&lspr[NOLIGHT],     // SPR_SPIK
 	&lspr[NOLIGHT],     // SPR_RAIN
+	#if TH_TOLERANCE >= 1
 	&lspr[NOLIGHT],     // SPR_DSPK
 	&lspr[NOLIGHT],     // SPR_USPK
+	#endif
 	//Fab:
 	&lspr[NOLIGHT],     // SPR_STPT
 	&lspr[RINGLIGHT_L],     // SPR_RNGM
