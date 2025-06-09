@@ -282,7 +282,6 @@ typedef enum
 	SPR_SPNK, // Boss 2 Spigot
 
 	SPR_TFOG, // Teleport Fog
-	SPR_EEGG, // Easter Egg!
 
 	SPR_LITE, // Streetlight corona
 	SPR_TRET,
@@ -1673,7 +1672,6 @@ typedef enum
 	S_FOG12,
 	S_FOG13,
 	S_FOG14,
-	S_EEGG, // Easter Egg
 	S_LITE,
 
 	// THZ Turret

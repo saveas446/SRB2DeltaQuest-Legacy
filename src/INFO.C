@@ -70,7 +70,7 @@ char sprnames[NUMSPRITES + 1][5] =
 	"BPLD",
 	#endif
 	"RDTV",
-	"RORB","EGGB","SFLM","TNKA","TNKB","SPNK","TFOG","EEGG","LITE","TRET",
+	"RORB","EGGB","SFLM","TNKA","TNKB","SPNK","TFOG","LITE","TRET",
 	"TRLS","FWR4","GOOM","MUS1","MUS2","TOAD","XMS1",
 	"XMS2","XMS3","SUPT","ROIA","ROIB","ROIC","ROID","ROIE","ROIF",
 	"ROIG","ROIH","ROII","ROIJ","ROIK","ROIL","ROIM","ROIN","ROIO","ROIP",
@@ -1456,9 +1456,6 @@ state_t states[NUMSTATES] =
 	{SPR_TFOG, 32779, 2, {NULL}, 0, 0, S_FOG13}, // S_FOG12
 	{SPR_TFOG, 32780, 2, {NULL}, 0, 0, S_FOG14}, // S_FOG13
 	{SPR_TFOG, 32781, 2, {NULL}, 0, 0, S_DISS},  // S_FOG14
-
-	// Easter Egg
-	{SPR_EEGG, 0, -1, {NULL}, 0, 0, S_NULL}, // S_EEGG
 
 	{SPR_LITE, 0, -1, {NULL}, 0, 0, S_LITE}, // S_LITE
 
@@ -6579,32 +6576,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		1,              // damage
 		sfx_None,       // activesound
 		MF_NOBLOCKMAP|MF_NOGRAVITY|MF_NOCLIP, // flags
-		S_NULL          // raisestate
-	},
-
-	{           // MT_EASTEREGG
-		-1,             // doomednum
-		S_EEGG,         // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		0,              // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_DISS,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		0,              // speed
-		8*FRACUNIT,     // radius
-		24*FRACUNIT,    // height
-		100,            // mass
-		1,              // damage
-		sfx_None,       // activesound
-		MF_SPECIAL|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
 

@@ -113,7 +113,7 @@ static y_data data;
 // graphics
 
 // Don't define these if we have it set to use no intermission background 
-#ifndef IS_NOBG
+#if INTERMISSION_BG != IS_NOBG
 static patch_t *bgpatch = NULL;     // INTERSCR
 static patch_t *widebgpatch = NULL; // INTERSCW
 #endif
@@ -176,7 +176,7 @@ void Y_IntermissionDrawer(void)
 
 	
 
-	#ifndef IS_NOBG 
+	#if !INTERMISSION_BG != IS_NOBG
 	V_DrawFill(0, 0, BASEVIDWIDTH, BASEVIDHEIGHT, 0);
 	
 	if (useinterpic)
@@ -677,7 +677,7 @@ void Y_StartIntermission(void)
 
 			
 			// get background patches
-			#ifdef IS_CHARBG
+			#if INTERMISSION_BG == IS_CHARBG
 			// Alternate between these four pics every level
 			// TODO: Remove these stupid brackets
 			if (prevmap % 4 == 0) {
@@ -690,7 +690,7 @@ void Y_StartIntermission(void)
 				widebgpatch = bgpatch = W_CachePatchName("EGGPIC", PU_LEVEL);
 			}
 			#endif
-			#ifdef IS_FDBG
+			#if INTERMISSION_BG == IS_FDBG
 			widebgpatch = W_CachePatchName("INTERSCW", PU_STATIC);
 			bgpatch = W_CachePatchName("INTERSCR", PU_STATIC);
 			#endif
@@ -1343,7 +1343,7 @@ static void Y_UnloadData(void)
 
 	// unload the background patches
 
-	#ifndef IS_NOBG
+	#if !INTERMISSION_BG != IS_NOBG
 	UNLOAD(bgpatch);
 	UNLOAD(widebgpatch);
 	#endif

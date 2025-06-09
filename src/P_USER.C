@@ -3956,6 +3956,16 @@ static void P_MovePlayer(player_t *player)
 	if (player->running && !(player->speed > player->runspeed))
 		P_SetPlayerMobjState(player->mo, S_PLAY_RUN1);
 
+	// lazy but whatevs Save 09-06-2025
+	#ifdef FALL_SPRITES
+	// If Springing, but travelling DOWNWARD, change back!
+	if (player->mo->state == &states[S_PLAY_PLG1] && player->mo->momz < 0)
+		P_SetPlayerMobjState(player->mo, S_PLAY_FALL1);
+
+	// If Springing but on the ground, change back!
+	else if (onground && (player->mo->state == &states[S_PLAY_PLG1] || player->mo->state == &states[S_PLAY_FALL1] || player->mo->state == &states[S_PLAY_FALL2]) && !player->mo->momz)
+		P_SetPlayerMobjState(player->mo, S_PLAY_STND);	
+	#else 
 	// If Springing, but travelling DOWNWARD, change back!
 	if (player->mo->state == &states[S_PLAY_PLG1] && player->mo->momz < 0)
 		P_SetPlayerMobjState(player->mo, S_PLAY_RUN1);
@@ -3963,6 +3973,7 @@ static void P_MovePlayer(player_t *player)
 	// If Springing but on the ground, change back!
 	else if (onground && (player->mo->state == &states[S_PLAY_PLG1]) && !player->mo->momz)
 		P_SetPlayerMobjState(player->mo, S_PLAY_STND);
+	#endif
 
 	// If you are stopped and are still walking, stand still!
 	if (!player->mo->momx && !player->mo->momy && !player->mo->momz && player->walking)

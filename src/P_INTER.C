@@ -415,8 +415,11 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 						localangle2 = player->mo->angle;
 
 					P_ResetPlayer(player);
-
+					#ifdef FALL_SPRITES
+					P_SetPlayerMobjState(player->mo, S_PLAY_FALL1);
+					#else
 					P_SetPlayerMobjState(player->mo, S_PLAY_ATK1);
+					#endif
 				}
 			}
 			return;

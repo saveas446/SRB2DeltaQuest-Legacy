@@ -219,7 +219,11 @@ static void P_DoSpring(mobj_t *spring, mobj_t *object)
 		if (spring->info->speed > 0)
 			P_SetPlayerMobjState(object, S_PLAY_PLG1);
 		else
+		#ifdef FALL_SPRITES
+			P_SetPlayerMobjState(object, S_PLAY_FALL1);
+		#else
 			P_SetPlayerMobjState(object, S_PLAY_ATK1);
+		#endif
 
 		if (spring->info->painchance)
 		{
@@ -588,8 +592,13 @@ static boolean PIT_CheckThing(mobj_t *thing)
 					{
 						thing->momz = tmthing->info->speed;
 						P_ResetPlayer(thing->player);
+						#ifdef FALL_SPRITES
+						if (!(thing->state == &states[S_PLAY_FALL1] || thing->state == &states[S_PLAY_FALL2]))
+							P_SetPlayerMobjState(thing, S_PLAY_FALL1);
+						#else
 						if (!(thing->state == &states[S_PLAY_ATK1] || thing->state == &states[S_PLAY_ATK2] || thing->state == &states[S_PLAY_ATK3] || thing->state == &states[S_PLAY_ATK4]))
 							P_SetPlayerMobjState(thing, S_PLAY_ATK1);
+						#endif
 					}
 					break;
 				case MT_STEAM: // Steam
@@ -597,8 +606,13 @@ static boolean PIT_CheckThing(mobj_t *thing)
 					{
 						thing->momz = tmthing->info->speed;
 						P_ResetPlayer(thing->player);
+						#ifdef FALL_SPRITES
+						if (!(thing->state == &states[S_PLAY_FALL1] || thing->state == &states[S_PLAY_FALL2]))
+							P_SetPlayerMobjState(thing, S_PLAY_FALL1);
+						#else
 						if (!(thing->state == &states[S_PLAY_ATK1] || thing->state == &states[S_PLAY_ATK2] || thing->state == &states[S_PLAY_ATK3] || thing->state == &states[S_PLAY_ATK4]))
 							P_SetPlayerMobjState(thing, S_PLAY_ATK1);
+						#endif
 					}
 					break;
 				default:
@@ -618,8 +632,13 @@ static boolean PIT_CheckThing(mobj_t *thing)
 					{
 						tmthing->momz = thing->info->speed;
 						P_ResetPlayer(tmthing->player);
+						#ifdef FALL_SPRITES
+						if (!(thing->state == &states[S_PLAY_FALL1] || thing->state == &states[S_PLAY_FALL2]))
+							P_SetPlayerMobjState(tmthing, S_PLAY_FALL1);
+						#else
 						if (!(thing->state == &states[S_PLAY_ATK1] || thing->state == &states[S_PLAY_ATK2] || thing->state == &states[S_PLAY_ATK3] || thing->state == &states[S_PLAY_ATK4]))
 							P_SetPlayerMobjState(tmthing, S_PLAY_ATK1);
+						#endif
 					}
 					break;
 				case MT_STEAM: // Steam
@@ -627,8 +646,13 @@ static boolean PIT_CheckThing(mobj_t *thing)
 					{
 						tmthing->momz = thing->info->speed;
 						P_ResetPlayer(tmthing->player);
+						#ifdef FALL_SPRITES
+						if (!(thing->state == &states[S_PLAY_FALL1] || thing->state == &states[S_PLAY_FALL2]))
+							P_SetPlayerMobjState(tmthing, S_PLAY_FALL1);
+						#else
 						if (!(thing->state == &states[S_PLAY_ATK1] || thing->state == &states[S_PLAY_ATK2] || thing->state == &states[S_PLAY_ATK3] || thing->state == &states[S_PLAY_ATK4]))
 							P_SetPlayerMobjState(tmthing, S_PLAY_ATK1);
+						#endif
 					}
 					break;
 				default:

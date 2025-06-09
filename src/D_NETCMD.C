@@ -123,6 +123,7 @@ static void Command_RunSOC(void);
 static void Command_Pause(void);
 
 static void Command_Version_f(void);
+static void Command_BuildSettings_f(void);
 static void Command_ShowGametype_f(void);
 static void Command_JumpToAxis_f(void);
 static void Command_Nodes_f(void);
@@ -422,6 +423,7 @@ void D_RegisterServerCommands(void)
 	COM_AddCommand("gametype", Command_ShowGametype_f);
 	COM_AddCommand("jumptoaxis", Command_JumpToAxis_f);
 	COM_AddCommand("version", Command_Version_f);
+	COM_AddCommand("buildsettings", Command_BuildSettings_f);
 	COM_AddCommand("quit", Command_Quit_f);
 
 	COM_AddCommand("saveconfig", Command_SaveConfig_f);
@@ -2555,6 +2557,99 @@ static void Command_Version_f(void)
 {
 	CONS_Printf("SRB2%s (%s %s)\n", VERSIONSTRING, compdate, comptime);
 }
+
+#if DEMO2ULTIMATE
+#define DEMO2ULTIMATE_STR "Demo 2 IWAD compatible mode: Yes\n"
+#else
+#define DEMO2ULTIMATE_STR "Demo 2 IWAD compatible mode: No\n"
+#endif
+
+#if BUILD_TYPE == DEMO
+#define BUILDTYPE_STR "Build type: Public Demo\n"
+#endif 
+
+#if BUILD_TYPE == PLAYTEST_BUILD
+#define BUILDTYPE_STR "Build type: Playtester Build\n"
+#endif 
+
+#if BUILD_TYPE == DEV_RELEASE
+#define BUILDTYPE_STR "Build type: Dev Release\n"
+#endif 
+
+#if BUILD_TYPE == FULL_RELEASE
+#define BUILDTYPE_STR "Build type: Full Release\n"
+#endif 
+
+#ifdef NOMAPCMD
+#define MAPCMD_STR "\"Map\" command in single player: Not Allowed\n"
+#else
+#define MAPCMD_STR "\"Map\" command in single player: Allowed\n"
+#endif
+
+#ifdef DARKENEDMENU
+#define DARKENEDMENU_STR "Darken main menu: Yes\n"
+#else
+#define DARKENEDMENU_STR "Darken main menu: No\n"
+#endif
+
+#ifdef CHARACTERSELECT
+#define CHARSEL_STR "Character select menu: Used\n"
+#else
+#define CHARSEL_STR "Character select menu: Unused\n"
+#endif
+
+#ifdef MULTITHOK
+#define MULTITHOK_STR "Multithok for Sonic: Yes\n"
+#else
+#define MULTITHOK_STR "Multithok for Sonic: No\n"
+#endif
+
+#ifdef FALL_SPRITES
+#define FALL_SPRITES_STR "Fall sprites: Yes\n"
+#else
+#define FALL_SPRITES_STR "Fall sprites: No\n"
+#endif
+
+
+#if INTERMISSION_BG == IS_NOBG
+#define INTERMISSION_BG_STR "Intermission background: Nothing\n"
+#endif 
+
+#if INTERMISSION_BG == IS_CHARBG
+#define INTERMISSION_BG_STR "Intermission background: Character pictures\n"
+#endif 
+
+#if INTERMISSION_BG == IS_FDBG
+#define INTERMISSION_BG_STR "Intermission background: Final Demo-style\n"
+#endif 
+
+#ifndef TH_TOLERANCE
+#define TH_TOLERANCE_STR "Thing tolerance: Strict\n"
+#endif 
+
+#if TH_TOLERANCE == 0
+#define TH_TOLERANCE_STR "Thing tolerance: Intermediate\n"
+#endif 
+
+#if TH_TOLERANCE == 1
+#define TH_TOLERANCE_STR "Thing tolerance: Loose\n"
+#endif 
+
+
+static void Command_BuildSettings_f(void)
+{
+	CONS_Printf("\n\n===BUILD SETTINGS===\n");
+	CONS_Printf(DEMO2ULTIMATE_STR);
+	CONS_Printf(BUILDTYPE_STR);
+	CONS_Printf(MAPCMD_STR);
+	CONS_Printf(DARKENEDMENU_STR);
+	CONS_Printf(CHARSEL_STR);
+	CONS_Printf(MULTITHOK_STR);
+	CONS_Printf(FALL_SPRITES_STR);
+	CONS_Printf(INTERMISSION_BG_STR);
+	CONS_Printf(TH_TOLERANCE_STR);
+}
+
 
 // Returns current gametype being used.
 //
