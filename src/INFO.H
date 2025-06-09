@@ -23,6 +23,7 @@
 // Needed for action function pointer handling.
 #include "d_think.h"
 #include "sounds.h"
+#include "d2udef.h"
 
 // IMPORTANT NOTE: If you add/remove from this list of action
 // functions, don't forget to update them in dehacked.c!
@@ -276,7 +277,9 @@ typedef enum
 	SPR_RDTV, // Fire shield
 	SPR_RORB, // Red orb
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	SPR_EGGB, // Eggman box
+	#endif
 	SPR_SFLM, // Spin fire
 
 	SPR_TNKA, // Boss 2 Tank 1
@@ -1648,10 +1651,15 @@ typedef enum
 	S_EMBLEM1,
 
 	// Eggman Box
+	S_EGGTV,
 	S_EGGTV1,
 	S_EGGTV2,
 	S_EGGTV3,
 	S_EGGTV4,
+	S_EGGTV5,
+	S_EGGTV6,
+	S_EGGTV7,
+	S_EGGTV8,
 
 	// Fire Shield's Spawn
 	S_SPINFIRE1,
@@ -2140,8 +2148,10 @@ typedef enum
 	MT_EGGTRAP,
 	MT_CHAOSSPAWNER,
 	MT_EMBLEM,
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	MT_EGGMANBOX,
 	MT_EGGMANICO,
+	#endif
 	MT_SPINFIRE,
 	MT_BOSSTANK1,
 	MT_BOSSTANK2,

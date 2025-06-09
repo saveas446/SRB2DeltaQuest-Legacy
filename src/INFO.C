@@ -24,6 +24,7 @@
 #include "z_zone.h"
 #include "d_player.h"
 #include "d2udef.h"
+#include "info.h"
 #ifdef HWRENDER
 #include "hardware/hw_light.h"
 #endif
@@ -70,7 +71,11 @@ char sprnames[NUMSPRITES + 1][5] =
 	"BPLD",
 	#endif
 	"RDTV",
-	"RORB","EGGB","SFLM","TNKA","TNKB","SPNK","TFOG","LITE","TRET",
+	"RORB",
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+	"EGGB",
+	#endif
+	"SFLM","TNKA","TNKB","SPNK","TFOG","LITE","TRET",
 	"TRLS","FWR4","GOOM","MUS1","MUS2","TOAD","XMS1",
 	"XMS2","XMS3","SUPT","ROIA","ROIB","ROIC","ROID","ROIE","ROIF",
 	"ROIG","ROIH","ROII","ROIJ","ROIK","ROIL","ROIM","ROIN","ROIO","ROIP",
@@ -1424,11 +1429,17 @@ state_t states[NUMSTATES] =
 	// Emblem
 	{SPR_NWNG, 0, -1, {NULL}, 0, 0, S_NULL}, // S_EMBLEM1
 
-	// Eggman Box
-	{SPR_EGGB, 0, 2, {NULL}, 0, 0, S_EGGTV2},          // S_EGGTV1
-	{SPR_MTEX, 0, 1, {NULL}, 0, 0, S_EGGTV1},          // S_EGGTV2
-	{SPR_EGGB, 1, 18, {A_MonitorPop}, 0, 0, S_EGGTV4}, // S_EGGTV3
-	{SPR_EGGB, 1, 18, {A_EggmanBox}, 0, 0, S_DISS},    // S_EGGTV4
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+	{SPR_EGGB, 0, 1, {NULL}, 0, 0,       S_EGGTV1},          // S_EGGTV
+	{SPR_EGGB, 1, 2, {NULL}, 0, 0,       S_EGGTV},           // S_EGGTV1
+	{SPR_EGGB, 2, 2, {A_Fall}, 0, 0,     S_EGGTV3}, // S_EGGTV2
+	{SPR_EGGB, 3, 2, {A_Scream}, 0, 0,   S_EGGTV4},             // S_EGGTV3
+	{SPR_EGGB, 4, 2, {NULL}, 0, 0,       S_EGGTV5},          // S_EGGTV4
+	{SPR_EGGB, 5, 2, {NULL}, 0, 0,       S_EGGTV6},           // S_EGGTV5
+	{SPR_EGGB, 6, 16, {NULL}, 0, 0,      S_EGGTV7}, // S_EGGTV6
+	{SPR_EGGB, 6, 48, {A_EggmanBox}, 0, 0, S_EGGTV8}, // S_EGGTV7
+	{SPR_EGGB, 7, -1, {NULL}, 0, 0, S_DISS},             // S_EGGTV8
+	#endif
 
 	// Red Shield's Spawn
 	{SPR_SFLM, 32768, 2, {NULL}, 0, 0, S_SPINFIRE2}, // S_SPINFIRE1
@@ -6398,6 +6409,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL          // raisestate
 	},
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{           // MT_EGGMANBOX
 		2005,           // doomednum
 		S_EGGTV1,       // spawnstate
@@ -6449,6 +6461,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOBLOCKMAP|MF_NOCLIP|MF_SCENERY|MF_NOGRAVITY|MF_MONITORICON, // flags
 		S_NULL          // raisestate
 	},
+	#endif
 
 	{           // MT_SPINFIRE
 		-1,             // doomednum

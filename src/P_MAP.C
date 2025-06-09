@@ -640,8 +640,8 @@ static boolean PIT_CheckThing(mobj_t *thing)
 						if (!(thing->state == &states[S_PLAY_FALL1] || thing->state == &states[S_PLAY_FALL2]))
 							P_SetPlayerMobjState(tmthing, S_PLAY_FALL1);
 						#else
-						if (!(thing->state == &states[S_PLAY_ATK1] || thing->state == &states[S_PLAY_ATK2] || thing->state == &states[S_PLAY_ATK3] || thing->state == &states[S_PLAY_ATK4]))
-							P_SetPlayerMobjState(tmthing, S_PLAY_ATK1);
+						if (!(thing->state == &states[S_PLAY_PAIN]))
+							P_SetPlayerMobjState(tmthing, S_PLAY_PAIN);
 						#endif
 					}
 					break;

@@ -17,7 +17,7 @@
 //#define DARKENEDMENU // Darkens menu
 //#define CHARACTERSELECT // Enables the character select menu
 #define MULTITHOK // If enabled, Sonic can multi-thok
-#define FALL_SPRITES // If enabled, Sonic will use fall sprites for some actions
+//#define FALL_SPRITES // If enabled, Sonic will use fall sprites for some actions
 
 // What background does the intermission use?
 #define IS_NOBG 0 // No background, currently pretty incomplete but it kinda works
@@ -28,7 +28,7 @@
 #define INTERMISSION_BG IS_CHARBG
 
 
-//#define TH_TOLERANCE 0
+#define TH_TOLERANCE 0
 // Undefined: Strict, ONLY things that were in the original Demo 2 IWAD are allowed
 // 0: Enable some very useful stuff that isn't in the Demo 2 IWAD, but we will need for D2U
 // 1: Enable some possibly useful things that break compatibility with the Demo 2 IWAD
