@@ -13,7 +13,7 @@
     #define DEV_RELEASE 2 // Enables dev build functionality
     #define FULL_RELEASE 3 // Enables full release functionality
 
-    #define BUILD_TYPE DEV_RELEASE
+    #define BUILD_TYPE PLAYTEST_BUILD
 
     //#define NOMAPCMD // Disables map command for singleplayer
     //#define DARKENEDMENU // Darkens menu

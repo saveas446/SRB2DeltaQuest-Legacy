@@ -839,7 +839,7 @@ static void ST_drawLevelTitle(void)
 	if (!(timeinmap > 1 && timeinmap < 111))
 		return;
 
-	if (actnum > 0)
+	/*if (actnum > 0)
 	{
 		ttlnum = W_CachePatchName(va("TTL%.2d", actnum), PU_CACHE);
 		lvlttlxpos = ((BASEVIDWIDTH/2) - ((lvlttl->width))) - ttlnum->width;
@@ -848,17 +848,16 @@ static void ST_drawLevelTitle(void)
 	{
 		nonumber = true;
 		lvlttlxpos = ((BASEVIDWIDTH/2) - (lvlttl->width/2));
-	}
+	}*/
 
 	ttlnumxpos = lvlttlxpos + lvlttl->width;
 	zonexpos = ttlnumxpos - ttlzone->width;
 
-	
 	if (gamemap % 3 == 1) {
 		ttlnum = act1;
 	} else if (gamemap % 3 == 2) {
 		ttlnum = act2;
-	} else if (gamemap % 3 == 3) {
+	} else if (!(gamemap % 3)) {
 		ttlnum = act3;
 	}
 	

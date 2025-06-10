@@ -1364,9 +1364,9 @@ static void Y_UnloadData(void)
 			UNLOAD(knuxpass);
 			UNLOAD(youpass);
 			UNLOAD(haspassed);
-			UNLOAD(act1);
-			UNLOAD(act2);
-			UNLOAD(act3);
+			//UNLOAD(act1);
+			//UNLOAD(act2);
+			//UNLOAD(act3);
 			break;
 		case int_match:
 			UNLOAD(data.match.result);
