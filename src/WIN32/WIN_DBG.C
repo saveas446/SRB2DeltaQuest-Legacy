@@ -532,16 +532,6 @@ int __cdecl RecordExceptionInfo (PEXCEPTION_POINTERS data/*, LPCSTR Message, LPS
 	//BP: should put message for end user to send this file to fix any bug
 	return EXCEPTION_CONTINUE_SEARCH;
 }
-
-#ifdef NO_SEH_MINGW
-struct _EXCEPTION_POINTERS *GetExceptionInformation(VOID)
-{
-	LPVOID SEHINFO = NULL;
-	//__asm__("movl -20(%%ebp), %%eax": "=a"(SEHINFO)); //Alam: FIXME!
-	return SEHINFO;
-}
-#endif
-
 	/*
 	//
 	//FPrintf ("e-mail this file to legacy@newdoom.com, so that we can fix the problem.\r\n\r\n");

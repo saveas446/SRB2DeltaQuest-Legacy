@@ -21,7 +21,8 @@
         "WIN_VID.C": "cpp",
         "R_BSP.C": "cpp",
         "P_FAB.C": "cpp",
-        "sounds.h": "c"
+        "sounds.h": "c",
+        "WIN_MAIN.C": "cpp"
     },
     "C_Cpp.dimInactiveRegions": false
 }

@@ -446,6 +446,14 @@ typedef struct
 #define VDOORSPEED              (FRACUNIT*2)
 #define VDOORWAIT               150
 
+int EV_LightTurnOn(line_t* line, int bright);
+
+int EV_CeilingCrushStop(line_t* line);
+
+int EV_DoDonut(line_t*  line);
+
+int EV_TurnTagLightsOff(line_t* line);
+
 int //SoM: 3/6/2000: boom support
 EV_VerticalDoor
 ( line_t*       line,

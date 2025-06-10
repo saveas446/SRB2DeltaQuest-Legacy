@@ -26,7 +26,7 @@ extern HWND hWndMain;
 
 // debugging CONS_Printf to file
 #ifdef LOGMESSAGES
-extern HANDLE logstream;
+extern HANDLE w_logstream;
 #endif
 extern int appActive;
 

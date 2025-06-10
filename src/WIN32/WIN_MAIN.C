@@ -69,7 +69,7 @@ boolean appActive = false; // app window is active
 
 #ifdef LOGMESSAGES
 // this is were I log debug text, cons_printf, I_error ect for window port debugging
-HANDLE logstream;
+HANDLE w_logstream;
 #endif
 
 BOOL nodinput = FALSE;
@@ -456,9 +456,9 @@ static int WINAPI HandledWinMain(HINSTANCE hInstance,
 	hPrevInstance = NULL;
 #ifdef LOGMESSAGES
 	// DEBUG!!! - set logstream to NULL to disable debug log
-	logstream = INVALID_HANDLE_VALUE;
+	w_logstream = INVALID_HANDLE_VALUE;
 
-	logstream = CreateFile (TEXT("log.txt"), GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS,
+	w_logstream = CreateFile (TEXT("log.txt"), GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS,
 	                        FILE_ATTRIBUTE_NORMAL, NULL);  //file flag writethrough?
 #endif
 

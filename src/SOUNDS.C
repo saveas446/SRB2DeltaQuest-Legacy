@@ -17,9 +17,10 @@
 /// \file
 /// \brief music/sound tables, and related sound routines
 
-#if defined(_MSC_VER) && _MSC_VER >= 1400
+#ifndef _MSC_VER
 #include <stdint.h>      /* C99+ */
 #endif
+
 #include "doomtype.h"
 #include "i_sound.h"
 #include "sounds.h"

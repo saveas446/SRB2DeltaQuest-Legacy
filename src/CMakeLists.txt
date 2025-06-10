@@ -69,8 +69,32 @@ add_executable(${PROJECT_NAME}
   r_bsp.c
   r_things.c
   s_sound.c
+  
+  win32/dx_error.c  
+  win32/mid2strm.c	
+  win32/win_dbg.c  
+  win32/win_net.c  
+  win32/win_sys.c
+  win32/fabdxlib.c  
+  win32/win_cd.c	
+  win32/win_dll.c  
+  win32/win_snd.c
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}
+# Apparently this won't work with MSVC or something but I don't care... yet.
+target_compile_options(${PROJECT_NAME} PRIVATE
+  -m32 # God knows what would happen if we tried to make a 64-bit build :uncanny:
+  -fno-pie 
+  -Wno-int-conversion 
+  -fpermissive
 )
+
+set(VS6DEP "${CMAKE_SOURCE_DIR}/../tools/vs6_files")
+
+target_include_directories(${PROJECT_NAME} PRIVATE 
+	"${CMAKE_SOURCE_DIR}"
+	"${VS6DEP}/include"
+	"${VS6DEP}/include/FMOD"
+)
+
+target_link_directories(${PROJECT_NAME} PRIVATE "${VS6DEP}/lib")

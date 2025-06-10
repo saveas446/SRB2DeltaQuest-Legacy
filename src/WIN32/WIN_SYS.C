@@ -512,11 +512,11 @@ static void signal_handler(int num)
 	}
 
 #ifdef LOGMESSAGES
-	if (logstream != INVALID_HANDLE_VALUE)
+	if (w_logstream != INVALID_HANDLE_VALUE)
 	{
 		I_OutputMsg("signal_handler() error: %s\r\n", sigmsg);
-		CloseHandle(logstream);
-		logstream = INVALID_HANDLE_VALUE;
+		CloseHandle(w_logstream);
+		w_logstream = INVALID_HANDLE_VALUE;
 	}
 #endif
 
@@ -595,8 +595,8 @@ void I_OutputMsg(const char *fmt, ...)
 	}
 
 #ifdef LOGMESSAGES
-	if (logstream != (HANDLE)-1)
-		WriteFile (logstream, txt, (DWORD)strlen(txt), &bytesWritten, NULL);
+	if (w_logstream != (HANDLE)-1)
+		WriteFile (w_logstream, txt, (DWORD)strlen(txt), &bytesWritten, NULL);
 #endif
 }
 
@@ -662,10 +662,10 @@ void I_Error(const char *error, ...)
 	I_ShutdownSystem();
 
 #ifdef LOGMESSAGES
-	if (logstream != INVALID_HANDLE_VALUE)
+	if (w_logstream != INVALID_HANDLE_VALUE)
 	{
-		CloseHandle(logstream);
-		logstream = INVALID_HANDLE_VALUE;
+		CloseHandle(w_logstream);
+		w_logstream = INVALID_HANDLE_VALUE;
 	}
 #endif
 
@@ -752,11 +752,11 @@ void I_Quit(void)
 		I_Error("Error detected (%d)", errorcount);
 
 #ifdef LOGMESSAGES
-	if (logstream != INVALID_HANDLE_VALUE)
+	if (w_logstream != INVALID_HANDLE_VALUE)
 	{
 		I_OutputMsg("I_Quit(): end of logstream.\r\n");
-		CloseHandle(logstream);
-		logstream = INVALID_HANDLE_VALUE;
+		CloseHandle(w_logstream);
+		w_logstream = INVALID_HANDLE_VALUE;
 	}
 #endif
 	if (!M_CheckParm("-noendtxt") && W_CheckNumForName("ENDOOM")!=-1

@@ -3496,7 +3496,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		0,              // damage
 		sfx_None,       // activesound
 		MF_ENEMY|MF_SPECIAL|MF_NOGRAVITY|MF_SHOOTABLE, // flags
-		MT_MINE         // raisestate
+		(statenum_t)MT_MINE         // raisestate
 	},
 
 	{           // MT_MINE
@@ -4042,7 +4042,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		0,              // damage
 		sfx_None,              // activesound
 		MF_SLIDEME|MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE|MF_NOGRAVITY, // flags
-		MT_MINE         // raisestate
+		(statenum_t)MT_MINE         // raisestate
 	},
 
 	{           // MT_JETTGUNNER
@@ -4068,7 +4068,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		0,              // damage
 		sfx_None,              // activesound
 		MF_SLIDEME|MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE|MF_NOGRAVITY, // flags
-		MT_JETTBULLET   // raisestate
+		(statenum_t)MT_JETTBULLET   // raisestate
 	},
 
 	{           // MT_JETTBULLET
@@ -7811,7 +7811,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		0,              // damage
 		sfx_None,       // activesound
 		MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE, // flags
-		MT_JETTBULLET   // raisestate
+		(statenum_t)MT_JETTBULLET   // raisestate
 	},
 	{           // MT_RANDOMAMBIENT2
 		43,             // doomednum

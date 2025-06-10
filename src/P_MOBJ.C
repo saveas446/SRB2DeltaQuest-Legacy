@@ -1176,6 +1176,7 @@ static void P_ZMovement(mobj_t *mo)
 static void P_PlayerZMovement(mobj_t *mo)
 {
 	fixed_t gravityadd = 0;
+	boolean fellthrufloor = false;
 
 	if (!mo->player)
 		return; // mobj was removed
@@ -1237,10 +1238,11 @@ static void P_PlayerZMovement(mobj_t *mo)
 
 	// Have player fall through floor?
 	if (mo->player->playerstate == PST_DEAD)
-		goto playergravity;
+		//Hack to replace weird goto statement that was causing an error
+		fellthrufloor = true;
 
 	// clip movement
-	if (mo->z <= mo->floorz)
+	if ((mo->z <= mo->floorz) && !fellthrufloor)
 	{
 		if (mo->player && mo->player->nightsmode)
 		{
@@ -1361,7 +1363,7 @@ static void P_PlayerZMovement(mobj_t *mo)
 				mo->momz = 0;
 		}
 	}
-	else if (!(mo->flags & MF_NOGRAVITY)) // Gravity here!
+	else if ((!(mo->flags & MF_NOGRAVITY)) && !fellthrufloor) // Gravity here!
 	{
 		boolean no3dfloorgrav = true; // Custom gravity
 
@@ -1406,9 +1408,11 @@ static void P_PlayerZMovement(mobj_t *mo)
 		if (!mo->momz) // mobj at stop, no floor, so feel the push of gravity!
 			gravityadd <<= 1;
 
-playergravity:
+	}
+
+	if (fellthrufloor) {
 		if ((mo->player->charability == 1) && ((mo->player->powers[pw_tailsfly]) || (mo->player->mo->state == &states[S_PLAY_SPC1]) || (mo->player->mo->state == &states[S_PLAY_SPC2]) || (mo->player->mo->state == &states[S_PLAY_SPC3]) || (mo->player->mo->state == &states[S_PLAY_SPC4])))
-			gravityadd = gravityadd/3; // less gravity while flying
+		gravityadd = gravityadd/3; // less gravity while flying
 		if (mo->player->gliding)
 			gravityadd = gravityadd/3; // less gravity while gliding
 		if (mo->player->climbing)
@@ -3844,7 +3848,11 @@ void P_RailThinker(mobj_t *mobj)
 	}
 
 	if (mobj->flags2 & MF2_HOMING)
-		A_ThrownRing(mobj);
+		//A_ThrownRing(mobj);
+
+		// Don't know WHY this had an argument before that's not in the actual function,
+		// I hope I didn't just break something lol
+		A_ThrownRing();
 }
 
 // Unquick, unoptimized function for pushables
@@ -4779,9 +4787,15 @@ void P_SpawnMapThing(mapthing_t *mthing)
 	}
 
 	// find which type to spawn
+	#ifdef _MSC_VER
 	for (i = 0; i < NUMMOBJTYPES; i++)
 		if (mthing->type == mobjinfo[i].doomednum)
 			break;
+	#else
+	for (i = 0; i < NUMMOBJTYPES; i = i + 1)
+		if (mthing->type == mobjinfo[(int)i].doomednum)
+			break;
+	#endif
 
 	if (i == NUMMOBJTYPES)
 	{

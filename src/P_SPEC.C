@@ -36,7 +36,7 @@
 #include "r_main.h" //Two extra includes.
 #include "r_sky.h"
 
-#if defined(_MSC_VER) && _MSC_VER >= 1400
+#ifndef _MSC_VER
 #include <stdint.h>
 #endif
 #include "hardware/hw3sound.h"

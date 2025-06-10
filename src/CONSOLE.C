@@ -952,7 +952,7 @@ void CON_LogMessage(const char *msg)
 {
 	XBOXSTATIC char txt[128], *t;
 #if defined (LOGMESSAGES) && defined (_WINDOWS)
-	const boolean ls = (logstream != INVALID_HANDLE_VALUE);
+	const boolean ls = (w_logstream != INVALID_HANDLE_VALUE);
 #endif
 	const char *p = msg, *e = txt+sizeof (txt)-2;
 

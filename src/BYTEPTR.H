@@ -19,7 +19,7 @@
 
 
 // VS2002 and VS2003 are untested but this works for VS6 and VS8/VS2005
-#if defined(_MSC_VER) && _MSC_VER >= 1400
+#ifndef _MSC_VER
 #include <stdint.h>      /* C99+ */
 #endif
 
