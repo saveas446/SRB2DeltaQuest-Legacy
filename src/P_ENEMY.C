@@ -443,7 +443,7 @@ static void P_NewChaseDir(mobj_t *actor)
 	// randomly determine direction of search
 	if (P_Random() & 1)
 	{
-		dirtype_t tdir = DI_EAST;
+		tdir = DI_EAST;
 		while (tdir < DI_SOUTHEAST)
 		{
 			if (tdir != turnaround)
@@ -453,12 +453,13 @@ static void P_NewChaseDir(mobj_t *actor)
 				if (P_TryWalk(actor))
 					return;
 			}
-			tdir++;
+			tdir = (dirtype_t)((int)tdir + 1);
 		}
 	}
 	else
 	{
-		for (tdir = DI_SOUTHEAST; tdir >= DI_EAST; tdir--)
+		tdir = DI_SOUTHEAST;
+		while (tdir < DI_EAST)
 		{
 			if (tdir != turnaround)
 			{
@@ -467,6 +468,7 @@ static void P_NewChaseDir(mobj_t *actor)
 				if (P_TryWalk(actor))
 					return;
 			}
+			tdir = (dirtype_t)((int)tdir - 1);
 		}
 	}
 

@@ -27,13 +27,10 @@
 //
 // Little-endian machines
 //
-#define WRITEBYTE(p, b)        \
-    do {                               \
-        *(p) = (b); /* store */        \
-        (p)++;      /* advance */      \
-    } while (0)
 
-
+#if defined(_MSC_VER)
+// Seems to work fine for VS6 and VS8
+#define WRITEBYTE(p,b)      do { byte *p_tmp = (byte *)p; *p_tmp = (byte)(b); p_tmp++; p = (void *)p_tmp; } while (0)
 #define WRITECHAR(p,b)      do { char *p_tmp = (char *)p; *p_tmp = (char)(b); p_tmp++; p = (void *)p_tmp; } while (0)
 #define WRITESHORT(p,b)     do { short *p_tmp = (short *)p; *p_tmp = (short)(b); p_tmp++; p = (void *)p_tmp; } while (0)
 #define WRITEUSHORT(p,b)    do { USHORT *p_tmp = (USHORT *)p; *p_tmp = (USHORT)(b); p_tmp++; p = (void *)p_tmp; } while (0)
@@ -41,19 +38,110 @@
 #define WRITEULONG(p,b)     do { ULONG *p_tmp = (ULONG *)p; *p_tmp = (ULONG)(b); p_tmp++; p = (void *)p_tmp; } while (0)
 #define WRITEFIXED(p,b)     do { fixed_t *p_tmp = (fixed_t *)p; *p_tmp = (fixed_t)(b); p_tmp++; p = (void *)p_tmp; } while (0)
 #define WRITEANGLE(p,b)     do { angle_t *p_tmp = (angle_t *)p; *p_tmp = (angle_t)(b); p_tmp++; p = (void *)p_tmp; } while (0)
+#else
+// CMake + Ninja
+#define WRITEBYTE(p, b)        \
+    do {                               \
+        *(p) = (b);                    \
+        (p)++;                         \
+    } while (0)
+#define WRITECHAR(p, b)        \
+do {                               \
+	*(p) = (b);                    \
+	(p)++;                         \
+} while (0)
+#define WRITESHORT(p, b)        \
+do {                               \
+	*(p) = (b);                    \
+	(p)++;                         \
+} while (0)
+#define WRITEUSHORT(p, b)        \
+do {                               \
+	*(p) = (b);                    \
+	(p)++;                         \
+} while (0)
+#define WRITELONG(p, b)        \
+do {                               \
+	*(p) = (b);                    \
+	(p)++;                         \
+} while (0)
+#define WRITEULONG(p, b)        \
+do {                               \
+	*(p) = (b);                    \
+	(p)++;                         \
+} while (0)
+#define WRITEFIXED(p, b)        \
+do {                               \
+	*(p) = (b);                    \
+	(p)++;                         \
+} while (0)
+#define WRITEANGLE(p, b)        \
+do {                               \
+	*(p) = (b);                    \
+	(p)++;                         \
+} while (0)
+#endif
 #define WRITESTRING(p,b)    { int tmp_i = 0; do { WRITECHAR(p, b[tmp_i]); } while (b[tmp_i++]); }
 #define WRITESTRINGN(p,b,n) { int tmp_i = 0; do { WRITECHAR(p, b[tmp_i]); if (!b[tmp_i]) break; tmp_i++; } while (tmp_i < n); }
 #define WRITEMEM(p,s,n)     memcpy(p, s, n); p += n
 
 #ifdef __GNUC__
-#define READBYTE(p)         ({ byte *p_tmp = (byte *)p; byte b = *p_tmp; p_tmp++; p = (void *)p_tmp; b; })
-#define READCHAR(p)         ({ char *p_tmp = (char *)p; char b = *p_tmp; p_tmp++; p = (void *)p_tmp; b; })
-#define READSHORT(p)        ({ short *p_tmp = (short *)p; short b = *p_tmp; p_tmp++; p = (void *)p_tmp; b; })
-#define READUSHORT(p)       ({ USHORT *p_tmp = (USHORT *)p; USHORT b = *p_tmp; p_tmp++; p = (void *)p_tmp; b; })
-#define READLONG(p)         ({ long *p_tmp = (long *)p; long b = *p_tmp; p_tmp++; p = (void *)p_tmp; b; })
-#define READULONG(p)        ({ ULONG *p_tmp = (ULONG *)p; ULONG b = *p_tmp; p_tmp++; p = (void *)p_tmp; b; })
-#define READFIXED(p)        ({ fixed_t *p_tmp = (fixed_t *)p; fixed_t b = *p_tmp; p_tmp++; p = (void *)p_tmp; b; })
-#define READANGLE(p)        ({ angle_t *p_tmp = (angle_t *)p; angle_t b = *p_tmp; p_tmp++; p = (void *)p_tmp; b; })
+//#define READBYTE(p)         ({ byte *p_tmp = (byte *)p; byte b = *p_tmp; p_tmp++; p = (void *)p_tmp; b; })
+#define READBYTE(p)                    \
+	({                                 \
+		byte p_tmp = *(p);			   \
+        (p)++;                         \
+		p_tmp;						   \
+    })
+//#define READCHAR(p)         ({ char *p_tmp = (char *)p; char b = *p_tmp; p_tmp++; p = (void *)p_tmp; b; })
+#define READCHAR(p)                    \
+	({                                 \
+		char p_tmp = *(p);			   \
+        (p)++;                         \
+		p_tmp;						   \
+    })
+//#define READSHORT(p)        ({ short *p_tmp = (short *)p; short b = *p_tmp; p_tmp++; p = (void *)p_tmp; b; })
+#define READSHORT(p)                   \
+	({                                 \
+		short p_tmp = *(p);			   \
+        (p)++;                         \
+		p_tmp;						   \
+    })
+//#define READUSHORT(p)       ({ USHORT *p_tmp = (USHORT *)p; USHORT b = *p_tmp; p_tmp++; p = (void *)p_tmp; b; })
+#define READUSHORT(p)                  \
+	({                                 \
+		USHORT p_tmp = *(p);		   \
+        (p)++;                         \
+		p_tmp;						   \
+    })
+//#define READLONG(p)         ({ long *p_tmp = (long *)p; long b = *p_tmp; p_tmp++; p = (void *)p_tmp; b; })
+#define READLONG(p)                    \
+	({                                 \
+		long p_tmp = *(p);			   \
+        (p)++;                         \
+		p_tmp;						   \
+    })
+//#define READULONG(p)        ({ ULONG *p_tmp = (ULONG *)p; ULONG b = *p_tmp; p_tmp++; p = (void *)p_tmp; b; })
+#define READULONG(p)                   \
+	({                                 \
+		ULONG p_tmp = *(p);		       \
+        (p)++;                         \
+		p_tmp;						   \
+    })
+//#define READFIXED(p)        ({ fixed_t *p_tmp = (fixed_t *)p; fixed_t b = *p_tmp; p_tmp++; p = (void *)p_tmp; b; })
+#define READFIXED(p)                   \
+	({                                 \
+		fixed_t p_tmp = *(p);		   \
+        (p)++;                         \
+		p_tmp;						   \
+    })
+//#define READANGLE(p)        ({ angle_t *p_tmp = (angle_t *)p; angle_t b = *p_tmp; p_tmp++; p = (void *)p_tmp; b; })
+#define READANGLE(p)                   \
+	({                                 \
+		angle_t p_tmp = *(p);		   \
+        (p)++;                         \
+		p_tmp;						   \
+    })
 #else
 #define READBYTE(p)         *((byte *)p)++
 #define READCHAR(p)         *((char *)p)++

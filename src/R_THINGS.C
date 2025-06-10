@@ -326,8 +326,7 @@ static boolean R_AddSingleSpriteDef(const char *sprname, spritedef_t *spritedef,
 
     // allocate this sprite's frames
     if (spritedef->spriteframes == NULL)
-        spritedef->spriteframes =
-            Z_Malloc(maxframe * sizeof (spriteframe_t), PU_STATIC, NULL);
+        spritedef->spriteframes = (spriteframe_t*) Z_Malloc(maxframe * sizeof (spriteframe_t), PU_STATIC, NULL);
 
     spritedef->numframes = maxframe;
     memcpy(spritedef->spriteframes, sprtemp, maxframe*sizeof (spriteframe_t));
@@ -422,7 +421,7 @@ void R_InitSprites(void)
 	if (!numsprites)
 		I_Error("R_AddSpriteDefs: no sprites in namelist\n");
 
-	sprites = Z_Malloc(numsprites * sizeof (*sprites), PU_STATIC, NULL);
+	sprites = (spritedef_t*) Z_Malloc(numsprites * sizeof (*sprites), PU_STATIC, NULL);
 	memset(sprites, 0, numsprites * sizeof (*sprites));
 
 	// find sprites in each -file added pwad
@@ -574,7 +573,7 @@ static void R_DrawVisSprite(vissprite_t *vis, int x1, int x2)
 
     //Fab : R_InitSprites now sets a wad lump number
 	 x1 = x2 = 0; // Logan: WHAT? we pass x1 and x2 for cliping, and we don't use them?
-    patch = W_CacheLumpNum(vis->patch, PU_CACHE);
+    patch = (patch_t*) W_CacheLumpNum(vis->patch, PU_CACHE);
 
     dc_colormap = vis->colormap;
 	if (vis->mobj && vis->mobjflags & MF_TRANSLATION && vis->transmap) // Map it to the color of the player that thokked it. Tails 08-20-2002
@@ -689,7 +688,7 @@ static void R_DrawPrecipitationVisSprite(vissprite_t *vis, int x1, int x2)
 	patch_t *patch;
 
 	//Fab : R_InitSprites now sets a wad lump number
-	patch = W_CacheLumpNum(vis->patch, PU_CACHE);
+	patch = (patch_t*) W_CacheLumpNum(vis->patch, PU_CACHE);
 
 	if (vis->transmap)
 	{
@@ -1029,7 +1028,7 @@ static void R_ProjectSprite(mobj_t *thing)
     // specific translucency
     if (thing->frame & FF_SMOKESHADE)
         // not realy a colormap ... see R_DrawVisSprite
-        vis->colormap = VIS_SMOKESHADE;
+        vis->colormap = (lighttable_t*)VIS_SMOKESHADE;
     else
     {
         if (thing->frame & FF_TRANSMASK)
@@ -1568,7 +1567,7 @@ static drawnode_t *R_CreateDrawNode(drawnode_t *link)
   node = nodebankhead.next;
   if (node == &nodebankhead)
   {
-    node = malloc(sizeof (drawnode_t));
+    node = (drawnode_t*) malloc(sizeof (drawnode_t));
     if (!node)
       I_Error("No more free memory to CreateDrawNode");
   }
@@ -2382,7 +2381,7 @@ void R_AddSkins(int wadnum)
 			continue; // so we know how many skins couldn't be added
 		}
 
-		buf = W_CacheLumpNum(lumpnum, PU_CACHE);
+		buf = (char*)W_CacheLumpNum(lumpnum, PU_CACHE);
 		size = W_LumpLength(lumpnum);
 
 		// for strtok
@@ -2429,7 +2428,7 @@ void R_AddSkins(int wadnum)
 				} else {
 					const int stringspace =
 						strlen(value) + sizeof (numskins) + 1;
-					char *value2 = Z_Malloc(stringspace, PU_STATIC, NULL);
+					char *value2 = (char*)Z_Malloc(stringspace, PU_STATIC, NULL);
 					snprintf(value2, stringspace,
 						"%s%d", value, numskins);
 					if (!R_SkinAvailable(value2))

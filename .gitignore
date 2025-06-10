@@ -67,6 +67,7 @@ SRB2*.pcx
 # Ninja
 .ninja_deps
 .ninja_log
+.ninja
 
 # CMake
 CMakeLists.txt.user

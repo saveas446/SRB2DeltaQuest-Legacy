@@ -1730,7 +1730,7 @@ static void Command_Map_f(void)
 		}
 	}
 	fromlevelselect = false;
-	D_MapChange(newmapnum, newgametype, newskill, newresetplayers, 0, false, false);
+	D_MapChange(newmapnum, newgametype, (skill_t)newskill, newresetplayers, 0, false, false);
 }
 
 /** Receives a map command and changes the map.
@@ -1812,7 +1812,7 @@ static void Got_Mapcmd(char **cp, int playernum)
 			emeralds = 0;
 	}
 
-	G_InitNew(skill, mapname, resetplayer, skipprecutscene);
+	G_InitNew((skill_t)skill, mapname, resetplayer, skipprecutscene);
 	if (demoplayback && !timingdemo)
 		precache = true;
 	CON_ToggleOff();
@@ -2807,7 +2807,7 @@ void ObjectPlace_OnChange(void)
 		players[0].mo->flags |= MF_NOBLOCKMAP;
 		P_SetThingPosition(players[0].mo);
 		if (!players[0].currentthing)
-			players[0].currentthing = 1;
+			players[0].currentthing = (mobjtype_t)1;
 		players[0].mo->momx = players[0].mo->momy = players[0].mo->momz = 0;
 	}
 	else if (players[0].mo)

@@ -522,7 +522,7 @@ static LPDIRECTSOUNDBUFFER CreateInvertedSound(int id)
 	lumpnum = S_sfx[id].lumpnum;
 	if (lumpnum < 0)
 		lumpnum = S_GetSfxLumpNum (&S_sfx[id]);
-	dsdata = W_CacheLumpNum (lumpnum, PU_CACHE);
+	dsdata = (byte*)W_CacheLumpNum (lumpnum, PU_CACHE);
 	return raw2DS(dsdata, S_sfx[id].length, TRUE);
 
 }
@@ -664,7 +664,7 @@ int I_StartSound (int            id,
 			int     lumpnum = S_sfx[id].lumpnum;
 			if (lumpnum < 0)
 				lumpnum = S_GetSfxLumpNum (&S_sfx[id]);
-			dsdata = W_CacheLumpNum (lumpnum, PU_CACHE);
+			dsdata = (byte*)W_CacheLumpNum (lumpnum, PU_CACHE);
 
 			// Well... Data lenght must be -8!!!
 			CopySoundData (dsbuffer, dsdata + 8, S_sfx[id].length - 8);
@@ -692,7 +692,7 @@ int I_StartSound (int            id,
 
 				if (lumpnum < 0)
 					lumpnum = S_GetSfxLumpNum (&S_sfx[id]);
-				dsdata = W_CacheLumpNum (lumpnum, PU_CACHE);
+				dsdata = (byte*)W_CacheLumpNum (lumpnum, PU_CACHE);
 				CopyAndInvertSoundData (dssurround, (byte *)dsdata + 8, S_sfx[id].length - 8);
 			
 				hr = IDirectSoundBuffer_Play (dssurround, 0, 0, 0);
@@ -1842,7 +1842,7 @@ boolean I_StartDigSong(const char *musicname, int looping)
 		return false; // No music found. Oh well!
 	}
 
-	data = W_CacheLumpName (filename, PU_CACHE);
+	data = (byte*)W_CacheLumpName (filename, PU_CACHE);
 
 	I_SaveMemToFile (data, W_LumpLength(lumpnum), "fmod.tmp");
 
@@ -1912,7 +1912,7 @@ boolean I_StartDigSong(const char *musicname, int looping)
 		{
 			//freq = FSOUND_GetFrequency(fsoundchannel);
 	
-			data = W_CacheLumpName (filename, PU_CACHE);
+			data = (byte*)W_CacheLumpName (filename, PU_CACHE);
 	
 			dataum = (byte *)data;
 	

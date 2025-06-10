@@ -1769,7 +1769,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // painstate
 		200,            // painchance
 		sfx_None,              // painsound
-		0,              // meleestate
+		S_NULL,              // meleestate
 		S_NULL,         // missilestate
 		S_XPLD1,        // deathstate
 		S_NULL,         // xdeathstate
@@ -1795,7 +1795,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // painstate
 		170,            // painchance
 		sfx_None,              // painsound
-		0,              // meleestate
+		S_NULL,              // meleestate
 		S_NULL,         // missilestate
 		S_XPLD1,        // deathstate
 		S_NULL,         // xdeathstate
@@ -1815,9 +1815,9 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_EGGMOBILE_STND,  // spawnstate
 		8,                 // spawnhealth
 		S_EGGMOBILE_STND,  // seestate
-		0,                 // seesound
+		sfx_None,                 // seesound
 		8,                 // reactiontime
-		0,                 // attacksound
+		sfx_None,                 // attacksound
 		S_EGGMOBILE_PAIN,  // painstate
 		MT_THOK,           // painchance
 		sfx_dmpain,        // painsound
@@ -4030,7 +4030,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // painstate
 		200,            // painchance
 		sfx_None,              // painsound
-		0,              // meleestate
+		S_NULL,              // meleestate
 		S_NULL,         // missilestate
 		S_XPLD1,        // deathstate
 		S_NULL,         // xdeathstate
@@ -4056,7 +4056,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // painstate
 		3072,           // painchance
 		sfx_None,              // painsound
-		0,              // meleestate
+		S_NULL,              // meleestate
 		S_JETGSHOOT1,   // missilestate
 		S_XPLD1,        // deathstate
 		S_NULL,         // xdeathstate
@@ -4082,7 +4082,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // painstate
 		200,            // painchance
 		sfx_None,              // painsound
-		0,              // meleestate
+		S_NULL,              // meleestate
 		S_NULL,         // missilestate
 		S_XPLD1,        // deathstate
 		S_NULL,         // xdeathstate
@@ -4109,7 +4109,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // painstate
 		200,            // painchance
 		sfx_None,              // painsound
-		0,              // meleestate
+		S_NULL,              // meleestate
 		S_NULL,         // missilestate
 		S_NULL,         // deathstate
 		S_NULL,         // xdeathstate
@@ -4136,7 +4136,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // painstate
 		3072,           // painchance
 		sfx_None,              // painsound
-		0,              // meleestate
+		S_NULL,              // meleestate
 		S_NULL,         // missilestate
 		S_DISS,         // deathstate
 		S_NULL,         // xdeathstate
@@ -4148,7 +4148,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		1,              // damage
 		sfx_None,              // activesound
 		MF_ENEMY|MF_SHOOTABLE|MF_NOGRAVITY|MF_MISSILE, // flags
-		ANG90/6         // raisestate: largest angle to turn in one tic (here, 15 degrees)
+		(statenum_t)(ANG90/6)         // raisestate: largest angle to turn in one tic (here, 15 degrees)
 	},
 
 	{           // MT_EXPLODE
@@ -4162,7 +4162,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // painstate
 		200,            // painchance
 		sfx_None,              // painsound
-		0,              // meleestate
+		S_NULL,              // meleestate
 		S_NULL,         // missilestate
 		S_DISS,         // deathstate
 		S_NULL,         // xdeathstate
@@ -4400,7 +4400,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_CCOMMAND1,    // painstate
 		200,            // painchance
 		sfx_dmpain,     // painsound
-		0,              // meleestate
+		S_NULL,              // meleestate
 		S_NULL,         // missilestate
 		S_XPLD1,        // deathstate
 		S_NULL,         // xdeathstate
@@ -4426,7 +4426,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // painstate
 		200,            // painchance
 		sfx_None,              // painsound
-		0,              // meleestate
+		S_NULL,              // meleestate
 		S_NULL,         // missilestate
 		S_DISS,         // deathstate
 		S_NULL,         // xdeathstate
@@ -6268,7 +6268,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_EGGMOBILE2_STND, // spawnstate
 		8,                 // spawnhealth
 		S_EGGMOBILE2_STND, // seestate
-		0,                 // seesound
+		sfx_None,                 // seesound
 		8,                 // reactiontime
 		0,        // attacksound
 		S_EGGMOBILE2_PAIN, // painstate
@@ -6718,7 +6718,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // painstate
 		200,            // painchance
 		sfx_None,              // painsound
-		0,              // meleestate
+		S_NULL,              // meleestate
 		S_NULL,         // missilestate
 		S_GOOMBA_DEAD,  // deathstate
 		S_NULL,         // xdeathstate
@@ -7522,7 +7522,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // painstate
 		3072,           // painchance
 		sfx_None,              // painsound
-		0,              // meleestate
+		S_NULL,              // meleestate
 		S_NULL,         // missilestate
 		S_XPLD1,        // deathstate
 		S_NULL,         // xdeathstate
@@ -7548,7 +7548,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // painstate
 		3072,           // painchance
 		sfx_None,              // painsound
-		0,              // meleestate
+		S_NULL,              // meleestate
 		S_NULL,         // missilestate
 		S_XPLD1,        // deathstate
 		S_NULL,         // xdeathstate

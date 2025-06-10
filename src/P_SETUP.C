@@ -401,8 +401,8 @@ static inline void P_LoadSubsectors(int lump)
 	numsubsectors = W_LumpLength(lump) / sizeof (mapsubsector_t);
 	if (numsubsectors <= 0)
 		I_Error("Level has no subsectors (did you forget to run it through a nodesbuilder?)");
-	subsectors = Z_Malloc(numsubsectors * sizeof (subsector_t), PU_LEVEL, NULL);
-	data = W_CacheLumpNum(lump,PU_STATIC);
+	subsectors = (subsector_t*)Z_Malloc(numsubsectors * sizeof (subsector_t), PU_LEVEL, NULL);
+	data = (byte*)W_CacheLumpNum(lump,PU_STATIC);
 
 	ms = (mapsubsector_t *)data;
 	memset(subsectors, 0, numsubsectors * sizeof (subsector_t));
@@ -515,7 +515,7 @@ static void P_LoadDBGSectors(int lump)
 		I_Error("Level has no sectors");
 	sectors = Z_Malloc(numsectors*sizeof (sector_t), PU_LEVEL, NULL);
 	memset(sectors, 0, numsectors*sizeof (sector_t));
-	data = W_CacheLumpNum(lump,PU_STATIC);
+	data = (byte*)W_CacheLumpNum(lump,PU_STATIC);
 
 	//Fab : FIXME: allocate for whatever number of flats
 	//           512 different flats per level should be plenty
@@ -602,7 +602,7 @@ static void P_LoadSectors(int lump)
 		I_Error("Level has no sectors");
 	sectors = Z_Malloc(numsectors*sizeof (sector_t), PU_LEVEL, NULL);
 	memset(sectors, 0, numsectors*sizeof (sector_t));
-	data = W_CacheLumpNum(lump,PU_STATIC);
+	data = (byte*)W_CacheLumpNum(lump,PU_STATIC);
 
 	//Fab : FIXME: allocate for whatever number of flats
 	//           512 different flats per level should be plenty
@@ -702,7 +702,7 @@ static void P_LoadNodes(int lump)
 	if (numnodes <= 0)
 		I_Error("Level has no nodes");
 	nodes = Z_Malloc(numnodes * sizeof (node_t), PU_LEVEL, NULL);
-	data = W_CacheLumpNum(lump, PU_STATIC);
+	data = (byte*)W_CacheLumpNum(lump, PU_STATIC);
 
 	mn = (mapnode_t *)data;
 	no = nodes;
@@ -973,7 +973,7 @@ static void P_LoadLineDefs(int lump)
 		I_Error("Level has no linedefs");
 	lines = Z_Malloc(numlines * sizeof (line_t), PU_LEVEL, NULL);
 	memset(lines, 0, numlines * sizeof (line_t));
-	data = W_CacheLumpNum(lump, PU_STATIC);
+	data = (byte*)W_CacheLumpNum(lump, PU_STATIC);
 
 	mld = (maplinedef_t *)data;
 	ld = lines;
@@ -1065,7 +1065,7 @@ static inline void P_LoadSideDefs(int lump)
 
 static void P_LoadSideDefs2(int lump)
 {
-	byte *data = W_CacheLumpNum(lump, PU_STATIC);
+	byte *data = (byte*)W_CacheLumpNum(lump, PU_STATIC);
 	int i, num, mapnum;
 
 	for (i = 0; i < numsides; i++)
