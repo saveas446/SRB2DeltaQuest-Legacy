@@ -22,6 +22,19 @@
 // COLUMNS
 // ==========================================================================
 
+#include "m_fixed.h"
+#include "r_draw.h"
+#include "doomtype.h"
+#include "doomdef.h"
+#include "doomstat.h"
+#include "r_local.h"
+#include "st_stuff.h" // need ST_HEIGHT
+#include "i_video.h"
+#include "v_video.h"
+#include "w_wad.h"
+#include "z_zone.h"
+#include "console.h" // Until buffering gets finished
+
 /// \brief kick out the upper bit of each component (we're in 5 : 5 : 5)
 #define HIMASK1 0x7bde
 

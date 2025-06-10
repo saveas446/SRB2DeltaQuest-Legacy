@@ -299,7 +299,7 @@ static const fixed_t yspeed[NUMDIRS] = {0, 47000, FRACUNIT, 47000, 0, -47000, -F
 static boolean P_Move(mobj_t *actor)
 {
 	fixed_t tryx, tryy;
-	dirtype_t movedir = actor->movedir;
+	dirtype_t movedir = (dirtype_t)actor->movedir;
 
 	if (movedir == DI_NODIR)
 		return false;
@@ -365,7 +365,7 @@ static void P_NewChaseDir(mobj_t *actor)
 		I_Error("P_NewChaseDir: called with no target");
 #endif
 
-	olddir = actor->movedir;
+	olddir = (dirtype_t)actor->movedir;;
 
 	if (olddir >= NUMDIRS)
 		olddir = DI_NODIR;
@@ -443,7 +443,8 @@ static void P_NewChaseDir(mobj_t *actor)
 	// randomly determine direction of search
 	if (P_Random() & 1)
 	{
-		for (tdir = DI_EAST; tdir <= DI_SOUTHEAST; tdir++)
+		dirtype_t tdir = DI_EAST;
+		while (tdir < DI_SOUTHEAST)
 		{
 			if (tdir != turnaround)
 			{
@@ -452,6 +453,7 @@ static void P_NewChaseDir(mobj_t *actor)
 				if (P_TryWalk(actor))
 					return;
 			}
+			tdir++;
 		}
 	}
 	else

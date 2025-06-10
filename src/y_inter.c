@@ -38,6 +38,7 @@
 #include "y_inter.h"
 #include "z_zone.h"
 #include "m_menu.h"
+#include "m_random.h"
 #include "m_misc.h"
 #include "i_system.h"
 

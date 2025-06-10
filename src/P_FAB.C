@@ -56,7 +56,9 @@ static void R_SetTrans(statenum_t state1, statenum_t state2, transnum_t transmap
 		if (!resettrans)
 			state->frame |= (transmap<<FF_TRANSSHIFT);
 		state++;
-	} while (state1++ < state2);
+		state1 = (statenum_t)(((int)state1) + 1);
+
+	} while (state1 < state2);
 }
 
 /**	\brief	The P_SetTranslucencies function
@@ -69,11 +71,11 @@ static void R_SetTrans(statenum_t state1, statenum_t state2, transnum_t transmap
 static void P_SetTranslucencies(void)
 {
 	R_SetTrans(S_SMOK1, S_SMOK5, tr_transmed);
-	R_SetTrans(S_SPLASH1, 0, tr_transmed);
-	R_SetTrans(S_SPLASH2, 0, tr_transmor);
-	R_SetTrans(S_SPLASH3, 0, tr_transhi);
+	R_SetTrans(S_SPLASH1, S_NULL, tr_transmed);
+	R_SetTrans(S_SPLASH2, S_NULL, tr_transmor);
+	R_SetTrans(S_SPLASH3, S_NULL, tr_transhi);
 
-	R_SetTrans(S_THOK1, 0, tr_transmed); // Thok! mobj
+	R_SetTrans(S_THOK1, S_NULL, tr_transmed); // Thok! mobj
 
 	R_SetTrans(S_FLAME1, S_FLAME4, tr_transfir); // Flame
 
@@ -99,8 +101,8 @@ static void P_SetTranslucencies(void)
 	R_SetTrans(S_LARGEBUBBLE, S_EXTRALARGEBUBBLE, tr_transmed);
 
 	R_SetTrans(S_SPLISH1, S_SPLISH9, tr_transmed);
-	R_SetTrans(S_TOKEN, 0, tr_transmed);
-	R_SetTrans(S_RAIN1, 0, tr_transmed);
+	R_SetTrans(S_TOKEN, S_NULL, tr_transmed);
+	R_SetTrans(S_RAIN1, S_NULL, tr_transmed);
 }
 
 /**	\brief 	The Translucency_OnChange function

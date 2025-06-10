@@ -20,6 +20,7 @@ SRB2*.pcx
 
 
 # Visual Studio + source code stuff
+*.lib
 *.rsuser
 *.suo
 *.user
@@ -60,6 +61,27 @@ SRB2*.pcx
 *.res
 *.ncb
 *.opt
+*.o
+*.obj
+
+# Ninja
+.ninja_deps
+.ninja_log
+
+# CMake
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+CMakeUserPresets.json
+
 objs/*
 build/log.txt
 build/log.txt
@@ -68,7 +90,13 @@ build/gamedata.dat
 
 # 2.2 folder, only added here because it keeps saying files added there are changed to the repo and i got tired of it
 2.2 (for reference)/
-*.idb
-*.idb
 playtest build 1.7z
 dev/load this into the launcher.xml
+build_new/log
+src/listing
+tools/libpng-src/projects/visualc6/Win32_LIB_ASM_Debug/BuildLog.htm
+tools/libpng-src/projects/visualc6/Win32_LIB_ASM_Debug/libpng.lib
+tools/libpng-src/projects/visualc6/Win32_LIB_ASM_Debug/vc60.idb
+tools/zlib/projects/visualc6/Win32_LIB_ASM_Debug/BuildLog.htm
+tools/zlib/projects/visualc6/Win32_LIB_ASM_Debug/vc60.idb
+tools/zlib/projects/visualc6/Win32_LIB_ASM_Debug/zlib.lib

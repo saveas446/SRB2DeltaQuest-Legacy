@@ -254,10 +254,10 @@ static inline void P_LoadVertexes(int lump)
 		I_Error("Level has no vertices"); // instead of crashing
 
 	// Allocate zone memory for buffer.
-	vertexes = Z_Malloc(numvertexes * sizeof (vertex_t), PU_LEVEL, NULL);
+	vertexes = (vertex_t*)Z_Malloc(numvertexes * sizeof (vertex_t), PU_LEVEL, NULL);
 
 	// Load data into cache.
-	data = W_CacheLumpNum(lump, PU_STATIC);
+	data = (byte*)W_CacheLumpNum(lump, PU_STATIC);
 
 	ml = (mapvertex_t *)data;
 	li = vertexes;
@@ -289,10 +289,10 @@ static inline void P_LoadDBGVertexes(int lump)
 		I_Error("Level has no vertices"); // instead of crashing
 
 	// Allocate zone memory for buffer.
-	vertexes = Z_Malloc(numvertexes * sizeof (vertex_t), PU_LEVEL, NULL);
+	vertexes = (vertex_t*)Z_Malloc(numvertexes * sizeof (vertex_t), PU_LEVEL, NULL);
 
 	// Load data into cache.
-	data = W_CacheLumpNum(lump, PU_STATIC);
+	data = (byte*)W_CacheLumpNum(lump, PU_STATIC);
 
 	ml = (dbgmapvertex_t *)data;
 	li = vertexes;
@@ -345,9 +345,9 @@ static void P_LoadSegs(int lump)
 	numsegs = W_LumpLength(lump) / sizeof (mapseg_t);
 	if (numsegs <= 0)
 		I_Error("Level has no segs"); // instead of crashing
-	segs = Z_Malloc(numsegs * sizeof (seg_t), PU_LEVEL, NULL);
+	segs = (seg_t*)Z_Malloc(numsegs * sizeof (seg_t), PU_LEVEL, NULL);
 	memset(segs, 0, numsegs * sizeof (seg_t));
-	data = W_CacheLumpNum(lump, PU_STATIC);
+	data = (byte*)W_CacheLumpNum(lump, PU_STATIC);
 
 	ml = (mapseg_t *)data;
 	li = segs;

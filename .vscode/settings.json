@@ -20,7 +20,8 @@
         "xtr1common": "c",
         "WIN_VID.C": "cpp",
         "R_BSP.C": "cpp",
-        "P_FAB.C": "cpp"
+        "P_FAB.C": "cpp",
+        "sounds.h": "c"
     },
     "C_Cpp.dimInactiveRegions": false
 }

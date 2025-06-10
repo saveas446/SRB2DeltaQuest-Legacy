@@ -17,11 +17,23 @@
 /// \brief Macros to read/write from/to a char *,
 ///        used for packet creation and such
 
+
+// VS2002 and VS2003 are untested but this works for VS6 and VS8/VS2005
+#if defined(_MSC_VER) && _MSC_VER >= 1400
+#include <stdint.h>      /* C99+ */
+#endif
+
 #ifndef __BIG_ENDIAN__
 //
 // Little-endian machines
 //
-#define WRITEBYTE(p,b)      do { byte *p_tmp = (byte *)p; *p_tmp = (byte)(b); p_tmp++; p = (void *)p_tmp; } while (0)
+#define WRITEBYTE(p, b)        \
+    do {                               \
+        *(p) = (b); /* store */        \
+        (p)++;      /* advance */      \
+    } while (0)
+
+
 #define WRITECHAR(p,b)      do { char *p_tmp = (char *)p; *p_tmp = (char)(b); p_tmp++; p = (void *)p_tmp; } while (0)
 #define WRITESHORT(p,b)     do { short *p_tmp = (short *)p; *p_tmp = (short)(b); p_tmp++; p = (void *)p_tmp; } while (0)
 #define WRITEUSHORT(p,b)    do { USHORT *p_tmp = (USHORT *)p; *p_tmp = (USHORT)(b); p_tmp++; p = (void *)p_tmp; } while (0)

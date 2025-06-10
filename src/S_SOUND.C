@@ -761,7 +761,7 @@ void S_UpdateSounds(void)
 				{
 					int audible2;
 					int volume2 = volume, sep2 = sep, pitch2 = pitch;
-					audible = S_AdjustSoundParams(listenmobj, c->origin, &volume, &sep, &pitch,
+					audible = S_AdjustSoundParams(listenmobj, (mobj_t*)c->origin, &volume, &sep, &pitch,
 						c->sfxinfo);
 
 					if (cv_splitscreen.value)

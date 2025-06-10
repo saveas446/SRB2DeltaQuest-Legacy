@@ -1168,7 +1168,7 @@ void G_DoLoadLevel(boolean resetplayer)
 	levelstarttic = gametic; // for time calculation
 
 	if (wipegamestate == GS_LEVEL)
-		wipegamestate = -1; // force a wipe
+		wipegamestate = (gamestate_t)-1; // force a wipe
 
 	if (gamestate == GS_INTERMISSION)
 		Y_EndIntermission();
@@ -1908,7 +1908,7 @@ void G_DoReborn(int playernum)
 			P_RehitStarposts();
 
 			// Do a wipe
-			wipegamestate = -1;
+			wipegamestate = (gamestate_t)-1;
 
 			if (player->starposttime)
 				starpost = true;

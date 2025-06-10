@@ -184,7 +184,7 @@ result_e T_MovePlane(sector_t *sector, fixed_t speed, fixed_t dest, boolean crus
 //
 void T_MoveFloor(floormove_t *movefloor)
 {
-	result_e res = 0;
+	result_e res = ok;
 	boolean dontupdate = false;
 
 	res = T_MovePlane(movefloor->sector,
@@ -319,7 +319,7 @@ void T_MoveFloor(floormove_t *movefloor)
 // stop the lift.
 void T_MoveElevator(elevator_t *elevator)
 {
-	result_e res = 0;
+	result_e res = ok;
 	boolean dontupdate = false;
 
 	if (elevator->direction < 0) // moving down
@@ -714,7 +714,7 @@ void T_BounceCheese(elevator_t *elevator)
 		elevator->low = 1;
 		if (abs(elevator->speed) > 6*FRACUNIT)
 		{
-			mobj_t *mp = (void *)&elevator->actionsector->soundorg;
+			mobj_t *mp = (mobj_t *)&elevator->actionsector->soundorg;
 			elevator->actionsector->soundorg.z = elevator->sector->floorheight;
 			S_StartSound(mp, sfx_splash);
 		}
@@ -729,7 +729,7 @@ void T_BounceCheese(elevator_t *elevator)
 		elevator->low = 0;
 		if (abs(elevator->speed) > 6*FRACUNIT)
 		{
-			mobj_t *mp = (void *)&elevator->actionsector->soundorg;
+			mobj_t *mp = (mobj_t *)&elevator->actionsector->soundorg;
 			elevator->actionsector->soundorg.z = elevator->sector->floorheight;
 			S_StartSound(mp, sfx_splash);
 		}
@@ -821,7 +821,7 @@ void T_StartCrumble(elevator_t *elevator)
 						rover->alpha = elevator->origspeed;
 
 						if (rover->alpha == 0xff)
-							rover->flags &= ~FF_TRANSLUCENT;
+							rover->flags = (ffloortype_e)(((int)rover->flags) & ~FF_TRANSLUCENT);
 					}
 				}
 			}
@@ -846,13 +846,13 @@ void T_StartCrumble(elevator_t *elevator)
 					{
 						if (rover->alpha == elevator->origspeed)
 						{
-							rover->flags |= FF_TRANSLUCENT;
+							rover->flags = (ffloortype_e)(((int)rover->flags) | ~FF_TRANSLUCENT);
 							rover->alpha = 0x00;
 						}
 						else
 						{
 							if (elevator->origspeed == 0xff)
-								rover->flags &= ~FF_TRANSLUCENT;
+							rover->flags = (ffloortype_e)(((int)rover->flags) & ~FF_TRANSLUCENT);
 
 							rover->alpha = elevator->origspeed;
 						}
@@ -1078,7 +1078,7 @@ void T_ThwompSector(elevator_t *elevator)
 
 	if (elevator->direction > 0) // Moving back up..
 	{
-		result_e res = 0;
+		result_e res = ok;
 
 		// Set the texture from the lower one (normal)
 		sides[elevator->sourceline->sidenum[0]].midtexture = sides[elevator->sourceline->sidenum[0]].bottomtexture;
@@ -1115,7 +1115,7 @@ void T_ThwompSector(elevator_t *elevator)
 	}
 	else if (elevator->direction < 0) // Crashing down!
 	{
-		result_e res = 0;
+		result_e res = ok;
 
 		// Set the texture from the upper one (angry)
 		sides[elevator->sourceline->sidenum[0]].midtexture = sides[elevator->sourceline->sidenum[0]].toptexture;
@@ -1150,7 +1150,7 @@ void T_ThwompSector(elevator_t *elevator)
 
 		if (res == pastdest)
 		{
-			mobj_t *mp = (void *)&elevator->actionsector->soundorg;
+			mobj_t *mp = (mobj_t *)&elevator->actionsector->soundorg;
 			elevator->direction = 1; // start heading back up
 			elevator->distance = TICRATE; // but only after a small delay
 		}
@@ -1257,7 +1257,7 @@ void T_RaiseSector(elevator_t *elevator)
 	int i;
 	boolean playeronme = false;
 	fixed_t ceilingdestination, floordestination;
-	result_e res = 0;
+	result_e res = ok;
 
 	if (elevator->sector->crumblestate >= 3 || elevator->sector->ceilingdata)
 		return;
@@ -1501,7 +1501,7 @@ int EV_DoFloor(line_t *line, floor_e floortype)
 
 		// new floor thinker
 		rtn = 1;
-		dofloor = Z_Malloc(sizeof (*dofloor), PU_LEVSPEC, NULL);
+		dofloor = (floormove_t*)Z_Malloc(sizeof (*dofloor), PU_LEVSPEC, NULL);
 		P_AddThinker(&dofloor->thinker);
 
 		// make sure another floor thinker won't get started over this one
@@ -1717,7 +1717,7 @@ int EV_DoDonut(line_t*  line)
       s3 = s2->lines[i]->backsector;      // s3 is model sector for changes
         
       //  Spawn rising slime
-      floor = Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0);
+      floor = (floormove_t*)Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0);
       P_AddThinker (&floor->thinker);
       s2->floordata = floor; //jff 2/22/98
       floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
@@ -1731,7 +1731,7 @@ int EV_DoDonut(line_t*  line)
       floor->floordestheight = s3->floorheight;
         
       //  Spawn lowering donut-hole pillar
-      floor = Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0);
+      floor = (floormove_t*)Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0);
       P_AddThinker (&floor->thinker);
       s1->floordata = floor; //jff 2/22/98
       floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
@@ -1774,7 +1774,7 @@ int EV_DoElevator(line_t *line, elevator_e elevtype, boolean customspeed)
 
 		// create and initialize new elevator thinker
 		rtn = 1;
-		elevator = Z_Malloc(sizeof (*elevator), PU_LEVSPEC, NULL);
+		elevator = (elevator_t*)Z_Malloc(sizeof (*elevator), PU_LEVSPEC, NULL);
 		P_AddThinker(&elevator->thinker);
 		sec->floordata = elevator;
 		sec->ceilingdata = elevator;
@@ -1939,10 +1939,12 @@ void EV_CrumbleChain(sector_t *sec, ffloor_t *rover)
 				{
 					// If the control sector has a special
 					// of 1500-1515, use the custom debris.
-					if (rover->master->frontsector->special >= 1500 && rover->master->frontsector->special <= 1515)
-						P_SpawnMobj(a, b, c, MT_ROCKCRUMBLE1+(rover->master->frontsector->special-1500));
-					else
+					if (rover->master->frontsector->special >= 1500 && rover->master->frontsector->special <= 1515) {
+						int temp = (int)MT_ROCKCRUMBLE1;
+						P_SpawnMobj(a, b, c, (mobjtype_t)(temp+(rover->master->frontsector->special-1500)));
+					} else {
 						P_SpawnMobj(a, b, c, MT_ROCKCRUMBLE1);
+					}
 				}
 			}
 		}
@@ -1952,8 +1954,8 @@ void EV_CrumbleChain(sector_t *sec, ffloor_t *rover)
 	rover->master->frontsector->floorheight = sec->floorheight - 128*FRACUNIT;
 	rover->master->frontsector->ceilingheight = sec->floorheight - 64*FRACUNIT;
 
-	rover->flags |= FF_SOLID;
-	rover->flags &= ~FF_BUSTUP;
+	rover->flags = (ffloortype_e)(((int)rover->flags) | FF_SOLID);
+	rover->flags = (ffloortype_e)(((int)rover->flags) & ~FF_BUSTUP);
 	rover->master->frontsector->crumblestate = 1;
 }
 
@@ -1968,7 +1970,7 @@ int EV_BounceSector(sector_t *sec, fixed_t momz, sector_t *blocksector, boolean 
 	if (sec->ceilingdata) // One at a time, ma'am.
 		return 0;
 
-	elevator = Z_Malloc(sizeof (*elevator), PU_LEVSPEC, NULL);
+	elevator = (elevator_t*)Z_Malloc(sizeof (*elevator), PU_LEVSPEC, NULL);
 	P_AddThinker(&elevator->thinker);
 	sec->ceilingdata = elevator;
 	elevator->thinker.function.acp1 = (actionf_p1)T_BounceCheese;
@@ -1990,7 +1992,7 @@ int EV_DoContinuousFall(sector_t *sec, sector_t *backsector, fixed_t speed, bool
 	elevator_t *elevator;
 
 	// create and initialize new elevator thinker
-	elevator = Z_Malloc(sizeof (*elevator), PU_LEVSPEC, NULL);
+	elevator = (elevator_t*)Z_Malloc(sizeof (*elevator), PU_LEVSPEC, NULL);
 	P_AddThinker(&elevator->thinker);
 	elevator->thinker.function.acp1 = (actionf_p1)T_ContinuousFalling;
 	elevator->type = elevateDown;
@@ -2032,7 +2034,7 @@ int EV_StartCrumble(sector_t *sec, ffloor_t *rover, boolean floating,
 		return 0;
 
 	// create and initialize new elevator thinker
-	elevator = Z_Malloc(sizeof (*elevator), PU_LEVSPEC, NULL);
+	elevator = (elevator_t*) Z_Malloc(sizeof (*elevator), PU_LEVSPEC, NULL);
 	P_AddThinker(&elevator->thinker);
 	elevator->thinker.function.acp1 = (actionf_p1)T_StartCrumble;
 
@@ -2097,7 +2099,7 @@ int EV_MarioBlock(sector_t *sec, sector_t *roversector, fixed_t topheight,
 		}
 		// create and initialize new elevator thinker
 
-		elevator = Z_Malloc(sizeof (*elevator), PU_LEVSPEC, NULL);
+		elevator = (elevator_t*)Z_Malloc(sizeof (*elevator), PU_LEVSPEC, NULL);
 		P_AddThinker(&elevator->thinker);
 		sec->floordata = elevator;
 		sec->ceilingdata = elevator;

@@ -261,7 +261,7 @@ static void CON_SetupBackColormap(void)
 	bluemap   = (byte *)Z_Malloc(256, PU_STATIC, NULL);
 	redmap    = (byte *)Z_Malloc(256, PU_STATIC, NULL);
 
-	pal = W_CacheLumpName("PLAYPAL", PU_CACHE);
+	pal = (byte*)W_CacheLumpName("PLAYPAL", PU_CACHE);
 
 	// setup the green translucent background colormaps
 	for (i = 0, k = 0; i < 768; i += 3, k++)

@@ -1741,7 +1741,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		0,              // reactiontime
 		sfx_pdiehi,       // attacksound
 		S_PLAY_PAIN,    // painstate
-		MT_THOK,        // painchance
+		(statenum_t)MT_THOK,        // painchance
 		sfx_None,       // painsound
 		S_NULL,         // meleestate
 		S_PLAY_ATK1,    // missilestate
@@ -1752,10 +1752,10 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		16*FRACUNIT,    // radius
 		56*FRACUNIT,    // height
 		1000,           // mass
-		MT_THOK,        // damage
-		0,     // activesound
+		(int)MT_THOK,        // damage
+		sfx_None,     // activesound
 		MF_SOLID|MF_SHOOTABLE, // flags
-		MT_THOK         // raisestate
+		(statenum_t)MT_THOK         // raisestate
 	},
 
 	{           // MT_BLUECRAWLA
@@ -1763,12 +1763,12 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_POSS_STND,    // spawnstate
 		1,              // spawnhealth
 		S_POSS_RUN1,    // seestate
-		0,              // seesound
+		sfx_None,              // seesound
 		32,             // reactiontime
-		0,              // attacksound
+		sfx_None,              // attacksound
 		S_NULL,         // painstate
 		200,            // painchance
-		0,              // painsound
+		sfx_None,              // painsound
 		0,              // meleestate
 		S_NULL,         // missilestate
 		S_XPLD1,        // deathstate
@@ -1779,7 +1779,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		32*FRACUNIT,    // height
 		100,            // mass
 		0,              // damage
-		0,              // activesound
+		sfx_None,              // activesound
 		MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE, // flags
 		S_NULL          // raisestate
 	},
@@ -1789,12 +1789,12 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_SPOS_STND,    // spawnstate
 		1,              // spawnhealth
 		S_SPOS_RUN1,    // seestate
-		0,              // seesound
+		sfx_None,              // seesound
 		32,             // reactiontime
-		0,              // attacksound
+		sfx_None,              // attacksound
 		S_NULL,         // painstate
 		170,            // painchance
-		0,              // painsound
+		sfx_None,              // painsound
 		0,              // meleestate
 		S_NULL,         // missilestate
 		S_XPLD1,        // deathstate
@@ -1805,7 +1805,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		32*FRACUNIT,    // height
 		100,            // mass
 		0,              // damage
-		0,              // activesound
+		sfx_None,              // activesound
 		MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE, // flags
 		S_NULL          // raisestate
 	},
@@ -4024,12 +4024,12 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_JETBLOOK1,    // spawnstate
 		1,              // spawnhealth
 		S_JETBZOOM1,    // seestate
-		0,              // seesound
+		sfx_None,              // seesound
 		32,             // reactiontime
-		0,              // attacksound
+		sfx_None,              // attacksound
 		S_NULL,         // painstate
 		200,            // painchance
-		0,              // painsound
+		sfx_None,              // painsound
 		0,              // meleestate
 		S_NULL,         // missilestate
 		S_XPLD1,        // deathstate
@@ -4040,7 +4040,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		32*FRACUNIT,    // height
 		100,            // mass
 		0,              // damage
-		0,              // activesound
+		sfx_None,              // activesound
 		MF_SLIDEME|MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE|MF_NOGRAVITY, // flags
 		MT_MINE         // raisestate
 	},
@@ -4050,12 +4050,12 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_JETGLOOK1,    // spawnstate
 		1,              // spawnhealth
 		S_JETGZOOM1,    // seestate
-		0,              // seesound
+		sfx_None,              // seesound
 		5,              // reactiontime
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
 		3072,           // painchance
-		0,              // painsound
+		sfx_None,              // painsound
 		0,              // meleestate
 		S_JETGSHOOT1,   // missilestate
 		S_XPLD1,        // deathstate
@@ -4066,7 +4066,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		32*FRACUNIT,    // height
 		100,            // mass
 		0,              // damage
-		0,              // activesound
+		sfx_None,              // activesound
 		MF_SLIDEME|MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE|MF_NOGRAVITY, // flags
 		MT_JETTBULLET   // raisestate
 	},
@@ -4076,12 +4076,12 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_JETBULLET1,   // spawnstate
 		1,              // spawnhealth
 		S_NULL,         // seestate
-		0,              // seesound
+		sfx_None,              // seesound
 		32,             // reactiontime
-		0,              // attacksound
+		sfx_None,              // attacksound
 		S_NULL,         // painstate
 		200,            // painchance
-		0,              // painsound
+		sfx_None,              // painsound
 		0,              // meleestate
 		S_NULL,         // missilestate
 		S_XPLD1,        // deathstate
@@ -4092,7 +4092,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		8*FRACUNIT,     // height
 		100,            // mass
 		1,              // damage
-		0,              // activesound
+		sfx_None,              // activesound
 		MF_NOBLOCKMAP|MF_MISSILE|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
@@ -4103,12 +4103,12 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_MOUSE1,       // spawnstate
 		1,              // spawnhealth
 		S_NULL,         // seestate
-		0,              // seesound
+		sfx_None,              // seesound
 		1,              // reactiontime
-		0,              // attacksound
+		sfx_None,              // attacksound
 		S_NULL,         // painstate
 		200,            // painchance
-		0,              // painsound
+		sfx_None,              // painsound
 		0,              // meleestate
 		S_NULL,         // missilestate
 		S_NULL,         // deathstate
@@ -4119,7 +4119,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		4*FRACUNIT,     // height
 		100,            // mass
 		0,              // damage
-		0,              // activesound
+		sfx_None,              // activesound
 		MF_NOCLIPTHING, // flags
 		S_NULL          // raisestate
 	},
@@ -4129,13 +4129,13 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_DETON1,       // spawnstate
 		1,              // spawnhealth
 		S_DETON2,       // seestate
-		0,              // seesound
+		sfx_None,              // seesound
 		1,              // reactiontime
 		//sfx_deton,      // attacksound
 		0,
 		S_NULL,         // painstate
 		3072,           // painchance
-		0,              // painsound
+		sfx_None,              // painsound
 		0,              // meleestate
 		S_NULL,         // missilestate
 		S_DISS,         // deathstate
@@ -4146,7 +4146,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		32*FRACUNIT,    // height
 		100,            // mass
 		1,              // damage
-		0,              // activesound
+		sfx_None,              // activesound
 		MF_ENEMY|MF_SHOOTABLE|MF_NOGRAVITY|MF_MISSILE, // flags
 		ANG90/6         // raisestate: largest angle to turn in one tic (here, 15 degrees)
 	},
@@ -4156,12 +4156,12 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_XPLD1,        // spawnstate
 		1,              // spawnhealth
 		S_NULL,         // seestate
-		0,              // seesound
+		sfx_None,              // seesound
 		32,             // reactiontime
-		0,              // attacksound
+		sfx_None,              // attacksound
 		S_NULL,         // painstate
 		200,            // painchance
-		0,              // painsound
+		sfx_None,              // painsound
 		0,              // meleestate
 		S_NULL,         // missilestate
 		S_DISS,         // deathstate
@@ -4172,7 +4172,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		16*FRACUNIT,    // height
 		100,            // mass
 		0,              // damage
-		0,              // activesound
+		sfx_None,              // activesound
 		MF_NOBLOCKMAP|MF_NOCLIP|MF_NOGRAVITY|MF_SCENERY, // flags
 		S_NULL          // raisestate
 	},
@@ -4394,9 +4394,9 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_CCOMMAND1,    // spawnstate
 		2,              // spawnhealth
 		S_CCOMMAND3,    // seestate
-		0,              // seesound
+		sfx_None,              // seesound
 		2*TICRATE,      // reactiontime
-		0,              // attacksound
+		sfx_None,              // attacksound
 		S_CCOMMAND1,    // painstate
 		200,            // painchance
 		sfx_dmpain,     // painsound
@@ -4410,7 +4410,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		32*FRACUNIT,    // height
 		100,            // mass
 		0,              // damage
-		0,              // activesound
+		sfx_None,              // activesound
 		MF_SLIDEME|MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE, // flags
 		S_NULL          // raisestate
 	},
@@ -4420,12 +4420,12 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_CRUMBLE1,     // spawnstate
 		1000,           // spawnhealth
 		S_CRUMBLE1,     // seestate
-		0,              // seesound
+		sfx_None,              // seesound
 		1,              // reactiontime
-		0,              // attacksound
+		sfx_None,              // attacksound
 		S_NULL,         // painstate
 		200,            // painchance
-		0,              // painsound
+		sfx_None,              // painsound
 		0,              // meleestate
 		S_NULL,         // missilestate
 		S_DISS,         // deathstate
@@ -4436,7 +4436,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		1*FRACUNIT,     // height
 		100,            // mass
 		0,              // damage
-		0,              // activesound
+		sfx_None,              // activesound
 		MF_NOBLOCKMAP|MF_NOCLIP|MF_SCENERY, // flags
 		S_NULL          // raisestate
 	},
@@ -6650,7 +6650,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		32*FRACUNIT,    // height
 		MT_TURRETLASER, // mass
 		1,              // damage
-		0,     // activesound
+		sfx_None,     // activesound
 		MF_NOBLOCKMAP,  // flags
 		S_NULL          // raisestate
 	},
@@ -6712,12 +6712,12 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_GOOMBA1,      // spawnstate
 		1,              // spawnhealth
 		S_GOOMBA2,      // seestate
-		0,              // seesound
+		sfx_None,              // seesound
 		32,             // reactiontime
-		0,              // attacksound
+		sfx_None,              // attacksound
 		S_NULL,         // painstate
 		200,            // painchance
-		0,              // painsound
+		sfx_None,              // painsound
 		0,              // meleestate
 		S_NULL,         // missilestate
 		S_GOOMBA_DEAD,  // deathstate
@@ -6728,7 +6728,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		32*FRACUNIT,    // height
 		100,            // mass
 		0,              // damage
-		0,              // activesound
+		sfx_None,              // activesound
 		MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE, // flags
 		S_NULL          // raisestate
 	},
@@ -7516,12 +7516,12 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_BUZZLOOK1,    // spawnstate
 		1,              // spawnhealth
 		S_BUZZFLY1,     // seestate
-		0,              // seesound
+		sfx_None,              // seesound
 		2,              // reactiontime
-		0,              // attacksound
+		sfx_None,              // attacksound
 		S_NULL,         // painstate
 		3072,           // painchance
-		0,              // painsound
+		sfx_None,              // painsound
 		0,              // meleestate
 		S_NULL,         // missilestate
 		S_XPLD1,        // deathstate
@@ -7532,7 +7532,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		24*FRACUNIT,    // height
 		100,            // mass
 		0,              // damage
-		0,              // activesound
+		sfx_None,              // activesound
 		MF_SLIDEME|MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
@@ -7542,12 +7542,12 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_RBUZZLOOK1,   // spawnstate
 		1,              // spawnhealth
 		S_RBUZZFLY1,    // seestate
-		0,              // seesound
+		sfx_None,              // seesound
 		2,              // reactiontime
-		0,              // attacksound
+		sfx_None,              // attacksound
 		S_NULL,         // painstate
 		3072,           // painchance
-		0,              // painsound
+		sfx_None,              // painsound
 		0,              // meleestate
 		S_NULL,         // missilestate
 		S_XPLD1,        // deathstate
@@ -7558,7 +7558,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		24*FRACUNIT,    // height
 		100,            // mass
 		0,              // damage
-		0,              // activesound
+		sfx_None,              // activesound
 		MF_SLIDEME|MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},

@@ -153,23 +153,28 @@ static boolean P_CanPickupItem(player_t *player)
 static void P_DoNightsScore(player_t *player)
 {
 	mobj_t *dummymo;
+	int temp;
 
 	player->linkcount++;
 	player->linktimer = 2*TICRATE;
 
 	dummymo = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z+player->mo->height/2, MT_NIGHTSCORE);
-	
+
+// breaking nights further teehee :3
+
+/*
 	if (player->linkcount < 10)
 	{
 		if (player->bonustime)
 		{
+			temp = dummymo->info->xdeathstate;
 			P_AddPlayerScore(player, player->linkcount*20);
-			P_SetMobjState(dummymo, dummymo->info->xdeathstate+player->linkcount-1);
+			P_SetMobjState(dummymo, (statenum_t)(temp+player->linkcount-1));
 		}
 		else
 		{
 			P_AddPlayerScore(player, player->linkcount*10);
-			P_SetMobjState(dummymo, dummymo->info->spawnstate+player->linkcount-1);
+			P_SetMobjState(dummymo, (statenum_t)dummymo->info->spawnstate+player->linkcount-1);
 		}
 	}
 	else
@@ -177,12 +182,12 @@ static void P_DoNightsScore(player_t *player)
 		if (player->bonustime)
 		{
 			P_AddPlayerScore(player, 200);
-			P_SetMobjState(dummymo, dummymo->info->xdeathstate+9);
+			P_SetMobjState(dummymo, (statenum_t)dummymo->info->xdeathstate+9);
 		}
 		else
 		{
 			P_AddPlayerScore(player, 100);
-			P_SetMobjState(dummymo, dummymo->info->spawnstate+9);
+			P_SetMobjState(dummymo, (statenum_t)dummymo->info->spawnstate+9);
 		}
 	}
 	player->drillmeter += TICRATE;
@@ -190,6 +195,7 @@ static void P_DoNightsScore(player_t *player)
 	dummymo->fuse = 3*TICRATE;
 
 	P_InstaThrust(dummymo, R_PointToAngle2(dummymo->x, dummymo->y, camera.x, camera.y), 3*FRACUNIT);
+*/
 }
 
 /** Takes action based on a ::MF_SPECIAL thing touched by a player.

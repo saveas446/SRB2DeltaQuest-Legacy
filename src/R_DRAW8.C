@@ -18,6 +18,19 @@
 /// 
 ///	NOTE: no includes because this is included as part of r_draw.c
 
+#include "m_fixed.h"
+#include "r_draw.h"
+#include "doomtype.h"
+#include "doomdef.h"
+#include "doomstat.h"
+#include "r_local.h"
+#include "st_stuff.h" // need ST_HEIGHT
+#include "i_video.h"
+#include "v_video.h"
+#include "w_wad.h"
+#include "z_zone.h"
+#include "console.h" // Until buffering gets finished
+
 // ==========================================================================
 // COLUMNS
 // ==========================================================================
