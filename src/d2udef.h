@@ -13,7 +13,7 @@
     #define DEV_RELEASE 2 // Enables dev build functionality
     #define FULL_RELEASE 3 // Enables full release functionality
 
-    #define BUILD_TYPE PLAYTEST_BUILD
+    #define BUILD_TYPE DEV_RELEASE
 
     //#define NOMAPCMD // Disables map command for singleplayer
     //#define DARKENEDMENU // Darkens menu
@@ -42,6 +42,15 @@
     #else
     #define ARCH_64BIT 0
     #endif
+    // 0 = Not done
+    // 1 = Initial relase
+    // 2+ = Big, grand releases (MAJOR new features)
+    #define MAJORVER 0
+
+    // Each time we add something that's kinda big (minecarts, d2 iwad support, clang support, working sdl, some other custom feature or object)
+    // increment this
+    #define MINORVER 1
+
 
     // Sanity checks
     #if BUILD_TYPE > DEV_RELEASE || BUILD_TYPE < DEMO

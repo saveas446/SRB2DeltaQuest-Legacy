@@ -651,6 +651,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\comptime.h"
+				>
+			</File>
+			<File
 				RelativePath="..\d2udef.h"
 				>
 			</File>

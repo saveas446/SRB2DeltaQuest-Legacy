@@ -37,6 +37,8 @@
 
 #include "../console.h"
 
+#include "../screen.h"
+
 #include "fabdxlib.h"
 #include "win_main.h"
 #include "win_dbg.h"

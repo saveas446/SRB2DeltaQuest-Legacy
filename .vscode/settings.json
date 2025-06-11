@@ -27,7 +27,8 @@
         "z_zone.h": "c",
         "v_video.h": "c",
         "hw_main.h": "c",
-        "d2udef.h": "c"
+        "d2udef.h": "c",
+        "m_cheat.h": "c"
     },
     "C_Cpp.dimInactiveRegions": false
 }

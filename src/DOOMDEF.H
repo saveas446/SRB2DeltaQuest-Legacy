@@ -218,7 +218,4 @@ int I_GetKey(void);
  #define PATHSEP "/"
 #endif
 
-// Compile date and time.
-extern const char *compdate, *comptime;
-
 #endif // __DOOMDEF__

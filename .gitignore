@@ -104,3 +104,5 @@ tools/zlib/projects/visualc6/Win32_LIB_ASM_Debug/zlib.lib
 build_new/build.ninja
 
 BuildLog.htm
+build/build.ninja
+build_new/build.ninja

@@ -51,6 +51,7 @@
 #include "z_zone.h"
 
 #include "d2udef.h"
+#include "comptime.h"
 
 #ifdef JOHNNYFUNCODE
 #define CV_JOHNNY CV_NETVAR
@@ -123,7 +124,6 @@ static void Command_RunSOC(void);
 static void Command_Pause(void);
 
 static void Command_Version_f(void);
-static void Command_BuildSettings_f(void);
 static void Command_ShowGametype_f(void);
 static void Command_JumpToAxis_f(void);
 static void Command_Nodes_f(void);
@@ -423,7 +423,6 @@ void D_RegisterServerCommands(void)
 	COM_AddCommand("gametype", Command_ShowGametype_f);
 	COM_AddCommand("jumptoaxis", Command_JumpToAxis_f);
 	COM_AddCommand("version", Command_Version_f);
-	COM_AddCommand("buildsettings", Command_BuildSettings_f);
 	COM_AddCommand("quit", Command_Quit_f);
 
 	COM_AddCommand("saveconfig", Command_SaveConfig_f);
@@ -2551,12 +2550,11 @@ static void Command_UnloadWAD_f(void)
 //                            MISC. COMMANDS
 // =========================================================================
 
+
+
+
 /** Prints program version.
   */
-static void Command_Version_f(void)
-{
-	CONS_Printf("SRB2%s (%s %s)\n", VERSIONSTRING, compdate, comptime);
-}
 
 #if DEMO2ULTIMATE
 #define DEMO2ULTIMATE_STR "Demo 2 IWAD compatible mode: Yes\n"
@@ -2643,11 +2641,26 @@ static void Command_Version_f(void)
 #define ARCHITECTURE_STR "Architecture: i686 (32-bit)\n"
 #endif
 
-static void Command_BuildSettings_f(void)
+static void Command_Version_f(void)
 {
-	CONS_Printf("\n\n===BUILD SETTINGS===\n");
-	CONS_Printf(DEMO2ULTIMATE_STR);
+	// All versions of NewEXE before this are retroactively now known as 0.0.x, going from 0.0.0 as the initial version to 0.0.25
+
+	CONS_Printf("Demo 2 Ultimate NewEXE v%d.%d.%d\n\n", MAJORVER, MINORVER, TINYVER);
+
+	CONS_Printf("\n\n===COMPILE SETTINGS===\n");
+	CONS_Printf("Compiled on %s %s\n", compdate, comptime);
+	#ifdef _MSC_VER
+	CONS_Printf("Compiler: MSVC ver. %04d\n", _MSC_VER);
+	#elif __CLANG__
+	CONS_Printf("Compiler: Clang ver. %d.%d.%d\n", __CLANG_MAJOR__, __CLANG_MINOR__, __CLANG_PATCHLEVEL__);
+	#elif __GNUC__
+	CONS_Printf("Compiler: GCC ver. %d.%d.%d\n", __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__);
+	#endif
+	CONS_Printf(ARCHITECTURE_STR);
+
+	CONS_Printf("\n\n===GAME SETTINGS===\n");
 	CONS_Printf(BUILDTYPE_STR);
+	CONS_Printf(DEMO2ULTIMATE_STR);
 	CONS_Printf(MAPCMD_STR);
 	CONS_Printf(DARKENEDMENU_STR);
 	CONS_Printf(CHARSEL_STR);
@@ -2655,8 +2668,10 @@ static void Command_BuildSettings_f(void)
 	CONS_Printf(FALL_SPRITES_STR);
 	CONS_Printf(INTERMISSION_BG_STR);
 	CONS_Printf(TH_TOLERANCE_STR);
-	CONS_Printf(ARCHITECTURE_STR);
+	CONS_Printf("Mind control systems: Off\n");
 }
+
+
 
 
 // Returns current gametype being used.

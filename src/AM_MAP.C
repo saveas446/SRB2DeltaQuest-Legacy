@@ -41,10 +41,6 @@
 #include "hardware/hw_main.h"
 #endif
 
-
-// cmon pls
-extern rendermode_t rendermode; 
-
 // For use if I do walls with outsides/insides
 static const byte GREENS     = (7*16);
 static const byte GREENRANGE = 16;

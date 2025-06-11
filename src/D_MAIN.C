@@ -76,6 +76,7 @@
 #include "screen.h"
 
 #include "d2udef.h"
+#include "comptime.h"
 
 #ifdef _XBOX
 #include "sdl/SRB2XBOX/xboxhelp.h"
@@ -982,6 +983,9 @@ void D_SRB2Main(void)
 
 	int pstartmap = 1;
 	boolean autostart = false;
+
+	// This should be the VERY FIRST thing the game does to minize chances of crashing before it's calculated
+	TINYVER = calc_TINYVER();
 
 	// keep error messages until the final flush(stderr)
 #if !defined (PC_DOS) && !defined (_WIN32_WCE)
