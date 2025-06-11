@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="Srb2win"
 	ProjectGUID="{F936D2C4-1DC7-43F7-8B99-F2CECA8BB2F4}"
+	RootNamespace="Srb2win"
 	>
 	<Platforms>
 		<Platform
@@ -2242,52 +2243,20 @@
 				>
 			</File>
 			<File
-				RelativePath="..\R_draw16.c"
+				RelativePath="..\R_DRAW16.C"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\R_draw8.c"
+				RelativePath="..\r_draw16.h"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\R_DRAW8.C"
+				>
+			</File>
+			<File
+				RelativePath="..\r_draw8.h"
+				>
 			</File>
 			<File
 				RelativePath="..\R_local.h"

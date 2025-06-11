@@ -34,6 +34,9 @@
 #include "d_clisrv.h"
 #include "f_finale.h"
 
+#include "r_draw8.h"
+#include "r_draw16.h"
+
 
 #if defined (USEASM) //&& (!defined (_MSC_VER) || (_MSC_VER <= 1200))
 #define RUSEASM //MSC.NET can't patch itself

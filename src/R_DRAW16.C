@@ -15,8 +15,6 @@
 //-----------------------------------------------------------------------------
 /// \file
 /// \brief 16bpp (HIGHCOLOR) span/column drawer functions
-/// 
-///	NOTE: no includes because this is included as part of r_draw.c
 
 // ==========================================================================
 // COLUMNS

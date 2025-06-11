@@ -29,6 +29,8 @@
 #include "r_things.h"
 #include "p_tick.h"
 
+#include "r_draw8.h"
+
 static void R_InitSkins(void);
 
 #define MINZ (FRACUNIT*4)

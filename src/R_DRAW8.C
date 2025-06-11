@@ -15,8 +15,6 @@
 //-----------------------------------------------------------------------------
 /// \file
 /// \brief 8bpp span/column drawer functions
-/// 
-///	NOTE: no includes because this is included as part of r_draw.c
 
 #include "m_fixed.h"
 #include "r_draw.h"

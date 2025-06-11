@@ -764,15 +764,3 @@ void R_DrawViewBorder(void)
 	VID_BlitLinearScreen(screens[1] + ofs, screens[0] + ofs, side, viewheight - 1,
 		vid.width, vid.width);
 }
-
-// ==========================================================================
-//                   INCLUDE 8bpp DRAWING CODE HERE
-// ==========================================================================
-
-#include "r_draw8.c"
-
-// ==========================================================================
-//                   INCLUDE 16bpp DRAWING CODE HERE
-// ==========================================================================
-
-#include "r_draw16.c"

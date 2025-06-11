@@ -29,6 +29,8 @@
 #include "p_local.h" // Camera...
 #include "console.h" // con_clipviewtop
 
+#include "r_draw8.h"
+
 // OPTIMIZE: closed two sided lines as single sided
 
 // True if any of the segs textures might be visible.

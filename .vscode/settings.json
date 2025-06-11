@@ -22,7 +22,10 @@
         "R_BSP.C": "cpp",
         "P_FAB.C": "cpp",
         "sounds.h": "c",
-        "WIN_MAIN.C": "cpp"
+        "WIN_MAIN.C": "cpp",
+        "r_draw8.h": "c",
+        "z_zone.h": "c",
+        "v_video.h": "c"
     },
     "C_Cpp.dimInactiveRegions": false
 }

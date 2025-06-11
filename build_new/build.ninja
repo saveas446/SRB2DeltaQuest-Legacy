@@ -44,15 +44,15 @@ cmake_ninja_workdir = D$:/Games/SRB2/demo_2/build_new/
 
 build cmake_object_order_depends_target_demo2ultimate: phony || .
 
-build CMakeFiles/demo2ultimate.dir/AM_MAP.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/AM_MAP.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\AM_MAP.C.obj.d
+build CMakeFiles/demo2ultimate.dir/am_map.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/am_map.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\am_map.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/COMMAND.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/COMMAND.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\COMMAND.C.obj.d
+build CMakeFiles/demo2ultimate.dir/command.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/command.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\command.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
@@ -149,8 +149,8 @@ build CMakeFiles/demo2ultimate.dir/i_tcp.c.obj: C_COMPILER__demo2ultimate_unscan
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/M_ARGV.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/M_ARGV.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\M_ARGV.C.obj.d
+build CMakeFiles/demo2ultimate.dir/m_argv.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/m_argv.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\m_argv.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
@@ -240,36 +240,36 @@ build CMakeFiles/demo2ultimate.dir/p_maputl.c.obj: C_COMPILER__demo2ultimate_uns
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/P_SAVEG.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/P_SAVEG.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\P_SAVEG.C.obj.d
+build CMakeFiles/demo2ultimate.dir/p_saveg.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/p_saveg.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\p_saveg.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/P_SIGHT.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/P_SIGHT.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\P_SIGHT.C.obj.d
+build CMakeFiles/demo2ultimate.dir/p_sight.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/p_sight.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\p_sight.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/P_TELEPT.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/P_TELEPT.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\P_TELEPT.C.obj.d
+build CMakeFiles/demo2ultimate.dir/p_telept.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/p_telept.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\p_telept.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/P_TICK.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/P_TICK.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\P_TICK.C.obj.d
+build CMakeFiles/demo2ultimate.dir/p_tick.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/p_tick.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\p_tick.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/R_DATA.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/R_DATA.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\R_DATA.C.obj.d
+build CMakeFiles/demo2ultimate.dir/r_data.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/r_data.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\r_data.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
@@ -282,57 +282,57 @@ build CMakeFiles/demo2ultimate.dir/R_DRAW.C.obj: C_COMPILER__demo2ultimate_unsca
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/R_DRAW16.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/R_DRAW16.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\R_DRAW16.C.obj.d
+build CMakeFiles/demo2ultimate.dir/r_draw16.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/r_draw16.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\r_draw16.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/R_DRAW8.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/R_DRAW8.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\R_DRAW8.C.obj.d
+build CMakeFiles/demo2ultimate.dir/r_draw8.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/r_draw8.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\r_draw8.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/R_MAIN.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/R_MAIN.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\R_MAIN.C.obj.d
+build CMakeFiles/demo2ultimate.dir/r_main.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/r_main.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\r_main.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/R_PLANE.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/R_PLANE.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\R_PLANE.C.obj.d
+build CMakeFiles/demo2ultimate.dir/r_plane.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/r_plane.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\r_plane.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/R_SEGS.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/R_SEGS.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\R_SEGS.C.obj.d
+build CMakeFiles/demo2ultimate.dir/r_segs.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/r_segs.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\r_segs.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/R_SKY.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/R_SKY.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\R_SKY.C.obj.d
+build CMakeFiles/demo2ultimate.dir/r_sky.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/r_sky.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\r_sky.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/R_SPLATS.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/R_SPLATS.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\R_SPLATS.C.obj.d
+build CMakeFiles/demo2ultimate.dir/r_splats.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/r_splats.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\r_splats.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/SCREEN.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/SCREEN.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\SCREEN.C.obj.d
+build CMakeFiles/demo2ultimate.dir/screen.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/screen.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\screen.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
@@ -345,8 +345,8 @@ build CMakeFiles/demo2ultimate.dir/sounds.c.obj: C_COMPILER__demo2ultimate_unsca
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/ST_STUFF.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/ST_STUFF.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\ST_STUFF.C.obj.d
+build CMakeFiles/demo2ultimate.dir/st_stuff.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/st_stuff.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\st_stuff.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
@@ -359,22 +359,22 @@ build CMakeFiles/demo2ultimate.dir/string.c.obj: C_COMPILER__demo2ultimate_unsca
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/TABLES.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/TABLES.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\TABLES.C.obj.d
+build CMakeFiles/demo2ultimate.dir/tables.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/tables.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\tables.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/V_VIDEO.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/V_VIDEO.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\V_VIDEO.C.obj.d
+build CMakeFiles/demo2ultimate.dir/v_video.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/v_video.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\v_video.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/W_WAD.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/W_WAD.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\W_WAD.C.obj.d
+build CMakeFiles/demo2ultimate.dir/w_wad.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/w_wad.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\w_wad.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
@@ -387,8 +387,8 @@ build CMakeFiles/demo2ultimate.dir/y_inter.c.obj: C_COMPILER__demo2ultimate_unsc
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/Z_ZONE.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/Z_ZONE.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\Z_ZONE.C.obj.d
+build CMakeFiles/demo2ultimate.dir/z_zone.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/z_zone.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\z_zone.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
@@ -401,29 +401,29 @@ build CMakeFiles/demo2ultimate.dir/console.c.obj: C_COMPILER__demo2ultimate_unsc
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/D_NETCMD.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/D_NETCMD.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\D_NETCMD.C.obj.d
+build CMakeFiles/demo2ultimate.dir/d_netcmd.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/d_netcmd.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\d_netcmd.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/G_GAME.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/G_GAME.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\G_GAME.C.obj.d
+build CMakeFiles/demo2ultimate.dir/g_game.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/g_game.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\g_game.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/INFO.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/INFO.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\INFO.C.obj.d
+build CMakeFiles/demo2ultimate.dir/info.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/info.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\info.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/M_MENU.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/M_MENU.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\M_MENU.C.obj.d
+build CMakeFiles/demo2ultimate.dir/m_menu.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/m_menu.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\m_menu.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
@@ -464,8 +464,8 @@ build CMakeFiles/demo2ultimate.dir/p_mobj.c.obj: C_COMPILER__demo2ultimate_unsca
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/P_SETUP.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/P_SETUP.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\P_SETUP.C.obj.d
+build CMakeFiles/demo2ultimate.dir/p_setup.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/p_setup.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\p_setup.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
@@ -485,22 +485,22 @@ build CMakeFiles/demo2ultimate.dir/p_user.c.obj: C_COMPILER__demo2ultimate_unsca
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/R_BSP.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/R_BSP.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\R_BSP.C.obj.d
+build CMakeFiles/demo2ultimate.dir/r_bsp.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/r_bsp.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\r_bsp.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/R_THINGS.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/R_THINGS.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\R_THINGS.C.obj.d
+build CMakeFiles/demo2ultimate.dir/r_things.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/r_things.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\r_things.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
   OBJECT_FILE_DIR = CMakeFiles\demo2ultimate.dir
 
-build CMakeFiles/demo2ultimate.dir/S_SOUND.C.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/S_SOUND.C || cmake_object_order_depends_target_demo2ultimate
-  DEP_FILE = CMakeFiles\demo2ultimate.dir\S_SOUND.C.obj.d
+build CMakeFiles/demo2ultimate.dir/s_sound.c.obj: C_COMPILER__demo2ultimate_unscanned_ D$:/Games/SRB2/demo_2/src/s_sound.c || cmake_object_order_depends_target_demo2ultimate
+  DEP_FILE = CMakeFiles\demo2ultimate.dir\s_sound.c.obj.d
   FLAGS = -m32 -fno-pie -Wno-int-conversion -fpermissive
   INCLUDES = -ID:/Games/SRB2/demo_2/src -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include -ID:/Games/SRB2/demo_2/src/../tools/vs6_files/include/FMOD
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir
@@ -577,7 +577,7 @@ build CMakeFiles/demo2ultimate.dir/win32/win_snd.c.obj: C_COMPILER__demo2ultimat
 #############################################
 # Link the executable demo2ultimate.exe
 
-build demo2ultimate.exe: C_EXECUTABLE_LINKER__demo2ultimate_ CMakeFiles/demo2ultimate.dir/AM_MAP.C.obj CMakeFiles/demo2ultimate.dir/COMMAND.C.obj CMakeFiles/demo2ultimate.dir/comptime.c.obj CMakeFiles/demo2ultimate.dir/d_clisrv.c.obj CMakeFiles/demo2ultimate.dir/d_main.c.obj CMakeFiles/demo2ultimate.dir/d_net.c.obj CMakeFiles/demo2ultimate.dir/d_netfil.c.obj CMakeFiles/demo2ultimate.dir/dehacked.c.obj CMakeFiles/demo2ultimate.dir/dstrings.c.obj CMakeFiles/demo2ultimate.dir/f_finale.c.obj CMakeFiles/demo2ultimate.dir/f_wipe.c.obj CMakeFiles/demo2ultimate.dir/filesrch.c.obj CMakeFiles/demo2ultimate.dir/g_input.c.obj CMakeFiles/demo2ultimate.dir/hu_stuff.c.obj CMakeFiles/demo2ultimate.dir/i_tcp.c.obj CMakeFiles/demo2ultimate.dir/M_ARGV.C.obj CMakeFiles/demo2ultimate.dir/m_bbox.c.obj CMakeFiles/demo2ultimate.dir/m_cheat.c.obj CMakeFiles/demo2ultimate.dir/m_fixed.c.obj CMakeFiles/demo2ultimate.dir/m_misc.c.obj CMakeFiles/demo2ultimate.dir/m_random.c.obj CMakeFiles/demo2ultimate.dir/md5.c.obj CMakeFiles/demo2ultimate.dir/mserv.c.obj CMakeFiles/demo2ultimate.dir/p_ceilng.c.obj CMakeFiles/demo2ultimate.dir/p_doors.c.obj CMakeFiles/demo2ultimate.dir/p_lights.c.obj CMakeFiles/demo2ultimate.dir/p_map.c.obj CMakeFiles/demo2ultimate.dir/p_maputl.c.obj CMakeFiles/demo2ultimate.dir/P_SAVEG.C.obj CMakeFiles/demo2ultimate.dir/P_SIGHT.C.obj CMakeFiles/demo2ultimate.dir/P_TELEPT.C.obj CMakeFiles/demo2ultimate.dir/P_TICK.C.obj CMakeFiles/demo2ultimate.dir/R_DATA.C.obj CMakeFiles/demo2ultimate.dir/R_DRAW.C.obj CMakeFiles/demo2ultimate.dir/R_DRAW16.C.obj CMakeFiles/demo2ultimate.dir/R_DRAW8.C.obj CMakeFiles/demo2ultimate.dir/R_MAIN.C.obj CMakeFiles/demo2ultimate.dir/R_PLANE.C.obj CMakeFiles/demo2ultimate.dir/R_SEGS.C.obj CMakeFiles/demo2ultimate.dir/R_SKY.C.obj CMakeFiles/demo2ultimate.dir/R_SPLATS.C.obj CMakeFiles/demo2ultimate.dir/SCREEN.C.obj CMakeFiles/demo2ultimate.dir/sounds.c.obj CMakeFiles/demo2ultimate.dir/ST_STUFF.C.obj CMakeFiles/demo2ultimate.dir/string.c.obj CMakeFiles/demo2ultimate.dir/TABLES.C.obj CMakeFiles/demo2ultimate.dir/V_VIDEO.C.obj CMakeFiles/demo2ultimate.dir/W_WAD.C.obj CMakeFiles/demo2ultimate.dir/y_inter.c.obj CMakeFiles/demo2ultimate.dir/Z_ZONE.C.obj CMakeFiles/demo2ultimate.dir/console.c.obj CMakeFiles/demo2ultimate.dir/D_NETCMD.C.obj CMakeFiles/demo2ultimate.dir/G_GAME.C.obj CMakeFiles/demo2ultimate.dir/INFO.C.obj CMakeFiles/demo2ultimate.dir/M_MENU.C.obj CMakeFiles/demo2ultimate.dir/p_enemy.c.obj CMakeFiles/demo2ultimate.dir/p_fab.c.obj CMakeFiles/demo2ultimate.dir/p_floor.c.obj CMakeFiles/demo2ultimate.dir/p_inter.c.obj CMakeFiles/demo2ultimate.dir/p_mobj.c.obj CMakeFiles/demo2ultimate.dir/P_SETUP.C.obj CMakeFiles/demo2ultimate.dir/p_spec.c.obj CMakeFiles/demo2ultimate.dir/p_user.c.obj CMakeFiles/demo2ultimate.dir/R_BSP.C.obj CMakeFiles/demo2ultimate.dir/R_THINGS.C.obj CMakeFiles/demo2ultimate.dir/S_SOUND.C.obj CMakeFiles/demo2ultimate.dir/win32/dx_error.c.obj CMakeFiles/demo2ultimate.dir/win32/mid2strm.c.obj CMakeFiles/demo2ultimate.dir/win32/win_dbg.c.obj CMakeFiles/demo2ultimate.dir/win32/win_net.c.obj CMakeFiles/demo2ultimate.dir/win32/win_sys.c.obj CMakeFiles/demo2ultimate.dir/win32/fabdxlib.c.obj CMakeFiles/demo2ultimate.dir/win32/win_cd.c.obj CMakeFiles/demo2ultimate.dir/win32/win_dll.c.obj CMakeFiles/demo2ultimate.dir/win32/win_snd.c.obj
+build demo2ultimate.exe: C_EXECUTABLE_LINKER__demo2ultimate_ CMakeFiles/demo2ultimate.dir/am_map.c.obj CMakeFiles/demo2ultimate.dir/command.c.obj CMakeFiles/demo2ultimate.dir/comptime.c.obj CMakeFiles/demo2ultimate.dir/d_clisrv.c.obj CMakeFiles/demo2ultimate.dir/d_main.c.obj CMakeFiles/demo2ultimate.dir/d_net.c.obj CMakeFiles/demo2ultimate.dir/d_netfil.c.obj CMakeFiles/demo2ultimate.dir/dehacked.c.obj CMakeFiles/demo2ultimate.dir/dstrings.c.obj CMakeFiles/demo2ultimate.dir/f_finale.c.obj CMakeFiles/demo2ultimate.dir/f_wipe.c.obj CMakeFiles/demo2ultimate.dir/filesrch.c.obj CMakeFiles/demo2ultimate.dir/g_input.c.obj CMakeFiles/demo2ultimate.dir/hu_stuff.c.obj CMakeFiles/demo2ultimate.dir/i_tcp.c.obj CMakeFiles/demo2ultimate.dir/m_argv.c.obj CMakeFiles/demo2ultimate.dir/m_bbox.c.obj CMakeFiles/demo2ultimate.dir/m_cheat.c.obj CMakeFiles/demo2ultimate.dir/m_fixed.c.obj CMakeFiles/demo2ultimate.dir/m_misc.c.obj CMakeFiles/demo2ultimate.dir/m_random.c.obj CMakeFiles/demo2ultimate.dir/md5.c.obj CMakeFiles/demo2ultimate.dir/mserv.c.obj CMakeFiles/demo2ultimate.dir/p_ceilng.c.obj CMakeFiles/demo2ultimate.dir/p_doors.c.obj CMakeFiles/demo2ultimate.dir/p_lights.c.obj CMakeFiles/demo2ultimate.dir/p_map.c.obj CMakeFiles/demo2ultimate.dir/p_maputl.c.obj CMakeFiles/demo2ultimate.dir/p_saveg.c.obj CMakeFiles/demo2ultimate.dir/p_sight.c.obj CMakeFiles/demo2ultimate.dir/p_telept.c.obj CMakeFiles/demo2ultimate.dir/p_tick.c.obj CMakeFiles/demo2ultimate.dir/r_data.c.obj CMakeFiles/demo2ultimate.dir/R_DRAW.C.obj CMakeFiles/demo2ultimate.dir/r_draw16.c.obj CMakeFiles/demo2ultimate.dir/r_draw8.c.obj CMakeFiles/demo2ultimate.dir/r_main.c.obj CMakeFiles/demo2ultimate.dir/r_plane.c.obj CMakeFiles/demo2ultimate.dir/r_segs.c.obj CMakeFiles/demo2ultimate.dir/r_sky.c.obj CMakeFiles/demo2ultimate.dir/r_splats.c.obj CMakeFiles/demo2ultimate.dir/screen.c.obj CMakeFiles/demo2ultimate.dir/sounds.c.obj CMakeFiles/demo2ultimate.dir/st_stuff.c.obj CMakeFiles/demo2ultimate.dir/string.c.obj CMakeFiles/demo2ultimate.dir/tables.c.obj CMakeFiles/demo2ultimate.dir/v_video.c.obj CMakeFiles/demo2ultimate.dir/w_wad.c.obj CMakeFiles/demo2ultimate.dir/y_inter.c.obj CMakeFiles/demo2ultimate.dir/z_zone.c.obj CMakeFiles/demo2ultimate.dir/console.c.obj CMakeFiles/demo2ultimate.dir/d_netcmd.c.obj CMakeFiles/demo2ultimate.dir/g_game.c.obj CMakeFiles/demo2ultimate.dir/info.c.obj CMakeFiles/demo2ultimate.dir/m_menu.c.obj CMakeFiles/demo2ultimate.dir/p_enemy.c.obj CMakeFiles/demo2ultimate.dir/p_fab.c.obj CMakeFiles/demo2ultimate.dir/p_floor.c.obj CMakeFiles/demo2ultimate.dir/p_inter.c.obj CMakeFiles/demo2ultimate.dir/p_mobj.c.obj CMakeFiles/demo2ultimate.dir/p_setup.c.obj CMakeFiles/demo2ultimate.dir/p_spec.c.obj CMakeFiles/demo2ultimate.dir/p_user.c.obj CMakeFiles/demo2ultimate.dir/r_bsp.c.obj CMakeFiles/demo2ultimate.dir/r_things.c.obj CMakeFiles/demo2ultimate.dir/s_sound.c.obj CMakeFiles/demo2ultimate.dir/win32/dx_error.c.obj CMakeFiles/demo2ultimate.dir/win32/mid2strm.c.obj CMakeFiles/demo2ultimate.dir/win32/win_dbg.c.obj CMakeFiles/demo2ultimate.dir/win32/win_net.c.obj CMakeFiles/demo2ultimate.dir/win32/win_sys.c.obj CMakeFiles/demo2ultimate.dir/win32/fabdxlib.c.obj CMakeFiles/demo2ultimate.dir/win32/win_cd.c.obj CMakeFiles/demo2ultimate.dir/win32/win_dll.c.obj CMakeFiles/demo2ultimate.dir/win32/win_snd.c.obj
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   LINK_PATH = -LD:/Games/SRB2/demo_2/src/../tools/vs6_files/lib
   OBJECT_DIR = CMakeFiles\demo2ultimate.dir

@@ -37,6 +37,8 @@
 
 #include "p_setup.h" // levelflats
 
+#include "r_draw8.h"
+
 //
 // opening
 //
