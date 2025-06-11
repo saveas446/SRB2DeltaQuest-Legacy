@@ -2637,6 +2637,12 @@ static void Command_Version_f(void)
 #endif
 
 
+#if ARCH_64BIT == 1
+#define ARCHITECTURE_STR "Architecture: x86_64 (64-bit)\n"
+#elif ARCH_64BIT == 0
+#define ARCHITECTURE_STR "Architecture: i686 (32-bit)\n"
+#endif
+
 static void Command_BuildSettings_f(void)
 {
 	CONS_Printf("\n\n===BUILD SETTINGS===\n");
@@ -2649,6 +2655,7 @@ static void Command_BuildSettings_f(void)
 	CONS_Printf(FALL_SPRITES_STR);
 	CONS_Printf(INTERMISSION_BG_STR);
 	CONS_Printf(TH_TOLERANCE_STR);
+	CONS_Printf(ARCHITECTURE_STR);
 }
 
 

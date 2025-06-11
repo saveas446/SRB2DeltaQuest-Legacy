@@ -24,6 +24,8 @@
 #include "win_dbg.h"
 #include "../m_argv.h" //print the parameter in the log
 
+#include "../d2udef.h" //just for ARCH_64BIT
+
 
 #define NumCodeBytes    16          // Number of code bytes to record.
 #define MaxStackDump    2048    // Maximum number of DWORDS in stack dumps.
@@ -299,8 +301,9 @@ static VOID RecordSystemInformation(HANDLE fileHandle)
 // the debugger will hopefully coexist peacefully with the structured exception
 // handler.
 // --------------------------------------------------------------------------
-int __cdecl RecordExceptionInfo (PEXCEPTION_POINTERS data/*, LPCSTR Message, LPSTR lpCmdLine*/)
-{
+// \attention REWRITE THIS!!!!!!!!! THIS SUCKS! Just use the VS8 or a modern debugger for the time being. I'm sure this can be done in a way that's one million times more modern and practical.
+int __cdecl RecordExceptionInfo (PEXCEPTION_POINTERS data/*, LPCSTR Message, LPSTR lpCmdLine*/) {
+#if 0
 	PEXCEPTION_RECORD   Exception;
 	PCONTEXT            Context;
 	TCHAR               ModuleName[MAX_PATH];
@@ -403,6 +406,7 @@ int __cdecl RecordExceptionInfo (PEXCEPTION_POINTERS data/*, LPCSTR Message, LPS
 	
 	FPrintf(fileHandle, "\r\n");
 	
+#ifndef ARCH_64BIT
 	// Print out the register values in a Win95 error window compatible format.
 	if ((Context->ContextFlags & CONTEXT_FULL) == CONTEXT_FULL)
 	{
@@ -430,6 +434,35 @@ int __cdecl RecordExceptionInfo (PEXCEPTION_POINTERS data/*, LPCSTR Message, LPS
 	// is no memory to read. If the dereferencing of code[] fails, the
 	// exception handler will print '??'.
 	code = (unsigned char *)(size_t)Context->Eip;
+#else
+	// Print out the register values in a Win95 error window compatible format.
+	if ((Context->ContextFlags & CONTEXT_FULL) == CONTEXT_FULL)
+	{
+		FPrintf (fileHandle, "Registers:\r\n");
+		FPrintf (fileHandle, "RAX=%.8lx CS=%.4x RIP=%.8lx EFLGS=%.8lx\r\n",
+			Context->Rax,Context->SegCs,Context->Rip,Context->EFlags);
+		FPrintf (fileHandle, "RBX=%.8lx SS=%.4x RSP=%.8lx RBP=%.8lx\r\n",
+			Context->Rbx,Context->SegSs,Context->Rsp,Context->Rbp);
+		FPrintf (fileHandle, "RCX=%.8lx DS=%.4x RSI=%.8lx FS=%.4x\r\n",
+			Context->Rcx,Context->SegDs,Context->Rsi,Context->SegFs);
+		FPrintf (fileHandle, "RDX=%.8lx ES=%.4x RDI=%.8lx GS=%.4x\r\n",
+			Context->Rdx,Context->SegEs,Context->Rdi,Context->SegGs);
+	}
+
+	// moved down because it was causing the printout to stop
+	FPrintf (fileHandle, "Command Line parameters: ");
+	for (i = 1;i < myargc;i++)
+		FPrintf (fileHandle, "%s ", myargv[i]);
+
+	FPrintf (fileHandle, "Bytes at CS : RIP:\r\n");
+	
+	// Print out the bytes of code at the instruction pointer. Since the
+	// crash may have been caused by an instruction pointer that was bad,
+	// this code needs to be wrapped in an exception handler, in case there
+	// is no memory to read. If the dereferencing of code[] fails, the
+	// exception handler will print '??'.
+	code = (unsigned char *)(size_t)Context->Rip;
+#endif
 	for (codebyte = 0; codebyte < NumCodeBytes; codebyte++)
 	{
 #ifdef NO_SEH_MINGW
@@ -638,3 +671,8 @@ int __cdecl RecordExceptionInfo (PEXCEPTION_POINTERS data/*, LPCSTR Message, LPS
 		FPrintf ("%x
 	}
 */
+
+#else
+	return 0;
+}
+#endif

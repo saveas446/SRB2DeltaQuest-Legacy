@@ -35,6 +35,14 @@
     // 0: Enable some very useful stuff that isn't in the Demo 2 IWAD, but we will need for D2U
     // 1: Enable some possibly useful things that break compatibility with the Demo 2 IWAD
 
+    // Used for a part in win_dbg.c
+    // Also probably just a good idea
+    #if defined(_WIN64) || defined(__x86_64__) || defined(__ppc64__) || defined(__aarch64__) || defined(__LP64__) || defined(_M_X64)
+    #define ARCH_64BIT 1
+    #else
+    #define ARCH_64BIT 0
+    #endif
+
     // Sanity checks
     #if BUILD_TYPE > DEV_RELEASE || BUILD_TYPE < DEMO
     #error "Invalid build type!"

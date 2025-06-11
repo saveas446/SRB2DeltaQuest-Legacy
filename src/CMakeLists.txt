@@ -83,7 +83,7 @@ add_executable(${PROJECT_NAME}
 
 # Apparently this won't work with MSVC or something but I don't care... yet.
 target_compile_options(${PROJECT_NAME} PRIVATE
-  -m32 # God knows what would happen if we tried to make a 64-bit build :uncanny:
+  #-m32
   -fno-pie 
   -Wno-int-conversion 
   -fpermissive
