@@ -3844,8 +3844,7 @@ void P_RailThinker(mobj_t *mobj)
 	}
 
 	if (mobj->flags2 & MF2_HOMING)
-		// :pray:
-		A_ThrownRing();
+		A_ThrownRing(mobj);
 }
 
 // Unquick, unoptimized function for pushables

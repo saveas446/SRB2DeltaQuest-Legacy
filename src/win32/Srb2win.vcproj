@@ -2135,6 +2135,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\spritenum.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Tables.c"
 				>
 				<FileConfiguration
