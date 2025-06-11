@@ -20,7 +20,6 @@
 #ifndef _MSC_VER
 #include <stdint.h>      /* C99+ */
 #endif
-
 #include "doomtype.h"
 #include "i_sound.h"
 #include "sounds.h"

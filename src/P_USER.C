@@ -3241,7 +3241,7 @@ static void P_ObjectplaceMovement(player_t *player)
 	{
 		do
 		{
-			player->currentthing = player->currentthing - 1;
+			player->currentthing--;
 			if (player->currentthing <= 0)
 				player->currentthing = NUMMOBJTYPES-1;
 		}while (mobjinfo[player->currentthing].doomednum == -1
@@ -3267,7 +3267,7 @@ static void P_ObjectplaceMovement(player_t *player)
 	{
 		do
 		{
-			player->currentthing = player->currentthing + 1;
+			player->currentthing++;
 			if (player->currentthing >= NUMMOBJTYPES)
 				player->currentthing = 0;
 		}while (mobjinfo[player->currentthing].doomednum == -1
@@ -4637,7 +4637,7 @@ static void P_MovePlayer(player_t *player)
 					if (player->spinitem > 0)
 						type = player->spinitem;
 					else
-						type = (mobjtype_t)player->mo->info->raisestate;
+						type = player->mo->info->raisestate;
 
 					mobj = P_SpawnMobj(player->mo->x, player->mo->y, zheight, type);
 					mobj->flags = (mobj->flags & ~MF_TRANSLATION)

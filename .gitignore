@@ -101,3 +101,6 @@ tools/libpng-src/projects/visualc6/Win32_LIB_ASM_Debug/vc60.idb
 tools/zlib/projects/visualc6/Win32_LIB_ASM_Debug/BuildLog.htm
 tools/zlib/projects/visualc6/Win32_LIB_ASM_Debug/vc60.idb
 tools/zlib/projects/visualc6/Win32_LIB_ASM_Debug/zlib.lib
+build_new/build.ninja
+
+BuildLog.htm

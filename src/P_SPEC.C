@@ -36,9 +36,6 @@
 #include "r_main.h" //Two extra includes.
 #include "r_sky.h"
 
-#ifndef _MSC_VER
-#include <stdint.h>
-#endif
 #include "hardware/hw3sound.h"
 
 static void P_AddFakeFloorsByLine(int line, int ffloorflags);
@@ -966,7 +963,7 @@ static void P_AddExecutorDelay(line_t *line, mobj_t *mobj)
 	if (!line->backsector)
 		I_Error("P_AddExecutorDelay: Line has no backsector!\n");
 
-	e = (executor_t*)Z_Malloc(sizeof *e, PU_LEVSPEC, NULL);
+	e = Z_Malloc(sizeof *e, PU_LEVSPEC, NULL);
 
 	e->thinker.function.acp1 = (actionf_p1)T_ExecutorDelay;
 	e->line = line;
@@ -1243,21 +1240,12 @@ int P_SectorActive(special_e t,sector_t *sec)
 {
     switch (t)
     {
-	#ifdef _MSC_VER
       case floor_special:
         return (int)sec->floordata;
       case ceiling_special:
         return (int)sec->ceilingdata;
       case lighting_special:
         return (int)sec->lightingdata;
-	#else
-		case floor_special:
-		return (intptr_t)sec->floordata;
-	case ceiling_special:
-		return (intptr_t)sec->ceilingdata;
-	case lighting_special:
-		return (intptr_t)sec->lightingdata;
-	#endif
     }
   return 1;
 }
@@ -2874,7 +2862,7 @@ static ffloor_t *P_AddFakeFloor(sector_t *sec, sector_t *sec2, line_t *master, i
 
 	if (sec2->numattached == 0)
 	{
-		sec2->attached = (size_t*)malloc(sizeof (size_t));
+		sec2->attached = malloc(sizeof (size_t));
 		if (!sec2->attached)
 			I_Error("No more free memory to AddFakeFloor");
 		sec2->attached[0] = sec - sectors;
@@ -2888,13 +2876,13 @@ static ffloor_t *P_AddFakeFloor(sector_t *sec, sector_t *sec2, line_t *master, i
 			if (sec2->attached[i] == (size_t)(sec - sectors))
 				return NULL;
 
-		sec2->attached = (size_t*)realloc(sec2->attached, sizeof (size_t)*(sec2->numattached + 1));
+		sec2->attached = realloc(sec2->attached, sizeof (size_t)*(sec2->numattached + 1));
 		sec2->attached[sec2->numattached] = sec - sectors;
 		sec2->numattached++;
 	}
 
 	// Add the floor
-	ffloor = (ffloor_t*)Z_Malloc(sizeof (ffloor_t), PU_LEVEL, NULL);
+	ffloor = Z_Malloc(sizeof (ffloor_t), PU_LEVEL, NULL);
 	ffloor->secnum = (int)(sec2 - sectors);
 	ffloor->target = sec;
 	ffloor->bottomheight = &sec2->floorheight;
@@ -2909,7 +2897,7 @@ static ffloor_t *P_AddFakeFloor(sector_t *sec, sector_t *sec2, line_t *master, i
 	ffloor->topxoffs = &sec2->ceiling_xoffs;
 	ffloor->topyoffs = &sec2->ceiling_yoffs;
 
-	ffloor->flags = (ffloortype_e)flags;
+	ffloor->flags = flags;
 	ffloor->master = master;
 
 	// scan the thinkers
@@ -2997,7 +2985,7 @@ static ffloor_t *P_AddOldWater(sector_t *sec, sector_t *sec2, line_t *master, in
 
 	if (sec2->numattached == 0)
 	{
-		sec2->attached = (size_t*)malloc(sizeof (size_t));
+		sec2->attached = malloc(sizeof (size_t));
 		if (!sec2->attached)
 			I_Error("No more free memory to AddFakeFloor");
 		sec2->attached[0] = sec - sectors;
@@ -3011,17 +2999,17 @@ static ffloor_t *P_AddOldWater(sector_t *sec, sector_t *sec2, line_t *master, in
 			if (sec2->attached[i] == (size_t)(sec - sectors))
 				return NULL;
 
-		sec2->attached = (size_t*)realloc(sec2->attached, sizeof (size_t)*(sec2->numattached + 1));
+		sec2->attached = realloc(sec2->attached, sizeof (size_t)*(sec2->numattached + 1));
 		sec2->attached[sec2->numattached] = sec - sectors;
 		sec2->numattached++;
 	}
 	
 	// Reduce floor height by one so we don't see the floor texture
-	floorheight = sec->floorheight;
+	floorheight = (&sec->floorheight);
 	floorheight--;
 	
 	// Add the floor
-	ffloor = (ffloor_t*)Z_Malloc(sizeof (ffloor_t), PU_LEVEL, NULL);
+	ffloor = Z_Malloc(sizeof (ffloor_t), PU_LEVEL, NULL);
 	ffloor->secnum = (int)(sec2 - sectors);
 	ffloor->target = sec;
 	ffloor->bottomheight = floorheight;
@@ -5391,7 +5379,7 @@ void P_SpawnSpecials(void)
 			case 87: // Make-Your-Own FOF!
 				if (lines[i].sidenum[1] != -1)
 				{
-					byte *data = (byte*)W_CacheLumpNum(lastloadedmaplumpnum + ML_SIDEDEFS,PU_STATIC);
+					byte *data = W_CacheLumpNum(lastloadedmaplumpnum + ML_SIDEDEFS,PU_STATIC);
 					int b;
 
 					for (b = 0; b < numsides; b++)

@@ -18,7 +18,6 @@
 
 //#define WIN32_LEAN_AND_MEAN
 #define RPC_NO_WINDOWS_H
-#include <winnt.h>
 #include <windows.h>
 
 // called in the exception filter of the __try block, writes all useful debugging information

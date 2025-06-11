@@ -311,7 +311,7 @@ void ST_LoadFaceGraphics(char *facestr, int skinnum)
 		facestr[8] = '\0';
 	strcpy(namelump, facestr); // copy base name
 
-	faceprefix[skinnum] = (patch_t*)W_CachePatchName(namelump, PU_STATIC);
+	faceprefix[skinnum] = W_CachePatchName(namelump, PU_STATIC);
 	facefreed[skinnum] = false;
 }
 
@@ -327,7 +327,7 @@ void ST_LoadFaceNameGraphics(char *facestr, int skinnum)
 		facestr[8] = '\0';
 	strcpy(namelump, facestr); // copy base name
 
-	facenameprefix[skinnum] = (patch_t*)W_CachePatchName(namelump, PU_STATIC);
+	facenameprefix[skinnum] = W_CachePatchName(namelump, PU_STATIC);
 	prefixfreed[skinnum] = false;
 }
 
@@ -385,103 +385,103 @@ void ST_Init(void)
 
 	// SRB2 border patch
 	st_borderpatchnum = W_GetNumForName("FLOOR0_3");
-	scr_borderpatch = (byte*)W_CacheLumpNum(st_borderpatchnum, PU_STATIC);
+	scr_borderpatch = W_CacheLumpNum(st_borderpatchnum, PU_STATIC);
 
 	ST_LoadGraphics();
 
 	// cache the status bar overlay icons (fullscreen mode)
 
-	sborings = (patch_t*)W_CachePatchName("SBOHEALT", PU_STATIC); // No more constantly red RINGS graphic! Save 24-05-2025
-	sboscore = (patch_t*)W_CachePatchName("SBOFRAGS", PU_STATIC); // There's a different name for this in Demo 2
-	sboover = (patch_t*)W_CachePatchName("SBOOVER", PU_STATIC);
-	timeover = (patch_t*)W_CachePatchName("TIMEOVER", PU_STATIC);
-	stlivex = (patch_t*)W_CachePatchName("STLIVEX", PU_STATIC);
-	rrings = (patch_t*)W_CachePatchName("SBORINGS", PU_STATIC); // There's a different name for this in Demo 2
-	sbotime = (patch_t*)W_CachePatchName("SBOTIME", PU_STATIC); // Time logo
-	sbocolon = (patch_t*)W_CachePatchName("SBOCOLON", PU_STATIC); // Colon for time
-	getall = (patch_t*)W_CachePatchName("GETALL", PU_STATIC); // Special Stage HUD
-	timeup = (patch_t*)W_CachePatchName("TIMEUP", PU_STATIC); // Special Stage HUD
-	homing1	= (patch_t*)W_CachePatchName("HOMING1", PU_STATIC); // Emerald hunt indicators
-	homing2	= (patch_t*)W_CachePatchName("HOMING2", PU_STATIC); // Emerald hunt indicators
-	homing3	= (patch_t*)W_CachePatchName("HOMING3", PU_STATIC); // Emerald hunt indicators
-	homing4	= (patch_t*)W_CachePatchName("HOMING4", PU_STATIC); // Emerald hunt indicators
-	homing5	= (patch_t*)W_CachePatchName("HOMING5", PU_STATIC); // Emerald hunt indicators
-	homing6	= (patch_t*)W_CachePatchName("HOMING6", PU_STATIC); // Emerald hunt indicators
-	supersonic = (patch_t*)W_CachePatchName("SUPERICO", PU_STATIC);
-	nightslink = (patch_t*)W_CachePatchName("NGHTLINK", PU_STATIC);
-	count5 = (patch_t*)W_CachePatchName("CNTFA0", PU_STATIC);
-	count4 = (patch_t*)W_CachePatchName("CNTEA0", PU_STATIC);
-	count3 = (patch_t*)W_CachePatchName("CNTDA0", PU_STATIC);
-	count2 = (patch_t*)W_CachePatchName("CNTCA0", PU_STATIC);
-	count1 = (patch_t*)W_CachePatchName("CNTBA0", PU_STATIC);
-	count0 = (patch_t*)W_CachePatchName("CNTAA0", PU_STATIC);
+	sborings = W_CachePatchName("SBOHEALT", PU_STATIC); // No more constantly red RINGS graphic! Save 24-05-2025
+	sboscore = W_CachePatchName("SBOFRAGS", PU_STATIC); // There's a different name for this in Demo 2
+	sboover = W_CachePatchName("SBOOVER", PU_STATIC);
+	timeover = W_CachePatchName("TIMEOVER", PU_STATIC);
+	stlivex = W_CachePatchName("STLIVEX", PU_STATIC);
+	rrings = W_CachePatchName("SBORINGS", PU_STATIC); // There's a different name for this in Demo 2
+	sbotime = W_CachePatchName("SBOTIME", PU_STATIC); // Time logo
+	sbocolon = W_CachePatchName("SBOCOLON", PU_STATIC); // Colon for time
+	getall = W_CachePatchName("GETALL", PU_STATIC); // Special Stage HUD
+	timeup = W_CachePatchName("TIMEUP", PU_STATIC); // Special Stage HUD
+	homing1	= W_CachePatchName("HOMING1", PU_STATIC); // Emerald hunt indicators
+	homing2	= W_CachePatchName("HOMING2", PU_STATIC); // Emerald hunt indicators
+	homing3	= W_CachePatchName("HOMING3", PU_STATIC); // Emerald hunt indicators
+	homing4	= W_CachePatchName("HOMING4", PU_STATIC); // Emerald hunt indicators
+	homing5	= W_CachePatchName("HOMING5", PU_STATIC); // Emerald hunt indicators
+	homing6	= W_CachePatchName("HOMING6", PU_STATIC); // Emerald hunt indicators
+	supersonic = W_CachePatchName("SUPERICO", PU_STATIC);
+	nightslink = W_CachePatchName("NGHTLINK", PU_STATIC);
+	count5 = W_CachePatchName("CNTFA0", PU_STATIC);
+	count4 = W_CachePatchName("CNTEA0", PU_STATIC);
+	count3 = W_CachePatchName("CNTDA0", PU_STATIC);
+	count2 = W_CachePatchName("CNTCA0", PU_STATIC);
+	count1 = W_CachePatchName("CNTBA0", PU_STATIC);
+	count0 = W_CachePatchName("CNTAA0", PU_STATIC);
 
-	jumpshield = (patch_t*)W_CachePatchName("WHTVB0", PU_STATIC);
-	fireshield = (patch_t*)W_CachePatchName("RDTVB0", PU_STATIC);
-	ringshield = (patch_t*)W_CachePatchName("YLTVB0", PU_STATIC);
-	watershield = (patch_t*)W_CachePatchName("BLTVB0", PU_STATIC);
-	bombshield = (patch_t*)W_CachePatchName("BKTVB0", PU_STATIC);
-	invincibility = (patch_t*)W_CachePatchName("PINVB0", PU_STATIC);
-	sneakers = (patch_t*)W_CachePatchName("SHTVB0", PU_STATIC);
+	jumpshield = W_CachePatchName("WHTVB0", PU_STATIC);
+	fireshield = W_CachePatchName("RDTVB0", PU_STATIC);
+	ringshield = W_CachePatchName("YLTVB0", PU_STATIC);
+	watershield = W_CachePatchName("BLTVB0", PU_STATIC);
+	bombshield = W_CachePatchName("BKTVB0", PU_STATIC);
+	invincibility = W_CachePatchName("PINVB0", PU_STATIC);
+	sneakers = W_CachePatchName("SHTVB0", PU_STATIC);
 
-	lvlttl1 = (patch_t*)W_CachePatchName ("LVLTTL1", PU_STATIC);
-	lvlttl2 = (patch_t*)W_CachePatchName ("LVLTTL2", PU_STATIC);
-	lvlttl3 = (patch_t*)W_CachePatchName ("LVLTTL3", PU_STATIC);
-	lvlttl4 = (patch_t*)W_CachePatchName ("LVLTTL4", PU_STATIC);
-	lvlttl5 = (patch_t*)W_CachePatchName ("LVLTTL5", PU_STATIC);
-	lvlttl6 = (patch_t*)W_CachePatchName ("LVLTTL6", PU_STATIC);
-	lvlttl7 = (patch_t*)W_CachePatchName ("LVLTTL7", PU_STATIC);
-	lvlttl8 = (patch_t*)W_CachePatchName ("LVLTTL8", PU_STATIC);
-	lvlttl9 = (patch_t*)W_CachePatchName ("LVLTTL9", PU_STATIC);
-	lvlttl10 = (patch_t*)W_CachePatchName ("LVLTTL10", PU_STATIC);
-	lvlttl11 = (patch_t*)W_CachePatchName ("LVLTTL11", PU_STATIC);
-	lvlttl12 = (patch_t*)W_CachePatchName ("LVLTTL12", PU_STATIC);
-	lvlttl13 = (patch_t*)W_CachePatchName ("LVLTTL13", PU_STATIC);
-	lvlttl14 = (patch_t*)W_CachePatchName ("LVLTTL14", PU_STATIC);
-	lvlttl15 = (patch_t*)W_CachePatchName ("LVLTTL15", PU_STATIC);
-	lvlttl16 = (patch_t*)W_CachePatchName ("LVLTTL16", PU_STATIC);
-	lvlttl17 = (patch_t*)W_CachePatchName ("LVLTTL17", PU_STATIC);
-	lvlttl18 = (patch_t*)W_CachePatchName ("LVLTTL18", PU_STATIC);
-	lvlttl19 = (patch_t*)W_CachePatchName ("LVLTTL19", PU_STATIC);
+	lvlttl1 = W_CachePatchName ("LVLTTL1", PU_STATIC);
+	lvlttl2 = W_CachePatchName ("LVLTTL2", PU_STATIC);
+	lvlttl3 = W_CachePatchName ("LVLTTL3", PU_STATIC);
+	lvlttl4 = W_CachePatchName ("LVLTTL4", PU_STATIC);
+	lvlttl5 = W_CachePatchName ("LVLTTL5", PU_STATIC);
+	lvlttl6 = W_CachePatchName ("LVLTTL6", PU_STATIC);
+	lvlttl7 = W_CachePatchName ("LVLTTL7", PU_STATIC);
+	lvlttl8 = W_CachePatchName ("LVLTTL8", PU_STATIC);
+	lvlttl9 = W_CachePatchName ("LVLTTL9", PU_STATIC);
+	lvlttl10 = W_CachePatchName ("LVLTTL10", PU_STATIC);
+	lvlttl11 = W_CachePatchName ("LVLTTL11", PU_STATIC);
+	lvlttl12 = W_CachePatchName ("LVLTTL12", PU_STATIC);
+	lvlttl13 = W_CachePatchName ("LVLTTL13", PU_STATIC);
+	lvlttl14 = W_CachePatchName ("LVLTTL14", PU_STATIC);
+	lvlttl15 = W_CachePatchName ("LVLTTL15", PU_STATIC);
+	lvlttl16 = W_CachePatchName ("LVLTTL16", PU_STATIC);
+	lvlttl17 = W_CachePatchName ("LVLTTL17", PU_STATIC);
+	lvlttl18 = W_CachePatchName ("LVLTTL18", PU_STATIC);
+	lvlttl19 = W_CachePatchName ("LVLTTL19", PU_STATIC);
 
-	ttlzone = (patch_t*)W_CachePatchName ("TTLZONE", PU_STATIC);
+	ttlzone = W_CachePatchName ("TTLZONE", PU_STATIC);
 
-	act1 = (patch_t*)W_CachePatchName ("TTLONE", PU_STATIC);
-	act2 = (patch_t*)W_CachePatchName ("TTLTWO", PU_STATIC);
-	act3 = (patch_t*)W_CachePatchName ("TTLTHREE", PU_STATIC);
+	act1 = W_CachePatchName ("TTLONE", PU_STATIC);
+	act2 = W_CachePatchName ("TTLTWO", PU_STATIC);
+	act3 = W_CachePatchName ("TTLTHREE", PU_STATIC);
 
 	// NiGHTS HUD things
-	bluestat = (patch_t*)W_CachePatchName("BLUESTAT", PU_STATIC);
-	byelstat = (patch_t*)W_CachePatchName("BYELSTAT", PU_STATIC);
-	orngstat = (patch_t*)W_CachePatchName("ORNGSTAT", PU_STATIC);
-	redstat = (patch_t*)W_CachePatchName("REDSTAT", PU_STATIC);
-	yelstat = (patch_t*)W_CachePatchName("YELSTAT", PU_STATIC);
-	nbracket = (patch_t*)W_CachePatchName("NBRACKET", PU_STATIC);
-	nhud[0] = (patch_t*)W_CachePatchName("NHUD1", PU_STATIC);
-	nhud[1] = (patch_t*)W_CachePatchName("NHUD2", PU_STATIC);
-	nhud[2] = (patch_t*)W_CachePatchName("NHUD3", PU_STATIC);
-	nhud[3] = (patch_t*)W_CachePatchName("NHUD4", PU_STATIC);
-	nhud[4] = (patch_t*)W_CachePatchName("NHUD5", PU_STATIC);
-	nhud[5] = (patch_t*)W_CachePatchName("NHUD6", PU_STATIC);
-	nhud[6] = (patch_t*)W_CachePatchName("NHUD7", PU_STATIC);
-	nhud[7] = (patch_t*)W_CachePatchName("NHUD8", PU_STATIC);
-	nhud[8] = (patch_t*)W_CachePatchName("NHUD9", PU_STATIC);
-	nhud[9] = (patch_t*)W_CachePatchName("NHUD10", PU_STATIC);
-	nhud[10] = (patch_t*)W_CachePatchName("NHUD11", PU_STATIC);
-	nhud[11] = (patch_t*)W_CachePatchName("NHUD12", PU_STATIC);
-	minicaps = (patch_t*)W_CachePatchName("MINICAPS", PU_STATIC);
+	bluestat = W_CachePatchName("BLUESTAT", PU_STATIC);
+	byelstat = W_CachePatchName("BYELSTAT", PU_STATIC);
+	orngstat = W_CachePatchName("ORNGSTAT", PU_STATIC);
+	redstat = W_CachePatchName("REDSTAT", PU_STATIC);
+	yelstat = W_CachePatchName("YELSTAT", PU_STATIC);
+	nbracket = W_CachePatchName("NBRACKET", PU_STATIC);
+	nhud[0] = W_CachePatchName("NHUD1", PU_STATIC);
+	nhud[1] = W_CachePatchName("NHUD2", PU_STATIC);
+	nhud[2] = W_CachePatchName("NHUD3", PU_STATIC);
+	nhud[3] = W_CachePatchName("NHUD4", PU_STATIC);
+	nhud[4] = W_CachePatchName("NHUD5", PU_STATIC);
+	nhud[5] = W_CachePatchName("NHUD6", PU_STATIC);
+	nhud[6] = W_CachePatchName("NHUD7", PU_STATIC);
+	nhud[7] = W_CachePatchName("NHUD8", PU_STATIC);
+	nhud[8] = W_CachePatchName("NHUD9", PU_STATIC);
+	nhud[9] = W_CachePatchName("NHUD10", PU_STATIC);
+	nhud[10] = W_CachePatchName("NHUD11", PU_STATIC);
+	nhud[11] = W_CachePatchName("NHUD12", PU_STATIC);
+	minicaps = W_CachePatchName("MINICAPS", PU_STATIC);
 
-	narrow[0] = (patch_t*)W_CachePatchName("NARROW1", PU_STATIC);
-	narrow[1] = (patch_t*)W_CachePatchName("NARROW2", PU_STATIC);
-	narrow[2] = (patch_t*)W_CachePatchName("NARROW3", PU_STATIC);
-	narrow[3] = (patch_t*)W_CachePatchName("NARROW4", PU_STATIC);
-	narrow[4] = (patch_t*)W_CachePatchName("NARROW5", PU_STATIC);
-	narrow[5] = (patch_t*)W_CachePatchName("NARROW6", PU_STATIC);
-	narrow[6] = (patch_t*)W_CachePatchName("NARROW7", PU_STATIC);
-	narrow[7] = (patch_t*)W_CachePatchName("NARROW8", PU_STATIC);
+	narrow[0] = W_CachePatchName("NARROW1", PU_STATIC);
+	narrow[1] = W_CachePatchName("NARROW2", PU_STATIC);
+	narrow[2] = W_CachePatchName("NARROW3", PU_STATIC);
+	narrow[3] = W_CachePatchName("NARROW4", PU_STATIC);
+	narrow[4] = W_CachePatchName("NARROW5", PU_STATIC);
+	narrow[5] = W_CachePatchName("NARROW6", PU_STATIC);
+	narrow[6] = W_CachePatchName("NARROW7", PU_STATIC);
+	narrow[7] = W_CachePatchName("NARROW8", PU_STATIC);
 
 	// non-animated version
-	narrow[8] = (patch_t*)W_CachePatchName("NARROW9", PU_STATIC);
+	narrow[8] = W_CachePatchName("NARROW9", PU_STATIC);
 }
 
 // change the status bar too, when pressing F12 while viewing a demo.
@@ -841,7 +841,7 @@ static void ST_drawLevelTitle(void)
 
 	/*if (actnum > 0)
 	{
-		ttlnum = (patch_t*)W_CachePatchName(va("TTL%.2d", actnum), PU_CACHE);
+		ttlnum = W_CachePatchName(va("TTL%.2d", actnum), PU_CACHE);
 		lvlttlxpos = ((BASEVIDWIDTH/2) - ((lvlttl->width))) - ttlnum->width;
 	}
 	else

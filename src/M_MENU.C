@@ -200,7 +200,7 @@ static void M_DrawMenuTitle(void)
 {
 	if (currentMenu->menutitlepic)
 	{
-		patch_t *p = (patch_t*)W_CachePatchName(currentMenu->menutitlepic, PU_CACHE);
+		patch_t *p = W_CachePatchName(currentMenu->menutitlepic, PU_CACHE);
 
 		int xtitle = (BASEVIDWIDTH - p->width)/2;
 		int ytitle = (currentMenu->y - p->height)/2;
@@ -236,13 +236,13 @@ void M_DrawGenericMenu(void)
 					if (currentMenu->menuitems[i].status & IT_CENTER)
 					{
 						patch_t *p;
-						p = (patch_t*)W_CachePatchName(currentMenu->menuitems[i].patch, PU_CACHE);
+						p = W_CachePatchName(currentMenu->menuitems[i].patch, PU_CACHE);
 						V_DrawScaledPatch((BASEVIDWIDTH - p->width)/2, y, 0, p);
 					}
 					else
 					{
 						V_DrawScaledPatch(x, y, 0,
-							(patch_t*)W_CachePatchName(currentMenu->menuitems[i].patch, PU_CACHE));
+							W_CachePatchName(currentMenu->menuitems[i].patch, PU_CACHE));
 					}
 				}
 			case IT_NOTHING:
@@ -303,7 +303,7 @@ void M_DrawGenericMenu(void)
 			case IT_GRAYPATCH:
 				if (currentMenu->menuitems[i].patch && currentMenu->menuitems[i].patch[0])
 					V_DrawMappedPatch(x, y, 0,
-						(patch_t*)W_CachePatchName(currentMenu->menuitems[i].patch,PU_CACHE), graymap);
+						W_CachePatchName(currentMenu->menuitems[i].patch,PU_CACHE), graymap);
 				y += LINEHEIGHT;
 				break;
 		}
@@ -314,12 +314,12 @@ void M_DrawGenericMenu(void)
 		|| ((currentMenu->menuitems[itemOn].status & IT_DISPLAY) == IT_NOTHING))
 	{
 		V_DrawScaledPatch(currentMenu->x + SKULLXOFF, cursory - 5, 0,
-			(patch_t*)W_CachePatchName("M_CURSOR", PU_CACHE));
+			W_CachePatchName("M_CURSOR", PU_CACHE));
 	}
 	else
 	{
 		V_DrawScaledPatch(currentMenu->x - 24, cursory, 0,
-			(patch_t*)W_CachePatchName("M_CURSOR", PU_CACHE));
+			W_CachePatchName("M_CURSOR", PU_CACHE));
 		V_DrawString(currentMenu->x, cursory, V_YELLOWMAP, currentMenu->menuitems[itemOn].text);
 	}
 }
@@ -362,11 +362,11 @@ typedef enum
 //main menu options
 static menuitem_t MainMenu[] =
 {
-	{IT_CALL    | IT_STRING, "\0", "    secrets",   M_SecretsMenu,   84},
-	{IT_SUBMENU | IT_STRING, "\0", "   1  player", &SinglePlayerDef, 92},
-	{IT_SUBMENU | IT_STRING, "\0", "multiplayer",  &MultiPlayerDef, 100},
-	{IT_CALL    | IT_STRING, "\0", "    options",   M_OptionsMenu,  108},
-	{IT_CALL    | IT_STRING, "\0", "  quit  game",  M_QuitSRB2,     116},
+	{IT_CALL    | IT_STRING, NULL, "    secrets",   M_SecretsMenu,   84},
+	{IT_SUBMENU | IT_STRING, NULL, "   1  player", &SinglePlayerDef, 92},
+	{IT_SUBMENU | IT_STRING, NULL, "multiplayer",  &MultiPlayerDef, 100},
+	{IT_CALL    | IT_STRING, NULL, "    options",   M_OptionsMenu,  108},
+	{IT_CALL    | IT_STRING, NULL, "  quit  game",  M_QuitSRB2,     116},
 };
 
 menu_t MainDef =

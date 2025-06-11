@@ -2771,7 +2771,7 @@ void G_RecordDemo(const char *name)
 		maxsize = atoi(M_GetNextParm()) * 1024;
 //	if (demobuffer)
 //		free(demobuffer);
-	demobuffer = (byte*)malloc(maxsize);
+	demobuffer = malloc(maxsize);
 	demoend = demobuffer + maxsize;
 
 	demorecording = true;
@@ -2837,11 +2837,11 @@ void G_DoPlayDemo(char *defdemoname)
 		demo_p = demobuffer;
 	}
 	else
-		demobuffer = demo_p = (byte*)W_CacheLumpNum(i, PU_STATIC);
+		demobuffer = demo_p = W_CacheLumpNum(i, PU_STATIC);
 
 	// read demo header
 	gameaction = ga_nothing;
-	skill = (skill_t)(*demo_p++);
+	skill = *demo_p++;
 	map = *demo_p++;
 
 	demo_p++;

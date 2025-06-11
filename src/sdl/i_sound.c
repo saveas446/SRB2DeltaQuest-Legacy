@@ -1301,7 +1301,7 @@ boolean I_StartDigSong(const char *musicname, int looping)
 	else
 		lumplength = W_LumpLength(lumpnum);
 
-	data = (byte*)W_CacheLumpNum(lumpnum, PU_MUSIC);
+	data = W_CacheLumpNum(lumpnum, PU_MUSIC);
 
 	if (Msc_Mutex) SDL_LockMutex(Msc_Mutex);
 
