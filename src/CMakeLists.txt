@@ -81,6 +81,12 @@ add_executable(${PROJECT_NAME}
   win32/win_snd.c
 )
 
+
+
+target_link_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/../lib")
+
+target_link_libraries(${PROJECT_NAME} PRIVATE libfmod)
+
 # Apparently this won't work with MSVC or something but I don't care... yet.
 target_compile_options(${PROJECT_NAME} PRIVATE
   #-m32
@@ -89,12 +95,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE
   -fpermissive
 )
 
-set(VS6DEP "${CMAKE_SOURCE_DIR}/../tools/vs6_files")
 
 target_include_directories(${PROJECT_NAME} PRIVATE 
-	"${CMAKE_SOURCE_DIR}"
-	"${VS6DEP}/include"
-	"${VS6DEP}/include/FMOD"
+	"${CMAKE_SOURCE_DIR}/../include"
 )
-
-target_link_directories(${PROJECT_NAME} PRIVATE "${VS6DEP}/lib")

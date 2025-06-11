@@ -1957,6 +1957,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\p_mobj2.h"
+				>
+			</File>
+			<File
 				RelativePath="..\P_pspr.h"
 				>
 			</File>

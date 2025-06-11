@@ -73,6 +73,8 @@
 #include "p_local.h" // chasecam
 #include "mserv.h" // cv_internetserver
 
+#include "screen.h"
+
 #include "d2udef.h"
 
 #ifdef _XBOX

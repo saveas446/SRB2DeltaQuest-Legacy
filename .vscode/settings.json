@@ -25,7 +25,9 @@
         "WIN_MAIN.C": "c",
         "r_draw8.h": "c",
         "z_zone.h": "c",
-        "v_video.h": "c"
+        "v_video.h": "c",
+        "hw_main.h": "c",
+        "d2udef.h": "c"
     },
     "C_Cpp.dimInactiveRegions": false
 }

@@ -27,6 +27,97 @@
 
 // IMPORTANT NOTE: If you add/remove from this list of action
 // functions, don't forget to update them in dehacked.c!
+#ifndef _MSC_VER
+void A_Explode(mobj_t* actor);
+void A_Pain(mobj_t* actor);
+void A_Fall(mobj_t* actor);
+void A_MonitorPop(mobj_t* actor);
+void A_Look(mobj_t* actor);
+void A_Chase(mobj_t* actor);
+void A_FaceTarget(mobj_t* actor);
+void A_Scream(mobj_t* actor);
+void A_BossDeath(mobj_t* actor);
+void A_CustomPower(mobj_t* actor); // Use this for a custom power
+void A_JumpShield(mobj_t* actor); // Obtained Jump Shield
+void A_RingShield(mobj_t* actor); // Obtained Ring Shield
+void A_RingBox(mobj_t* actor); // Obtained Ring Box Tails
+void A_Invincibility(mobj_t* actor); // Obtained Invincibility Box
+void A_SuperSneakers(mobj_t* actor); // Obtained Super Sneakers Box
+void A_BunnyHop(mobj_t* actor); // have bunny hop tails
+void A_BubbleSpawn(mobj_t* actor); // Randomly spawn bubbles
+void A_BubbleRise(mobj_t* actor); // Bubbles float to surface
+void A_BubbleCheck(mobj_t* actor); // Don't draw if not underwater
+void A_ExtraLife(mobj_t* actor); // Extra Life
+void A_BombShield(mobj_t* actor); // Obtained Bomb Shield
+void A_WaterShield(mobj_t* actor); // Obtained Water Shield
+void A_FireShield(mobj_t* actor);
+void A_ScoreRise(mobj_t* actor); // Rise the score logo
+void A_AttractChase(mobj_t* actor); // Ring Chase
+void A_DropMine(mobj_t* actor); // Drop Mine from Skim or Jetty-Syn Bomber
+void A_FishJump(mobj_t* actor); // Fish Jump
+void A_SignPlayer(mobj_t* actor); // Level end sign function to determine which player to display
+void A_ThrownRing(mobj_t* actor); // Sparkle trail for red ring
+void A_SetSolidSteam(mobj_t* actor);
+void A_UnsetSolidSteam(mobj_t* actor);
+void A_JetChase(mobj_t* actor);
+void A_JetbThink(mobj_t* actor); // Jetty-Syn Bomber Thinker
+void A_JetgThink(mobj_t* actor); // Jetty-Syn Gunner Thinker
+void A_JetgShoot(mobj_t* actor); // Jetty-Syn Shoot Function
+void A_ShootBullet(mobj_t* actor); // JetgShoot without reactiontime setting
+void A_MouseThink(mobj_t* actor); // Mouse Thinker
+void A_DetonChase(mobj_t* actor); // Deton Chaser
+void A_CapeChase(mobj_t* actor); // Fake little Super Sonic cape
+void A_RotateSpikeBall(mobj_t* actor); // Spike ball rotation
+void A_SnowBall(mobj_t* actor); // Snowball function for Snow Buster
+void A_CrawlaCommanderThink(mobj_t* actor); // Crawla Commander
+void A_SmokeTrailer(mobj_t* actor);
+void A_RingExplode(mobj_t* actor);
+void A_MixUp(mobj_t* actor);
+void A_BossScream(mobj_t* actor);
+void A_Invinciblerize(mobj_t* actor);
+void A_DeInvinciblerize(mobj_t* actor);
+void A_Boss2PogoSFX(mobj_t* actor);
+void A_EggmanBox(mobj_t* actor);
+void A_TurretFire(mobj_t* actor);
+void A_SuperTurretFire(mobj_t* actor);
+void A_TurretStop(mobj_t* actor);
+void A_SkimChase(mobj_t* actor);
+void A_SkullAttack(mobj_t* actor);
+void A_FireShot(mobj_t* actor);
+void A_SuperFireShot(mobj_t* actor);
+void A_SparkFollow(mobj_t* actor);
+void A_BuzzFly(mobj_t* actor);
+void A_SetReactionTime(mobj_t* actor);
+void A_LinedefExecute(mobj_t* actor);
+void A_PlaySeeSound(mobj_t* actor);
+void A_PlayAttackSound(mobj_t* actor);
+void A_PlayActiveSound(mobj_t* actor);
+void A_PumaJump(mobj_t* actor); // Mario mode function
+void A_1upThinker(mobj_t* actor);
+void A_BossZoom(mobj_t* actor); //Usused
+void A_Boss1Chase(mobj_t* actor);
+void A_Boss2Chase(mobj_t* actor);
+void A_Boss2Pogo(mobj_t* actor);
+void A_BossJetFume(mobj_t* actor);
+void A_SpawnObjectAbsolute(mobj_t* actor);
+void A_SpawnObjectRelative(mobj_t* actor);
+void A_ChangeAngleRelative(mobj_t* actor);
+void A_ChangeAngleAbsolute(mobj_t* actor);
+void A_PlaySound(mobj_t* actor);
+void A_FindTarget(mobj_t* actor);
+void A_FindTracer(mobj_t* actor);
+void A_SetTics(mobj_t* actor);
+void A_ChangeColorRelative(mobj_t* actor);
+void A_ChangeColorAbsolute(mobj_t* actor);
+void A_MoveRelative(mobj_t* actor);
+void A_MoveAbsolute(mobj_t* actor);
+void A_SetTargetsTarget(mobj_t* actor);
+void A_SetObjectFlags(mobj_t* actor);
+void A_SetObjectFlags2(mobj_t* actor);
+void A_RandomState(mobj_t* actor);
+void A_RandomStateRange(mobj_t* actor);
+void A_DualAction(mobj_t* actor);
+#else
 void A_Explode();
 void A_Pain();
 void A_Fall();
@@ -116,6 +207,7 @@ void A_SetObjectFlags2();
 void A_RandomState();
 void A_RandomStateRange();
 void A_DualAction();
+#endif
 
 // ratio of states to sprites to mobj types is roughly 6 : 1 : 1
 #define NUMMOBJFREESLOTS 128
