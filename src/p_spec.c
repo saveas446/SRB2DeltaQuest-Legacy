@@ -4723,6 +4723,17 @@ void P_SpawnSpecials(void)
     P_SpawnFriction();  //New friction model using linedefs
     P_SpawnPushers();   //New pusher model using linedefs*/
 	
+	if (mapheaderinfo[gamemap-1].weather == 2) // snow
+		curWeather = PRECIP_SNOW;
+	else if (mapheaderinfo[gamemap-1].weather == 3) // rain
+		curWeather = PRECIP_RAIN;
+	else if (mapheaderinfo[gamemap-1].weather == 1) // storm
+		curWeather = PRECIP_STORM;
+	else if (mapheaderinfo[gamemap-1].weather == 5) // storm w/o rain
+		curWeather = PRECIP_STORM_NORAIN;
+	else
+		curWeather = PRECIP_NONE;
+
 	P_InitTagLists();   // Create xref tables for tags
 	P_SpawnScrollers(); // Add generalized scrollers
 	P_SpawnFriction();  // Friction model using linedefs
