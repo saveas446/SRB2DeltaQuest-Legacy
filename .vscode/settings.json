@@ -28,7 +28,8 @@
         "v_video.h": "c",
         "hw_main.h": "c",
         "d2udef.h": "c",
-        "m_cheat.h": "c"
+        "m_cheat.h": "c",
+        "HW_MAIN.C": "cpp"
     },
     "C_Cpp.dimInactiveRegions": false
 }

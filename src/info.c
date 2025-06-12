@@ -66,7 +66,11 @@ char sprnames[NUMSPRITES + 1][5] =
 	#endif
 	"FWR2","FWR3","MIXU","QUES","MTEX","FLAM","PUMA","HAMM","KOOP",
 	"SHLL","MAXE","FBLL","FFWR","NSPK","SUPE","SUPZ","NDRN","NDRL",
-	"SEED","JETF","HOOP","NSCR","NWNG","EGGN","GOOP",
+	"SEED","JETF","HOOP","NSCR","NWNG",
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+	"EGGN",
+	#endif
+	"GOOP",
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	"BPLD",
 	#endif
@@ -1394,6 +1398,7 @@ state_t states[NUMSTATES] =
 
 	{SPR_NWNG, 0, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSWING
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	// Boss 2
 	{SPR_EGGN, 0, -1, {NULL}, 0, 0, S_NULL},                         // S_EGGMOBILE2_STND
 	{SPR_EGGN, 1, 1, {NULL}, 0, 0, S_EGGMOBILE2_POGO2},              // S_EGGMOBILE2_POGO1
@@ -1418,6 +1423,7 @@ state_t states[NUMSTATES] =
 	{SPR_EGGN, 4, -1, {A_BossDeath}, 0, 0, S_NULL},                  // S_EGGMOBILE2_DIE14
 	{SPR_EGGN, 5, 5, {NULL}, 0, 0, S_EGGMOBILE2_FLEE2},              // S_EGGMOBILE2_FLEE1
 	{SPR_EGGN, 6, 5, {NULL}, 0, 0, S_EGGMOBILE2_FLEE1},              // S_EGGMOBILE2_FLEE2
+	#endif
 
 	// Boss 2 Goop
 	{SPR_GOOP, 32768, 2, {NULL}, 0, 0, S_GOOP2}, // S_GOOP1
@@ -6263,6 +6269,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL          // raisestate
 	},
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{           // MT_EGGMOBILE2
 		2008,              // doomednum
 		S_EGGMOBILE2_STND, // spawnstate
@@ -6288,6 +6295,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SPECIAL|MF_SHOOTABLE|MF_NOGRAVITY|MF_BOSS, // flags
 		S_EGGMOBILE2_POGO1 // raisestate
 	},
+	#endif
 
 	{           // MT_GOOP
 		-1,             // doomednum

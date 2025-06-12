@@ -4754,7 +4754,19 @@ void P_SpawnSpecials(void)
 				sec = (int)(sides[*lines[i].sidenum].sector-sectors);
 				for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0 ;)
 					sectors[s].floorlightsec = sec;
-			break;		  
+			break;	
+
+			// I don't know what these linedefs do
+			case 232:
+			EV_DoElevator(&lines[i], elevateContinuous); // Tails
+			break;
+         	// support for drawn heights coming from different sector
+          	case 242:
+            sec = sides[*lines[i].sidenum].sector-sectors;
+            for (s = -1; (s = P_FindSectorFromLineTag(lines+i,s)) >= 0;)
+              sectors[s].heightsec = sec;
+            break;
+
 			//l270 Old Water Save 17-05-2025
 			case 270:
 				sec = sides[*lines[i].sidenum].sector-sectors;

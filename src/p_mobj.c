@@ -944,7 +944,10 @@ static void P_ZMovement(mobj_t *mo)
 		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1) 
 		mo->type == MT_CRAWLACOMMANDER ||
 		#endif
-		mo->type == MT_EGGMOBILE2) && mo->target->health > 0)
+		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+		mo->type == MT_EGGMOBILE2) 
+		#endif
+		&& mo->target->health > 0)
 	{
 		// float down towards target if too close
 		if (!(mo->flags2 & MF2_SKULLFLY) && !(mo->flags2 & MF2_INFLOAT))
@@ -3157,11 +3160,13 @@ void P_MobjThinker(mobj_t *mobj)
 				if (mobj->flags2 & MF2_BOSSFLEE)
 					P_InstaThrust(mobj, mobj->angle, 12*FRACUNIT);
 				break;
+			#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 			case MT_EGGMOBILE2:
 				P_Boss2Thinker(mobj);
 				if (mobj->flags2 & MF2_BOSSFLEE)
 					P_InstaThrust(mobj, mobj->angle, 12*FRACUNIT);
 				break;
+			#endif
 			default: // Generic SOC-made boss
 				if (mobj->flags2 & MF2_SKULLFLY)
 				{
@@ -3724,6 +3729,7 @@ void P_MobjThinker(mobj_t *mobj)
 								numchoices++;
 							}
 						}
+						#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 						if (cv_chaos_eggmobile2.value
 							&& space >= mobjinfo[MT_EGGMOBILE2].height + 33*FRACUNIT)
 						{
@@ -3735,6 +3741,7 @@ void P_MobjThinker(mobj_t *mobj)
 								numchoices++;
 							}
 						}
+						#endif
 					}
 
 					if (numchoices)
@@ -4998,8 +5005,10 @@ void P_SpawnMapThing(mapthing_t *mthing)
 			z = ss->sector->floorheight + ((mthing->options >> 4) << FRACBITS);
 		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 		else if (i == MT_CRAWLACOMMANDER || i == MT_DETON || i == MT_JETTBOMBER || i == MT_JETTGUNNER || i == MT_EGGMOBILE || i == MT_EGGMOBILE2)
-		#else
+		#elif defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 		else if (i == MT_DETON || i == MT_JETTBOMBER || i == MT_JETTGUNNER || i == MT_EGGMOBILE || i == MT_EGGMOBILE2)
+		#else
+		else if (i == MT_DETON || i == MT_JETTBOMBER || i == MT_JETTGUNNER || i == MT_EGGMOBILE)
 		#endif
 			z = ss->sector->floorheight + 33*FRACUNIT;
 		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
@@ -5075,10 +5084,15 @@ void P_SpawnMapThing(mapthing_t *mthing)
 			mobj->health = mthing->angle;
 	}
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	// Special condition for the 2nd boss.
 	if (mobj->type == MT_EGGMOBILE2)
 		mobj->watertop = mobj->info->speed;
+
 	else if (mobj->type == MT_CHAOSSPAWNER)
+	#else
+	if (mobj->type == MT_CHAOSSPAWNER)
+	#endif
 	{
 #ifndef CHAOSISNOTDEADYET
 		return;

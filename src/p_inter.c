@@ -250,8 +250,10 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 	if ((special->flags & MF_BOSS) && (special->flags2 & MF2_FRET))
 		return;
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	if (special->type == MT_EGGMOBILE2 && special->movecount)
 		return;
+	#endif
 
 	if (special->flags & MF_BOSS)
 	{
@@ -1117,10 +1119,12 @@ static void P_DeathMessages(mobj_t *target, mobj_t *inflictor, mobj_t *source)
 					if (netgame)
 						str = "%s%s%s was killed by the Egg Mobile!\n";
 					break;
+				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 				case MT_EGGMOBILE2:
 					if (netgame)
 						str = "%s%s%s was killed by the Egg Slimer!\n";
 					break;
+				#endif
 				default:
 					break;
 			}

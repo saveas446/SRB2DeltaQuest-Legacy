@@ -156,7 +156,9 @@ typedef enum
 	SPR_HOOP, // NiGHTS hoop sprite
 	SPR_NSCR, // NiGHTS score sprite
 	SPR_NWNG, // NiGHTS Wing collectable item.
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	SPR_EGGN, // Boss 2
+	#endif
 	SPR_GOOP, // Boss 2 Goop
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	SPR_BPLD, // Boss Explosions
@@ -1504,6 +1506,7 @@ typedef enum
 
 	S_NIGHTSWING,
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	// Boss 2
 	S_EGGMOBILE2_STND,
 	S_EGGMOBILE2_POGO1,
@@ -1528,6 +1531,7 @@ typedef enum
 	S_EGGMOBILE2_DIE14,
 	S_EGGMOBILE2_FLEE1,
 	S_EGGMOBILE2_FLEE2,
+	#endif
 
 	// Boss 2 Goop
 	S_GOOP1,
@@ -2038,7 +2042,9 @@ typedef enum
 	MT_NIGHTSCORE,
 	MT_NIGHTSWING,
 	MT_BOSSFLYPOINT,
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	MT_EGGMOBILE2,
+	#endif
 	MT_GOOP,
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	MT_BOSSEXPLODE,

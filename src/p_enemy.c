@@ -1214,6 +1214,7 @@ void A_BossDeath(mobj_t *mo)
 	line_t junk;
 	int i;
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	if (mo->type == MT_EGGMOBILE || mo->type == MT_EGGMOBILE2)
 	{
 		if (mo->flags2 & MF2_CHAOSBOSS)
@@ -1223,6 +1224,17 @@ void A_BossDeath(mobj_t *mo)
 			return;
 		}
 	}
+	#else
+	if (mo->type == MT_EGGMOBILE)
+	{
+		if (mo->flags2 & MF2_CHAOSBOSS)
+		{
+			mo->health = 0;
+			P_SetMobjState(mo, S_DISS);
+			return;
+		}
+	}
+	#endif
 
 	mo->health = 0;
 
@@ -1303,6 +1315,7 @@ void A_BossDeath(mobj_t *mo)
 		else
 			mo->momz = 2*FRACUNIT;
 
+		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 		if (mo->type == MT_EGGMOBILE2)
 		{
 			mo2 = P_SpawnMobj(mo->x + P_ReturnThrustX(mo, mo->angle - ANG90, 32*FRACUNIT),
@@ -1322,6 +1335,7 @@ void A_BossDeath(mobj_t *mo)
 			P_SpawnMobj(mo->x, mo->y, mo->z + mo->height + 32*FRACUNIT, MT_BOSSSPIGOT)->momz = 4*FRACUNIT;
 			return;
 		}
+		#endif
 }
 
 // Function: A_CustomPower

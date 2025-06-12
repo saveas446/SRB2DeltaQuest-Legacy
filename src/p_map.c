@@ -3245,7 +3245,10 @@ static void P_FakeZMovement(mobj_t *mo)
 	// adjust height
 	mo->z += mo->momz;
 	if (mo->flags & MF_FLOAT && mo->target && mo->type != MT_EGGMOBILE
-		&& mo->type != MT_EGGMOBILE2 && mo->type != MT_RING) // Tails
+		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+		&& mo->type != MT_EGGMOBILE2
+		#endif
+		&& mo->type != MT_RING) // Tails
 	{ // float down towards target if too close
 		if (!(mo->flags2&MF2_SKULLFLY) && !(mo->flags2&MF2_INFLOAT))
 		{
