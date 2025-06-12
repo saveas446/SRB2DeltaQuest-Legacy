@@ -4803,7 +4803,7 @@ void P_SpawnMapThing(mapthing_t *mthing)
 			return;
 	}
 
-	if ((!(gametype == GT_MATCH || gametype == GT_CTF	|| gametype == GT_TAG)
+	if ((!(gametype == GT_MATCH)
 		&& (!cv_ringslinger.value)) || (!cv_specialrings.value))
 	{
 		switch (i)
@@ -4819,92 +4819,11 @@ void P_SpawnMapThing(mapthing_t *mthing)
 		}
 	}
 
-	// Hunt should only work in Cooperative.
-	if (gametype != GT_COOP)
-	{
-		switch (i)
-		{
-			case MT_EMERHUNT:
-			case MT_EMESHUNT:
-			case MT_EMETHUNT:
-				return;
-			default:
-				break;
-		}
-	}
-	else if (i == MT_EMERHUNT)
-	{
-		ss = R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS);
-		mthing->z = (short)((ss->sector->floorheight>>FRACBITS) + (mthing->options >> 4));
-
-		if (numhuntemeralds[0] < MAXHUNTEMERALDS)
-			huntemeralds[0][numhuntemeralds[0]++] = mthing;
-		return;
-	}
-	else if (i == MT_EMESHUNT)
-	{
-		ss = R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS);
-		mthing->z = (short)((ss->sector->floorheight>>FRACBITS) + (mthing->options >> 4));
-
-		if (numhuntemeralds[1] < MAXHUNTEMERALDS)
-			huntemeralds[1][numhuntemeralds[1]++] = mthing;
-		return;
-	}
-	else if (i == MT_EMETHUNT)
-	{
-		ss = R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS);
-		mthing->z = (short)((ss->sector->floorheight>>FRACBITS) + (mthing->options >> 4));
-
-		if (numhuntemeralds[2] < MAXHUNTEMERALDS)
-			huntemeralds[2][numhuntemeralds[2]++] = mthing;
-		return;
-	}
-
 	if (gametype == GT_MATCH) // No enemies in match mode
 		if ((mobjinfo[i].flags & MF_ENEMY) || (mobjinfo[i].flags & MF_BOSS))
 			return;
 
-	// Set powerup boxes to user settings for race.
-	if (gametype == GT_RACE)
-	{
-		if (cv_raceitemboxes.value) // not Normal
-		{
-			if (mobjinfo[i].flags & MF_MONITOR)
-			{
-				if (cv_raceitemboxes.value == 1) // Random
-					i = MT_QUESTIONBOX;
-				else if (cv_raceitemboxes.value == 2) // Teleports
-					i = MT_MIXUPBOX;
-				else if (cv_raceitemboxes.value == 3) // None
-					return; // Don't spawn!
-			}
-		}
-		else // cv_raceitemboxes.value == 0, Normal
-		{
-			if (i == MT_REDTV && !cv_fireshield.value) return;
-			if (i == MT_YELLOWTV && !cv_ringshield.value) return;
-			if (i == MT_BLUETV && !cv_watershield.value) return;
-			if (i == MT_BLACKTV && !cv_bombshield.value) return;
-			if (i == MT_WHITETV && !cv_jumpshield.value) return;
-			if (i == MT_SNEAKERTV && !cv_supersneakers.value) return;
-			if (i == MT_PRUP && !cv_1up.value) return;
-			if (i == MT_SUPERRINGBOX && !cv_superring.value) return;
-			if (i == MT_GREYRINGBOX && !cv_silverring.value) return;
-			if (i == MT_INV && !cv_invincibility.value) return;
-			#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
-			if (i == MT_EGGMANBOX && !cv_eggmanbox.value) return;
-			#endif
-			if (i == MT_MIXUPBOX && !cv_teleporters.value) return;
-			if (i == MT_QUESTIONBOX && !cv_questionbox.value) return;
-		}
-	}
-
-	// Set powerup boxes to user settings for other netplay modes
-	else if (gametype == GT_MATCH || gametype == GT_TAG || gametype == GT_CTF
-#ifdef CHAOSISNOTDEADYET
-		|| gametype == GT_CHAOS
-#endif
-		)
+	if (gametype == GT_MATCH)
 	{
 		if (cv_matchboxes.value) // not Normal
 		{
@@ -5125,10 +5044,7 @@ void P_SpawnMapThing(mapthing_t *mthing)
 		}
 	}
 	else if (i == MT_EMMY)
-	{
 		mobj->health = 1 << tokenbits++;
-		P_SpawnMobj(x, y, z, MT_TOKEN);
-	}
 	else if (i == MT_EGGMOBILE && mthing->options & MTF_AMBUSH)
 	{
 		mobj_t *spikemobj;

@@ -205,7 +205,6 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT],     // SPR_STEM
 	#endif
 	&lspr[NOLIGHT],     // SPR_GFLG
-	&lspr[BLUEBALL_L],     // SPR_TOKE
 	&lspr[GREENSHINE_L],     // SPR_CEMG
 	&lspr[ORANGESHINE_L],     // SPR_CEMO
 	&lspr[PINKSHINE_L],     // SPR_CEMP
@@ -222,9 +221,6 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT],     // SPR_CHAN
 	&lspr[NOLIGHT],     // SPR_SNO1
 	&lspr[NOLIGHT],     // SPR_SANT
-	&lspr[NOLIGHT],     // SPR_EMER
-	&lspr[NOLIGHT],     // SPR_EMES
-	&lspr[NOLIGHT],     // SPR_EMET
 	&lspr[NOLIGHT],     // SPR_SBLL
 	&lspr[NOLIGHT],     // SPR_SPIK
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)

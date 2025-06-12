@@ -703,44 +703,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 				S_StartSound(NULL, sfx_firsht);
 			}
 			return;
-	
-		// Emerald Hunt
-		case MT_EMERHUNT:
-		case MT_EMESHUNT:
-		case MT_EMETHUNT:
-			player->emeraldhunt++;
-			P_SetMobjState(special, S_DISS);
-			P_SpawnMobj(special->x, special->y, special->z,
-				MT_SPARK);
-			special->health = 0;
 
-			if (hunt1 == special)
-				hunt1 = NULL;
-			else if (hunt2 == special)
-				hunt2 = NULL;
-			else if (hunt3 == special)
-				hunt3 = NULL;
-
-			for (i = 0; i < MAXPLAYERS; i++)
-			{
-				if (!playeringame[i])
-					continue;
-	
-				if (players[i].emeraldhunt > 0)
-					emercount += players[i].emeraldhunt;
-			}
-			if (emercount >= 3)
-			{
-				for (i = 0; i < MAXPLAYERS; i++)
-				{
-					if (!playeringame[i])
-						continue;
-	
-					players[i].exiting = (14*TICRATE)/5 + 1;
-				}
-				S_StartSound(NULL, sfx_firsht);
-			}
-			return;
 	
 		case MT_PUMA:
 		case MT_HAMMER:
@@ -930,12 +893,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			break;
 	// end bubble grab Tails 03-07-2000
 		case MT_DISS:
-			break;
-	
-		case MT_TOKEN: // Tails 08-18-2001
-			P_SetMobjState(special, S_DISS);
-			return; // Tails 08-18-2001
-	
+			break;	
 		default:
 			break;
 		}

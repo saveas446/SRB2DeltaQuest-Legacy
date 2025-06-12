@@ -46,11 +46,11 @@ char sprnames[NUMSPRITES + 1][5] =
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"STEM",
 	#endif
-	"GFLG","TOKE",
+	"GFLG",
 	"CEMG","CEMO","CEMP","CEMB","CEMR","CEML","CEMY","JETB","JETG","JBUL",
 	"MOUS",
 	"PAIN", // Demo 2 uses "PAIN" instead of "DETN" for some reason
-	"XPLD","CHAN","SNO1","SANT","EMER","EMES","EMET",
+	"XPLD","CHAN","SNO1","SANT",
 	"SBLL","SPIK",
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	"CCOM",
@@ -266,13 +266,27 @@ state_t states[NUMSTATES] =
 	{SPR_MEDI, 7, -1, {NULL}, 0, 0, S_DISS},             // S_GREYRINGBOX8
 
 	// Special Stage Token
-	{SPR_EMMY, 32768, 2, {NULL}, 0, 0, S_EMMY2}, // S_EMMY1
-	{SPR_EMMY, 32769, 2, {NULL}, 0, 0, S_EMMY3}, // S_EMMY2
-	{SPR_EMMY, 32770, 2, {NULL}, 0, 0, S_EMMY4}, // S_EMMY3
-	{SPR_EMMY, 32771, 2, {NULL}, 0, 0, S_EMMY5}, // S_EMMY4
-	{SPR_EMMY, 32772, 2, {NULL}, 0, 0, S_EMMY6}, // S_EMMY5
-	{SPR_EMMY, 32773, 2, {NULL}, 0, 0, S_EMMY7}, // S_EMMY6
-	{SPR_EMMY, 32774, 2, {NULL}, 0, 0, S_EMMY1}, // S_EMMY7
+	{SPR_EMMY, 0, 3, {NULL}, 0, 0, S_EMMY2}, // S_EMMY1
+	{SPR_EMMY, 1, 3, {NULL}, 0, 0, S_EMMY3}, // S_EMMY2
+	{SPR_EMMY, 2, 3, {NULL}, 0, 0, S_EMMY4}, // S_EMMY3
+	{SPR_EMMY, 3, 3, {NULL}, 0, 0, S_EMMY5}, // S_EMMY4
+	{SPR_EMMY, 4, 3, {NULL}, 0, 0, S_EMMY6}, // S_EMMY5
+	{SPR_EMMY, 5, 3, {NULL}, 0, 0, S_EMMY7}, // S_EMMY6
+	{SPR_EMMY, 6, 3, {NULL}, 0, 0, S_EMMY8}, // S_EMMY7
+	{SPR_EMMY, 7, 3, {NULL}, 0, 0, S_EMMY9}, // S_EMMY8
+	{SPR_EMMY, 8, 3, {NULL}, 0, 0, S_EMMY10}, // S_EMMY9
+	{SPR_EMMY, 9, 3, {NULL}, 0, 0, S_EMMY11}, // S_EMMY10
+	{SPR_EMMY, 10, 3, {NULL}, 0, 0, S_EMMY12}, // S_EMMY11
+	{SPR_EMMY, 11, 3, {NULL}, 0, 0, S_EMMY13}, // S_EMMY12
+	{SPR_EMMY, 12, 3, {NULL}, 0, 0, S_EMMY14}, // S_EMMY13
+	{SPR_EMMY, 13, 3, {NULL}, 0, 0, S_EMMY15}, // S_EMMY14
+	{SPR_EMMY, 14, 3, {NULL}, 0, 0, S_EMMY16}, // S_EMMY15
+	{SPR_EMMY, 15, 3, {NULL}, 0, 0, S_EMMY17}, // S_EMMY16
+	{SPR_EMMY, 16, 3, {NULL}, 0, 0, S_EMMY18}, // S_EMMY17
+	{SPR_EMMY, 17, 3, {NULL}, 0, 0, S_EMMY19}, // S_EMMY18
+	{SPR_EMMY, 18, 3, {NULL}, 0, 0, S_EMMY20}, // S_EMMY19
+	{SPR_EMMY, 19, 3, {NULL}, 0, 0, S_EMMY21}, // S_EMMY20
+	{SPR_EMMY, 20, 3, {NULL}, 0, 0, S_EMMY1}, // S_EMMY21
 
 	// Invincibility Box
 	{SPR_PINV, 0, 1, {NULL}, 0, 0, S_PINV1},          // S_PINV
@@ -800,9 +814,7 @@ state_t states[NUMSTATES] =
 	{SPR_GFLG, 0, 1, {NULL}, 0, 0, S_GOTFLAG4}, // S_GOTFLAG3
 	{SPR_GFLG, 2, 1, {NULL}, 0, 0, S_DISS},     // S_GOTFLAG4
 
-	// Special Stage Token
-	{SPR_TOKE, 32768, -1, {NULL}, 0, 0, S_TOKEN2}, // S_TOKEN
-	{SPR_TOKE, 32769, 1, {NULL}, 0, 0, S_TOKEN},   // S_TOKEN2
+
 
 	// Intangible Chaos Emeralds (Used for visual confirmation at end of Special Stages)
 	{SPR_CEMG, 32768, -1, {NULL}, 0, 0, S_NULL}, // S_CEMG
@@ -868,11 +880,6 @@ state_t states[NUMSTATES] =
 
 	// Santa
 	{SPR_SANT, 0, -1, {NULL}, 0, 0, S_NULL}, // S_SANTA1
-
-	// Emeralds (for hunt)
-	{SPR_EMER, 0, -1, {NULL}, 0, 0, S_NULL}, // S_EMER1
-	{SPR_EMES, 0, -1, {NULL}, 0, 0, S_NULL}, // S_EMES1
-	{SPR_EMET, 0, -1, {NULL}, 0, 0, S_NULL}, // S_EMET1
 
 	// Snowball for Snow Buster
 	{SPR_SBLL, 0, 1, {A_SnowBall}, 10*TICRATE, 0, S_SBLL2}, // S_SBLL1
@@ -3817,31 +3824,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL          // raisestate
 	},
 
-	{           // MT_TOKEN
-		-1,             // doomednum
-		S_TOKEN,        // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		8,              // speed
-		8*FRACUNIT,     // radius
-		16*FRACUNIT,    // height
-		16,             // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_NOGRAVITY|MF_SPECIAL, // flags
-		S_NULL          // raisestate
-	},
 
 	{           // MT_GREENEMERALD
 		-1,             // doomednum
@@ -4259,87 +4241,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		0,              // damage
 		sfx_None,       // activesound
 		MF_SPECIAL,     // flags
-		S_NULL          // raisestate
-	},
-
-	// first hunt emerald
-	{           // MT_EMERHUNT
-		64,             // doomednum
-		S_EMER1,        // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		8,              // speed
-		4*FRACUNIT,     // radius
-		8*FRACUNIT,     // height
-		4,              // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_SPECIAL|MF_NOGRAVITY, // flags
-		S_NULL          // raisestate
-	},
-
-	// second hunt emerald
-	{           // MT_EMESHUNT
-		3002,           // doomednum
-		S_EMES1,        // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		8,              // speed
-		4*FRACUNIT,     // radius
-		8*FRACUNIT,     // height
-		4,              // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_SPECIAL|MF_NOGRAVITY, // flags
-		S_NULL          // raisestate
-	},
-
-	// third hunt emerald
-	{           // MT_EMETHUNT
-		3001,           // doomednum
-		S_EMET1,        // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		8,              // speed
-		4*FRACUNIT,     // radius
-		8*FRACUNIT,     // height
-		4,              // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_SPECIAL|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
 

@@ -7095,14 +7095,6 @@ void P_FindEmerald(void)
 	{
 		if (th->function.acp1 != (actionf_p1)P_MobjThinker)
 			continue;
-
-		mo2 = (mobj_t *)th;
-		if (mo2->type == MT_EMERHUNT)
-			hunt1 = mo2;
-		else if (mo2->type == MT_EMESHUNT)
-			hunt2 = mo2;
-		else if (mo2->type == MT_EMETHUNT)
-			hunt3 = mo2;
 	}
 	return;
 }

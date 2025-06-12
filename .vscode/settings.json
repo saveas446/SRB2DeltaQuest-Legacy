@@ -29,7 +29,8 @@
         "hw_main.h": "c",
         "d2udef.h": "c",
         "m_cheat.h": "c",
-        "HW_MAIN.C": "cpp"
+        "HW_MAIN.C": "cpp",
+        "HW_LIGHT.C": "cpp"
     },
     "C_Cpp.dimInactiveRegions": false
 }

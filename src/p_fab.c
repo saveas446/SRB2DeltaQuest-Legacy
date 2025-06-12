@@ -101,7 +101,6 @@ static void P_SetTranslucencies(void)
 	R_SetTrans(S_LARGEBUBBLE, S_EXTRALARGEBUBBLE, tr_transmed);
 
 	R_SetTrans(S_SPLISH1, S_SPLISH9, tr_transmed);
-	R_SetTrans(S_TOKEN, S_NULL, tr_transmed);
 	R_SetTrans(S_RAIN1, S_NULL, tr_transmed);
 }
 

@@ -82,7 +82,6 @@ typedef enum
 	SPR_STEM, // Steam riser
 	#endif
 	SPR_GFLG, // Got Flag sign
-	SPR_TOKE, // Special Stage Token
 	SPR_CEMG, // Chaos Emerald (intangible)
 	SPR_CEMO, // Chaos Emerald (intangible)
 	SPR_CEMP, // Chaos Emerald (intangible)
@@ -99,9 +98,6 @@ typedef enum
 	SPR_CHAN, // CEZ Chain
 	SPR_SNO1, // Snowflake
 	SPR_SANT, // Santa
-	SPR_EMER, // Emerald Hunt 1
-	SPR_EMES, // Emerald Hunt 2
-	SPR_EMET, // Emerald Hunt 3
 	SPR_SBLL, // Snow Ball for Snow Buster
 	SPR_SPIK, // Spike Ball
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
@@ -415,6 +411,20 @@ typedef enum
 	S_EMMY5,
 	S_EMMY6,
 	S_EMMY7,
+	S_EMMY8,
+	S_EMMY9,
+	S_EMMY10,
+	S_EMMY11,
+	S_EMMY12,
+	S_EMMY13,
+	S_EMMY14,
+	S_EMMY15,
+	S_EMMY16,
+	S_EMMY17,
+	S_EMMY18,
+	S_EMMY19,
+	S_EMMY20,
+	S_EMMY21,
 
 	// Invincibility Box
 	S_PINV,
@@ -937,10 +947,6 @@ typedef enum
 	S_GOTFLAG3,
 	S_GOTFLAG4,
 
-	// Special Stage Token
-	S_TOKEN,
-	S_TOKEN2,
-
 	// Chaos Emeralds (intangible)
 	S_CEMG,
 	S_CEMO,
@@ -1005,11 +1011,6 @@ typedef enum
 
 	// Santa
 	S_SANTA1,
-
-	// Emeralds (for hunt)
-	S_EMER1,
-	S_EMES1,
-	S_EMET1,
 
 	// Snowball for Snow Buster
 	S_SBLL1,
@@ -1942,7 +1943,6 @@ typedef enum
 	#endif
 	MT_GOTFLAG, // Got Flag sign
 	MT_GOTFLAG2, // Got Flag sign
-	MT_TOKEN, // Special Stage Token
 	MT_GREENEMERALD, // Chaos Emerald (intangible)
 	MT_ORANGEEMERALD, // Chaos Emerald (intangible)
 	MT_PINKEMERALD, // Chaos Emerald (intangible)
@@ -1959,9 +1959,6 @@ typedef enum
 	MT_CHAIN, // CEZ Chain
 	MT_SNOWFLAKE, // Snowflake
 	MT_SANTA, // Santa
-	MT_EMERHUNT, // Emerald Hunt 1
-	MT_EMESHUNT, // Emerald Hunt 2
-	MT_EMETHUNT, // Emerald Hunt 3
 	MT_SNOWBALL, // Snow Ball for Snow Buster
 	MT_SPIKEBALL, // Spike Ball
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)

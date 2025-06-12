@@ -787,27 +787,6 @@ static void P_LoadThings(int lump)
 		P_SpawnMapThing(mt);
 	}
 
-	// random emeralds for hunt
-	if (numhuntemeralds[0] && numhuntemeralds[1] && numhuntemeralds[2])
-	{
-		int whichone;
-
-		whichone = P_Random() % numhuntemeralds[0];
-		P_SpawnMobj(huntemeralds[0][whichone]->x<<FRACBITS,
-			huntemeralds[0][whichone]->y<<FRACBITS,
-			huntemeralds[0][whichone]->z<<FRACBITS, MT_EMERHUNT);
-
-		whichone = P_Random() % numhuntemeralds[1];
-		P_SpawnMobj(huntemeralds[1][whichone]->x<<FRACBITS,
-			huntemeralds[1][whichone]->y<<FRACBITS,
-			huntemeralds[1][whichone]->z<<FRACBITS, MT_EMESHUNT);
-
-		whichone = P_Random() % numhuntemeralds[2];
-		P_SpawnMobj(huntemeralds[2][whichone]->x<<FRACBITS,
-			huntemeralds[2][whichone]->y<<FRACBITS,
-			huntemeralds[2][whichone]->z<<FRACBITS, MT_EMETHUNT);
-	}
-
 	// Run through the list of mapthings again to spawn hoops and rings
 	mt = mapthings;
 	for (i = 0; i < nummapthings; i++, mt++)

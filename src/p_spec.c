@@ -4758,7 +4758,7 @@ void P_SpawnSpecials(void)
 
 			// I don't know what these linedefs do
 			case 232:
-			EV_DoElevator(&lines[i], elevateContinuous); // Tails
+			EV_DoElevator(&lines[i], elevateContinuous, false); // Tails
 			break;
          	// support for drawn heights coming from different sector
           	case 242:
