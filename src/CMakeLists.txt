@@ -98,12 +98,17 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	wsock32
 )
 
-# Apparently this won't work with MSVC or something but I don't care... yet.
+# NOW I do. 
 target_compile_options(${PROJECT_NAME} PRIVATE
-  #-m32
-  -fno-pie 
-  -Wno-int-conversion 
-  -fpermissive
+  $<$<C_COMPILER_ID:GNU,Clang>:
+    -fno-pie
+    -Wno-int-conversion
+    -fpermissive
+  >
+  $<$<C_COMPILER_ID:MSVC>:
+    /wd4244         # disable conversion warnings
+    /permissive-    # make MSVC less permissive (closer to standard)
+  >
 )
 
 

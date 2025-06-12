@@ -65,6 +65,7 @@ gamedata.dat
 *.opt
 *.o
 *.obj
+/src/vs17/.vs/
 
 # Ninja
 *.ninja_deps
