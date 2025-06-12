@@ -262,7 +262,6 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT],     // SPR_KOOP
 	&lspr[NOLIGHT],     // SPR_SHLL
 	&lspr[NOLIGHT],     // SPR_MAXE	
-	&lspr[SMALLREDBALL_L],     // SPR_FBLL
 	&lspr[NOLIGHT],     // SPR_FFWR
 
 	&lspr[NOLIGHT],     // SPR_NSPK

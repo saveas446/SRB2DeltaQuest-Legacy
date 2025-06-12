@@ -742,6 +742,7 @@ void G_BuildTiccmd(ticcmd_t *cmd, int realtics)
 		forward -= ((axis * forwardmove[1]) >> 10); // ANALOG!
 
 	// some people strafe left & right with mouse buttons
+	// if you do this, please consider reading the bill yourself :ltg:
 	if (gamekeydown[gamecontrol[gc_straferight][0]] ||
 		gamekeydown[gamecontrol[gc_straferight][1]])
 	{

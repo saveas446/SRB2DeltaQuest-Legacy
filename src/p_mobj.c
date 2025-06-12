@@ -575,32 +575,6 @@ void P_XYMovement(mobj_t *mo)
 
 				P_ExplodeMissile(mo);
 			}
-			else if (mo->type == MT_FIREBALL)
-			{
-				// explode a missile
-				if (ceilingline &&
-					ceilingline->backsector &&
-					ceilingline->backsector->ceilingpic == skyflatnum &&
-					ceilingline->frontsector &&
-					ceilingline->frontsector->ceilingpic == skyflatnum &&
-					mo->subsector->sector->ceilingheight == mo->ceilingz)
-				{
-					if (mo->z > ceilingline->backsector->ceilingheight) // demos
-					{
-						// Hack to prevent missiles exploding
-						// against the sky.
-						// Does not handle sky floors.
-						// Check frontsector as well.
-
-						P_SetMobjState(mo, S_DISS);
-						return;
-					}
-				}
-
-				S_StartSound(mo, sfx_tink);
-
-				P_ExplodeMissile(mo);
-			}
 			else
 				mo->momx = mo->momy = 0;
 		}
@@ -637,7 +611,7 @@ void P_XYMovement(mobj_t *mo)
 		P_SetThingPosition(mo);
 	}
 
-	if (mo->type == MT_FIREBALL || mo->type == MT_SHELL)
+	if (mo->type == MT_SHELL)
 		return;
 
 	if ((((mo->flags & MF_MISSILE) || (mo->flags2 & MF2_SKULLFLY)) || mo->type == MT_SNOWBALL)
@@ -981,8 +955,6 @@ static void P_ZMovement(mobj_t *mo)
 				return;
 			}
 		}
-		else if (mo->type == MT_FIREBALL)
-			mo->momz = 5*FRACUNIT;
 
 		mo->z = mo->floorz;
 
@@ -1144,23 +1116,8 @@ static void P_ZMovement(mobj_t *mo)
 		{ // the skull slammed into something
 			mo->momz = -mo->momz;
 		}
-
-		if (mo->type == MT_FIREBALL)
-		{
-			// Don't explode on the sky!
-			if (mo->subsector->sector->ceilingpic == skyflatnum &&
-				mo->subsector->sector->ceilingheight == mo->ceilingz)
-			{
-				P_SetMobjState(mo, S_DISS);
-				return;
-			}
-
-			S_StartSound(mo, sfx_tink);
-
-			P_ExplodeMissile(mo);
-			return;
-		}
-		else if ((mo->flags & MF_MISSILE) && !(mo->flags & MF_NOCLIP))
+		
+		if ((mo->flags & MF_MISSILE) && !(mo->flags & MF_NOCLIP))
 		{
 			// Don't explode on the sky!
 			if (mo->subsector->sector->ceilingpic == skyflatnum &&

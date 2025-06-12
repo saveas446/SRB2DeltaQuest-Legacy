@@ -65,7 +65,7 @@ char sprnames[NUMSPRITES + 1][5] =
 	"BUS1","BUS2",
 	#endif
 	"FWR2","FWR3","MIXU","QUES","MTEX","FLAM","PUMA","HAMM","KOOP",
-	"SHLL","MAXE","FBLL","FFWR","NSPK","SUPE","SUPZ","NDRN","NDRL",
+	"SHLL","MAXE","FFWR","NSPK","SUPE","SUPZ","NDRN","NDRL",
 	"SEED","JETF","HOOP","NSCR","NWNG",
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"EGGN",
@@ -324,10 +324,15 @@ state_t states[NUMSTATES] =
 	{SPR_SUDY, 1, 1, {NULL}, 0, 0, S_YELLOWSPRINGUD},    // S_YELLOWSPRINGUD5
 
 	// Super Sneakers Box
-	{SPR_SHTV, 0, 2, {NULL}, 0, 0, S_SHTV1},            // S_SHTV
-	{SPR_MTEX, 0, 1, {NULL}, 0, 0, S_SHTV},             // S_SHTV1
-	{SPR_SHTV, 1, 18, {A_MonitorPop}, 0, 0, S_SHTV3},   // S_SHTV2
-	{SPR_SHTV, 1, 18, {A_SuperSneakers}, 0, 0, S_DISS}, // S_SHTV3
+	{SPR_SHTV, 0, 1, {NULL}, 0, 0, S_SHTV1 },          // S_SHTV
+	{SPR_SHTV, 1, 2, {NULL}, 0, 0, S_SHTV },          // S_SHTV1
+	{SPR_SHTV, 2, 2, {A_Fall}, 0, 0, S_SHTV3 }, // S_SHTV2
+	{SPR_SHTV, 3, 2, {A_Scream}, 0, 0, S_SHTV4 }, // S_SHTV3
+	{SPR_SHTV, 4, 2, {NULL}, 0, 0, S_SHTV5 }, // S_SHTV4
+	{SPR_SHTV, 5, 2, {NULL}, 0, 0, S_SHTV6 }, // S_SHTV5
+	{SPR_SHTV, 6, 2, {NULL}, 0, 0, S_SHTV7 }, // S_SHTV6
+	{SPR_SHTV, 6, 48, {A_SuperSneakers}, 0, 0, S_DISS },  // S_SHTV7
+	{SPR_SHTV, 7, -1, {NULL}, 0, 0, S_NULL }, // S_SHTV8
 
 	// Fan
 	{SPR_FANS, 0, 1, {NULL}, 0, 0, S_FAN2}, // S_FAN
@@ -1264,15 +1269,6 @@ state_t states[NUMSTATES] =
 	{SPR_MAXE, 0, 3, {NULL}, 0, 0, S_AXE2}, // S_AXE1
 	{SPR_MAXE, 1, 3, {NULL}, 0, 0, S_AXE3}, // S_AXE2
 	{SPR_MAXE, 2, 3, {NULL}, 0, 0, S_AXE1}, // S_AXE3
-
-	// Thrown Mario Fireball
-	{SPR_FBLL, 32768, 3, {NULL}, 0, 0, S_FIREBALL2},    // S_FIREBALL1
-	{SPR_FBLL, 32769, 3, {NULL}, 0, 0, S_FIREBALL3},    // S_FIREBALL2
-	{SPR_FBLL, 32770, 3, {NULL}, 0, 0, S_FIREBALL4},    // S_FIREBALL3
-	{SPR_FBLL, 32771, 3, {NULL}, 0, 0, S_FIREBALL1},    // S_FIREBALL4
-	{SPR_FBLL, 32772, 3, {NULL}, 0, 0, S_FIREBALLEXP2}, // S_FIREBALLEXP1
-	{SPR_FBLL, 32773, 3, {NULL}, 0, 0, S_FIREBALLEXP3}, // S_FIREBALLEXP2
-	{SPR_FBLL, 32774, 3, {NULL}, 0, 0, S_NULL},         // S_FIREBALLEXP3
 
 	// Fire Flower
 	{SPR_FFWR, 0, 3, {NULL}, 0, 0, S_FIREFLOWER2}, // S_FIREFLOWER1
@@ -5519,32 +5515,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SPECIAL,     // flags
 		S_NULL          // raisestate
 	},
-	{           // MT_FIREBALL
-		-1,             // doomednum
-		S_FIREBALL1,    // spawnstate
-		1000,           // spawnhealth
-		S_FIREBALLEXP1, // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		0,              // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_FIREBALLEXP1, // meleestate
-		S_FIREBALLEXP1, // missilestate
-		S_FIREBALLEXP1, // deathstate
-		S_FIREBALLEXP1, // xdeathstate
-		sfx_None,       // deathsound
-		10*FRACUNIT,    // speed
-		4*FRACUNIT,     // radius
-		8*FRACUNIT,     // height
-		100,            // mass
-		1,              // damage
-		sfx_None,       // activesound
-		MF_NOBLOCKMAP|MF_FIRE, // flags
-		S_NULL          // raisestate
-	},
-
 	{           // MT_FIREFLOWER
 		50,             // doomednum
 		S_FIREFLOWER1,  // spawnstate

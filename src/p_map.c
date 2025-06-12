@@ -335,7 +335,7 @@ static boolean PIT_CheckThing(mobj_t *thing)
 	}
 
 	// missiles can hit other things
-	if (tmthing->flags & MF_MISSILE || tmthing->type == MT_SHELL || tmthing->type == MT_FIREBALL)
+	if (tmthing->flags & MF_MISSILE || tmthing->type == MT_SHELL)
 	{
 		// see if it went over / under
 		if (tmthing->z > thing->z + thing->height)

@@ -3618,6 +3618,18 @@ static void P_MovePlayer(player_t *player)
 
 			// Sonic steps out of the phone booth...
 //			P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height, MT_CAPE)->target = player->mo; // A cape... "Super" Sonic, get it? Ha...ha...
+
+
+
+
+
+
+
+
+
+
+
+
 // 			GET OUT
 
 
@@ -3894,6 +3906,14 @@ static void P_MovePlayer(player_t *player)
 	else
 		player->walking = player->running = player->spinning = 0;
 
+	// Backup solution in case nothing else works because this doesn't work very well
+
+	/*
+	// Fix the tapping while moving bug, hopefully.
+	if ((player->speed != 0 && player->mo->state == &states[S_PLAY_TAP1])) {
+		P_SetPlayerMobjState(player->mo, S_PLAY_RUN1);
+	}*/
+
 	if ((cmd->forwardmove != 0 || cmd->sidemove != 0) || (player->powers[pw_super] && player->mo->z > player->mo->floorz))
 	{
 		// If the player is moving fast enough,
@@ -3902,7 +3922,7 @@ static void P_MovePlayer(player_t *player)
 			P_SetPlayerMobjState (player->mo, S_PLAY_SPD1);
 
 		// Otherwise, just walk.
-		else if ((player->rmomx || player->rmomy) && (player->mo->state == &states[S_PLAY_STND]))
+		else if ((player->rmomx || player->rmomy) && (player->mo->state == &states[S_PLAY_STND] || player->mo->state == &states[S_PLAY_TAP1] || player->mo->state == &states[S_PLAY_TAP2]))
 			P_SetPlayerMobjState (player->mo, S_PLAY_RUN1);
 	}
 
