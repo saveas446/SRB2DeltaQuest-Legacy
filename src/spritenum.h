@@ -171,8 +171,10 @@ typedef enum
 	SPR_TFOG, // Teleport Fog
 
 	SPR_LITE, // Streetlight corona
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	SPR_TRET,
 	SPR_TRLS,
+#endif
 	SPR_FWR4,
 
 	SPR_GOOM,
@@ -221,8 +223,9 @@ typedef enum
 
 	SPR_WHTV, // Jump shield TV
 	SPR_WORB, // White Shield
-
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	SPR_TURR, // Pop-Up Turret
+#endif
 
 	SPR_FIRSTFREESLOT,
 	SPR_LASTFREESLOT = SPR_FIRSTFREESLOT + NUMSPRITEFREESLOTS - 1,
@@ -1584,6 +1587,7 @@ typedef enum
 	S_LITE,
 
 	// THZ Turret
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	S_TURRET,
 	S_TURRETFIRE,
 	S_TURRETSHOCK1,
@@ -1599,6 +1603,7 @@ typedef enum
 	S_TURRETLASER,
 	S_TURRETLASEREXPLODE1,
 	S_TURRETLASEREXPLODE2,
+#endif
 
 	// GFZ Flower
 	S_GFZFLOWERD1,
@@ -1820,6 +1825,7 @@ typedef enum
 	S_PRUPAUX35,
 	S_PRUPAUX36,
 
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	S_TURRETLOOK,
 	S_TURRETPOPUP1,
 	S_TURRETPOPUP2,
@@ -1830,6 +1836,7 @@ typedef enum
 	S_TURRETPOPDOWN2,
 	S_TURRETPOPDOWN3,
 	S_TURRETPOPDOWN4,	
+#endif
 
 	S_FIRSTFREESLOT,
 	S_LASTFREESLOT = S_FIRSTFREESLOT + NUMSTATEFREESLOTS - 1,
@@ -2036,8 +2043,10 @@ typedef enum
 	MT_TFOG,
 	MT_EASTEREGG,
 	MT_STREETLIGHT,
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	MT_TURRET,
 	MT_TURRETLASER,
+#endif
 	MT_GFZFLOWER4,
 
 	MT_GOOMBA,
@@ -2097,7 +2106,9 @@ typedef enum
 
 	MT_ALTVIEWMAN,
 
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	MT_POPUPTURRET,
+#endif
 
 	MT_RANDOMAMBIENT2,
 

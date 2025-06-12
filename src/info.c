@@ -37,58 +37,63 @@ char sprnames[NUMSPRITES + 1][5] =
 {
 	"MISL","PLAY","POSS","SPOS","EGGM","BON1",
 	"STIM","MEDI",
-	"EMMY","PINV","BLTV","SPRY","SUDY","SHTV","COL3","BUBL","YLTV","FWR1",
+	"EMMY","PINV","BLTV","SPRY","SUDY","SHTV","COL3","BUBL","YLTV","COL5",
 	"SPRR","SUDR","SMOK","SPLA","TNT1","BIRD","SQRL","YORB","BORB","KORB","SPRK","IVSP",
 	"IVSQ","DISS","BUBP","BUBO","BUBN","BUBM","CNTA","CNTB","CNTC","CNTD",
 	"CNTE","CNTF","POPP","PRUP","BKTV","SCRA","SCRB","SCRC","SCRD","SSPK",
 	"NBMP","YSPR","RSPR","YSUD","RSUD","SKIM","MINE","FISH","GARG","SPLH",
-	"THOK","THZP","SIGN","RRNG","TTAG",
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+	"GTHO","THZP","SIGN","RRNG","TTAG",
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"STEM",
-	#endif
+#endif
 	"GFLG",
 	"CEMG","CEMO","CEMP","CEMB","CEMR","CEML","CEMY","JETB","JETG","JBUL",
 	"MOUS",
 	"PAIN", // Demo 2 uses "PAIN" instead of "DETN" for some reason
 	"XPLD","CHAN","SNO1","SANT",
 	"SBLL","SPIK",
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	"CCOM",
-	#endif
+#endif
 	"RAIN",
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	"DSPK","USPK",
-	#endif
+#endif
 	"STPT","RNGM","RNGR","RNGS",
 	"RNGA","RNGE","TAEH","TAER","THER","TAHR","THOM","TAUT","TEXP",
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"BUS1","BUS2",
-	#endif
+#endif
 	"FWR2","FWR3","FLAM","PUMA","HAMM","KOOP",
 	"SHLL","MAXE","FFWR","NSPK","SUPE","SUPZ","NDRN","NDRL",
 	"SEED","JETF","HOOP","NSCR","NWNG",
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"EGGN",
-	#endif
+#endif
 	"GOOP",
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	"BPLD",
-	#endif
+#endif
 	"RDTV",
 	"RORB",
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"EGGB",
-	#endif
-	"SFLM","TNKA","TNKB","SPNK","TFOG","LITE","TRET",
-	"TRLS","FWR4","GOOM","MUS1","MUS2","TOAD","XMS1",
+#endif
+	"SFLM","TNKA","TNKB","SPNK","TFOG","LITE",
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+	"TRET","TRLS",
+#endif
+	"FWR4","GOOM","MUS1","MUS2","TOAD","XMS1",
 	"XMS2","XMS3","SUPT","ROIA","ROIB","ROIC","ROID","ROIE","ROIF",
 	"ROIG","ROIH","ROII","ROIJ","ROIK","ROIL","ROIM","ROIN","ROIO","ROIP",
 	"NPRA","NPRB","NPRC","REDX","SPRB",
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"BUZZ","RBUZ",
-	#endif
+#endif
 	"CEMK","WHTV","WORB",
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"TURR",
+#endif
 };
 
 // Doesn't work with g++, needs actionf_p1 (don't modify this comment)
@@ -1488,6 +1493,7 @@ state_t states[NUMSTATES] =
 	{SPR_LITE, 0, -1, {NULL}, 0, 0, S_LITE}, // S_LITE
 
 	// THZ Turret
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{SPR_TRET, 32768, 105, {A_TurretStop}, 0, 0, S_TURRETFIRE}, // S_TURRET
 	{SPR_TRET, 32768, 105, {A_TurretFire}, 0, 0, S_TURRET},     // S_TURRETFIRE
 	{SPR_TRET, 32769, 7, {A_Pain}, 0, 0, S_TURRETSHOCK2},       // S_TURRETSHOCK1
@@ -1502,6 +1508,7 @@ state_t states[NUMSTATES] =
 	{SPR_TRLS, 32768, 1, {NULL}, 0, 0, S_TURRETLASER},          // S_TURRETLASER
 	{SPR_TRLS, 32769, 2, {NULL}, 0, 0, S_TURRETLASEREXPLODE2},  // S_TURRETLASEREXPLODE1
 	{SPR_TRLS, 32770, 2, {NULL}, 0, 0, S_DISS},                 // S_TURRETLASEREXPLODE2
+#endif
 
 	// GFZ Flower
 	{SPR_FWR4, 0, -1, {NULL}, 0, 0, S_NULL}, // S_GFZFLOWERD1
@@ -1724,7 +1731,7 @@ state_t states[NUMSTATES] =
 	{SPR_PRUP, 24, 2, {NULL}, 0, 0, S_PRUP2},			// S_PRUPAUX34
 	{SPR_PRUP, 25, 18, {NULL}, 0, 0, S_PRUPAUX36},	// S_PRUPAUX35
 	{SPR_PRUP, 25, 18, {A_ExtraLife}, 0, 0, S_DISS},  // S_PRUPAUX36
-
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{SPR_TURR, 0, 1, {A_Look}, 1, 0, S_TURRETLOOK},          // S_TURRETLOOK
 	{SPR_TURR, 1, 3, {A_FaceTarget}, 0, 0, S_TURRETPOPUP2},  // S_TURRETPOPUP1
 	{SPR_TURR, 2, 3, {NULL}, 0, 0, S_TURRETPOPUP3},  // S_TURRETPOPUP2
@@ -1735,6 +1742,7 @@ state_t states[NUMSTATES] =
 	{SPR_TURR, 2, 3, {NULL}, 0, 0, S_TURRETPOPDOWN3},        // S_TURRETPOPDOWN2
 	{SPR_TURR, 1, 3, {NULL}, 0, 0, S_TURRETPOPDOWN4},        // S_TURRETPOPDOWN3
 	{SPR_TURR, 0, 69,{A_SetTics}, 0, 1, S_TURRETLOOK},            // S_TURRETPOPDOWN4
+#endif
 };
 
 mobjinfo_t mobjinfo[NUMMOBJTYPES] =
@@ -6140,7 +6148,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOGRAVITY,   // flags
 		S_NULL          // raisestate
 	},
-
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{           // MT_TURRET
 		2004,           // doomednum
 		S_TURRET,       // spawnstate
@@ -6192,7 +6200,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOBLOCKMAP|MF_MISSILE|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
-
+#endif
 	{           // MT_GFZFLOWER4
 		2001,           // doomednum
 		S_GFZFLOWERD1,  // spawnstate
@@ -7300,6 +7308,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOBLOCKMAP|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{           // MT_POPUPTURRET
 		42,             // doomednum
 		S_TURRETLOOK,   // spawnstate
@@ -7325,6 +7334,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE, // flags
 		(statenum_t)MT_JETTBULLET   // raisestate
 	},
+#endif
 	{           // MT_RANDOMAMBIENT2
 		43,             // doomednum
 		S_NULL,         // spawnstate

@@ -30,7 +30,7 @@
     #define INTERMISSION_BG IS_CHARBG
 
 
-    #define TH_TOLERANCE 0
+    //#define TH_TOLERANCE 0
     // Undefined: Strict, ONLY things that were in the original Demo 2 IWAD are allowed
     // 0: Enable some very useful stuff that isn't in the Demo 2 IWAD, but we will need for D2U
     // 1: Enable some possibly useful things that break compatibility with the Demo 2 IWAD

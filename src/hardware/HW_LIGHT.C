@@ -288,8 +288,10 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT], // SPR_SPNK
 	&lspr[SUPERSPARK_L], // SPR_TFOG
 	&lspr[STREETLIGHT_L], // SPR_LITE
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	&lspr[NOLIGHT], // SPR_TRET
 	&lspr[SMALLREDBALL_L], // SPR_TRLS
+#endif
 	&lspr[NOLIGHT], // SPR_FWR4
 	&lspr[NOLIGHT], // SPR_GOOM
 	&lspr[NOLIGHT], // SPR_MUS1
@@ -327,10 +329,11 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[GREYSHINE_L], // SPR_CEMK, // 8th Emerald
 	&lspr[NOLIGHT],     // SPR_WHTV
 	&lspr[WHITESHIELD_L],     // SPR_WORB
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	&lspr[NOLIGHT], // SPR_TURR
+#endif
 
 	// Free slots
-	&lspr[NOLIGHT],
 	&lspr[NOLIGHT],
 	&lspr[NOLIGHT],
 	&lspr[NOLIGHT],

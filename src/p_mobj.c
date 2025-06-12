@@ -919,9 +919,9 @@ static void P_ZMovement(mobj_t *mo)
 		mo->type == MT_CRAWLACOMMANDER ||
 		#endif
 		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
-		mo->type == MT_EGGMOBILE2) 
+		mo->type == MT_EGGMOBILE2) &&
 		#endif
-		&& mo->target->health > 0)
+		mo->target->health > 0))
 	{
 		// float down towards target if too close
 		if (!(mo->flags2 & MF2_SKULLFLY) && !(mo->flags2 & MF2_INFLOAT))
@@ -2494,9 +2494,11 @@ static void P_Boss2Thinker(mobj_t *mobj)
 		if (mobj->state == &states[mobj->info->spawnstate] && mobj->health > mobj->info->damage)
 			A_Boss2Chase(mobj);
 		else if (mobj->state == &states[mobj->info->raisestate]
+#if defined(TH_TOLERANCE) && TH_TOLERANCE >= 1
 			|| mobj->state == &states[S_EGGMOBILE2_POGO2]
 			|| mobj->state == &states[S_EGGMOBILE2_POGO3]
 			|| mobj->state == &states[S_EGGMOBILE2_POGO4]
+#endif
 			|| mobj->state == &states[mobj->info->spawnstate])
 		{
 			mobj->flags &= ~MF_NOGRAVITY;
@@ -3335,6 +3337,7 @@ void P_MobjThinker(mobj_t *mobj)
 				P_InstaThrust(mobj, mobj->angle, mobj->info->speed);
 			}
 			break;
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 		case MT_TURRET:
 			P_MobjCheckWater(mobj);
 			if ((mobj->eflags & MF_UNDERWATER) && mobj->health > 0)
@@ -3344,6 +3347,7 @@ void P_MobjThinker(mobj_t *mobj)
 				mobj->flags2 &= ~MF2_FIRING;
 			}
 			break;
+#endif
 		case MT_SPINFIRE:
 			mobj->z = mobj->floorz+1;
 			// THERE IS NO BREAK HERE ON PURPOSE
@@ -4903,6 +4907,7 @@ void P_SpawnMapThing(mapthing_t *mthing)
 		else
 			mobj->threshold = 44;
 	}
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	else if (mobj->type == MT_POPUPTURRET)
 	{
 		if (mthing->angle)
@@ -4910,6 +4915,7 @@ void P_SpawnMapThing(mapthing_t *mthing)
 		else
 			mobj->threshold = (TICRATE*2)-1;
 	}
+#endif
 	else if (mobj->type == MT_NIGHTSBUMPER)
 	{
 		// Lower 4 bits specify the angle of
@@ -5676,8 +5682,10 @@ mobj_t *P_SpawnMissile(mobj_t *source, mobj_t *dest, mobjtype_t type)
 			else
 				z = source->z + source->height/2;
 			break;
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 		case MT_TURRETLASER:
 			z = source->z + source->height/2;
+#endif
 		default:
 			z = source->z + 32*FRACUNIT;
 			break;
@@ -5690,19 +5698,22 @@ mobj_t *P_SpawnMissile(mobj_t *source, mobj_t *dest, mobjtype_t type)
 	if (speed == 0) // Backwards compatibility with 1.09.2
 	{
 		CONS_Printf("P_SpawnMissile - projectile has 0 speed! (mobj type %d)\nPlease update this SOC.", type);
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 		speed = mobjinfo[MT_TURRETLASER].speed;
+#endif
 	}
 
 	if (th->info->seesound)
 		S_StartSound(th, th->info->seesound);
 
 	th->target = source; // where it came from
-
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	if (type == MT_TURRETLASER) // More accurate!
 		an = R_PointToAngle2(source->x, source->y,
 			dest->x + (dest->momx*gsf),
 			dest->y + (dest->momy*gsf));
 	else
+#endif
 		an = R_PointToAngle2(source->x, source->y, dest->x, dest->y);
 
 	th->angle = an;
@@ -5710,9 +5721,11 @@ mobj_t *P_SpawnMissile(mobj_t *source, mobj_t *dest, mobjtype_t type)
 	th->momx = FixedMul(speed, finecosine[an]);
 	th->momy = FixedMul(speed, finesine[an]);
 
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	if (type == MT_TURRETLASER) // More accurate!
 		dist = P_AproxDistance(dest->x+(dest->momx*gsf) - source->x, dest->y+(dest->momy*gsf) - source->y);
 	else
+#endif
 		dist = P_AproxDistance(dest->x - source->x, dest->y - source->y);
 
 	dist = dist / speed;
@@ -5720,9 +5733,11 @@ mobj_t *P_SpawnMissile(mobj_t *source, mobj_t *dest, mobjtype_t type)
 	if (dist < 1)
 		dist = 1;
 
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	if (type == MT_TURRETLASER) // More accurate!
 		th->momz = (dest->z + (dest->momz*gsf) - z) / dist;
 	else
+#endif
 		th->momz = (dest->z - z) / dist;
 
 	dist = P_CheckMissileSpawn(th);
