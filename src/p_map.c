@@ -585,11 +585,12 @@ static boolean PIT_CheckThing(mobj_t *thing)
 			}
 		}
 
-		if (thing->z >= tmthing->z && !(thing->state == &states[S_PLAY_PAIN])) // Stuff where da player don't gotta move
+		if (thing->z >= tmthing->z /*&& !(thing->state == &states[S_PLAY_PAIN])*/) // Stuff where da player don't gotta move
 		{
 			switch (tmthing->type)
 			{
 				case MT_FAN: // fan
+				//CONS_Printf("player z: %d, fan z: %d, fan tolerance: %d\n", thing->z << FRACBITS, tmthing->z << FRACBITS, tmthing->health << FRACBITS+FRACBITS);
 					if (thing->z <= tmthing->z + (tmthing->health << FRACBITS))
 					{
 						thing->momz = tmthing->info->speed;
@@ -627,12 +628,13 @@ static boolean PIT_CheckThing(mobj_t *thing)
 
 	if (tmthing->player) // Is the moving/interacting object the player?
 	{
-		if (tmthing->z >= thing->z && !(tmthing->state == &states[S_PLAY_PAIN]))
+		if (tmthing->z >= thing->z /*&& !(tmthing->state == &states[S_PLAY_PAIN])*/)
 		{
 			switch (thing->type)
 			{
 				case MT_FAN: // fan
-					if (tmthing->z <= thing->z + (thing->health << FRACBITS))
+					//CONS_Printf("player z: %d, fan z: %d, fan tolerance: %d\n", tmthing->z << FRACBITS, thing->z << FRACBITS, thing->health << FRACBITS+FRACBITS);
+					if (tmthing->z <= (thing->z + (thing->health << FRACBITS)))
 					{
 						tmthing->momz = thing->info->speed;
 						P_ResetPlayer(tmthing->player);

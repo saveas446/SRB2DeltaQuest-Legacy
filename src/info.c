@@ -2021,7 +2021,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 	{           // MT_FAN
 		32,             // doomednum
 		S_FAN,          // spawnstate
-		1000,           // spawnhealth
+		10000,  		// spawnhealth
 		S_NULL,         // seestate
 		sfx_None,       // seesound
 		8,              // reactiontime

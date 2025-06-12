@@ -556,15 +556,11 @@ void Y_Ticker(void)
 			S_StartSound(NULL, sfx_sgcock); // cha-ching!
 		}
 	}
-	else if (inttype == int_match || inttype == int_ctf || inttype == int_teammatch) // match
+	else if (inttype == int_match)
 	{
 		// If a player has left or joined, recalculate scores.
 		if (data.match.numplayers != D_NumPlayers())
 			Y_CalculateMatchWinners();
-	}
-	else if (inttype == int_race || inttype == int_timerace) // race
-	{
-		// Don't bother recalcing for race. It doesn't make as much sense.
 	}
 }
 
@@ -1313,12 +1309,22 @@ static void Y_FollowIntermission(void)
 		return;
 	}
 
+	// Go back to title screen after MAP04 if demo 2 strict compatibility is enabled OR this is a demo version of d2u
+	#if !(defined(DEMO2ULTIMATE)) || (BUILD_TYPE == DEMO)
+	if (nextmap < 5-1)
+	{
+		// normal level
+		G_AfterIntermission();
+		return;
+	}
+	#else
 	if (nextmap < 1100-1)
 	{
 		// normal level
 		G_AfterIntermission();
 		return;
 	}
+	#endif
 
 	// Start a custom cutscene if there is one.
 	if (mapheaderinfo[gamemap-1].cutscenenum)
