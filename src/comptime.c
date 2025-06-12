@@ -58,7 +58,7 @@ int calc_TINYVER(void) {
     }
     
     // this is the date to update
-    base_tm.tm_mday = 12;
+    base_tm.tm_mday = 11;
     base_tm.tm_mon = 6;
     base_tm.tm_year = 2025 - 1900;
     base_tm.tm_isdst = -1;
