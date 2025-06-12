@@ -270,7 +270,6 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NIGHTSLIGHT_L],     // SPR_SEED // Sonic CD flower seed
 	&lspr[JETLIGHT_L],     // SPR_JETF // Boss jet fumes
 	&lspr[NOLIGHT],     // SPR_HOOP
-	&lspr[NOLIGHT],     // SPR_NSCR
 	&lspr[NOLIGHT],     // SPR_NWNG
 	&lspr[NOLIGHT],     // SPR_EGGN
 	&lspr[NOLIGHT],     // SPR_GOOP
@@ -319,7 +318,6 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT], // SPR_ROIP
 	&lspr[NOLIGHT], // SPR_NPRA
 	&lspr[NOLIGHT], // SPR_NPRB
-	&lspr[NOLIGHT], // SPR_NPRC
 	&lspr[NOLIGHT], // SPR_REDX
 	&lspr[NOLIGHT], // SPR_SPRB Graue 01-08-2004
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)

@@ -3344,8 +3344,10 @@ void A_TurretFire(mobj_t *actor)
 	else
 		dist = 2048*FRACUNIT;
 
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	if (!locvar1)
 		locvar1 = MT_TURRETLASER;
+#endif
 
 	while (P_SupermanLook4Players(actor) && count < MAXPLAYERS)
 	{
@@ -3380,8 +3382,10 @@ void A_SuperTurretFire(mobj_t *actor)
 	else
 		dist = 2048*FRACUNIT;
 
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	if (!locvar1)
 		locvar1 = MT_TURRETLASER;
+#endif
 
 	while (P_SupermanLook4Players(actor) && count < MAXPLAYERS)
 	{

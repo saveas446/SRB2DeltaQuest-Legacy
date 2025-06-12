@@ -37,8 +37,8 @@ char sprnames[NUMSPRITES + 1][5] =
 {
 	"MISL","PLAY","POSS","SPOS","EGGM","BON1",
 	"STIM","MEDI",
-	"EMMY","PINV","BLTV","SPRY","SUDY","SHTV","COL3","BUBL","YLTV","COL5",
-	"SPRR","SUDR","SMOK","SPLA","TNT1","BIRD","SQRL","YORB","BORB","KORB","SPRK","IVSP",
+	"EMMY","PINV","BLTV","POL2","SUDY","SHTV","COL3","BUBL","YLTV","COL5",
+	"POB1","SUDR","SMOK","SPLA","TNT1","BIRD","SQRL","YORB","BORB","KORB","SPRK","IVSP",
 	"IVSQ","DISS","BUBP","BUBO","BUBN","BUBM","CNTA","CNTB","CNTC","CNTD",
 	"CNTE","CNTF","POPP","PRUP","BKTV","SCRA","SCRB","SCRC","SCRD","SSPK",
 	"NBMP","YSPR","RSPR","YSUD","RSUD","SKIM","MINE","FISH","GARG","SPLH",
@@ -66,7 +66,7 @@ char sprnames[NUMSPRITES + 1][5] =
 #endif
 	"FWR2","FWR3","FLAM","PUMA","HAMM","KOOP",
 	"SHLL","MAXE","FFWR","NSPK","SUPE","SUPZ","NDRN","NDRL",
-	"SEED","JETF","HOOP","NSCR","NWNG",
+	"SEED","JETF","HOOP","NWNG",
 #if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"EGGN",
 #endif
@@ -86,7 +86,7 @@ char sprnames[NUMSPRITES + 1][5] =
 	"FWR4","GOOM","MUS1","MUS2","TOAD","XMS1",
 	"XMS2","XMS3","SUPT","ROIA","ROIB","ROIC","ROID","ROIE","ROIF",
 	"ROIG","ROIH","ROII","ROIJ","ROIK","ROIL","ROIM","ROIN","ROIO","ROIP",
-	"NPRA","NPRB","NPRC","REDX","SPRB",
+	"NPRA","NPRB","REDX","SPRB",
 #if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"BUZZ","RBUZ",
 #endif
@@ -1391,17 +1391,6 @@ state_t states[NUMSTATES] =
 
 	{SPR_HOOP, 0, -1, {NULL}, 0, 0, S_NULL}, // S_HOOP
 
-	{SPR_NSCR, 32768, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE10
-	{SPR_NSCR, 32769, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE20
-	{SPR_NSCR, 32770, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE30
-	{SPR_NSCR, 32771, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE40
-	{SPR_NSCR, 32772, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE50
-	{SPR_NSCR, 32773, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE60
-	{SPR_NSCR, 32774, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE70
-	{SPR_NSCR, 32775, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE80
-	{SPR_NSCR, 32776, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE90
-	{SPR_NSCR, 32777, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE100
-
 	{SPR_NWNG, 0, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSWING
 
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
@@ -1648,18 +1637,6 @@ state_t states[NUMSTATES] =
 	{SPR_DISS, 0, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSPOWERUP3
 	{SPR_NPRB, 0, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSPOWERUP4
 	{SPR_DISS, 0, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSPOWERUP5
-	{SPR_NPRC, 0, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSPOWERUP6
-
-	{SPR_NSCR, 32778, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE10_2
-	{SPR_NSCR, 32779, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE20_2
-	{SPR_NSCR, 32780, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE30_2
-	{SPR_NSCR, 32781, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE40_2
-	{SPR_NSCR, 32782, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE50_2
-	{SPR_NSCR, 32783, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE60_2
-	{SPR_NSCR, 32784, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE70_2
-	{SPR_NSCR, 32785, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE80_2
-	{SPR_NSCR, 32786, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE90_2
-	{SPR_NSCR, 32787, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSCORE100_2
 
 	// Hyper Sonic Spark
 	{SPR_SSPK, 0, 1, {A_SparkFollow}, 0, 0, S_HSPK2}, // S_HSPK1
@@ -5703,32 +5680,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL          // raisestate
 	},
 
-	{           // MT_NIGHTSCORE
-		-1,             // doomednum
-		S_NIGHTSCORE10, // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NIGHTSCORE10_2, // xdeathstate
-		sfx_None,       // deathsound
-		1,              // speed
-		8*FRACUNIT,     // radius
-		8*FRACUNIT,     // height
-		4,              // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_NOBLOCKMAP|MF_NOCLIP|MF_NOGRAVITY, // flags
-		S_NULL          // raisestate
-	},
-
 	{           // MT_NIGHTSWING
 		37,             // doomednum
 		S_NIGHTSWING,   // spawnstate
@@ -6952,33 +6903,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOGRAVITY,   // flags
 		S_NULL          // raisestate
 	},
-
-	{           // MT_NIGHTSHELPER
-		3009,           // doomednum
-		S_NIGHTSPOWERUP5, // spawnstate
-		1000,           // spawnhealth
-		S_NIGHTSPOWERUP6, // seestate
-		sfx_None,       // seesound
-		0,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		255,            // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_DISS,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		0,              // speed
-		16*FRACUNIT,    // radius
-		32*FRACUNIT,    // height
-		1000,           // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_NOGRAVITY,   // flags
-		S_NULL          // raisestate
-	},
-
 	{           // MT_HYPERSPARK
 		-1,             // doomednum
 		S_HSPK1,        // spawnstate

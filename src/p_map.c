@@ -258,8 +258,7 @@ static boolean PIT_CheckThing(mobj_t *thing)
 		return true;
 
 	// Don't collide with sparks, hehe!
-	if (thing->type == MT_SPARK || tmthing->type == MT_SPARK
-		|| thing->type == MT_NIGHTSCORE || tmthing->type == MT_NIGHTSCORE)
+	if (thing->type == MT_SPARK || tmthing->type == MT_SPARK)
 		return true;
 
 	blockdist = thing->radius + tmthing->radius;

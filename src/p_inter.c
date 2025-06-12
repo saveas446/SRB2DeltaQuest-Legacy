@@ -439,10 +439,12 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			player->drillmeter = 96*20;
 			P_SetMobjState(special, S_DISS);
 			return;
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 		case MT_NIGHTSHELPER:
 			player->powers[pw_nightshelper] = helpertics;
 			P_SetMobjState(special, S_DISS);
 			return;
+#endif
 		case MT_NIGHTSWING:
 			P_SpawnMobj(special->x, special->y, special->z, MT_SPARK);
 	
@@ -583,7 +585,10 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 					// Tails 12-15-2003
 					if (mo2->type == MT_NIGHTSSUPERLOOP
 						|| mo2->type == MT_NIGHTSDRILLREFILL
-						|| mo2->type == MT_NIGHTSHELPER)
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+						|| mo2->type == MT_NIGHTSHELPER
+#endif
+						)
 					{
 						if (!(mo2->flags & MF_SPECIAL))
 						{

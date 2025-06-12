@@ -3195,9 +3195,6 @@ void P_MobjThinker(mobj_t *mobj)
 			break;
 		case MT_BOSSFLYPOINT:
 			return;
-		case MT_NIGHTSCORE:
-			mobj->flags = (mobj->flags & ~MF_TRANSLATION) | ((leveltime % 13)<<MF_TRANSSHIFT);
-			break;
 		case MT_JETFUME1:
 			{
 				fixed_t jetx, jety;
