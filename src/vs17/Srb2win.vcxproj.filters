@@ -345,6 +345,9 @@
     <ClInclude Include="..\win32\resource.h">
       <Filter>Win32app</Filter>
     </ClInclude>
+    <ClInclude Include="..\filesrch.h">
+      <Filter>D_Doom</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\comptime.c">
@@ -598,6 +601,9 @@
     </ClCompile>
     <ClCompile Include="..\win32\mid2strm.c">
       <Filter>Win32app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\filesrch.c">
+      <Filter>D_Doom</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

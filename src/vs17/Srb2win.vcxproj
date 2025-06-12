@@ -45,6 +45,7 @@
     <OutDir>.\..\..\build\</OutDir>
     <IntDir>.\..\..\objs\VC\Debug\Win32\</IntDir>
     <LinkIncremental>true</LinkIncremental>
+    <TargetName>srb2debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>.\..\..\bin\VC\Release\Win32\</OutDir>
@@ -168,6 +169,7 @@
     <ClInclude Include="..\D_player.h" />
     <ClInclude Include="..\D_think.h" />
     <ClInclude Include="..\D_ticcmd.h" />
+    <ClInclude Include="..\filesrch.h" />
     <ClInclude Include="..\F_finale.h" />
     <ClInclude Include="..\G_game.h" />
     <ClInclude Include="..\G_input.h" />
@@ -259,6 +261,7 @@
     <ClCompile Include="..\D_net.c" />
     <ClCompile Include="..\D_netcmd.c" />
     <ClCompile Include="..\D_netfil.c" />
+    <ClCompile Include="..\filesrch.c" />
     <ClCompile Include="..\F_finale.c" />
     <ClCompile Include="..\F_wipe.c" />
     <ClCompile Include="..\G_game.c" />
