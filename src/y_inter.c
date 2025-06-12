@@ -234,7 +234,7 @@ void Y_IntermissionDrawer(void)
 		else if (gamemap % 3 == 2){
 			act = act2;
 		}
-		else if (gamemap % 3 == 3){
+		else if (!(gamemap % 3)){
 			act = act3;
 		}
 

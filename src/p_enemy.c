@@ -1248,7 +1248,7 @@ void A_BossDeath(mobj_t *mo)
 	}
 
 	// victory!
-		if (mo->flags2 & MF2_BOSSNOTRAP)
+		if (mo->flags2 & MF2_BOSSNOTRAP || mo->type == MT_EGGMOBILE)
 		{
 			for (i = 0; i < MAXPLAYERS; i++)
 				P_DoPlayerExit(&players[i]);
@@ -1269,6 +1269,7 @@ void A_BossDeath(mobj_t *mo)
 
 		mo->target = NULL;
 
+		
 		// Flee! Flee! Find a point to escape to! If none, just shoot upward!
 		// scan the thinkers to find the runaway point
 		for (th = thinkercap.next; th != &thinkercap; th = th->next)
