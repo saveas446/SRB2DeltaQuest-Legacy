@@ -127,9 +127,6 @@ typedef enum
 	#endif
 	SPR_FWR2, // GFZ Sunflower
 	SPR_FWR3, // GFZ budding flower
-	SPR_MIXU, // Player mixing monitor
-	SPR_QUES, // Random monitor
-	SPR_MTEX, // Exploding monitor
 	SPR_FLAM, // Flame (has corona)
 
 	// Mario-specific stuff
@@ -485,6 +482,11 @@ typedef enum
 	S_YLTV1,
 	S_YLTV2,
 	S_YLTV3,
+	S_YLTV4,
+	S_YLTV5,
+	S_YLTV6,
+	S_YLTV7,
+	S_YLTV8,
 
 	S_GFZFLOWERA,
 	S_GFZFLOWERA2,
@@ -681,16 +683,26 @@ typedef enum
 	S_BKTV8,
 
 	// Jump Shield Box
+	S_WHTV,
 	S_WHTV1,
 	S_WHTV2,
 	S_WHTV3,
 	S_WHTV4,
+	S_WHTV5,
+	S_WHTV6,
+	S_WHTV7,
+	S_WHTV8,
 
 	// Fire Shield Box
+	S_RDTV,
 	S_RDTV1,
 	S_RDTV2,
 	S_RDTV3,
 	S_RDTV4,
+	S_RDTV5,
+	S_RDTV6,
+	S_RDTV7,
+	S_RDTV8,
 
 	// Score Logos
 	S_SCRA, // 100
@@ -1338,24 +1350,6 @@ typedef enum
 	S_GFZFLOWERB2,
 	S_GFZFLOWERC1,
 
-	// Teleport Box
-	S_MIXUPBOX1,
-	S_MIXUPBOX2,
-	S_MIXUPBOX3,
-	S_MIXUPBOX4,
-
-	// Question Box
-	S_RANDOMBOX1,
-	S_RANDOMBOX2,
-	S_RANDOMBOX3,
-
-	// Monitor Explosion
-	S_MONITOREXPLOSION1,
-	S_MONITOREXPLOSION2,
-	S_MONITOREXPLOSION3,
-	S_MONITOREXPLOSION4,
-	S_MONITOREXPLOSION5,
-
 	// Flame (has corona)
 	S_FLAME1,
 	S_FLAME2,
@@ -1987,20 +1981,6 @@ typedef enum
 	MT_BUSH,
 	MT_GFZFLOWER2,
 	MT_GFZFLOWER3,
-	MT_MIXUPBOX,
-	MT_QUESTIONBOX,
-	MT_MONITOREXPLOSION,
-	MT_RINGICO,
-	MT_SRINGICO,
-	MT_1UPICO,
-	MT_BSHIELDICO,
-	MT_YSHIELDICO,
-	MT_KSHIELDICO,
-	MT_WSHIELDICO,
-	MT_RSHIELDICO,
-	MT_INVCICO,
-	MT_MIXUPICO,
-	MT_SHOESICO,
 	MT_FLAME, // Flame (has corona)
 
 	// Mario-specific stuff

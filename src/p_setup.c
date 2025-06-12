@@ -835,8 +835,7 @@ static void P_SpawnEmblems(void)
 		if (emblemlocations[i].level != gamemap)
 			continue;
 
-		emblemmobj = P_SpawnMobj(emblemlocations[i].x<<FRACBITS, emblemlocations[i].y<<FRACBITS,
-			emblemlocations[i].z<<FRACBITS, MT_EMBLEM);
+		emblemmobj = P_SpawnMobj(emblemlocations[i].x<<FRACBITS, emblemlocations[i].y<<FRACBITS,emblemlocations[i].z<<FRACBITS, MT_EMBLEM);
 		P_SetMobjStateNF(emblemmobj, emblemmobj->info->spawnstate);
 
 		emblemmobj->health = i+1;

@@ -1173,14 +1173,6 @@ void A_MonitorPop(mobj_t *actor)
 		mobj_t *newmobj;
 		newmobj = P_SpawnMobj(actor->x, actor->y, actor->z, item);
 		newmobj->target = actor->target; // Transfer target
-
-		if (item == MT_1UPICO && newmobj->target->player)
-		{
-			if (newmobj->target->player->boxindex != 0)
-			{
-				P_SetMobjState(newmobj, S_PRUPAUX2+(newmobj->target->player->boxindex*3)-3);
-			}
-		}
 	}
 	else
 		CONS_Printf("Powerup item not defined in 'damage' field for A_MonitorPop\n");

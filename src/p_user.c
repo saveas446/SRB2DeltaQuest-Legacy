@@ -5109,7 +5109,11 @@ static void P_MovePlayer(player_t *player)
 				player->jumping = 0;
 				player->thokked = true;
 				player->mfspinning = 0;
+#ifdef FALL_SPRITES
 				P_SetPlayerMobjState(player->mo, S_PLAY_FALL1);
+#else
+				P_SetPlayerMobjState(player->mo, S_PLAY_ATK1);
+#endif
 				//S_StartSound(player->mo, sfx_wdjump);  26-05-2025
 			}
 		}
@@ -6996,9 +7000,6 @@ boolean P_LookForEnemies(player_t *player)
 			continue;
 
 		if (mo->type == MT_DETON) // Don't be STUPID, Sonic!
-			continue;
-
-		if (mo->flags & MF_MONITOR && mo->state == &states[S_MONITOREXPLOSION5])
 			continue;
 
 		if (P_AproxDistance(P_AproxDistance(player->mo->x-mo->x, player->mo->y-mo->y),

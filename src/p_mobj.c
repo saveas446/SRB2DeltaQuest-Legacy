@@ -3416,7 +3416,6 @@ void P_MobjThinker(mobj_t *mobj)
 				case MT_SUPERRINGBOX: // 10-Ring box
 				case MT_GREYRINGBOX: // 25-Ring box
 				case MT_INV: // Invincibility box
-				case MT_MIXUPBOX: // Teleporter Mixup box
 				case MT_PRUP: // 1up!
 					P_SetMobjState(mobj, S_DISS); // make sure they disappear
 
@@ -3519,15 +3518,6 @@ void P_MobjThinker(mobj_t *mobj)
 								numchoices++;
 							}
 						}
-						if (cv_teleporters.value)
-						{
-							oldi = i;
-							for (; i < oldi + cv_teleporters.value; i++)
-							{
-								spawnchance[i] = MT_MIXUPBOX;
-								numchoices++;
-							}
-						}
 
 						if (!(cv_1up.value || cv_bombshield.value || cv_fireshield.value
 							|| cv_ringshield.value || cv_watershield.value || cv_jumpshield.value
@@ -3539,10 +3529,6 @@ void P_MobjThinker(mobj_t *mobj)
 					}
 					else
 						P_SpawnMobj(mobj->x, mobj->y, mobj->z, mobj->type);
-					break;
-				case MT_QUESTIONBOX:
-					P_SetMobjState(mobj, S_DISS);
-					P_SpawnMobj(mobj->x, mobj->y, mobj->z, MT_QUESTIONBOX);
 					break;
 				case MT_EGGTRAP: // Egg Capsule animal release
 				{
@@ -4786,8 +4772,6 @@ void P_SpawnMapThing(mapthing_t *mthing)
 		{
 			if (cv_matchboxes.value == 1) // Random
 			{
-				if (mobjinfo[i].flags & MF_MONITOR)
-					i = MT_QUESTIONBOX;
 			}
 			else if (cv_matchboxes.value == 3) // Don't spawn
 			{
@@ -4809,8 +4793,6 @@ void P_SpawnMapThing(mapthing_t *mthing)
 				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 				if (i == MT_EGGMANBOX && !cv_eggmanbox.value) return;
 				#endif
-				if (i == MT_MIXUPBOX && !cv_teleporters.value) return;
-				if (i == MT_QUESTIONBOX) return; // don't spawn in Non-Random
 
 				mthing->options &= ~MTF_AMBUSH; // no random respawning!
 			}
@@ -4830,8 +4812,6 @@ void P_SpawnMapThing(mapthing_t *mthing)
 			#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 			if (i == MT_EGGMANBOX && !cv_eggmanbox.value) return;
 			#endif
-			if (i == MT_MIXUPBOX && !cv_teleporters.value) return;
-			if (i == MT_QUESTIONBOX && !cv_questionbox.value) return;
 		}
 	}
 

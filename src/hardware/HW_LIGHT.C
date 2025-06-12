@@ -251,9 +251,6 @@ light_t *t_lspr[NUMSPRITES] =
 	#endif
 	&lspr[NOLIGHT],     // SPR_FWR2
 	&lspr[NOLIGHT],     // SPR_FWR3
-	&lspr[NOLIGHT],     // SPR_MIXU
-	&lspr[NOLIGHT],     // SPR_QUES
-	&lspr[NOLIGHT],     // SPR_MTEX
 	&lspr[REDBALL_L],     // SPR_FLAM // Tails 09-06-2002
 
 	// Mario-specific stuff Tails 09-10-2002
