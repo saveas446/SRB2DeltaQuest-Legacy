@@ -94,7 +94,7 @@ int secondarydisplayplayer; // for splitscreen
 
 tic_t gametic;
 tic_t levelstarttic; // gametic at level start
-int totalitems, totalrings; // for intermission
+int totalitems, totalrings, totalsecret; // for intermission
 int lastmap; // last level you were at (returning from special stages)
 tic_t timeinmap; // Ticker for time spent in level (used for levelcard display)
 

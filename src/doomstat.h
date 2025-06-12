@@ -139,6 +139,7 @@ extern int nextmapoverride, nextmapgametype;
 extern boolean skipstats;
 
 extern int totalitems;
+extern int totalsecret;
 extern int totalrings; //  Total # of rings in a level
 
 // Fun extra stuff

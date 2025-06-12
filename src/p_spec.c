@@ -2427,7 +2427,7 @@ static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean r
 		
 		//! SECTOR SPECIAL CODE
 		// Has hitten ground.
-		switch (sector->special)
+		/*switch (sector->special)
 		{
 			case 5: // instant death
 				// HELLSLIME DAMAGE
@@ -2525,7 +2525,66 @@ static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean r
 			default:
 				// Just ignore.
 				break;
-		};
+		};*/
+        switch (sector->special&31)
+        {
+          case 1:
+            // FLICKERING LIGHTS
+            P_SpawnLightFlash (sector);
+            break;
+
+          case 2:
+            // STROBE FAST
+            P_SpawnStrobeFlash(sector,FASTDARK,0);
+            break;
+
+          case 3:
+            // STROBE SLOW
+            P_SpawnStrobeFlash(sector,SLOWDARK,0);
+            break;
+
+          case 4:
+            // STROBE FAST/DEATH SLIME
+            P_SpawnStrobeFlash(sector,FASTDARK,0);
+            sector->special |= 3<<DAMAGE_SHIFT; //SoM: 3/8/2000: put damage bits in
+            break;
+
+          case 8:
+            // GLOWING LIGHT
+            P_SpawnGlowingLight(sector);
+            sector->special = 4; // Tails 9-15-99
+            break;
+
+          case 9:
+            // SECRET SECTOR
+            if(sector->special<32)
+              totalsecret++;
+            break;
+
+          case 10:
+            // DOOR CLOSE IN 30 SECONDS
+            P_SpawnDoorCloseIn30 (sector);
+            break;
+
+          case 12:
+            // SYNC STROBE SLOW
+            P_SpawnStrobeFlash (sector, SLOWDARK, 1);
+            break;
+
+          case 13:
+            // SYNC STROBE FAST
+            P_SpawnStrobeFlash (sector, FASTDARK, 1);
+            break;
+
+          case 14:
+            // DOOR RAISE IN 5 MINUTES
+            P_SpawnDoorRaiseIn5Mins (sector, i);
+            break;
+
+          case 17:
+            P_SpawnFireFlicker(sector);
+            break;
+        }
 	}
 /*	else // Extended sector types for secrets and damage
 	{
