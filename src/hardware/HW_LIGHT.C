@@ -269,9 +269,9 @@ light_t *t_lspr[NUMSPRITES] =
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	&lspr[SUPERSPARK_L],     // SPR_BPLD
 	#endif
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	&lspr[NOLIGHT],     // SPR_RDTV
 	&lspr[REDSHIELD_L],     // SPR_RORB
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	&lspr[NOLIGHT],     // SPR_EGGB
 	#endif
 	&lspr[NOLIGHT], // SPR_SFLM
@@ -316,9 +316,9 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT], // SPR_RBUZ Graue 03-10-2004
 	#endif
 	&lspr[GREYSHINE_L], // SPR_CEMK, // 8th Emerald
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	&lspr[NOLIGHT],     // SPR_WHTV
 	&lspr[WHITESHIELD_L],     // SPR_WORB
-#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	&lspr[NOLIGHT], // SPR_TURR
 #endif
 

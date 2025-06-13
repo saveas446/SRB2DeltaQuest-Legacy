@@ -1,0 +1,1 @@
+srb2debug -win -nomusic -nosound -iwad ../dev/srb2.srb -file ../dev/supp.wad ../dev/maps/DEEP_SEA_3.wad -warp 9

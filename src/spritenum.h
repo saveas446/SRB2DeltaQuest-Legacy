@@ -148,10 +148,9 @@ typedef enum
 	SPR_BPLD, // Boss Explosions
 	#endif
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	SPR_RDTV, // Fire shield
 	SPR_RORB, // Red orb
-
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	SPR_EGGB, // Eggman box
 	#endif
 	SPR_SFLM, // Spin fire
@@ -163,8 +162,10 @@ typedef enum
 	SPR_TFOG, // Teleport Fog
 
 	SPR_LITE, // Streetlight corona
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	SPR_TRET,
 	SPR_TRLS,
+	#endif
 	SPR_FWR4,
 
 	SPR_GOOM,
@@ -206,8 +207,10 @@ typedef enum
 
 	SPR_CEMK, // 8th Emerald
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	SPR_WHTV, // Jump shield TV
 	SPR_WORB, // White Shield
+	#endif
 
 	SPR_TURR, // Pop-Up Turret
 
@@ -551,6 +554,7 @@ typedef enum
 	S_KORB7,
 	S_KORB8,
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	// White Shield Orb
 	S_WORB1,
 	S_WORB2,
@@ -561,7 +565,6 @@ typedef enum
 	S_WORB7,
 	S_WORB8,
 
-
 	// Red Shield Orb
 	S_RORB1,
 	S_RORB2,
@@ -571,6 +574,7 @@ typedef enum
 	S_RORB6,
 	S_RORB7,
 	S_RORB8,
+	#endif
 
 	// Spark
 	S_SPRK1,
@@ -669,6 +673,7 @@ typedef enum
 	S_BKTV7,
 	S_BKTV8,
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	// Jump Shield Box
 	S_WHTV,
 	S_WHTV1,
@@ -690,6 +695,7 @@ typedef enum
 	S_RDTV6,
 	S_RDTV7,
 	S_RDTV8,
+	#endif
 
 	// Score Logos
 	S_SCRA, // 100
@@ -1718,7 +1724,9 @@ typedef enum
 	MT_BUBBLES, // Bubble source
 	MT_GFZFLOWER1,
 	MT_YELLOWTV,
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	MT_REDTV,
+	#endif
 	MT_YELLOWSPRING,
 	MT_SNEAKERTV,
 	MT_REDSPRING,
@@ -1731,11 +1739,15 @@ typedef enum
 	MT_FLINGRING, // Lost ring
 	MT_BIRD, // Birdie freed!
 	MT_SQRL, // Squirrel freed!
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	MT_REDORB, // shield mobjs
+	#endif
 	MT_YELLOWORB, // shield mobjs
 	MT_BLUEORB, // shield mobjs
 	MT_BLACKORB, // shield mobjs
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	MT_WHITEORB, // shield mobjs
+	#endif
 	MT_SPARK, //spark
 	MT_IVSP, // invincibility sparkles
 	MT_IVSQ, // invincibility sparkles finish
@@ -1752,7 +1764,9 @@ typedef enum
 	MT_POP, // Extra Large bubble goes POP!
 	MT_PRUP, // 1up Box
 	MT_BLACKTV, // Bomb shield TV
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	MT_WHITETV, // Jump shield TV
+	#endif
 	MT_SCRA, // 100 score logo
 	MT_SCRB, // 200 score logo
 	MT_SCRC, // 500 score logo
@@ -1882,8 +1896,10 @@ typedef enum
 	MT_TFOG,
 	MT_EASTEREGG,
 	MT_STREETLIGHT,
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	MT_TURRET,
 	MT_TURRETLASER,
+	#endif
 	MT_GFZFLOWER4,
 
 	MT_GOOMBA,

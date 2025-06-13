@@ -83,12 +83,14 @@ static void P_SetTranslucencies(void)
 
 	// if higher translucency needed, toy around with the other tr_trans variables
 
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	// shield translucencies
 	R_SetTrans(S_BORB1, S_BORB8, tr_transmed);
 	R_SetTrans(S_YORB1, S_YORB8, tr_transmed);
 	R_SetTrans(S_KORB1, S_KORB8, tr_transmed);
 	R_SetTrans(S_RORB1, S_RORB8, tr_transmed);
 	R_SetTrans(S_WORB1, S_WORB8, tr_transmed);
+#endif
 
 	// translucent spark
 	R_SetTrans(S_SPRK1, S_SPRK4, tr_transfir);

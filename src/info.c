@@ -62,11 +62,7 @@ char sprnames[NUMSPRITES + 1][5] =
 	"STPT","RNGM","RNGR","RNGS",
 	"RNGA","RNGE","TAEH","TAER","THER","TAHR","THOM","TAUT","TEXP",
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
-	"BUS1","BUS2",
-	#endif
-
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
-	"HDB1","FCAN",
+	"BUS1","BUS2","HDB1","FCAN",
 	#endif
 	"FLAM","PUMA","HAMM","KOOP",
 	"SHLL","MAXE","FFWR",
@@ -78,20 +74,28 @@ char sprnames[NUMSPRITES + 1][5] =
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	"BPLD",
 	#endif
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"RDTV",
 	"RORB",
+	#endif
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"EGGB",
 	#endif
-	"SFLM","TNKA","TNKB","SPNK","TFOG","LITE","TRET",
-	"TRLS","FWR4","GOOM","MUS1","MUS2","TOAD","XMS1",
+	"SFLM","TNKA","TNKB","SPNK","TFOG","LITE",
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+	"TRET","TRLS",
+	#endif
+	"FWR4","GOOM","MUS1","MUS2","TOAD","XMS1",
 	"XMS2","XMS3","SUPT","ROIA","ROIB","ROIC","ROID","ROIE","ROIF",
 	"ROIG","ROIH","ROII","ROIJ","ROIK","ROIL","ROIM","ROIN","ROIO","ROIP",
 	"REDX","SPRB",
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"BUZZ","RBUZ",
 	#endif
-	"CEMK","WHTV","WORB",
+	"CEMK",
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+	"WHTV","WORB",
+	#endif
 	"TURR",
 };
 
@@ -438,6 +442,7 @@ state_t states[NUMSTATES] =
 	{SPR_KORB, 6, 1, {NULL}, 0, 0, S_KORB8}, // S_KORB7
 	{SPR_KORB, 7, 1, {NULL}, 0, 0, S_KORB1}, // S_KORB8
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	// White Shield Orb
 	{SPR_WORB, 0, 1, {NULL}, 0, 0, S_WORB2}, // S_WORB1
 	{SPR_WORB, 1, 1, {NULL}, 0, 0, S_WORB3}, // S_WORB2
@@ -448,7 +453,6 @@ state_t states[NUMSTATES] =
 	{SPR_WORB, 6, 1, {NULL}, 0, 0, S_WORB8}, // S_WORB7
 	{SPR_WORB, 7, 1, {NULL}, 0, 0, S_WORB1}, // S_WORB8
 
-
 	// Red Shield Orb
 	{SPR_RORB, 0, 1, {NULL}, 0, 0, S_RORB2}, // S_RORB1
 	{SPR_RORB, 1, 1, {NULL}, 0, 0, S_RORB3}, // S_RORB2
@@ -458,6 +462,7 @@ state_t states[NUMSTATES] =
 	{SPR_RORB, 5, 1, {NULL}, 0, 0, S_RORB7}, // S_RORB6
 	{SPR_RORB, 6, 1, {NULL}, 0, 0, S_RORB8}, // S_RORB7
 	{SPR_RORB, 7, 1, {NULL}, 0, 0, S_RORB1}, // S_RORB8
+	#endif
 
 	// Spark
 	{SPR_SPRK, 0, 1, {NULL}, 0, 0, S_SPRK2},  // S_SPRK1
@@ -559,6 +564,7 @@ state_t states[NUMSTATES] =
 	{SPR_BKTV, 6, 48, {A_BombShield}, 0, 0, S_DISS},  // S_BKTV7
 	{SPR_BKTV, 6, -1, {NULL}, 0, 0, S_NULL}, // S_BKTV8
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	// Jump Shield Box
 	{SPR_WHTV, 0, 1, {NULL}, 0, 0, S_WHTV1 },          // S_WHTV
 	{SPR_WHTV, 1, 2, {NULL}, 0, 0, S_WHTV },          // S_WHTV1
@@ -580,6 +586,7 @@ state_t states[NUMSTATES] =
 	{SPR_RDTV, 6, 2, {NULL}, 0, 0, S_RDTV7 }, // S_RDTV6
 	{SPR_RDTV, 6, 48, {A_FireShield}, 0, 0, S_DISS },  // S_RDTV7
 	{SPR_RDTV, 6, -1, {NULL}, 0, 0, S_NULL }, // S_RDTV8
+	#endif
 
 	{SPR_SCRA, 0, 32, {A_ScoreRise}, 0, 0, S_DISS}, // S_SCRA
 	{SPR_SCRB, 0, 32, {A_ScoreRise}, 0, 0, S_DISS}, // S_SCRB
@@ -1365,6 +1372,7 @@ state_t states[NUMSTATES] =
 	{SPR_LITE, 0, -1, {NULL}, 0, 0, S_LITE}, // S_LITE
 
 	// THZ Turret
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{SPR_TRET, 32768, 105, {A_TurretStop}, 0, 0, S_TURRETFIRE}, // S_TURRET
 	{SPR_TRET, 32768, 105, {A_TurretFire}, 0, 0, S_TURRET},     // S_TURRETFIRE
 	{SPR_TRET, 32769, 7, {A_Pain}, 0, 0, S_TURRETSHOCK2},       // S_TURRETSHOCK1
@@ -1379,6 +1387,7 @@ state_t states[NUMSTATES] =
 	{SPR_TRLS, 32768, 1, {NULL}, 0, 0, S_TURRETLASER},          // S_TURRETLASER
 	{SPR_TRLS, 32769, 2, {NULL}, 0, 0, S_TURRETLASEREXPLODE2},  // S_TURRETLASEREXPLODE1
 	{SPR_TRLS, 32770, 2, {NULL}, 0, 0, S_DISS},                 // S_TURRETLASEREXPLODE2
+	#endif
 
 	// GFZ Flower
 	{SPR_FWR4, 0, -1, {NULL}, 0, 0, S_NULL}, // S_GFZFLOWERD1
@@ -1987,6 +1996,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL          // raisestate
 	},
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{           // MT_REDTV
 		2002,           // doomednum
 		S_RDTV,        // spawnstate
@@ -2012,6 +2022,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SOLID|MF_SHOOTABLE|MF_MONITOR, // flags
 		S_NULL          // raisestate
 	},
+	#endif
 
 	{           // MT_YELLOWSPRING
 		28,             // doomednum
@@ -2330,6 +2341,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL          // raisestate
 	},
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{           // MT_REDORB
 		-1,             // doomednum
 		S_RORB1,        // spawnstate
@@ -2355,6 +2367,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOBLOCKMAP|MF_NOCLIP|MF_NOGRAVITY|MF_SCENERY, // flags
 		S_NULL          // raisestate
 	},
+	#endif
 
 	{           // MT_YELLOWORB
 		-1,             // doomednum
@@ -2434,6 +2447,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL          // raisestate
 	},
 	
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{           // MT_WHITEORB
 		-1,             // doomednum
 		S_WORB1,        // spawnstate
@@ -2459,6 +2473,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOBLOCKMAP|MF_NOCLIP|MF_NOGRAVITY|MF_SCENERY, // flags
 		S_NULL          // raisestate
 	},
+	#endif
 
 	{           // MT_SPARK
 		-1,             // doomednum
@@ -2881,6 +2896,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL          // raisestate
 	},
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	// jump shield box
 	{           // MT_WHITETV
 		35,             // doomednum
@@ -2907,6 +2923,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SOLID|MF_SHOOTABLE|MF_MONITOR, // flags
 		S_NULL          // raisestate
 	},
+	#endif
 
 	// 100pt score logo
 	{           // MT_SCRA
@@ -5842,6 +5859,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL          // raisestate
 	},
 
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{           // MT_TURRET
 		2004,           // doomednum
 		S_TURRET,       // spawnstate
@@ -5893,7 +5911,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOBLOCKMAP|MF_MISSILE|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
-
+	#endif
 	{           // MT_GFZFLOWER4
 		2001,           // doomednum
 		S_GFZFLOWERD1,  // spawnstate

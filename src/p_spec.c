@@ -157,9 +157,9 @@ void P_InitPicAnims(void)
 	// Init animation
 	int i;
 
-	if (W_CheckNumForName("ANIMATED") != -1)
+	/*if (W_CheckNumForName("ANIMATED") != -1)
 		animdefs = (animdef_t *)W_CacheLumpName("ANIMATED", PU_STATIC);
-	else
+	else*/
 		animdefs = harddefs;
 
 	for (i = 0; animdefs[i].istexture != (char)-1; i++, maxanims++);
@@ -196,9 +196,8 @@ void P_InitPicAnims(void)
 
 		if (lastanim->numpics < 2)
 		{
-			continue;
-			//free(anims);
-			//I_Error("P_InitPicAnims: bad cycle from %s to %s", animdefs[i].startname, animdefs[i].endname);
+			free(anims);
+			I_Error("P_InitPicAnims: bad cycle from %s to %s", animdefs[i].startname, animdefs[i].endname);
 		}
 
 		lastanim->speed = LONG(animdefs[i].speed) * NEWTICRATERATIO;
@@ -2851,6 +2850,7 @@ void P_UpdateSpecials(void)
 		for (i = anim->basepic; i < anim->basepic + anim->numpics; i++)
 		{
 			pic = anim->basepic + ((leveltime/anim->speed + i) % anim->numpics);
+			
 			if (anim->istexture)
 				texturetranslation[i] = pic;
 		}

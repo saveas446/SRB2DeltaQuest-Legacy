@@ -689,10 +689,15 @@ void P_SpawnShieldOrb(player_t *player)
 		I_Error("P_SpawnShieldOrb: player->mo is NULL!\n");
 #endif
 
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	if (player->powers[pw_jumpshield])
 		P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_WHITEORB)->target =
 			player->mo;
+	
 	else if (player->powers[pw_ringshield])
+#else
+	if (player->powers[pw_ringshield])
+#endif
 		P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_YELLOWORB)->target =
 			player->mo;
 	else if (player->powers[pw_watershield])
@@ -701,9 +706,11 @@ void P_SpawnShieldOrb(player_t *player)
 	else if (player->powers[pw_bombshield])
 		P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_BLACKORB)->target =
 			player->mo;
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	else if (player->powers[pw_fireshield])
 		P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_REDORB)->target =
 			player->mo;
+#endif
 }
 //
 // P_DoPlayerExit

@@ -1,0 +1,1 @@
+srb2debug -win -nomusic -nosound -iwad ../dev/srb2.srb -file ../dev/supp.wad ../dev/maps/TECHNO_HILL_2.wad -warp 5

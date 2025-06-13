@@ -3017,8 +3017,10 @@ void P_MobjThinker(mobj_t *mobj)
 					mobj->fuse--;
 				return;
 			case MT_BLACKORB:
+			#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 			case MT_WHITEORB:
 			case MT_REDORB:
+			#endif
 			case MT_YELLOWORB:
 			case MT_BLUEORB:
 				if (!P_ShieldLook(mobj, mobj->info->speed))
@@ -3374,10 +3376,12 @@ void P_MobjThinker(mobj_t *mobj)
 
 				// gargoyle and snowman handled in P_PushableThinker, not here
 				case MT_YELLOWTV: // Ring shield box
+				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 				case MT_REDTV: // Fire shield box
+				case MT_WHITETV: // Jump shield box
+				#endif
 				case MT_BLUETV: // Water shield box
 				case MT_BLACKTV: // Bomb shield box
-				case MT_WHITETV: // Jump shield box
 				case MT_SNEAKERTV: // Super Sneaker box
 				case MT_SUPERRINGBOX: // 10-Ring box
 				case MT_GREYRINGBOX: // 25-Ring box
@@ -3430,6 +3434,7 @@ void P_MobjThinker(mobj_t *mobj)
 								numchoices++;
 							}
 						}
+						#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 						if (cv_jumpshield.value)
 						{
 							oldi = i;
@@ -3439,6 +3444,7 @@ void P_MobjThinker(mobj_t *mobj)
 								numchoices++;
 							}
 						}
+						#endif
 						if (cv_watershield.value)
 						{
 							oldi = i;
@@ -3457,6 +3463,7 @@ void P_MobjThinker(mobj_t *mobj)
 								numchoices++;
 							}
 						}
+						#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 						if (cv_fireshield.value)
 						{
 							oldi = i;
@@ -3466,6 +3473,7 @@ void P_MobjThinker(mobj_t *mobj)
 								numchoices++;
 							}
 						}
+						#endif
 						if (cv_bombshield.value)
 						{
 							oldi = i;
@@ -3944,9 +3952,11 @@ mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
 		case MT_EXPLOSIONRING:
 		case MT_BLUEORB:
 		case MT_BLACKORB:
-		case MT_WHITEORB:
 		case MT_YELLOWORB:
+		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+		case MT_WHITEORB:
 		case MT_REDORB:
+		#endif
 		case MT_THOK:
 			mobj->flags2 |= MF2_NOCLIPHEIGHT;
 		default:
@@ -4747,11 +4757,13 @@ void P_SpawnMapThing(mapthing_t *mthing)
 			}
 			else // cv_matchboxes.value == 2, Non-Random
 			{
+				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 				if (i == MT_REDTV && !cv_fireshield.value) return;
+				if (i == MT_WHITETV && !cv_jumpshield.value) return;
+				#endif
 				if (i == MT_YELLOWTV && !cv_ringshield.value) return;
 				if (i == MT_BLUETV && !cv_watershield.value) return;
 				if (i == MT_BLACKTV && !cv_bombshield.value) return;
-				if (i == MT_WHITETV && !cv_jumpshield.value) return;
 				if (i == MT_SNEAKERTV && !cv_supersneakers.value) return;
 				if (i == MT_PRUP) return; // no meaning in CTF/tag/chaos/match
 				if (i == MT_SUPERRINGBOX && !cv_superring.value) return;
@@ -4766,11 +4778,13 @@ void P_SpawnMapThing(mapthing_t *mthing)
 		}
 		else // cv_matchboxes.value == 0, Normal
 		{
+			#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 			if (i == MT_REDTV && !cv_fireshield.value) return;
+			if (i == MT_WHITETV && !cv_jumpshield.value) return;
+			#endif
 			if (i == MT_YELLOWTV && !cv_ringshield.value) return;
 			if (i == MT_BLUETV && !cv_watershield.value) return;
 			if (i == MT_BLACKTV && !cv_bombshield.value) return;
-			if (i == MT_WHITETV && !cv_jumpshield.value) return;
 			if (i == MT_SNEAKERTV && !cv_supersneakers.value) return;
 			if (i == MT_PRUP) return; // no meaning in CTF/tag/chaos/match
 			if (i == MT_SUPERRINGBOX && !cv_superring.value) return;
@@ -4785,8 +4799,15 @@ void P_SpawnMapThing(mapthing_t *mthing)
 	if (i == MT_SIGN && gametype != GT_COOP && gametype != GT_RACE)
 		return; // Don't spawn the level exit sign when it isn't needed.
 
-	if ((i == MT_SUPERRINGBOX || i == MT_GREYRINGBOX || i == MT_REDTV
-		|| i == MT_YELLOWTV || i == MT_BLUETV || i == MT_BLACKTV || i == MT_WHITETV)
+	if ((i == MT_SUPERRINGBOX || i == MT_GREYRINGBOX 
+		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+		|| i == MT_REDTV
+		#endif
+		|| i == MT_YELLOWTV || i == MT_BLUETV || i == MT_BLACKTV 
+		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+		|| i == MT_WHITETV
+		#endif
+		)
 		&& gameskill == sk_insane)
 	{
 		// Don't have rings/shields in Ultimate mode
