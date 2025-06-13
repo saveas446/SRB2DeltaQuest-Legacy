@@ -52,6 +52,7 @@
     // increment this
     #define MINORVER 1
 
+    #define COMPAT_TITLESKY
 
     // Sanity checks
     #if BUILD_TYPE > DEV_RELEASE || BUILD_TYPE < DEMO

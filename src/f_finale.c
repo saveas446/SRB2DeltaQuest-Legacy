@@ -1910,7 +1910,7 @@ static void F_SkyScroll
 	short width;
 
 	
-	#ifndef DEMO2ULTIMATE
+	#ifdef COMPAT_TITLESKY
 	pat = W_CachePatchName("RSKY1", PU_CACHE);
 	#else
 	pat = W_CachePatchName("TITLESKY", PU_CACHE);	

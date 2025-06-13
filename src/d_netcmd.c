@@ -2562,6 +2562,12 @@ static void Command_UnloadWAD_f(void)
 #define DEMO2ULTIMATE_STR "Demo 2 IWAD compatible mode: No\n"
 #endif
 
+#ifdef COMPAT_TITLESKY
+#define TITLESKY_STR "Compatible title screen sky: Yes\n"
+#else
+#define TITLESKY_STR "Compatible title screen sky: No\n"
+#endif
+
 #if BUILD_TYPE == DEMO
 #define BUILDTYPE_STR "Build type: Public Demo\n"
 #endif 
@@ -2669,6 +2675,7 @@ static void Command_Version_f(void)
 	CONS_Printf("\n\n===GAME SETTINGS===\n");
 	CONS_Printf(BUILDTYPE_STR);
 	CONS_Printf(DEMO2ULTIMATE_STR);
+	CONS_Printf(TITLESKY_STR);
 	CONS_Printf(MAPCMD_STR);
 	CONS_Printf(DARKENEDMENU_STR);
 	CONS_Printf(CHARSEL_STR);
