@@ -67,7 +67,7 @@
       <AdditionalIncludeDirectories>D:\Games\SRB2\demo_2\include\FMOD;D:\Games\SRB2\demo_2\include;tools\libpng-src;..\..\tools\libpng-src;..\..\tools\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;USEASM;HAVE_PNG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\..\..\objs\VC\Debug\Win32/Srb2win.pch</PrecompiledHeaderOutputFile>
       <AssemblerOutput>All</AssemblerOutput>
       <AssemblerListingLocation>.\..\..\objs\VC\Debug\Win32/</AssemblerListingLocation>

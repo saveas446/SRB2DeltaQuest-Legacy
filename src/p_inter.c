@@ -144,59 +144,6 @@ static boolean P_CanPickupItem(player_t *player)
 	else return true;
 }
 
-//
-// P_DoNightsScore
-//
-// When you pick up some items in nights, it displays
-// a score sign, and awards you some drill time.
-//
-static void P_DoNightsScore(player_t *player)
-{
-	mobj_t *dummymo;
-	int temp;
-
-	player->linkcount++;
-	player->linktimer = 2*TICRATE;
-
-	dummymo = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z+player->mo->height/2, MT_NIGHTSCORE);
-
-// breaking nights further teehee :3
-
-/*
-	if (player->linkcount < 10)
-	{
-		if (player->bonustime)
-		{
-			temp = dummymo->info->xdeathstate;
-			P_AddPlayerScore(player, player->linkcount*20);
-			P_SetMobjState(dummymo, (statenum_t)(temp+player->linkcount-1));
-		}
-		else
-		{
-			P_AddPlayerScore(player, player->linkcount*10);
-			P_SetMobjState(dummymo, (statenum_t)dummymo->info->spawnstate+player->linkcount-1);
-		}
-	}
-	else
-	{
-		if (player->bonustime)
-		{
-			P_AddPlayerScore(player, 200);
-			P_SetMobjState(dummymo, (statenum_t)dummymo->info->xdeathstate+9);
-		}
-		else
-		{
-			P_AddPlayerScore(player, 100);
-			P_SetMobjState(dummymo, (statenum_t)dummymo->info->spawnstate+9);
-		}
-	}
-	player->drillmeter += TICRATE;
-	dummymo->momz = FRACUNIT;
-	dummymo->fuse = 3*TICRATE;
-
-	P_InstaThrust(dummymo, R_PointToAngle2(dummymo->x, dummymo->y, camera.x, camera.y), 3*FRACUNIT);
-*/
-}
 
 /** Takes action based on a ::MF_SPECIAL thing touched by a player.
   * Actually, this just checks a few things (heights, toucher->player, no
@@ -371,90 +318,12 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 				G_SaveGameData();
 			}
 			return;
-		case MT_NIGHTSBUMPER:
-			if (player->bumpertime < TICRATE/4)
-			{
-				S_StartSound(player->mo, special->info->seesound);
-				if (player->nightsmode)
-				{
-					player->bumpertime = TICRATE/2;
-					if (special->threshold > 0)
-						player->flyangle = (special->threshold*30)-1;
-					else
-						player->flyangle = special->threshold;
-
-					player->speed = special->info->speed;
-					P_UnsetThingPosition(player->mo);
-					player->mo->x = special->x;
-					player->mo->y = special->y;
-					P_SetThingPosition(player->mo);
-					player->mo->z = special->z+(special->height/4);
-				}
-				else // More like a spring
-				{
-					angle_t fa;
-					fixed_t xspeed, yspeed;
-					const fixed_t speed = (special->info->speed*FRACUNIT)/75;
-
-					player->bumpertime = TICRATE/2;
-
-					P_UnsetThingPosition(player->mo);
-					player->mo->x = special->x;
-					player->mo->y = special->y;
-					P_SetThingPosition(player->mo);
-					player->mo->z = special->z+(special->height/4);
-
-					if (special->threshold > 0)
-						fa = FINEANGLE_C((special->threshold*30)-1);
-					else
-						fa = FINEANGLE_C(0);
-
-					xspeed = FixedMul(finecosine[fa],speed);
-					yspeed = FixedMul(finesine[fa],speed);
-
-					P_InstaThrust(player->mo, special->angle, xspeed/10);
-					player->mo->momz = yspeed/11;
-
-					player->mo->angle = special->angle;
-
-					if (player == &players[consoleplayer])
-						localangle = player->mo->angle;
-					else if (cv_splitscreen.value && player == &players[secondarydisplayplayer])
-						localangle2 = player->mo->angle;
-
-					P_ResetPlayer(player);
-					#ifdef FALL_SPRITES
-					P_SetPlayerMobjState(player->mo, S_PLAY_FALL1);
-					#else
-					P_SetPlayerMobjState(player->mo, S_PLAY_ATK1);
-					#endif
-				}
-			}
-			return;
-		case MT_NIGHTSSUPERLOOP:
-			player->powers[pw_superparaloop] = paralooptics;
-			P_SetMobjState(special, S_DISS);
-			return;
-		case MT_NIGHTSDRILLREFILL:
-			player->drillmeter = 96*20;
-			P_SetMobjState(special, S_DISS);
-			return;
 #if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 		case MT_NIGHTSHELPER:
 			player->powers[pw_nightshelper] = helpertics;
 			P_SetMobjState(special, S_DISS);
 			return;
 #endif
-		case MT_NIGHTSWING:
-			P_SpawnMobj(special->x, special->y, special->z, MT_SPARK);
-	
-			//S_StartSound(touchersfx_itemupem);
-
-			P_DoNightsScore(toucher->player);
-	
-			P_SetMobjState(special, S_DISS);
-			special->flags &= ~MF_SPECIAL;
-			return;
 		case MT_HOOPCOLLIDE:
 			// This produces a kind of 'domino effect' with the hoop's pieces.
 			for (; special->hprev != NULL; special = special->hprev); // Move to the first sprite in the hoop
@@ -470,142 +339,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			for (; special != NULL; special = special->hnext)
 				P_RemoveMobj(special);
 
-			// Play hoop sound -- pick one depending on the current link.
-			P_DoNightsScore(player);
-
-			return;
-		case MT_NIGHTSDRONE:
-			if (player->bonustime && !player->exiting)
-			{
-				if (!player->nightsmode)
-				{
-					if (!(netgame || multiplayer))
-					{
-						special->flags2 |= MF2_DONTDRAW;
-						special->tracer = toucher;
-					}
-	
-					toucher->tracer = P_SpawnMobj(toucher->x, toucher->y, toucher->z, MT_NIGHTSCHAR);
-				}
-	
-				P_NightserizePlayer(player, special->health);
-				return;
-			}
-			if (!player->nightsmode)
-			{
-				if (!(netgame || multiplayer))
-				{
-					special->flags2 |= MF2_DONTDRAW;
-					special->tracer = toucher;
-				}
-	
-				toucher->tracer = P_SpawnMobj(toucher->x, toucher->y, toucher->z, MT_NIGHTSCHAR);
-				P_NightserizePlayer(player, special->health);
-			}
-			return;
-		case MT_NIGHTSPARKLE:
-			if (special->fuse < player->mo->fuse - TICRATE)
-			{
-				thinker_t *th;
-				mobj_t *mo2;
-				int count;
-				fixed_t x,y,z, gatherradius;
-				angle_t d;
-	
-				if (special->target != toucher) // These ain't your sparkles, pal!
-					return;
-	
-				x = special->x >> FRACBITS;
-				y = special->y >> FRACBITS;
-				z = special->z >> FRACBITS;
-				count = 1;
-	
-				// scan the remaining thinkers
-				for (th = thinkercap.next; th != &thinkercap; th = th->next)
-				{
-					if (th->function.acp1 != (actionf_p1)P_MobjThinker)
-						continue;
-	
-					mo2 = (mobj_t *)th;
-	
-					if (mo2 == special)
-						continue;
-	
-					if (mo2->type == MT_NIGHTSPARKLE && mo2->fuse >= special->fuse
-						&& mo2->target == toucher
-						&& (mo2->flags & MF_SPECIAL))
-					{
-						mo2->tics = 1;
-						mo2->flags &= ~MF_SPECIAL;
-						count++;
-						x += mo2->x >> FRACBITS;
-						y += mo2->y >> FRACBITS;
-						z += mo2->z >> FRACBITS;
-					}
-					else if (mo2->type == MT_NIGHTSPARKLE && mo2->target == toucher
-						&& (mo2->flags & MF_SPECIAL))
-					{
-						mo2->tics = 1;
-						mo2->flags &= ~MF_SPECIAL;
-					}
-				}
-				x = (x/count)<<FRACBITS;
-				y = (y/count)<<FRACBITS;
-				z = (z/count)<<FRACBITS;
-				P_SetMobjState(special, S_DISS);
-				gatherradius = P_AproxDistance(P_AproxDistance(special->x - x, special->y - y), special->z - z);
-	
-				if (player->powers[pw_superparaloop])
-					gatherradius *= 2;
-	
-				if (gatherradius < 30*FRACUNIT) // Player is probably just sitting there.
-					return;
-	
-				for (d = 0; d < 16; d++)
-					P_SpawnParaloop(x, y, z, gatherradius, 16, MT_NIGHTSPARKLE, d*(ANGLE_45/2));
-				// Now we RE-scan all the thinkers to find close objects to pull
-				// in from the paraloop. Isn't this just so efficient?
-				for (th = thinkercap.next; th != &thinkercap; th = th->next)
-				{
-					if (th->function.acp1 != (actionf_p1)P_MobjThinker)
-						continue;
-	
-					mo2 = (mobj_t *)th;
-	
-					if (P_AproxDistance(P_AproxDistance(mo2->x - x, mo2->y - y), mo2->z - z) > gatherradius)
-						continue;
-	
-					if (mo2->flags & MF_SHOOTABLE)
-					{
-						P_DamageMobj(mo2, toucher, toucher, 1);
-						continue;
-					}
-	
-					// Make these APPEAR!
-					// Tails 12-15-2003
-					if (mo2->type == MT_NIGHTSSUPERLOOP
-						|| mo2->type == MT_NIGHTSDRILLREFILL
-#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
-						|| mo2->type == MT_NIGHTSHELPER
-#endif
-						)
-					{
-						if (!(mo2->flags & MF_SPECIAL))
-						{
-							P_SetMobjState(mo2, mo2->info->seestate);
-							mo2->flags |= MF_SPECIAL;
-							continue;
-						}
-					}
-	
-					if (!(mo2->type == MT_NIGHTSWING || mo2->type == MT_RING))
-						continue;
-	
-					// Yay! The thing's in reach! Pull it in!
-					mo2->flags2 |= MF2_NIGHTSPULL;
-					mo2->tracer = toucher;
-				}
-			}
 			return;
 		case MT_STARPOST:
 			if (special->health > 32)
@@ -776,51 +509,8 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			if (player->lightdash)
 				player->lightdash = TICRATE;
 	
-			if ((maptol & TOL_NIGHTS) || cv_timeattacked.value)
-				P_DoNightsScore(player);
-			break;
 	
-		case MT_HOMINGRING:
-			if (!(P_CanPickupItem(toucher->player)))
-				return;
-			P_GivePlayerRings(player, 1, false);
-			P_SpawnMobj (special->x,special->y,special->z, MT_SPARK);
-			player->powers[pw_homingring] += special->health;
-			sound = sfx_itemup;
 			break;
-		case MT_RAILRING:
-			if (!(P_CanPickupItem(toucher->player)))
-				return;
-			P_GivePlayerRings(player, 1, false);
-			P_SpawnMobj (special->x,special->y,special->z, MT_SPARK);
-			player->powers[pw_railring] += special->health;
-			sound = sfx_itemup;
-			break;
-		case MT_INFINITYRING:
-			if (!(P_CanPickupItem(toucher->player)))
-				return;
-			P_GivePlayerRings(player, 1, false);
-			P_SpawnMobj (special->x,special->y,special->z, MT_SPARK);
-			player->powers[pw_infinityring] += special->health;
-			sound = sfx_itemup;
-			break;
-		case MT_AUTOMATICRING:
-			if (!(P_CanPickupItem(toucher->player)))
-				return;
-			P_GivePlayerRings(player, 1, false);
-			P_SpawnMobj (special->x,special->y,special->z, MT_SPARK);
-			player->powers[pw_automaticring] += special->health;
-			sound = sfx_itemup;
-			break;
-		case MT_EXPLOSIONRING:
-			if (!(P_CanPickupItem(toucher->player)))
-				return;
-			P_GivePlayerRings(player, 1, false);
-			P_SpawnMobj(special->x, special->y, special->z, MT_SPARK);
-			player->powers[pw_explosionring] += special->health;
-			sound = sfx_itemup;
-			break;
-	
 		     // Special Stage Token
 		case MT_EMMY:
 			P_SpawnMobj(special->x, special->y, special->z, MT_SPARK);
@@ -1692,60 +1382,6 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 
 	if (player) // Player is the target
 	{
-		if (player->nightsmode) // NiGHTS damage handling
-		{
-			if (!player->powers[pw_flashing]
-				&& !(player->cheats & CF_GODMODE))
-			{
-				angle_t fa;
-
-				P_UnsetThingPosition(target);
-				player->angle_pos = player->old_angle_pos;
-				player->speed /= 5;
-				player->flyangle += 180;
-				player->flyangle %= 360;
-
-				if (gametype == GT_RACE)
-					player->drillmeter -= 5*20;
-				else
-				{
-					if (source && source->player)
-					{
-						if (player->nightstime > 20)
-							player->nightstime -= 20;
-						else
-							player->nightstime = 1;
-					}
-					else
-					{
-						if (player->nightstime > 5)
-							player->nightstime -= 5;
-						else
-							player->nightstime = 1;
-					}
-				}
-
-				if (player->transfertoclosest)
-				{
-					target->x -= target->momx;
-					target->y -= target->momy;
-				}
-				else
-				{
-					fa = player->old_angle_pos>>ANGLETOFINESHIFT;
-
-					target->x = target->target->x + FixedMul(finecosine[fa],target->target->radius);
-					target->y = target->target->y + FixedMul(finesine[fa],target->target->radius);
-				}
-
-				target->momx = target->momy = 0;
-				P_SetThingPosition(target);
-				player->powers[pw_flashing] = flashingtics;
-				P_SetMobjState(target->tracer, S_NIGHTSHURT1);
-			}
-			return true;
-		}
-
 		if (inflictor && (inflictor->flags & MF_FIRE))
 		{
 			if (player->powers[pw_fireshield])
@@ -2216,10 +1852,10 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
   *       up.
   * \sa P_PlayerFlagBurst
   */
-void P_PlayerRingBurst(player_t *player, int num_rings)
+void P_PlayerRingBurst(player_t* player, int num_rings)
 {
 	int i;
-	mobj_t *mo;
+	mobj_t* mo;
 	byte randomangle;
 	angle_t fa;
 	fixed_t ns;
@@ -2243,109 +1879,109 @@ void P_PlayerRingBurst(player_t *player, int num_rings)
 		if (player->powers[pw_infinityring])
 		{
 			mo = P_SpawnMobj(player->mo->x,
-							player->mo->y,
-							player->mo->z,
-							MT_INFINITYRING);
+				player->mo->y,
+				player->mo->z,
+				MT_INFINITYRING);
 			mo->health = player->powers[pw_infinityring];
 			mo->flags2 |= MF2_DONTRESPAWN;
 			mo->flags &= ~MF_NOGRAVITY;
 			mo->flags2 &= ~MF2_NOCLIPHEIGHT;
 			player->powers[pw_infinityring] = 0;
-			mo->fuse = 12*TICRATE;
+			mo->fuse = 12 * TICRATE;
 		}
 		else if (player->powers[pw_homingring])
 		{
 			mo = P_SpawnMobj(player->mo->x,
-							player->mo->y,
-							player->mo->z,
-							MT_HOMINGRING);
+				player->mo->y,
+				player->mo->z,
+				MT_HOMINGRING);
 			mo->health = player->powers[pw_homingring];
 			mo->flags2 |= MF2_DONTRESPAWN;
 			mo->flags &= ~MF_NOGRAVITY;
 			mo->flags2 &= ~MF2_NOCLIPHEIGHT;
 			player->powers[pw_homingring] = 0;
-			mo->fuse = 12*TICRATE;
+			mo->fuse = 12 * TICRATE;
 		}
 		else if (player->powers[pw_railring])
 		{
 			mo = P_SpawnMobj(player->mo->x,
-							player->mo->y,
-							player->mo->z,
-							MT_RAILRING);
+				player->mo->y,
+				player->mo->z,
+				MT_RAILRING);
 			mo->health = player->powers[pw_railring];
 			mo->flags2 |= MF2_DONTRESPAWN;
 			mo->flags &= ~MF_NOGRAVITY;
 			mo->flags2 &= ~MF2_NOCLIPHEIGHT;
 			player->powers[pw_railring] = 0;
-			mo->fuse = 12*TICRATE;
+			mo->fuse = 12 * TICRATE;
 		}
 		else if (player->powers[pw_automaticring])
 		{
 			mo = P_SpawnMobj(player->mo->x,
-							player->mo->y,
-							player->mo->z,
-							MT_AUTOMATICRING);
+				player->mo->y,
+				player->mo->z,
+				MT_AUTOMATICRING);
 			mo->health = player->powers[pw_automaticring];
 			mo->flags2 |= MF2_DONTRESPAWN;
 			mo->flags &= ~MF_NOGRAVITY;
 			mo->flags2 &= ~MF2_NOCLIPHEIGHT;
 			player->powers[pw_automaticring] = 0;
-			mo->fuse = 12*TICRATE;
+			mo->fuse = 12 * TICRATE;
 		}
 		else if (player->powers[pw_explosionring])
 		{
 			mo = P_SpawnMobj(player->mo->x,
-							player->mo->y,
-							player->mo->z,
-							MT_EXPLOSIONRING);
+				player->mo->y,
+				player->mo->z,
+				MT_EXPLOSIONRING);
 			mo->health = player->powers[pw_explosionring];
 			mo->flags2 |= MF2_DONTRESPAWN;
 			mo->flags &= ~MF_NOGRAVITY;
 			mo->flags2 &= ~MF2_NOCLIPHEIGHT;
 			player->powers[pw_explosionring] = 0;
-			mo->fuse = 12*TICRATE;
+			mo->fuse = 12 * TICRATE;
 		}
 		else
 		{
 			mo = P_SpawnMobj(player->mo->x,
-							 player->mo->y,
-							 player->mo->z,
-							 MT_FLINGRING);
+				player->mo->y,
+				player->mo->z,
+				MT_FLINGRING);
 
-			mo->fuse = (8-player->losscount)*TICRATE;
+			mo->fuse = (8 - player->losscount) * TICRATE;
 		}
 
 		randomangle = P_Random();
 
-		fa = (randomangle+i*FINEANGLES/16) & FINEMASK;
+		fa = (randomangle + i * FINEANGLES / 16) & FINEMASK;
 
 		// Make rings spill out around the player in 16 directions like SA, but spill like Sonic 2.
 		// Technically a non-SA way of spilling rings. They just so happen to be a little similar.
 		if (player->nightsfall)
 		{
-			ns = ((i*FRACUNIT)/16)+2*FRACUNIT;
-			mo->momx = FixedMul(finesine[fa],ns);
+			ns = ((i * FRACUNIT) / 16) + 2 * FRACUNIT;
+			mo->momx = FixedMul(finesine[fa], ns);
 
 			if (!twodlevel)
-				mo->momy = FixedMul(finecosine[fa],ns);
+				mo->momy = FixedMul(finecosine[fa], ns);
 
-			mo->momz = 8*FRACUNIT;
-			mo->fuse = 20*TICRATE; // Adjust fuse for NiGHTS
+			mo->momz = 8 * FRACUNIT;
+			mo->fuse = 20 * TICRATE; // Adjust fuse for NiGHTS
 		}
 		else
 		{
 			if (i > 15)
 			{
 				ns = 3 * FRACUNIT;
-				mo->momx = FixedMul(finesine[fa],ns);
+				mo->momx = FixedMul(finesine[fa], ns);
 
 				if (!twodlevel)
-					mo->momy = FixedMul(finecosine[fa],ns);
+					mo->momy = FixedMul(finecosine[fa], ns);
 
-				mo->momz = 4*FRACUNIT;
+				mo->momz = 4 * FRACUNIT;
 
-				if ((i&1) && !(maptol & TOL_ADVENTURE))
-					mo->momz += 4*FRACUNIT;
+				if ((i & 1) && !(maptol & TOL_ADVENTURE))
+					mo->momz += 4 * FRACUNIT;
 			}
 			else
 			{
@@ -2353,12 +1989,12 @@ void P_PlayerRingBurst(player_t *player, int num_rings)
 				mo->momx = FixedMul(finesine[fa], ns);
 
 				if (!twodlevel)
-					mo->momy = FixedMul(finecosine[fa],ns);
+					mo->momy = FixedMul(finecosine[fa], ns);
 
-				mo->momz = 3*FRACUNIT;
+				mo->momz = 3 * FRACUNIT;
 
-				if ((i&1) && !(maptol & TOL_ADVENTURE))
-					mo->momz += 3*FRACUNIT;
+				if ((i & 1) && !(maptol & TOL_ADVENTURE))
+					mo->momz += 3 * FRACUNIT;
 			}
 		}
 	}
@@ -2374,6 +2010,8 @@ void P_PlayerRingBurst(player_t *player, int num_rings)
 	player->nightsfall = false;
 	return;
 }
+
+
 
 /** Makes an injured or dead player lose possession of the flag.
   *

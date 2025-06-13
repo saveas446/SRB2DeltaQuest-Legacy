@@ -902,7 +902,6 @@ static void P_ZMovement(mobj_t *mo)
 		case MT_INFINITYRING:
 		case MT_RAILRING:
 		case MT_EXPLOSIONRING:
-		case MT_NIGHTSWING:
 			if (!(mo->momx || mo->momy || mo->momz))
 				return;
 			break;
@@ -3014,25 +3013,6 @@ void P_MobjThinker(mobj_t *mobj)
 				else
 					mobj->fuse--;
 				return;
-			case MT_NIGHTSPARKLE:
-				if (mobj->tics != -1)
-				{
-					mobj->tics--;
-
-					// you can cycle through multiple states in a tic
-					if (!mobj->tics)
-						if (!P_SetMobjState(mobj, mobj->state->nextstate))
-							return; // freed itself
-				}
-				if (mobj->flags & MF_SPECIAL)
-					return;
-
-				P_UnsetThingPosition(mobj);
-				mobj->x += mobj->momx;
-				mobj->y += mobj->momy;
-				mobj->z += mobj->momz;
-				P_SetThingPosition(mobj);
-				return;
 			case MT_BLACKORB:
 			case MT_WHITEORB:
 			case MT_REDORB:
@@ -3163,13 +3143,6 @@ void P_MobjThinker(mobj_t *mobj)
 				return;
 			}
 			break;
-		case MT_SUPERTRANS:
-			if (mobj->state == &states[S_NIGHTSDRONE1])
-			{
-				mobj->health = 0;
-				P_SetMobjState(mobj, S_DISS);
-			}
-			break;
 		case MT_HAMMER:
 			if (mobj->z <= mobj->floorz)
 				P_SetMobjState(mobj,S_DISS);
@@ -3269,13 +3242,6 @@ void P_MobjThinker(mobj_t *mobj)
 		case MT_SEED:
 			mobj->momz = mobj->info->speed;
 			break;
-		case MT_NIGHTSDRONE:
-			if (mobj->tracer && mobj->tracer->player && !mobj->tracer->player->nightsmode)
-				mobj->flags2 &= ~MF2_DONTDRAW;
-			mobj->angle += ANGLE_10;
-			if (mobj->z <= mobj->floorz)
-				mobj->momz = 5*FRACUNIT;
-			break;
 		case MT_PLAYER:
 			P_PlayerMobjThinker(mobj);
 			return;
@@ -3320,10 +3286,6 @@ void P_MobjThinker(mobj_t *mobj)
 			if (mobj->flags2 & MF2_NIGHTSPULL)
 				P_NightsItemChase(mobj);
 			return;
-		case MT_NIGHTSWING:
-			if (mobj->flags2 & MF2_NIGHTSPULL)
-				P_NightsItemChase(mobj);
-			break;
 		case MT_SHELL:
 			if (mobj->threshold > TICRATE)
 				mobj->threshold--;
@@ -3975,7 +3937,6 @@ mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
 		case MT_INFINITYRING:
 		case MT_AUTOMATICRING:
 		case MT_EXPLOSIONRING:
-		case MT_NIGHTSWING:
 		case MT_BLUEORB:
 		case MT_BLACKORB:
 		case MT_WHITEORB:
@@ -4913,13 +4874,6 @@ void P_SpawnMapThing(mapthing_t *mthing)
 			mobj->threshold = (TICRATE*2)-1;
 	}
 #endif
-	else if (mobj->type == MT_NIGHTSBUMPER)
-	{
-		// Lower 4 bits specify the angle of
-		// the bumper in 30 degree increments.
-		mobj->threshold = (mthing->options & 15);
-		P_SetMobjState(mobj, mobj->info->spawnstate+mobj->threshold);
-	}
 
 	if (mobj->flags & MF_BOSS)
 	{
@@ -4936,11 +4890,6 @@ void P_SpawnMapThing(mapthing_t *mthing)
 	{
 		mobj->health = mthing->angle & 255;
 		mobj->threshold = mthing->angle >> 8;
-	}
-	else if (mobj->type == MT_NIGHTSDRONE)
-	{
-		if (mthing->angle > 0)
-			mobj->health = mthing->angle;
 	}
 
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
@@ -5230,88 +5179,6 @@ void P_SpawnHoopsAndRings(mapthing_t *mthing)
 		}
 		return;
 	}
-	else if (mthing->type == 37) // Wing logo item.
-	{
-		if (mthing->options >> 4)
-			mthing->z = (short)((R_PointInSubsector(x, y)->sector->floorheight + ((mthing->options >> 4) << FRACBITS)) >> FRACBITS);
-		else
-			mthing->z = (short)(R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS)->sector->floorheight >> FRACBITS);
-
-		mobj = P_SpawnMobj(mthing->x << FRACBITS, mthing->y << FRACBITS,mthing->z << FRACBITS, MT_NIGHTSWING);
-		mobj->spawnpoint = mthing;
-
-		if (mobj->tics > 0)
-			mobj->tics = 1 + (P_Random() % mobj->tics);
-		mobj->angle = FixedAngle(mthing->angle*FRACUNIT);
-		mobj->flags |= MF_AMBUSH;
-		mthing->mobj = mobj;
-	}
-	else if (mthing->type == 2048) // A ring of wing items (NiGHTS stuff)
-	{
-		mthingx = mthing->x << FRACBITS;
-		mthingy = mthing->y << FRACBITS;
-
-		if (mthing->options >> 4)
-			mthingz = (R_PointInSubsector(x, y)->sector->floorheight + ((mthing->options >> 4) << FRACBITS));
-		else
-			mthingz = R_PointInSubsector(mthingx, mthing->y << FRACBITS)->sector->floorheight;
-
-		closestangle = FixedAngle(mthing->angle*FRACUNIT);
-
-		// Create the hoop!
-		for (i = 0; i < 8; i++)
-		{
-			fa = i*FINEANGLES/8;
-			v[0] = FixedMul(finecosine[fa],96*FRACUNIT);
-			v[1] = 0;
-			v[2] = FixedMul(finesine[fa],96*FRACUNIT);
-			v[3] = FRACUNIT;
-
-			res = VectorMatrixMultiply(v, *RotateZMatrix(closestangle));
-			memcpy(&v, res, sizeof (v));
-
-			finalx = mthingx + v[0];
-			finaly = mthingy + v[1];
-			finalz = mthingz + v[2];
-
-			mobj = P_SpawnMobj(finalx, finaly, finalz, MT_NIGHTSWING);
-			mobj->z -= mobj->height/2;
-		}
-		return;
-	}
-	else if (mthing->type == 2010) // A BIGGER ring of wing items (NiGHTS stuff)
-	{
-		mthingx = mthing->x << FRACBITS;
-		mthingy = mthing->y << FRACBITS;
-
-		if (mthing->options >> 4)
-			mthingz = (R_PointInSubsector(x, y)->sector->floorheight + ((mthing->options >> 4) << FRACBITS));
-		else
-			mthingz = R_PointInSubsector(mthingx, mthing->y << FRACBITS)->sector->floorheight;
-
-		closestangle = FixedAngle(mthing->angle*FRACUNIT);
-
-		// Create the hoop!
-		for (i = 0; i < 16; i++)
-		{
-			fa = (i*FINEANGLES/8) & FINEMASK;
-			v[0] = FixedMul(finecosine[fa],192*FRACUNIT);
-			v[1] = 0;
-			v[2] = FixedMul(finesine[fa],192*FRACUNIT);
-			v[3] = FRACUNIT;
-
-			res = VectorMatrixMultiply(v, *RotateZMatrix(closestangle));
-			memcpy(&v, res, sizeof (v));
-
-			finalx = mthingx + v[0];
-			finaly = mthingy + v[1];
-			finalz = mthingz + v[2];
-
-			mobj = P_SpawnMobj(finalx, finaly, finalz, MT_NIGHTSWING);
-			mobj->z -= mobj->height/2;
-		}
-		return;
-	}
 	else
 	{
 		if (gameskill >= sk_insane && !((gamemap >= sstage_start && gamemap <= sstage_end) || (maptol & TOL_NIGHTS))) // No rings in Ultimate!
@@ -5430,149 +5297,6 @@ void P_SpawnHoopsAndRings(mapthing_t *mthing)
 				if (mthing->options & MTF_AMBUSH)
 					mobj->flags |= MF_AMBUSH;
 			}
-		}
-		else if (mthing->type == 47) // A ring of rings (NiGHTS stuff)
-		{
-			mthingx = mthing->x << FRACBITS;
-			mthingy = mthing->y << FRACBITS;
-
-			if (mthing->options >> 4)
-				mthingz = (R_PointInSubsector(x, y)->sector->floorheight + ((mthing->options >> 4) << FRACBITS));
-			else
-				mthingz = R_PointInSubsector(mthingx, mthing->y << FRACBITS)->sector->floorheight;
-
-			closestangle = FixedAngle(mthing->angle*FRACUNIT);
-
-			// Create the hoop!
-			for (i = 0; i < 8; i++)
-			{
-				fa = i*FINEANGLES/8;
-				v[0] = FixedMul(finecosine[fa],96*FRACUNIT);
-				v[1] = 0;
-				v[2] = FixedMul(finesine[fa],96*FRACUNIT);
-				v[3] = FRACUNIT;
-
-				res = VectorMatrixMultiply(v, *RotateZMatrix(closestangle));
-				memcpy(&v, res, sizeof (v));
-
-				finalx = mthingx + v[0];
-				finaly = mthingy + v[1];
-				finalz = mthingz + v[2];
-
-				mobj = P_SpawnMobj(finalx, finaly, finalz, MT_RING);
-				mobj->z -= mobj->height/2;
-			}
-
-			return;
-		}
-		else if (mthing->type == 2007) // A BIGGER ring of rings (NiGHTS stuff)
-		{
-			mthingx = mthing->x << FRACBITS;
-			mthingy = mthing->y << FRACBITS;
-
-			if (mthing->options >> 4)
-				mthingz = (R_PointInSubsector(x, y)->sector->floorheight + ((mthing->options >> 4) << FRACBITS));
-			else
-				mthingz = R_PointInSubsector(mthingx, mthing->y << FRACBITS)->sector->floorheight;
-
-			closestangle = FixedAngle(mthing->angle*FRACUNIT);
-
-			// Create the hoop!
-			for (i = 0; i < 16; i++)
-			{
- 				fa = i*FINEANGLES/16;
-				v[0] = FixedMul(finecosine[fa],192*FRACUNIT);
-				v[1] = 0;
-				v[2] = FixedMul(finesine[fa],192*FRACUNIT);
-				v[3] = FRACUNIT;
-
-				res = VectorMatrixMultiply(v, *RotateZMatrix(closestangle));
-				memcpy(&v, res, sizeof (v));
-
-				finalx = mthingx + v[0];
-				finaly = mthingy + v[1];
-				finalz = mthingz + v[2];
-
-				mobj = P_SpawnMobj(finalx, finaly, finalz, MT_RING);
-				mobj->z -= mobj->height/2;
-			}
-
-			return;
-		}
-		else if (mthing->type == 2046) // A ring of rings and wings (alternating) (NiGHTS stuff)
-		{
-			mthingx = mthing->x << FRACBITS;
-			mthingy = mthing->y << FRACBITS;
-
-			if (mthing->options >> 4)
-				mthingz = (R_PointInSubsector(x, y)->sector->floorheight + ((mthing->options >> 4) << FRACBITS));
-			else
-				mthingz = R_PointInSubsector(mthingx, mthing->y << FRACBITS)->sector->floorheight;
-
-			closestangle = FixedAngle(mthing->angle*FRACUNIT);
-
-			// Create the hoop!
-			for (i = 0; i < 8; i++)
-			{
-				fa = i*FINEANGLES/8;
-				v[0] = FixedMul(finecosine[fa],96*FRACUNIT);
-				v[1] = 0;
-				v[2] = FixedMul(finesine[fa],96*FRACUNIT);
-				v[3] = FRACUNIT;
-
-				res = VectorMatrixMultiply(v, *RotateZMatrix(closestangle));
-				memcpy(&v, res, sizeof (v));
-
-				finalx = mthingx + v[0];
-				finaly = mthingy + v[1];
-				finalz = mthingz + v[2];
-
-				if (i & 1)
-					mobj = P_SpawnMobj(finalx, finaly, finalz, MT_RING);
-				else
-					mobj = P_SpawnMobj(finalx, finaly, finalz, MT_NIGHTSWING);
-
-				mobj->z -= mobj->height/2;
-			}
-
-			return;
-		}
-		else if (mthing->type == 2047) // A BIGGER ring of rings and wings (alternating) (NiGHTS stuff)
-		{
-			mthingx = mthing->x << FRACBITS;
-			mthingy = mthing->y << FRACBITS;
-
-			if (mthing->options >> 4)
-				mthingz = (R_PointInSubsector(x, y)->sector->floorheight + ((mthing->options >> 4) << FRACBITS));
-			else
-				mthingz = R_PointInSubsector(mthingx, mthing->y << FRACBITS)->sector->floorheight;
-
-			closestangle = FixedAngle(mthing->angle*FRACUNIT);
-
-			// Create the hoop!
-			for (i = 0; i < 16; i++)
-			{
-				fa = i*FINEANGLES/16;
-				v[0] = FixedMul(finecosine[fa],192*FRACUNIT);
-				v[1] = 0;
-				v[2] = FixedMul(finesine[fa],192*FRACUNIT);
-				v[3] = FRACUNIT;
-
-				res = VectorMatrixMultiply(v, *RotateZMatrix(closestangle));
-				memcpy(&v, res, sizeof (v));
-
-				finalx = mthingx + v[0];
-				finaly = mthingy + v[1];
-				finalz = mthingz + v[2];
-
-				if (i & 1)
-					mobj = P_SpawnMobj(finalx, finaly, finalz, MT_RING);
-				else
-					mobj = P_SpawnMobj(finalx, finaly, finalz, MT_NIGHTSWING);
-				mobj->z -= mobj->height/2;
-			}
-
-			return;
 		}
 	}
 }

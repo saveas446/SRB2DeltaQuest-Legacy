@@ -186,7 +186,6 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT],     // SPR_SCRC
 	&lspr[NOLIGHT],     // SPR_SCRD
 	&lspr[SUPERSPARK_L],     // SPR_SSPK
-	&lspr[NOLIGHT],     // SPR_GRAS
 	&lspr[NOLIGHT],     // SPR_YSPR
 	&lspr[NOLIGHT],     // SPR_RSPR
 	&lspr[NOLIGHT],     // SPR_YSUD
@@ -261,12 +260,6 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT],     // SPR_MAXE	
 	&lspr[NOLIGHT],     // SPR_FFWR
 
-	&lspr[NOLIGHT],     // SPR_NSPK
-
-	&lspr[SUPERSONIC_L],     // SPR_SUPE // NiGHTS character flying
-	&lspr[SUPERSONIC_L],     // SPR_SUPZ // NiGHTS hurt
-	&lspr[SUPERSONIC_L],     // SPR_NDRN // NiGHTS drone
-	&lspr[SUPERSONIC_L],     // SPR_NDRL // NiGHTS character drilling
 	&lspr[NIGHTSLIGHT_L],     // SPR_SEED // Sonic CD flower seed
 	&lspr[JETLIGHT_L],     // SPR_JETF // Boss jet fumes
 	&lspr[NOLIGHT],     // SPR_HOOP
@@ -316,8 +309,6 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT], // SPR_ROIN
 	&lspr[NOLIGHT], // SPR_ROIO
 	&lspr[NOLIGHT], // SPR_ROIP
-	&lspr[NOLIGHT], // SPR_NPRA
-	&lspr[NOLIGHT], // SPR_NPRB
 	&lspr[NOLIGHT], // SPR_REDX
 	&lspr[NOLIGHT], // SPR_SPRB Graue 01-08-2004
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)

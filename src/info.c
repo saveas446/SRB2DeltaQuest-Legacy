@@ -37,63 +37,58 @@ char sprnames[NUMSPRITES + 1][5] =
 {
 	"MISL","PLAY","POSS","SPOS","EGGM","BON1",
 	"STIM","MEDI",
-	"EMMY","PINV","BLTV","POL2","SUDY","SHTV","COL3","BUBL","YLTV","COL5",
-	"POB1","SUDR","SMOK","SPLA","TNT1","BIRD","SQRL","YORB","BORB","KORB","SPRK","IVSP",
+	"EMMY","PINV","BLTV","SPRY","SUDY","SHTV","COL3","BUBL","YLTV","FWR1",
+	"SPRR","SUDR","SMOK","SPLA","TNT1","BIRD","SQRL","YORB","BORB","KORB","SPRK","IVSP",
 	"IVSQ","DISS","BUBP","BUBO","BUBN","BUBM","CNTA","CNTB","CNTC","CNTD",
 	"CNTE","CNTF","POPP","PRUP","BKTV","SCRA","SCRB","SCRC","SCRD","SSPK",
-	"NBMP","YSPR","RSPR","YSUD","RSUD","SKIM","MINE","FISH","GARG","SPLH",
-	"GTHO","THZP","SIGN","RRNG","TTAG",
-#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+	"YSPR","RSPR","YSUD","RSUD","SKIM","MINE","FISH","GARG","SPLH",
+	"THOK","THZP","SIGN","RRNG","TTAG",
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"STEM",
-#endif
+	#endif
 	"GFLG",
 	"CEMG","CEMO","CEMP","CEMB","CEMR","CEML","CEMY","JETB","JETG","JBUL",
 	"MOUS",
 	"PAIN", // Demo 2 uses "PAIN" instead of "DETN" for some reason
 	"XPLD","CHAN","SNO1","SANT",
 	"SBLL","SPIK",
-#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	"CCOM",
-#endif
+	#endif
 	"RAIN",
-#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	"DSPK","USPK",
-#endif
+	#endif
 	"STPT","RNGM","RNGR","RNGS",
 	"RNGA","RNGE","TAEH","TAER","THER","TAHR","THOM","TAUT","TEXP",
-#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"BUS1","BUS2",
-#endif
+	#endif
 	"FWR2","FWR3","FLAM","PUMA","HAMM","KOOP",
-	"SHLL","MAXE","FFWR","NSPK","SUPE","SUPZ","NDRN","NDRL",
+	"SHLL","MAXE","FFWR",
 	"SEED","JETF","HOOP","NWNG",
-#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"EGGN",
-#endif
+	#endif
 	"GOOP",
-#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	"BPLD",
-#endif
+	#endif
 	"RDTV",
 	"RORB",
-#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"EGGB",
-#endif
-	"SFLM","TNKA","TNKB","SPNK","TFOG","LITE",
-#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
-	"TRET","TRLS",
-#endif
-	"FWR4","GOOM","MUS1","MUS2","TOAD","XMS1",
+	#endif
+	"SFLM","TNKA","TNKB","SPNK","TFOG","LITE","TRET",
+	"TRLS","FWR4","GOOM","MUS1","MUS2","TOAD","XMS1",
 	"XMS2","XMS3","SUPT","ROIA","ROIB","ROIC","ROID","ROIE","ROIF",
 	"ROIG","ROIH","ROII","ROIJ","ROIK","ROIL","ROIM","ROIN","ROIO","ROIP",
-	"NPRA","NPRB","REDX","SPRB",
-#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+	"REDX","SPRB",
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"BUZZ","RBUZ",
-#endif
+	#endif
 	"CEMK","WHTV","WORB",
-#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"TURR",
-#endif
 };
 
 // Doesn't work with g++, needs actionf_p1 (don't modify this comment)
@@ -593,20 +588,6 @@ state_t states[NUMSTATES] =
 	{SPR_SSPK, 2, 2, {NULL}, 0, 0, S_SSPK4}, // S_SSPK3
 	{SPR_SSPK, 1, 2, {NULL}, 0, 0, S_SSPK5}, // S_SSPK4
 	{SPR_SSPK, 0, 2, {NULL}, 0, 0, S_DISS},  // S_SSPK5
-
-	// NiGHTS bumper
-	{SPR_NBMP, 0, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSBUMPER1
-	{SPR_NBMP, 1, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSBUMPER2
-	{SPR_NBMP, 2, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSBUMPER3
-	{SPR_NBMP, 3, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSBUMPER4
-	{SPR_NBMP, 4, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSBUMPER5
-	{SPR_NBMP, 5, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSBUMPER6
-	{SPR_NBMP, 6, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSBUMPER7
-	{SPR_NBMP, 7, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSBUMPER8
-	{SPR_NBMP, 8, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSBUMPER9
-	{SPR_NBMP, 9, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSBUMPER10
-	{SPR_NBMP, 10, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSBUMPER11
-	{SPR_NBMP, 11, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSBUMPER12
 
 	// Yellow Diagonal Spring
 	{SPR_YSPR, 0, -1, {NULL}, 0, 0, S_NULL},    // S_YDIAG1
@@ -1279,108 +1260,6 @@ state_t states[NUMSTATES] =
 	{SPR_FFWR, 2, 3, {NULL}, 0, 0, S_FIREFLOWER4}, // S_FIREFLOWER3
 	{SPR_FFWR, 3, 3, {NULL}, 0, 0, S_FIREFLOWER1}, // S_FIREFLOWER4
 
-	// Nights Sparkle
-	{SPR_NSPK, 32768, 140, {NULL}, 0, 0, S_NIGHTSPARKLE2}, // S_NIGHTSPARKLE1
-	{SPR_NSPK, 32769, 7, {NULL}, 0, 0, S_NIGHTSPARKLE3},   // S_NIGHTSPARKLE2
-	{SPR_NSPK, 32770, 7, {NULL}, 0, 0, S_NIGHTSPARKLE4},   // S_NIGHTSPARKLE3
-	{SPR_NSPK, 32771, 7, {NULL}, 0, 0, S_NULL},            // S_NIGHTSPARKLE4
-
-	// Nights Drone
-	{SPR_NDRN, 0, -1, {NULL}, 0, 0, S_NIGHTSDRONE2}, // S_NIGHTSDRONE1
-	{SPR_NDRN, 0, -1, {NULL}, 0, 0, S_NIGHTSDRONE1}, // S_NIGHTSDRONE2
-
-	// Nights Player, Flying
-	{SPR_SUPE, 0, 1, {NULL}, 0, 0, S_NIGHTSFLY1B},  // S_NIGHTSFLY1A
-	{SPR_SUPE, 1, 1, {NULL}, 0, 0, S_NIGHTSFLY1A},  // S_NIGHTSFLY1B
-	{SPR_SUPE, 2, 1, {NULL}, 0, 0, S_NIGHTSFLY2B},  // S_NIGHTSFLY2A
-	{SPR_SUPE, 3, 1, {NULL}, 0, 0, S_NIGHTSFLY2A},  // S_NIGHTSFLY2B
-	{SPR_SUPE, 4, 1, {NULL}, 0, 0, S_NIGHTSFLY3B},  // S_NIGHTSFLY3A
-	{SPR_SUPE, 5, 1, {NULL}, 0, 0, S_NIGHTSFLY3A},  // S_NIGHTSFLY3B
-	{SPR_SUPE, 6, 1, {NULL}, 0, 0, S_NIGHTSFLY4B},  // S_NIGHTSFLY4A
-	{SPR_SUPE, 7, 1, {NULL}, 0, 0, S_NIGHTSFLY4A},  // S_NIGHTSFLY4B
-	{SPR_SUPE, 8, 1, {NULL}, 0, 0, S_NIGHTSFLY5B},  // S_NIGHTSFLY5A
-	{SPR_SUPE, 9, 1, {NULL}, 0, 0, S_NIGHTSFLY5A},  // S_NIGHTSFLY5B
-	{SPR_SUPE, 10, 1, {NULL}, 0, 0, S_NIGHTSFLY6B}, // S_NIGHTSFLY6A
-	{SPR_SUPE, 11, 1, {NULL}, 0, 0, S_NIGHTSFLY6A}, // S_NIGHTSFLY6B
-	{SPR_SUPE, 12, 1, {NULL}, 0, 0, S_NIGHTSFLY7B}, // S_NIGHTSFLY7A
-	{SPR_SUPE, 13, 1, {NULL}, 0, 0, S_NIGHTSFLY7A}, // S_NIGHTSFLY7B
-	{SPR_SUPE, 14, 1, {NULL}, 0, 0, S_NIGHTSFLY8B}, // S_NIGHTSFLY8A
-	{SPR_SUPE, 15, 1, {NULL}, 0, 0, S_NIGHTSFLY8A}, // S_NIGHTSFLY8B
-	{SPR_SUPE, 16, 1, {NULL}, 0, 0, S_NIGHTSFLY9B}, // S_NIGHTSFLY9A
-	{SPR_SUPE, 17, 1, {NULL}, 0, 0, S_NIGHTSFLY9A}, // S_NIGHTSFLY9B
-
-	// Nights Player, Falling
-	{SPR_SUPZ, 0, 1, {NULL}, 0, 0, S_NIGHTSHURT2},   // S_NIGHTSHURT1
-	{SPR_SUPZ, 1, 1, {NULL}, 0, 0, S_NIGHTSHURT3},   // S_NIGHTSHURT2
-	{SPR_SUPZ, 2, 1, {NULL}, 0, 0, S_NIGHTSHURT4},   // S_NIGHTSHURT3
-	{SPR_SUPZ, 3, 1, {NULL}, 0, 0, S_NIGHTSHURT5},   // S_NIGHTSHURT4
-	{SPR_SUPZ, 4, 1, {NULL}, 0, 0, S_NIGHTSHURT6},   // S_NIGHTSHURT5
-	{SPR_SUPZ, 5, 1, {NULL}, 0, 0, S_NIGHTSHURT7},   // S_NIGHTSHURT6
-	{SPR_SUPZ, 6, 1, {NULL}, 0, 0, S_NIGHTSHURT8},   // S_NIGHTSHURT7
-	{SPR_SUPZ, 7, 1, {NULL}, 0, 0, S_NIGHTSHURT9},   // S_NIGHTSHURT8
-	{SPR_SUPZ, 8, 1, {NULL}, 0, 0, S_NIGHTSHURT10},  // S_NIGHTSHURT9
-	{SPR_SUPZ, 9, 1, {NULL}, 0, 0, S_NIGHTSHURT11},  // S_NIGHTSHURT10
-	{SPR_SUPZ, 10, 1, {NULL}, 0, 0, S_NIGHTSHURT12}, // S_NIGHTSHURT11
-	{SPR_SUPZ, 11, 1, {NULL}, 0, 0, S_NIGHTSHURT13}, // S_NIGHTSHURT12
-	{SPR_SUPZ, 12, 1, {NULL}, 0, 0, S_NIGHTSHURT14}, // S_NIGHTSHURT13
-	{SPR_SUPZ, 13, 1, {NULL}, 0, 0, S_NIGHTSHURT15}, // S_NIGHTSHURT14
-	{SPR_SUPZ, 14, 1, {NULL}, 0, 0, S_NIGHTSHURT16}, // S_NIGHTSHURT15
-	{SPR_SUPZ, 15, 1, {NULL}, 0, 0, S_NIGHTSHURT17}, // S_NIGHTSHURT16
-	{SPR_SUPZ, 0, 1, {NULL}, 0, 0, S_NIGHTSHURT18},  // S_NIGHTSHURT17
-	{SPR_SUPZ, 1, 1, {NULL}, 0, 0, S_NIGHTSHURT19},  // S_NIGHTSHURT18
-	{SPR_SUPZ, 2, 1, {NULL}, 0, 0, S_NIGHTSHURT20},  // S_NIGHTSHURT19
-	{SPR_SUPZ, 3, 1, {NULL}, 0, 0, S_NIGHTSHURT21},  // S_NIGHTSHURT20
-	{SPR_SUPZ, 4, 1, {NULL}, 0, 0, S_NIGHTSHURT22},  // S_NIGHTSHURT21
-	{SPR_SUPZ, 5, 1, {NULL}, 0, 0, S_NIGHTSHURT23},  // S_NIGHTSHURT22
-	{SPR_SUPZ, 6, 1, {NULL}, 0, 0, S_NIGHTSHURT24},  // S_NIGHTSHURT23
-	{SPR_SUPZ, 7, 1, {NULL}, 0, 0, S_NIGHTSHURT25},  // S_NIGHTSHURT24
-	{SPR_SUPZ, 8, 1, {NULL}, 0, 0, S_NIGHTSHURT26},  // S_NIGHTSHURT25
-	{SPR_SUPZ, 9, 1, {NULL}, 0, 0, S_NIGHTSHURT27},  // S_NIGHTSHURT26
-	{SPR_SUPZ, 10, 1, {NULL}, 0, 0, S_NIGHTSHURT28}, // S_NIGHTSHURT27
-	{SPR_SUPZ, 11, 1, {NULL}, 0, 0, S_NIGHTSHURT29}, // S_NIGHTSHURT28
-	{SPR_SUPZ, 12, 1, {NULL}, 0, 0, S_NIGHTSHURT30}, // S_NIGHTSHURT29
-	{SPR_SUPZ, 13, 1, {NULL}, 0, 0, S_NIGHTSHURT31}, // S_NIGHTSHURT30
-	{SPR_SUPZ, 14, 1, {NULL}, 0, 0, S_NIGHTSHURT32}, // S_NIGHTSHURT31
-	{SPR_SUPZ, 15, 1, {NULL}, 0, 0, S_NIGHTSFLY1A},  // S_NIGHTSHURT32
-
-	// Nights Player, Drilling
-	{SPR_NDRL, 0, 2, {NULL}, 0, 0, S_NIGHTSDRILL1B},  // S_NIGHTSDRILL1A
-	{SPR_NDRL, 1, 2, {NULL}, 0, 0, S_NIGHTSDRILL1C},  // S_NIGHTSDRILL1B
-	{SPR_NDRL, 2, 2, {NULL}, 0, 0, S_NIGHTSDRILL1D},  // S_NIGHTSDRILL1C
-	{SPR_NDRL, 3, 2, {NULL}, 0, 0, S_NIGHTSDRILL1A},  // S_NIGHTSDRILL1D
-	{SPR_NDRL, 4, 2, {NULL}, 0, 0, S_NIGHTSDRILL2B},  // S_NIGHTSDRILL2A
-	{SPR_NDRL, 5, 2, {NULL}, 0, 0, S_NIGHTSDRILL2C},  // S_NIGHTSDRILL2B
-	{SPR_NDRL, 6, 2, {NULL}, 0, 0, S_NIGHTSDRILL2D},  // S_NIGHTSDRILL2C
-	{SPR_NDRL, 7, 2, {NULL}, 0, 0, S_NIGHTSDRILL2A},  // S_NIGHTSDRILL2D
-	{SPR_NDRL, 8, 2, {NULL}, 0, 0, S_NIGHTSDRILL3B},  // S_NIGHTSDRILL3A
-	{SPR_NDRL, 9, 2, {NULL}, 0, 0, S_NIGHTSDRILL3C},  // S_NIGHTSDRILL3B
-	{SPR_NDRL, 10, 2, {NULL}, 0, 0, S_NIGHTSDRILL3D}, // S_NIGHTSDRILL3C
-	{SPR_NDRL, 11, 2, {NULL}, 0, 0, S_NIGHTSDRILL3A}, // S_NIGHTSDRILL3D
-	{SPR_NDRL, 12, 2, {NULL}, 0, 0, S_NIGHTSDRILL4B}, // S_NIGHTSDRILL4A
-	{SPR_NDRL, 13, 2, {NULL}, 0, 0, S_NIGHTSDRILL4C}, // S_NIGHTSDRILL4B
-	{SPR_NDRL, 14, 2, {NULL}, 0, 0, S_NIGHTSDRILL4D}, // S_NIGHTSDRILL4C
-	{SPR_NDRL, 15, 2, {NULL}, 0, 0, S_NIGHTSDRILL4A}, // S_NIGHTSDRILL4D
-	{SPR_NDRL, 16, 2, {NULL}, 0, 0, S_NIGHTSDRILL5B}, // S_NIGHTSDRILL5A
-	{SPR_NDRL, 17, 2, {NULL}, 0, 0, S_NIGHTSDRILL5C}, // S_NIGHTSDRILL5B
-	{SPR_NDRL, 18, 2, {NULL}, 0, 0, S_NIGHTSDRILL5D}, // S_NIGHTSDRILL5C
-	{SPR_NDRL, 19, 2, {NULL}, 0, 0, S_NIGHTSDRILL5A}, // S_NIGHTSDRILL5D
-	{SPR_NDRL, 20, 2, {NULL}, 0, 0, S_NIGHTSDRILL6B}, // S_NIGHTSDRILL6A
-	{SPR_NDRL, 21, 2, {NULL}, 0, 0, S_NIGHTSDRILL6C}, // S_NIGHTSDRILL6B
-	{SPR_NDRL, 22, 2, {NULL}, 0, 0, S_NIGHTSDRILL6D}, // S_NIGHTSDRILL6C
-	{SPR_NDRL, 23, 2, {NULL}, 0, 0, S_NIGHTSDRILL6A}, // S_NIGHTSDRILL6D
-	{SPR_NDRL, 24, 2, {NULL}, 0, 0, S_NIGHTSDRILL7B}, // S_NIGHTSDRILL7A
-	{SPR_NDRL, 25, 2, {NULL}, 0, 0, S_NIGHTSDRILL7C}, // S_NIGHTSDRILL7B
-	{SPR_NDRL, 26, 2, {NULL}, 0, 0, S_NIGHTSDRILL7D}, // S_NIGHTSDRILL7C
-	{SPR_NDRL, 27, 2, {NULL}, 0, 0, S_NIGHTSDRILL7A}, // S_NIGHTSDRILL7D
-	{SPR_NDRL, 28, 2, {NULL}, 0, 0, S_NIGHTSDRILL8B}, // S_NIGHTSDRILL8A
-	{SPR_NDRL, 29, 2, {NULL}, 0, 0, S_NIGHTSDRILL8C}, // S_NIGHTSDRILL8B
-	{SPR_NDRL, 30, 2, {NULL}, 0, 0, S_NIGHTSDRILL8D}, // S_NIGHTSDRILL8C
-	{SPR_NDRL, 31, 2, {NULL}, 0, 0, S_NIGHTSDRILL8A}, // S_NIGHTSDRILL8D
-	{SPR_NDRL, 32, 2, {NULL}, 0, 0, S_NIGHTSDRILL9B}, // S_NIGHTSDRILL9A
-	{SPR_NDRL, 33, 2, {NULL}, 0, 0, S_NIGHTSDRILL9C}, // S_NIGHTSDRILL9B
-	{SPR_NDRL, 34, 2, {NULL}, 0, 0, S_NIGHTSDRILL9D}, // S_NIGHTSDRILL9C
-	{SPR_NDRL, 35, 2, {NULL}, 0, 0, S_NIGHTSDRILL9A}, // S_NIGHTSDRILL9D
-
 	// Flower Seed
 	{SPR_SEED, 32768, -1, {NULL}, 0, 0, S_NULL}, // S_SEED
 
@@ -1482,7 +1361,6 @@ state_t states[NUMSTATES] =
 	{SPR_LITE, 0, -1, {NULL}, 0, 0, S_LITE}, // S_LITE
 
 	// THZ Turret
-#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{SPR_TRET, 32768, 105, {A_TurretStop}, 0, 0, S_TURRETFIRE}, // S_TURRET
 	{SPR_TRET, 32768, 105, {A_TurretFire}, 0, 0, S_TURRET},     // S_TURRETFIRE
 	{SPR_TRET, 32769, 7, {A_Pain}, 0, 0, S_TURRETSHOCK2},       // S_TURRETSHOCK1
@@ -1497,7 +1375,6 @@ state_t states[NUMSTATES] =
 	{SPR_TRLS, 32768, 1, {NULL}, 0, 0, S_TURRETLASER},          // S_TURRETLASER
 	{SPR_TRLS, 32769, 2, {NULL}, 0, 0, S_TURRETLASEREXPLODE2},  // S_TURRETLASEREXPLODE1
 	{SPR_TRLS, 32770, 2, {NULL}, 0, 0, S_DISS},                 // S_TURRETLASEREXPLODE2
-#endif
 
 	// GFZ Flower
 	{SPR_FWR4, 0, -1, {NULL}, 0, 0, S_NULL}, // S_GFZFLOWERD1
@@ -1533,7 +1410,7 @@ state_t states[NUMSTATES] =
 	{SPR_SUPT, 5, 3, {NULL}, 0, 0, S_SUPERTRANS7},     // S_SUPERTRANS6
 	{SPR_SUPT, 6, 3, {NULL}, 0, 0, S_SUPERTRANS8},     // S_SUPERTRANS7
 	{SPR_SUPT, 7, 3, {NULL}, 0, 0, S_SUPERTRANS9},     // S_SUPERTRANS8
-	{SPR_SUPT, 8, 16, {NULL}, 0, 0, S_NIGHTSDRONE1},   // S_SUPERTRANS9
+	{SPR_SUPT, 8, 16, {NULL}, 0, 0, S_SUPERTRANS1},   // S_SUPERTRANS9
 
 	{SPR_ROIA, 0, 2, {NULL}, 0, 0, S_ROCKCRUMBLEA2}, // S_ROCKCRUMBLEA1
 	{SPR_ROIA, 1, 2, {NULL}, 0, 0, S_ROCKCRUMBLEA3}, // S_ROCKCRUMBLEA2
@@ -1631,13 +1508,6 @@ state_t states[NUMSTATES] =
 	{SPR_ROIP, 3, 2, {NULL}, 0, 0, S_ROCKCRUMBLEP5}, // S_ROCKCRUMBLEP4
 	{SPR_ROIP, 4, 2, {NULL}, 0, 0, S_ROCKCRUMBLEP1}, // S_ROCKCRUMBLEP5
 
-	// NiGHTS Paraloop Powerups
-	{SPR_DISS, 0, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSPOWERUP1
-	{SPR_NPRA, 0, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSPOWERUP2
-	{SPR_DISS, 0, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSPOWERUP3
-	{SPR_NPRB, 0, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSPOWERUP4
-	{SPR_DISS, 0, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSPOWERUP5
-
 	// Hyper Sonic Spark
 	{SPR_SSPK, 0, 1, {A_SparkFollow}, 0, 0, S_HSPK2}, // S_HSPK1
 	{SPR_SSPK, 1, 1, {A_SparkFollow}, 0, 0, S_HSPK3}, // S_HSPK2
@@ -1708,7 +1578,7 @@ state_t states[NUMSTATES] =
 	{SPR_PRUP, 24, 2, {NULL}, 0, 0, S_PRUP2},			// S_PRUPAUX34
 	{SPR_PRUP, 25, 18, {NULL}, 0, 0, S_PRUPAUX36},	// S_PRUPAUX35
 	{SPR_PRUP, 25, 18, {A_ExtraLife}, 0, 0, S_DISS},  // S_PRUPAUX36
-#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+
 	{SPR_TURR, 0, 1, {A_Look}, 1, 0, S_TURRETLOOK},          // S_TURRETLOOK
 	{SPR_TURR, 1, 3, {A_FaceTarget}, 0, 0, S_TURRETPOPUP2},  // S_TURRETPOPUP1
 	{SPR_TURR, 2, 3, {NULL}, 0, 0, S_TURRETPOPUP3},  // S_TURRETPOPUP2
@@ -1719,7 +1589,6 @@ state_t states[NUMSTATES] =
 	{SPR_TURR, 2, 3, {NULL}, 0, 0, S_TURRETPOPDOWN3},        // S_TURRETPOPDOWN2
 	{SPR_TURR, 1, 3, {NULL}, 0, 0, S_TURRETPOPDOWN4},        // S_TURRETPOPDOWN3
 	{SPR_TURR, 0, 69,{A_SetTics}, 0, 1, S_TURRETLOOK},            // S_TURRETPOPDOWN4
-#endif
 };
 
 mobjinfo_t mobjinfo[NUMMOBJTYPES] =
@@ -1763,7 +1632,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,              // painsound
 		S_NULL,              // meleestate
 		S_NULL,         // missilestate
-		S_POSS_DIE1,        // deathstate
+		S_XPLD1,        // deathstate
 		S_NULL,         // xdeathstate
 		sfx_slop,        // deathsound
 		3,              // speed
@@ -3166,32 +3035,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		0,              // damage
 		sfx_None,       // activesound
 		MF_NOBLOCKMAP|MF_NOCLIP|MF_NOGRAVITY|MF_SCENERY, // flags
-		S_NULL          // raisestate
-	},
-
-	{           // MT_NIGHTSBUMPER
-		82,             // doomednum
-		S_NIGHTSBUMPER1,// spawnstate
-		1,              // spawnhealth
-		S_NULL,         // seestate
-		0,     // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		21000,          // speed
-		32*FRACUNIT,    // radius
-		64*FRACUNIT,    // height
-		100,            // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_SCENERY|MF_SPECIAL|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
 
@@ -5159,32 +5002,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL          // raisestate
 	},
 
-	{           // MT_NIGHTSPARKLE
-		-1,             // doomednum
-		S_NIGHTSPARKLE1,// spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		0,              // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_DISS,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		0,              // speed
-		2*FRACUNIT,     // radius
-		4*FRACUNIT,     // height
-		100,            // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_SPECIAL|MF_NOGRAVITY|MF_SCENERY, // flags
-		S_NULL          // raisestate
-	},
-
 	// axis for NiGHTS maps
 	{           // MT_EMPTYSLOT3
 		52,             // doomednum
@@ -5472,58 +5289,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL          // raisestate
 	},
 
-	{           // MT_NIGHTSDRONE
-		60,             // doomednum
-		S_NIGHTSDRONE1, // spawnstate
-		120,            // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		0,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		255,            // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		0,              // speed
-		16*FRACUNIT,    // radius
-		56*FRACUNIT,    // height
-		1000,           // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_SPECIAL,     // flags
-		S_NULL          // raisestate
-	},
-
-	{           // MT_NIGHTSCHAR
-		-1,             // doomednum
-		S_NIGHTSFLY1A,  // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		0,              // reactiontime
-		sfx_None,       // attacksound
-		S_NIGHTSFLY1A,  // painstate
-		255,            // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NIGHTSFLY1A,  // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		0,              // speed
-		16*FRACUNIT,    // radius
-		56*FRACUNIT,    // height
-		1000,           // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_NOCLIP|MF_NOGRAVITY|MF_NOBLOCKMAP, // flags
-		S_NULL          // raisestate
-	},
-
 	{           // MT_SEED
 		-1,             // doomednum
 		S_SEED,         // spawnstate
@@ -5679,33 +5444,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOBLOCKMAP|MF_NOSECTOR|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
-
-	{           // MT_NIGHTSWING
-		37,             // doomednum
-		S_NIGHTSWING,   // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		1,              // speed
-		12*FRACUNIT,    // radius
-		24*FRACUNIT,    // height
-		4,              // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_NOBLOCKMAP|MF_NOGRAVITY|MF_SPECIAL, // flags
-		S_NULL          // raisestate
-	},
-
 	{           // MT_BOSSFLYPOINT
 		17,             // doomednum
 		S_NULL,         // spawnstate
@@ -6099,7 +5837,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOGRAVITY,   // flags
 		S_NULL          // raisestate
 	},
-#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+
 	{           // MT_TURRET
 		2004,           // doomednum
 		S_TURRET,       // spawnstate
@@ -6151,7 +5889,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOBLOCKMAP|MF_MISSILE|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
-#endif
+
 	{           // MT_GFZFLOWER4
 		2001,           // doomednum
 		S_GFZFLOWERD1,  // spawnstate
@@ -6852,57 +6590,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL          // raisestate
 	},
 
-	{           // MT_NIGHTSSUPERLOOP
-		3007,           // doomednum
-		S_NIGHTSPOWERUP1, // spawnstate
-		1000,           // spawnhealth
-		S_NIGHTSPOWERUP2, // seestate
-		sfx_None,       // seesound
-		0,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		255,            // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_DISS,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		0,              // speed
-		16*FRACUNIT,    // radius
-		32*FRACUNIT,    // height
-		1000,           // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_NOGRAVITY,   // flags
-		S_NULL          // raisestate
-	},
-
-	{           // MT_NIGHTSDRILLREFILL
-		3008,           // doomednum
-		S_NIGHTSPOWERUP3, // spawnstate
-		1000,           // spawnhealth
-		S_NIGHTSPOWERUP4, // seestate
-		sfx_None,       // seesound
-		0,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		255,            // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_DISS,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		0,              // speed
-		16*FRACUNIT,    // radius
-		32*FRACUNIT,    // height
-		1000,           // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_NOGRAVITY,   // flags
-		S_NULL          // raisestate
-	},
 	{           // MT_HYPERSPARK
 		-1,             // doomednum
 		S_HSPK1,        // spawnstate
@@ -7232,7 +6919,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOBLOCKMAP|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
-#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{           // MT_POPUPTURRET
 		42,             // doomednum
 		S_TURRETLOOK,   // spawnstate
@@ -7258,7 +6944,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE, // flags
 		(statenum_t)MT_JETTBULLET   // raisestate
 	},
-#endif
 	{           // MT_RANDOMAMBIENT2
 		43,             // doomednum
 		S_NULL,         // spawnstate
