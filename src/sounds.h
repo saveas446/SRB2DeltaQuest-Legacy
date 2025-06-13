@@ -347,7 +347,6 @@ typedef enum
     sfx_amwtr6, // Tails
     sfx_amwtr7, // Tails
     sfx_amwtr8, // Tails
-    sfx_amwtr9, // Tails
 	sfx_splish, // Tails 12-08-2000
 	sfx_wslap, // Water Slap Tails 12-13-2000
 

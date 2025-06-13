@@ -261,7 +261,6 @@ sfxinfo_t S_sfx[NUMSFX] =
   { "amwtr6"   , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL},
   { "amwtr7"   , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL},
   { "amwtr8"   , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL},
-  { "amwtr9"   , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL},
   { "splish"   , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL}, // Splish Tails 12-08-2000
   { "wslap\0"  , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL}, // Water Slap Tails 12-13-2000
   // skin sounds free slots to add sounds at run time (Boris HACK!!!)

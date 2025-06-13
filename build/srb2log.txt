@@ -2,7 +2,7 @@ Compiled for SDL version: 1.2.15
 Linked with SDL version: 1.2.15
 Setting up SRB2...
 Looking for WADs in: SRB2WADDIR,.
- Jun 13 2025                   Sonic Robo Blast 2                      20:27:44 
+ Jun 13 2025                   Sonic Robo Blast 2                      21:20:58 
 Sonic Robo Blast 2
 Z_Init: Init zone memory allocation daemon. 
 system memory 2047MB free 2047MB
@@ -93,7 +93,6 @@ Join accepted, wait next map change...
 Player 1 is in the game (node 0)
 SendNameAndColorSpeeding off to level...
 Player 1 renamed to save_as
-Speeding off to level...
 >quit
 I_ShutdownMusic: shut down
 I_ShutdownSound: shut down
