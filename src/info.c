@@ -50,7 +50,7 @@ char sprnames[NUMSPRITES + 1][5] =
 	"CEMG","CEMO","CEMP","CEMB","CEMR","CEML","CEMY","JETB","JETG","JBUL",
 	"MOUS",
 	"PAIN", // Demo 2 uses "PAIN" instead of "DETN" for some reason
-	"XPLD","CHAN","SNO1","SANT",
+	"CHAN","SNO1","SANT",
 	"SBLL","SPIK",
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	"CCOM",
@@ -881,12 +881,6 @@ state_t states[NUMSTATES] =
 	{SPR_DETN, 2, 1, {A_DetonChase}, 0, 0, S_DETON15}, // S_DETON14
 	{SPR_DETN, 1, 1, {A_DetonChase}, 0, 0, S_DETON2},  // S_DETON15
 
-	// Robot Explosion
-	{SPR_XPLD, 0, 1, {A_Scream}, 0, 0, S_XPLD2}, // S_XPLD1
-	{SPR_XPLD, 1, 5, {NULL}, 0, 0, S_XPLD3},     // S_XPLD2
-	{SPR_XPLD, 2, 5, {NULL}, 0, 0, S_XPLD4},     // S_XPLD3
-	{SPR_XPLD, 3, 5, {NULL}, 0, 0, S_DISS},      // S_XPLD4
-
 	// CEZ Chain
 	{SPR_CHAN, 0, -1, {NULL}, 0, 0, S_NULL}, // S_CEZCHAIN
 
@@ -1217,7 +1211,7 @@ state_t states[NUMSTATES] =
 	{SPR_RNGE, 32773, 1, {A_ThrownRing}, 0, 0, S_THROWNEXPLOSION7}, // S_THROWNEXPLOSION6
 	{SPR_RNGE, 32774, 1, {A_ThrownRing}, 0, 0, S_THROWNEXPLOSION1}, // S_THROWNEXPLOSION7
 
-	{SPR_DISS, 0, 1, {A_RingExplode}, MT_REDRING, 0, S_XPLD1}, // S_RINGEXPLODE
+	{SPR_DISS, 0, 1, {A_RingExplode}, MT_REDRING, 0, S_POSS_DIE1}, // S_RINGEXPLODE
 
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	// Greenflower Scenery
@@ -1383,7 +1377,7 @@ state_t states[NUMSTATES] =
 	{SPR_TRET, 32770, 7, {A_Pain}, 0, 0, S_TURRETSHOCK7},       // S_TURRETSHOCK6
 	{SPR_TRET, 32771, 7, {NULL}, 0, 0, S_TURRETSHOCK8},         // S_TURRETSHOCK7
 	{SPR_TRET, 32772, 7, {NULL}, 0, 0, S_TURRETSHOCK9},         // S_TURRETSHOCK8
-	{SPR_TRET, 32772, 7, {NULL}, 0, 0, S_XPLD1},                // S_TURRETSHOCK9
+	{SPR_TRET, 32772, 7, {NULL}, 0, 0, S_POSS_DIE1},                // S_TURRETSHOCK9
 	{SPR_TRLS, 32768, 1, {NULL}, 0, 0, S_TURRETLASER},          // S_TURRETLASER
 	{SPR_TRLS, 32769, 2, {NULL}, 0, 0, S_TURRETLASEREXPLODE2},  // S_TURRETLASEREXPLODE1
 	{SPR_TRLS, 32770, 2, {NULL}, 0, 0, S_DISS},                 // S_TURRETLASEREXPLODE2
@@ -1645,7 +1639,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,              // painsound
 		S_NULL,              // meleestate
 		S_NULL,         // missilestate
-		S_XPLD1,        // deathstate
+		S_POSS_DIE1,        // deathstate
 		S_NULL,         // xdeathstate
 		sfx_slop,        // deathsound
 		3,              // speed
@@ -1671,7 +1665,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,              // painsound
 		S_NULL,              // meleestate
 		S_NULL,         // missilestate
-		S_XPLD1,        // deathstate
+		S_POSS_DIE1,        // deathstate
 		S_NULL,         // xdeathstate
 		sfx_slop,        // deathsound
 		3,              // speed
@@ -3863,7 +3857,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,              // painsound
 		S_NULL,              // meleestate
 		S_NULL,         // missilestate
-		S_XPLD1,        // deathstate
+		S_POSS_DIE1,        // deathstate
 		S_NULL,         // xdeathstate
 		sfx_slop,        // deathsound
 		1*FRACUNIT,     // speed
@@ -3889,7 +3883,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,              // painsound
 		S_NULL,              // meleestate
 		S_JETGSHOOT1,   // missilestate
-		S_XPLD1,        // deathstate
+		S_POSS_DIE1,        // deathstate
 		S_NULL,         // xdeathstate
 		sfx_slop,        // deathsound
 		1*FRACUNIT,     // speed
@@ -3915,7 +3909,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,              // painsound
 		S_NULL,              // meleestate
 		S_NULL,         // missilestate
-		S_XPLD1,        // deathstate
+		S_POSS_DIE1,        // deathstate
 		S_NULL,         // xdeathstate
 		sfx_None,       // deathsound
 		20*FRACUNIT,    // speed
@@ -3984,7 +3978,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 
 	{           // MT_EXPLODE
 		-1,             // doomednum
-		S_XPLD1,        // spawnstate
+		S_POSS_DIE1,        // spawnstate
 		1,              // spawnhealth
 		S_NULL,         // seestate
 		sfx_None,              // seesound
@@ -4152,7 +4146,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_dmpain,     // painsound
 		S_NULL,              // meleestate
 		S_NULL,         // missilestate
-		S_XPLD1,        // deathstate
+		S_POSS_DIE1,        // deathstate
 		S_NULL,         // xdeathstate
 		sfx_slop,        // deathsound
 		3,              // speed
@@ -6677,7 +6671,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,              // painsound
 		S_NULL,              // meleestate
 		S_NULL,         // missilestate
-		S_XPLD1,        // deathstate
+		S_POSS_DIE1,        // deathstate
 		S_NULL,         // xdeathstate
 		sfx_slop,        // deathsound
 		4*FRACUNIT,     // speed
@@ -6703,7 +6697,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,              // painsound
 		S_NULL,              // meleestate
 		S_NULL,         // missilestate
-		S_XPLD1,        // deathstate
+		S_POSS_DIE1,        // deathstate
 		S_NULL,         // xdeathstate
 		sfx_slop,        // deathsound
 		8*FRACUNIT,     // speed
@@ -6954,7 +6948,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,       // painsound
 		S_NULL,         // meleestate
 		S_NULL,         // missilestate
-		S_XPLD1,        // deathstate
+		S_POSS_DIE1,        // deathstate
 		S_NULL,         // xdeathstate
 		sfx_slop,        // deathsound
 		0,              // speed

@@ -93,7 +93,6 @@ typedef enum
 	SPR_JBUL, // Jetty-Syn Bullet
 	SPR_MOUS, // Mouse
 	SPR_DETN, // Deton
-	SPR_XPLD, // Robot Explosion
 	SPR_CHAN, // CEZ Chain
 	SPR_SNO1, // Snowflake
 	SPR_SANT, // Santa
@@ -989,12 +988,6 @@ typedef enum
 	S_DETON13,
 	S_DETON14,
 	S_DETON15,
-
-	// Robot Explosion
-	S_XPLD1,
-	S_XPLD2,
-	S_XPLD3,
-	S_XPLD4,
 
 	// CEZ Chain
 	S_CEZCHAIN,
