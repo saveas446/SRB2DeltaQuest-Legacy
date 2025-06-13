@@ -106,6 +106,9 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <OutputFile>.\Win32_LIB_ASM_Debug/libpng.bsc</OutputFile>
     </Bscmake>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\png.c" />

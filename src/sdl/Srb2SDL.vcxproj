@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{DA9D69A4-FA5B-49F7-A36D-B1DD707250C6}</ProjectGuid>
+    <RootNamespace>Srb2SDL</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>17.0.36109.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\..\..\bin\VC\Debug\SDL\</OutDir>
+    <IntDir>.\..\..\objs\VC\Debug\SDL\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\..\..\bin\VC\Release\SDL\</OutDir>
+    <IntDir>.\..\..\objs\VC\Release\SDL\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <TypeLibraryName>.\..\..\bin\VC\Debug\SDL/Srb2SDL.tlb</TypeLibraryName>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\tools\libpng-src;..\..\tools\zlib;..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;USE_WGL_SWAP;DIRECTFULLSCREEN;SDL;HWRENDER;HW3SOUND;HAVE_FILTER;HAVE_MIXER;USEASM;HAVE_PNG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\..\..\objs\VC\Debug\SDL/Srb2SDL.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\..\objs\VC\Debug\SDL/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\objs\VC\Debug\SDL/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\objs\VC\Debug\SDL/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>SDL.lib;SDL_mixer.lib;opengl32.lib;glu32.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\..\build\srb2sdldebug.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>D:\Games\SRB2\demo_2\build\srb2sdldebug.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>..\..\objs\SDL\Debug/wLegacy.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\..\..\bin\VC\Release\SDL/Srb2SDL.tlb</TypeLibraryName>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>..\..\tools\libpng-src;..\..\tools\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;SDLMAIN;NO_STDIO_REDIRECT;USE_WGL_SWAP;DIRECTFULLSCREEN;SDL;HWRENDER;HW3SOUND;HAVE_FILTER;HAVE_MIXER;USEASM;HAVE_PNG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\..\..\objs\VC\Release\SDL/Srb2SDL.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\..\..\objs\VC\Release\SDL/</AssemblerListingLocation>
+      <ObjectFileName>.\..\..\objs\VC\Release\SDL/</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\..\objs\VC\Release\SDL/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>SDL.lib;SDL_mixer.lib;opengl32.lib;glu32.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>c:\srb2demo2\srb2sdl.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>c:\srb2demo2\srb2sdl.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>..\..\objs\SDL\Release\DoomLegacy.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\am_map.c" />
+    <ClCompile Include="..\command.c" />
+    <ClCompile Include="..\comptime.c" />
+    <ClCompile Include="..\console.c" />
+    <ClCompile Include="..\dehacked.c" />
+    <ClCompile Include="..\dstrings.c" />
+    <ClCompile Include="..\d_clisrv.c" />
+    <ClCompile Include="..\d_main.c" />
+    <ClCompile Include="..\d_net.c" />
+    <ClCompile Include="..\d_netcmd.c" />
+    <ClCompile Include="..\d_netfil.c" />
+    <ClCompile Include="..\filesrch.c" />
+    <ClCompile Include="..\f_finale.c" />
+    <ClCompile Include="..\f_wipe.c" />
+    <ClCompile Include="..\g_game.c" />
+    <ClCompile Include="..\g_input.c" />
+    <ClCompile Include="..\hardware\hw3sound.c" />
+    <ClCompile Include="..\hardware\hw_bsp.c" />
+    <ClCompile Include="..\hardware\hw_cache.c" />
+    <ClCompile Include="..\hardware\hw_draw.c" />
+    <ClCompile Include="..\hardware\hw_light.c" />
+    <ClCompile Include="..\hardware\hw_main.c" />
+    <ClCompile Include="..\hardware\hw_md2.c" />
+    <ClCompile Include="..\hardware\hw_trick.c" />
+    <ClCompile Include="..\hardware\r_opengl\r_opengl.c" />
+    <ClCompile Include="..\hu_stuff.c" />
+    <ClCompile Include="..\info.c" />
+    <ClCompile Include="..\i_tcp.c" />
+    <ClCompile Include="..\md5.c" />
+    <ClCompile Include="..\mserv.c" />
+    <ClCompile Include="..\m_argv.c" />
+    <ClCompile Include="..\m_bbox.c" />
+    <ClCompile Include="..\m_cheat.c" />
+    <ClCompile Include="..\m_fixed.c" />
+    <ClCompile Include="..\m_menu.c" />
+    <ClCompile Include="..\m_misc.c" />
+    <ClCompile Include="..\m_random.c" />
+    <ClCompile Include="..\p_ceilng.c" />
+    <ClCompile Include="..\p_doors.c" />
+    <ClCompile Include="..\p_enemy.c" />
+    <ClCompile Include="..\p_fab.c" />
+    <ClCompile Include="..\p_floor.c" />
+    <ClCompile Include="..\p_inter.c" />
+    <ClCompile Include="..\p_lights.c" />
+    <ClCompile Include="..\p_map.c" />
+    <ClCompile Include="..\p_maputl.c" />
+    <ClCompile Include="..\p_mobj.c" />
+    <ClCompile Include="..\p_saveg.c" />
+    <ClCompile Include="..\p_setup.c" />
+    <ClCompile Include="..\p_sight.c" />
+    <ClCompile Include="..\p_spec.c" />
+    <ClCompile Include="..\p_telept.c" />
+    <ClCompile Include="..\p_tick.c" />
+    <ClCompile Include="..\p_user.c" />
+    <ClCompile Include="..\r_bsp.c" />
+    <ClCompile Include="..\r_data.c" />
+    <ClCompile Include="..\r_draw.c" />
+    <ClCompile Include="..\r_draw16.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\r_draw8.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\r_main.c" />
+    <ClCompile Include="..\r_plane.c" />
+    <ClCompile Include="..\r_segs.c" />
+    <ClCompile Include="..\r_sky.c" />
+    <ClCompile Include="..\r_splats.c" />
+    <ClCompile Include="..\r_things.c" />
+    <ClCompile Include="..\screen.c" />
+    <ClCompile Include="..\sounds.c" />
+    <ClCompile Include="..\string.c" />
+    <ClCompile Include="..\st_stuff.c" />
+    <ClCompile Include="..\s_sound.c" />
+    <ClCompile Include="..\tables.c" />
+    <ClCompile Include="..\v_video.c" />
+    <ClCompile Include="..\win32\win_dbg.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\w_wad.c" />
+    <ClCompile Include="..\y_inter.c" />
+    <ClCompile Include="..\z_zone.c" />
+    <ClCompile Include="dosstr.c" />
+    <ClCompile Include="endtxt.c" />
+    <ClCompile Include="filter\filters.c" />
+    <ClCompile Include="filter\hq2x.c" />
+    <ClCompile Include="filter\lq2x.c" />
+    <ClCompile Include="hwsym_sdl.c" />
+    <ClCompile Include="IMG_xpm.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="i_cdmus.c" />
+    <ClCompile Include="i_main.c" />
+    <ClCompile Include="i_net.c" />
+    <ClCompile Include="i_sound.c" />
+    <ClCompile Include="i_system.c" />
+    <ClCompile Include="i_video.c" />
+    <ClCompile Include="ogl_sdl.c" />
+    <ClCompile Include="SDL_main\SDL_win32_main.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\am_map.h" />
+    <ClInclude Include="..\byteptr.h" />
+    <ClInclude Include="..\command.h" />
+    <ClInclude Include="..\comptime.h" />
+    <ClInclude Include="..\console.h" />
+    <ClInclude Include="..\d2udef.h" />
+    <ClInclude Include="..\dehacked.h" />
+    <ClInclude Include="..\doomdata.h" />
+    <ClInclude Include="..\doomdef.h" />
+    <ClInclude Include="..\doomstat.h" />
+    <ClInclude Include="..\doomtype.h" />
+    <ClInclude Include="..\dstrings.h" />
+    <ClInclude Include="..\d_clisrv.h" />
+    <ClInclude Include="..\d_englsh.h" />
+    <ClInclude Include="..\d_event.h" />
+    <ClInclude Include="..\d_main.h" />
+    <ClInclude Include="..\d_net.h" />
+    <ClInclude Include="..\d_netcmd.h" />
+    <ClInclude Include="..\d_netfil.h" />
+    <ClInclude Include="..\d_player.h" />
+    <ClInclude Include="..\d_think.h" />
+    <ClInclude Include="..\d_ticcmd.h" />
+    <ClInclude Include="..\filesrch.h" />
+    <ClInclude Include="..\f_finale.h" />
+    <ClInclude Include="..\g_game.h" />
+    <ClInclude Include="..\g_input.h" />
+    <ClInclude Include="..\g_state.h" />
+    <ClInclude Include="..\hardware\hw3dsdrv.h" />
+    <ClInclude Include="..\hardware\hw3sound.h" />
+    <ClInclude Include="..\hardware\hws_data.h" />
+    <ClInclude Include="..\hardware\hw_data.h" />
+    <ClInclude Include="..\hardware\hw_defs.h" />
+    <ClInclude Include="..\hardware\hw_dll.h" />
+    <ClInclude Include="..\hardware\hw_drv.h" />
+    <ClInclude Include="..\hardware\hw_glide.h" />
+    <ClInclude Include="..\hardware\hw_glob.h" />
+    <ClInclude Include="..\hardware\hw_light.h" />
+    <ClInclude Include="..\hardware\hw_main.h" />
+    <ClInclude Include="..\hardware\hw_md2.h" />
+    <ClInclude Include="..\hardware\r_opengl\r_opengl.h" />
+    <ClInclude Include="..\hu_stuff.h" />
+    <ClInclude Include="..\info.h" />
+    <ClInclude Include="..\i_joy.h" />
+    <ClInclude Include="..\i_net.h" />
+    <ClInclude Include="..\i_sound.h" />
+    <ClInclude Include="..\i_system.h" />
+    <ClInclude Include="..\i_tcp.h" />
+    <ClInclude Include="..\i_video.h" />
+    <ClInclude Include="..\keys.h" />
+    <ClInclude Include="..\md5.h" />
+    <ClInclude Include="..\mserv.h" />
+    <ClInclude Include="..\m_argv.h" />
+    <ClInclude Include="..\m_bbox.h" />
+    <ClInclude Include="..\m_cheat.h" />
+    <ClInclude Include="..\m_fixed.h" />
+    <ClInclude Include="..\m_menu.h" />
+    <ClInclude Include="..\m_misc.h" />
+    <ClInclude Include="..\m_random.h" />
+    <ClInclude Include="..\m_swap.h" />
+    <ClInclude Include="..\p5prof.h" />
+    <ClInclude Include="..\p_local.h" />
+    <ClInclude Include="..\p_maputl.h" />
+    <ClInclude Include="..\p_mobj.h" />
+    <ClInclude Include="..\p_pspr.h" />
+    <ClInclude Include="..\p_saveg.h" />
+    <ClInclude Include="..\p_setup.h" />
+    <ClInclude Include="..\p_spec.h" />
+    <ClInclude Include="..\p_tick.h" />
+    <ClInclude Include="..\r_bsp.h" />
+    <ClInclude Include="..\r_data.h" />
+    <ClInclude Include="..\r_defs.h" />
+    <ClInclude Include="..\r_draw.h" />
+    <ClInclude Include="..\r_draw16.h" />
+    <ClInclude Include="..\r_draw8.h" />
+    <ClInclude Include="..\r_local.h" />
+    <ClInclude Include="..\r_main.h" />
+    <ClInclude Include="..\r_plane.h" />
+    <ClInclude Include="..\r_segs.h" />
+    <ClInclude Include="..\r_sky.h" />
+    <ClInclude Include="..\r_splats.h" />
+    <ClInclude Include="..\r_state.h" />
+    <ClInclude Include="..\r_things.h" />
+    <ClInclude Include="..\screen.h" />
+    <ClInclude Include="..\sounds.h" />
+    <ClInclude Include="..\spritenum.h" />
+    <ClInclude Include="..\st_stuff.h" />
+    <ClInclude Include="..\s_sound.h" />
+    <ClInclude Include="..\tables.h" />
+    <ClInclude Include="..\v_video.h" />
+    <ClInclude Include="..\win32\win_dbg.h" />
+    <ClInclude Include="..\win32\win_main.h" />
+    <ClInclude Include="..\w_wad.h" />
+    <ClInclude Include="..\y_inter.h" />
+    <ClInclude Include="..\z_zone.h" />
+    <ClInclude Include="endtxt.h" />
+    <ClInclude Include="filter\filters.h" />
+    <ClInclude Include="filter\hq2x.h" />
+    <ClInclude Include="filter\interp.h" />
+    <ClInclude Include="filter\lq2x.h" />
+    <ClInclude Include="hwsym_sdl.h" />
+    <ClInclude Include="ogl_sdl.h" />
+    <ClInclude Include="sdlmain.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\doc\copying" />
+    <CustomBuild Include="..\tmap.nas">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).nas with NASM...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">nasmw -o $(IntDir)%(Filename).obj -f win32 %(FullPath)
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling %(Filename).nas with NASM...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">nasmw -o $(IntDir)%(Filename).obj -f win32 %(FullPath)
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\tmap_mmx.nas">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).nas with NASM...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">nasmw -o $(IntDir)%(Filename).obj -f win32 %(FullPath)
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling %(Filename).nas with NASM...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">nasmw -o $(IntDir)%(Filename).obj -f win32 %(FullPath)
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\tmap_vc.nas">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).nas with NASM...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">nasmw -o $(IntDir)%(Filename).obj -f win32 %(FullPath)
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling %(Filename).nas with NASM...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">nasmw -o $(IntDir)%(Filename).obj -f win32 %(FullPath)
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <None Include="SDL_icon.xpm" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\win32\Srb2win.rc">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">\Games\SRB2\demo_2\src\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">\Games\SRB2\demo_2\src\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\doc\faq.txt" />
+    <Text Include="..\..\doc\source.txt" />
+    <Text Include="..\..\readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\win32\Srb2win.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\tools\libpng-src\projects\visualc6\libpng.vcxproj">
+      <Project>{db2741d3-25fa-424b-8204-66ea7fcf9e6b}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\..\tools\zlib\projects\visualc6\zlib.vcxproj">
+      <Project>{b869c44c-edc8-4305-a193-c073c1fa7ee7}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

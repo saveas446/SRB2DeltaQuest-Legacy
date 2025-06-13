@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36119.2 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Srb2SDL", "Srb2SDL.vcxproj", "{DA9D69A4-FA5B-49F7-A36D-B1DD707250C6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libpng", "..\..\tools\libpng-src\projects\visualc6\libpng.vcxproj", "{DB2741D3-25FA-424B-8204-66EA7FCF9E6B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "s_openal", "..\hardware\s_openal\s_openal.vcxproj", "{D4B6D3D7-675F-4085-A391-E1047F90FA16}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "..\..\tools\zlib\projects\visualc6\zlib.vcxproj", "{B869C44C-EDC8-4305-A193-C073C1FA7EE7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DA9D69A4-FA5B-49F7-A36D-B1DD707250C6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DA9D69A4-FA5B-49F7-A36D-B1DD707250C6}.Debug|Win32.Build.0 = Debug|Win32
+		{DA9D69A4-FA5B-49F7-A36D-B1DD707250C6}.Release|Win32.ActiveCfg = Release|Win32
+		{DA9D69A4-FA5B-49F7-A36D-B1DD707250C6}.Release|Win32.Build.0 = Release|Win32
+		{DB2741D3-25FA-424B-8204-66EA7FCF9E6B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DB2741D3-25FA-424B-8204-66EA7FCF9E6B}.Debug|Win32.Build.0 = Debug|Win32
+		{DB2741D3-25FA-424B-8204-66EA7FCF9E6B}.Release|Win32.ActiveCfg = Release|Win32
+		{DB2741D3-25FA-424B-8204-66EA7FCF9E6B}.Release|Win32.Build.0 = Release|Win32
+		{D4B6D3D7-675F-4085-A391-E1047F90FA16}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D4B6D3D7-675F-4085-A391-E1047F90FA16}.Debug|Win32.Build.0 = Debug|Win32
+		{D4B6D3D7-675F-4085-A391-E1047F90FA16}.Release|Win32.ActiveCfg = Release|Win32
+		{D4B6D3D7-675F-4085-A391-E1047F90FA16}.Release|Win32.Build.0 = Release|Win32
+		{B869C44C-EDC8-4305-A193-C073C1FA7EE7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B869C44C-EDC8-4305-A193-C073C1FA7EE7}.Debug|Win32.Build.0 = Debug|Win32
+		{B869C44C-EDC8-4305-A193-C073C1FA7EE7}.Release|Win32.ActiveCfg = Release|Win32
+		{B869C44C-EDC8-4305-A193-C073C1FA7EE7}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D65A6F90-B0E2-43CC-A5BF-97F8F67C0BD6}
+	EndGlobalSection
+EndGlobal
