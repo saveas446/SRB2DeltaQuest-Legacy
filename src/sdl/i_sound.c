@@ -63,6 +63,7 @@
 #include "../screen.h" //vid.WndParent
 #include "../doomdef.h"
 #include "../doomstat.h"
+#include "../sounds.h"
 #include "../s_sound.h"
 
 #include "../d_main.h"
@@ -518,7 +519,8 @@ void *I_GetSfx(sfxinfo_t *sfx)
 		return HW3S_GetSfx(sfx);
 #endif
 
-	if (sfx->data)
+	// Had to update this because it kept thinking 0xFFFFFFFF was a valid sound pointer
+	if ((sfx->data) && (sfx->data != DATA_NONE))
 		return sfx->data; //Alam: I have it done!
 
 	sfx->length = W_LumpLength (sfx->lumpnum);

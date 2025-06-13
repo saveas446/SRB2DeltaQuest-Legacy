@@ -127,13 +127,6 @@ musicinfo_t S_music[NUMMUSIC] =
 
 // 
 
-// VS2002 and VS2003 are untested but this works for VS6 and VS8/VS2005
-#if defined(_MSC_VER) && _MSC_VER < 1400
-#define DATA_NONE -1
-#else
-#define DATA_NONE ((void*)(intptr_t)-1)
-#endif
-
 sfxinfo_t S_sfx[NUMSFX] =
 {
   // S_sfx[0] needs to be a dummy for odd reasons.

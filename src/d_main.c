@@ -147,6 +147,8 @@ int eventhead, eventtail;
 
 boolean dedicated = false;
 
+window_system wnd_system = WND_DUMMY;
+
 //
 // D_PostEvent
 // Called by the I/O functions when input is detected
@@ -975,7 +977,7 @@ static inline void D_InitCutsceneInfo(void)
 //
 // D_SRB2Main
 //
-void D_SRB2Main(void)
+void D_SRB2Main(int sys)
 {
 	int p;
 	char srb2[82]; // srb2 title banner
@@ -986,6 +988,9 @@ void D_SRB2Main(void)
 
 	// This should be the VERY FIRST thing the game does to minize chances of crashing before it's calculated
 	TINYVER = calc_TINYVER();
+
+	// Figure out our windowing system
+	wnd_system = (window_system)sys;
 
 	// keep error messages until the final flush(stderr)
 #if !defined (PC_DOS) && !defined (_WIN32_WCE)

@@ -13,7 +13,6 @@
 #include <malloc.h>			/* For _alloca() */
 
 #include <tchar.h>
-
 #ifdef _WIN32_WCE
 # define DIR_SEPERATOR TEXT("\\")
 # define _tgetcwd(str,len)	wcscpy(str,TEXT(""))

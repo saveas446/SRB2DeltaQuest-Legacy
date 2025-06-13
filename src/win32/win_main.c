@@ -494,7 +494,7 @@ static int WINAPI HandledWinMain(HINSTANCE hInstance,
 
 	// startup SRB2
 	CONS_Printf("D_SRB2Main() ...\n");
-	D_SRB2Main();
+	D_SRB2Main(2);
 	CONS_Printf("Entering main app loop...\n");
 	// never return
 	D_SRB2Loop();

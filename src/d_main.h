@@ -34,6 +34,15 @@ extern boolean usehome; //Alam: which path?
 extern const char *pandf; //Alam: how to path?
 extern char srb2path[256]; //Alam: SRB2's Home
 
+typedef enum {
+    WND_DUMMY,
+    WND_DOS,
+    WND_WIN32,
+    WND_SDL
+} window_system;
+
+extern window_system wnd_system;
+
 // the infinite loop of D_SRB2Loop() called from win_main for windows version
 void D_SRB2Loop(void) FUNCNORETURN;
 
@@ -43,7 +52,7 @@ void D_SRB2Loop(void) FUNCNORETURN;
 // calls all startup code, parses command line options.
 // If not overrided by user input, calls N_AdvanceDemo.
 //
-void D_SRB2Main(void);
+void D_SRB2Main(int sys);
 
 // Called by IO functions when input is detected.
 void D_PostEvent(const event_t *ev);

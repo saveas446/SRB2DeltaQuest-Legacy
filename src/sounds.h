@@ -213,6 +213,13 @@ typedef enum
 // Identifiers for all sfx in game.
 //
 
+// VS2002 and VS2003 are untested but this works for VS6 and VS8/VS2005
+#if defined(_MSC_VER) && _MSC_VER < 1400
+#define DATA_NONE -1
+#else
+#define DATA_NONE ((void*)(intptr_t)-1)
+#endif
+
 // List of sounds (don't modify this comment!)
 typedef enum
 {

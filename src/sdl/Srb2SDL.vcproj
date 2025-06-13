@@ -71,7 +71,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="SDL.lib SDL_mixer.lib opengl32.lib glu32.lib wsock32.lib"
-				OutputFile="c:\srb2demo2\srb2sdldebug.exe"
+				OutputFile="..\..\build\srb2sdldebug.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\lib"
@@ -798,6 +798,14 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\comptime.h"
+				>
+			</File>
+			<File
+				RelativePath="..\d2udef.h"
+				>
+			</File>
+			<File
 				RelativePath="..\d_clisrv.c"
 				>
 				<FileConfiguration
@@ -1013,6 +1021,10 @@
 			</File>
 			<File
 				RelativePath="..\dstrings.h"
+				>
+			</File>
+			<File
+				RelativePath="..\spritenum.h"
 				>
 			</File>
 			<File
@@ -1890,6 +1902,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\p_doors.c"
+				>
+			</File>
+			<File
 				RelativePath="..\p_enemy.c"
 				>
 				<FileConfiguration
@@ -2368,7 +2384,6 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -2388,11 +2403,14 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\r_draw16.h"
+				>
+			</File>
+			<File
 				RelativePath="..\r_draw8.c"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -2410,6 +2428,10 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\r_draw8.h"
+				>
 			</File>
 			<File
 				RelativePath="..\r_local.h"

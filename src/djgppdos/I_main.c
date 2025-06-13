@@ -64,7 +64,7 @@ int main (int argc, char **argv)
 		breakpoint();
 #endif
 
-		D_SRB2Main();
+		D_SRB2Main(1);
 		D_SRB2Loop();
 
 	}
