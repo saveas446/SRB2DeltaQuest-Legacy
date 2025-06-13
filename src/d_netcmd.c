@@ -2556,7 +2556,7 @@ static void Command_UnloadWAD_f(void)
 /** Prints program version.
   */
 
-#if DEMO2ULTIMATE
+#ifdef DEMO2ULTIMATE
 #define DEMO2ULTIMATE_STR "Demo 2 IWAD compatible mode: Yes\n"
 #else
 #define DEMO2ULTIMATE_STR "Demo 2 IWAD compatible mode: No\n"

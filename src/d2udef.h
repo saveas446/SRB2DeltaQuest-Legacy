@@ -6,7 +6,8 @@
 
     // More and more defines will be added to this over time, allowing us to tweak more and more things 
 
-    //#define DEMO2ULTIMATE // Disables stuff that's only there for the sake of D2 IWAD compatibility
+    #define DEMO2ULTIMATE // Disables stuff that's only there for the sake of D2 IWAD compatibility
+    // Needed for OpenGL
 
     #define DEMO 0 // Enables public demo build functionality
     #define PLAYTEST_BUILD 1 // Enables playtester/private build functionality
