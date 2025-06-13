@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="r_opengl"
 	ProjectGUID="{48EA8F63-456A-4C3C-B3D5-B9EEA5489252}"
+	RootNamespace="r_opengl"
 	>
 	<Platforms>
 		<Platform
@@ -74,7 +75,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
 				AdditionalDependencies="opengl32.lib glu32.lib"
-				OutputFile="c:\srb2demo2\r_opengl.dll"
+				OutputFile="D:\Games\SRB2\demo_2\build\r_opengl.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"

@@ -20,6 +20,7 @@ SRB2*.pcx
 SRB2*.png
 log.txt
 gamedata.dat
+ogllog.txt
 
 # Visual Studio + source code stuff
 *.lib
