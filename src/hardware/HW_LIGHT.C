@@ -247,9 +247,9 @@ light_t *t_lspr[NUMSPRITES] =
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	&lspr[NOLIGHT],     // SPR_BUS1
 	&lspr[NOLIGHT],     // SPR_BUS2
-	#endif
 	&lspr[NOLIGHT],     // SPR_FWR2
 	&lspr[NOLIGHT],     // SPR_FWR3
+	#endif
 	&lspr[REDBALL_L],     // SPR_FLAM // Tails 09-06-2002
 
 	// Mario-specific stuff Tails 09-10-2002

@@ -976,13 +976,16 @@ static void P_ZMovement(mobj_t *mo)
 			if (mo->type == MT_SEED)
 			{
 				byte prandom = P_Random();
-
+				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 				if (prandom < 64)
 					P_SpawnMobj(mo->x, mo->y, mo->floorz, MT_GFZFLOWER3);
 				else if (prandom < 192)
+				#endif
 					P_SpawnMobj(mo->x, mo->y, mo->floorz, MT_GFZFLOWER1);
+				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 				else
 					P_SpawnMobj(mo->x, mo->y, mo->floorz, MT_GFZFLOWER2);
+				#endif
 
 				P_SetMobjState(mo, S_DISS);
 				return;
@@ -3925,8 +3928,10 @@ mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
 		case MT_BERRYBUSH:
 		case MT_THZPLANT:
 		case MT_GFZFLOWER1:
+		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 		case MT_GFZFLOWER2:
 		case MT_GFZFLOWER3:
+		#endif
 		case MT_GFZFLOWER4:
 			if (!modifiedgame) // Speedup, if the game is not modified.
 				mobj->flags |= MF_NOBLOCKMAP;

@@ -123,9 +123,9 @@ typedef enum
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	SPR_BUS1, // GFZ Bush w/ berries
 	SPR_BUS2, // GFZ Bush w/o berries
-	#endif
 	SPR_FWR2, // GFZ Sunflower
 	SPR_FWR3, // GFZ budding flower
+	#endif
 	SPR_FLAM, // Flame (has corona)
 
 	// Mario-specific stuff
@@ -1318,10 +1318,10 @@ typedef enum
 	// Greenflower Scenery
 	S_BERRYBUSH,
 	S_BUSH,
-	#endif
 	S_GFZFLOWERB1,
 	S_GFZFLOWERB2,
 	S_GFZFLOWERC1,
+	#endif
 
 	// Flame (has corona)
 	S_FLAME1,
@@ -1828,8 +1828,10 @@ typedef enum
 	MT_THROWNEXPLOSION,
 	MT_BERRYBUSH,
 	MT_BUSH,
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	MT_GFZFLOWER2,
 	MT_GFZFLOWER3,
+	#endif
 	MT_FLAME, // Flame (has corona)
 
 	// Mario-specific stuff

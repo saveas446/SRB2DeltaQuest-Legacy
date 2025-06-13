@@ -64,7 +64,11 @@ char sprnames[NUMSPRITES + 1][5] =
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"BUS1","BUS2",
 	#endif
-	"FWR2","FWR3","FLAM","PUMA","HAMM","KOOP",
+
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+	"HDB1","FCAN",
+	#endif
+	"FLAM","PUMA","HAMM","KOOP",
 	"SHLL","MAXE","FFWR",
 	"SEED","JETF","HOOP","NWNG",
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
@@ -1212,10 +1216,10 @@ state_t states[NUMSTATES] =
 	// Greenflower Scenery
 	{SPR_BUS1, 0, -1, {NULL}, 0, 0, S_NULL},       // S_BERRYBUSH
 	{SPR_BUS2, 0, -1, {NULL}, 0, 0, S_NULL},       // S_BUSH
-	#endif
 	{SPR_FWR2, 0, 7, {NULL}, 0, 0, S_GFZFLOWERB2}, // S_GFZFLOWERB1
 	{SPR_FWR2, 1, 7, {NULL}, 0, 0, S_GFZFLOWERB1}, // S_GFZFLOWERB1
 	{SPR_FWR3, 0, -1, {NULL}, 0, 0, S_NULL},       // S_GFZFLOWERC1
+	#endif
 
 
 	// Flame (has corona)
@@ -4771,7 +4775,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOCLIP|MF_SCENERY, // flags
 		S_NULL          // raisestate
 	},
-	#endif
 	{           // MT_GFZFLOWER2
 		70,             // doomednum
 		S_GFZFLOWERB1,  // spawnstate
@@ -4823,6 +4826,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOCLIP|MF_SCENERY, // flags
 		S_NULL          // raisestate
 	},
+	#endif
 	{           // MT_FLAME
 		24,             // doomednum
 		S_FLAME1,       // spawnstate

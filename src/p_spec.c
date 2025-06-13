@@ -196,9 +196,9 @@ void P_InitPicAnims(void)
 
 		if (lastanim->numpics < 2)
 		{
-			free(anims);
-			I_Error("P_InitPicAnims: bad cycle from %s to %s",
-				animdefs[i].startname, animdefs[i].endname);
+			continue;
+			//free(anims);
+			//I_Error("P_InitPicAnims: bad cycle from %s to %s", animdefs[i].startname, animdefs[i].endname);
 		}
 
 		lastanim->speed = LONG(animdefs[i].speed) * NEWTICRATERATIO;

@@ -1,6 +1,15 @@
 {
     "files.associations": {
         "HW_MAIN.C": "cpp",
-        "HW_LIGHT.C": "cpp"
+        "HW_LIGHT.C": "cpp",
+        "cstddef": "c",
+        "limits": "c",
+        "memory": "c",
+        "system_error": "c",
+        "xiosbase": "c",
+        "xlocale": "c",
+        "xstring": "c",
+        "xutility": "c",
+        "P_MOBJ.C": "cpp"
     }
 }
