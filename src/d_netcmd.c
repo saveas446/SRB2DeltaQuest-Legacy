@@ -915,8 +915,6 @@ static void SendNameAndColor(void)
 	char *p;
 	byte extrainfo = 0; // color and (if applicable) CTF team
 
-	CONS_Printf("SendNameAndColor");
-
 	if (netgame && !addedtogame)
 		return;
 
@@ -2668,7 +2666,7 @@ static void Command_Version_f(void)
 	else if (wnd_system == WND_DOS)
 		CONS_Printf("Windowing system: DOS\n");
 	else if (wnd_system == WND_WIN32)
-		CONS_Printf("Windowing system: Win32'/Wine \n");
+		CONS_Printf("Windowing system: Win32/Wine \n");
 	else if (wnd_system == WND_SDL)
 		CONS_Printf("Windowing system: SDL1\n");
 

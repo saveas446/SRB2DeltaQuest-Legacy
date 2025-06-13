@@ -1001,9 +1001,6 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source)
 				switch (target->type)
 				{
 					case MT_BLUECRAWLA:
-					case MT_GOOMBA:
-						score = 100*source->player->scoreadd;
-						break;
 					case MT_REDCRAWLA:
 						score = 150*source->player->scoreadd;
 						break;

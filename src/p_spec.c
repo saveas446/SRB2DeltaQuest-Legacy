@@ -132,10 +132,12 @@ animdef_t               harddefs[] =
 
 	{true,      "TFALL4",       "TFALL1",       4}, // THZ Chemical fall Tails 11-07-2000
 
+	#ifdef DEMO2ULTIMATE
 	// THZ water chamber textures
 	{true,      "RFALL4",       "RFALL1",       4},
 	{true,      "GRFALL4",      "GRFALL1",      4},
 	{true,      "YFALL4",       "YFALL1",       4},
+	#endif
 
     {-1}
 };

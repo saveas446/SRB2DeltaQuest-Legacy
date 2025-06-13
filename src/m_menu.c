@@ -541,7 +541,6 @@ typedef enum
 	loadgame,
 	savegame,
 	endgame,
-	playersetup,
 	single_end
 } single_e;
 
@@ -550,16 +549,15 @@ typedef enum
 static menuitem_t SinglePlayerMenu[] =
 {
 	#ifdef FD_SPMENUOPTIONS
-	{IT_CALL | IT_STRING, NULL, "New Game",   M_NewGame,     60},
-	{IT_CALL | IT_STRING, NULL, "Time Attack",M_TimeAttack,  70},
-	{IT_CALL | IT_STRING, NULL, "Statistics", M_Statistics,  80},
+	{IT_CALL | IT_STRING, NULL, "New Game",   M_NewGame,     70},
+	{IT_CALL | IT_STRING, NULL, "Time Attack",M_TimeAttack,  80},
+	{IT_CALL | IT_STRING, NULL, "Statistics", M_Statistics,  90},
 	#else
-	{IT_CALL | IT_STRING, NULL, "New Game",   M_NewGame,     80},
+	{IT_CALL | IT_STRING, NULL, "New Game",   M_NewGame,     90},
 	#endif
-	{IT_CALL | IT_STRING, NULL, "Load Game",  M_LoadGame,    90},
-	{IT_CALL | IT_STRING, NULL, "Save Game",  M_SaveGame,    100},
-	{IT_CALL | IT_STRING, NULL, "End Game",   M_EndGame,     110},
-	{IT_CALL | IT_STRING, NULL, "Player Setup", M_SetupMultiPlayer, 120}
+	{IT_CALL | IT_STRING, NULL, "Load Game",  M_LoadGame,    100},
+	{IT_CALL | IT_STRING, NULL, "Save Game",  M_SaveGame,    110},
+	{IT_CALL | IT_STRING, NULL, "End Game",   M_EndGame,     120},
 };
 
 menu_t SinglePlayerDef =
@@ -1249,7 +1247,7 @@ menu_t SetupMultiPlayerDef =
 	&MultiPlayerDef,
 	SetupMultiPlayerMenu,
 	M_DrawSetupMultiPlayerMenu,
-	27, 40,
+	130, 40,
 	0,
 	M_QuitMultiPlayerMenu
 };
@@ -1300,13 +1298,13 @@ menuitem_t PlayerMenu[] =
 
 menu_t PlayerDef =
 {
-	"M_PSETUP",
+	"M_MULTI",
 	"Choose Your Character",
 	sizeof (PlayerMenu)/sizeof (menuitem_t),//player_end,
 	&NewDef,
 	PlayerMenu,
 	M_DrawSetupChoosePlayerMenu,
-	24, 16,
+	130, 48,
 	0,
 	M_QuitChoosePlayerMenu
 };
@@ -1653,11 +1651,9 @@ static void M_DrawSetupChoosePlayerMenu(void)
 	int             mx,my;
 	patch_t *       patch;
 
-	mx = PlayerDef.x;
+	mx = 96;
 	my = PlayerDef.y;
 
-	// Black BG
-	V_DrawFill(0, 0, vid.width, vid.height, 0);
 
 	{
 		// Compact the menu
@@ -1677,19 +1673,12 @@ static void M_DrawSetupChoosePlayerMenu(void)
 	// use generic drawer for cursor, items and title
 	M_DrawGenericMenu();
 
-	// TEXT BOX!
-	// For the character
-	M_DrawTextBox(mx+152,my, 16, 16);
-
 	// For description
-	M_DrawTextBox(mx-24, my+72, 20, 10);
+	M_DrawTextBox(mx-24, my+48, 20, 10);
 
-	patch = W_CachePatchName(description[itemOn].picname, PU_CACHE);
+	V_DrawString(mx-16, my+56, V_YELLOWMAP, "Speed:\nAbility:\nNotes:");
 
-	V_DrawString(mx-16, my+80, V_YELLOWMAP, "Speed:\nAbility:\nNotes:");
-
-	V_DrawScaledPatch(mx+160,my+8,0,patch);
-	V_DrawString(mx-16, my+80, 0, description[itemOn].info);
+	V_DrawString(mx-16, my+56, 0, description[itemOn].info);
 }
 
 //

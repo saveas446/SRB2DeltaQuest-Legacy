@@ -2312,7 +2312,11 @@ static void P_MovePlayer(player_t *player)
 			{
 				player->mo->momx >>= 1;
 				player->mo->momy >>= 1;
+				#ifdef FALL_SPRITES
 				P_SetPlayerMobjState(player->mo, S_PLAY_FALL1);
+				#else
+				P_SetPlayerMobjState(player->mo, S_PLAY_ATK1);
+				#endif
 			}
 		}
 	}
@@ -3066,7 +3070,7 @@ static void P_MovePlayer(player_t *player)
 					}
 					// If currently in the air from a jump, and you pressed the
 					// button again and have the ability to fly, do so!
-					else if (!player->thokked && !(player->powers[pw_tailsfly]) && (player->mfjumped) && !(player->charability == 7 && !(player->mo->eflags & MF_UNDERWATER)))
+					else if (!(player->powers[pw_tailsfly]) && (player->mfjumped) && !(player->charability == 7 && !(player->mo->eflags & MF_UNDERWATER)))
 					{
 						P_SetPlayerMobjState(player->mo, S_PLAY_ABL1); // Change to the flying animation
 

@@ -6,7 +6,7 @@
 
     // More and more defines will be added to this over time, allowing us to tweak more and more things 
 
-    #define DEMO2ULTIMATE // Disables stuff that's only there for the sake of D2 IWAD compatibility
+    //#define DEMO2ULTIMATE // Disables stuff that's only there for the sake of D2 IWAD compatibility
     // Needed for OpenGL
 
     #define DEMO 0 // Enables public demo build functionality
@@ -18,7 +18,7 @@
 
     //#define NOMAPCMD // Disables map command for singleplayer
     //#define DARKENEDMENU // Darkens menu
-    //#define CHARACTERSELECT // Enables the character select menu
+    #define CHARACTERSELECT // Enables the character select menu
     #define MULTITHOK // If enabled, Sonic can multi-thok
     //#define FALL_SPRITES // If enabled, Sonic will use fall sprites for some actions
 

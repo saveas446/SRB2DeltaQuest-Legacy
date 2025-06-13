@@ -3804,7 +3804,6 @@ void P_PushableThinker(mobj_t *mobj)
 		// or something in the future.
 		switch (mobj->type)
 		{
-			case MT_SNOWMAN:
 			case MT_GARGOYLE:
 				x = mobj->spawnpoint->x << FRACBITS;
 				y = mobj->spawnpoint->y << FRACBITS;

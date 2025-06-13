@@ -285,13 +285,8 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[SMALLREDBALL_L], // SPR_TRLS
 #endif
 	&lspr[NOLIGHT], // SPR_FWR4
-	&lspr[NOLIGHT], // SPR_GOOM
 	&lspr[NOLIGHT], // SPR_MUS1
 	&lspr[NOLIGHT], // SPR_MUS2
-	&lspr[NOLIGHT], // SPR_TOAD
-	&lspr[NOLIGHT], // SPR_XMS1
-	&lspr[NOLIGHT], // SPR_XMS2
-	&lspr[NOLIGHT], // SPR_XMS3
 	&lspr[SUPERSONIC_L], // SPR_SUPT
 	&lspr[NOLIGHT], // SPR_ROIA
 	&lspr[NOLIGHT], // SPR_ROIB
