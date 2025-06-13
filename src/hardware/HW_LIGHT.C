@@ -153,7 +153,7 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT],     // SPR_FANS
 	&lspr[NOLIGHT],     // SPR_BUBL
 	&lspr[NOLIGHT],     // SPR_YLTV
-	&lspr[NOLIGHT],     // SPR_FWR1
+	&lspr[NOLIGHT],     // SPR_COL5
 	&lspr[NOLIGHT],     // SPR_SPRR
 	&lspr[NOLIGHT],     // SPR_SUDR
 	&lspr[NOLIGHT],     // SPR_SMOK

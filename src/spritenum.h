@@ -30,7 +30,7 @@ typedef enum
 	SPR_FANS,
 	SPR_BUBL, // water bubble source
 	SPR_YLTV,
-	SPR_FWR1,
+	SPR_COL5,
 	SPR_SPRR, // red spring
 	SPR_SUDR,
 	SPR_SMOK,
