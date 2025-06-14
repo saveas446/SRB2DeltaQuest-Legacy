@@ -742,6 +742,10 @@ static void ST_DrawNightsOverlayNum(int x /* right border */, int y, int num,
 	// Sorry chum, this function only draws UNSIGNED values!
 }
 
+char letters[] = {
+	"ABCDEFGHIJKLMNOPQRSTU"
+};
+
 static void ST_drawDebugInfo(void)
 {
 	char d2uver[33];
@@ -768,15 +772,10 @@ static void ST_drawDebugInfo(void)
 	char smfstartdash[33];
 	char sjumping[33];
 	char sscoreadd[33];
-	
-	char emmys[33];
-	char emmy1[33];
-	char emmy2[33];
-	char emmy3[33];
-	char emmy4[33];
-	char emmy5[33];
-	char emmy6[33];
-	char emmy7[33];
+
+	patch_t* emmypatch;
+
+	char emmypatchname[9];
 
 	sprintf(smomx, "MOMX: %d", stplyr->rmomx >> FRACBITS);
 	sprintf(smomy, "MOMY: %d", stplyr->rmomy >> FRACBITS);
@@ -795,7 +794,7 @@ static void ST_drawDebugInfo(void)
 	sprintf(sy, "Y: %d", stplyr->mo->y >> FRACBITS);
 	sprintf(sz, "Z: %d", stplyr->mo->z >> FRACBITS);
 
-	sprintf(d2uver, "DEMO 2 ULTIMATE %d.%d.%d", MAJORVER, MINORVER, TINYVER);
+	sprintf(d2uver, "DEMO 2 ULTIMATE v%d.%d.%d", MAJORVER, MINORVER, TINYVER);
 	sprintf(sangle, "Angle: %d", stplyr->mo->angle >> FRACBITS);
 	/*sprintf(sunderwater, "%d", stplyr->powers[pw_underwater]);
 	sprintf(smfjumped, "%d", stplyr->mfjumped);
@@ -815,23 +814,31 @@ static void ST_drawDebugInfo(void)
 	
 
 	/*V_DrawString(0, 240, 24, 0, "SPEED =");
-	V_DrawString(0, 296, 24, 0, sspeed);
-	V_DrawString(0, 224, 32, 0, "EMERALDS");
-	V_DrawString(0, 288, 32, 0, emmys);
-	V_DrawString(0, 240, 40, 0, "EMMY1");
-	V_DrawString(0, 296, 40, 0, emmy1);
-	V_DrawString(0, 240, 48, 0, "EMMY2");
-	V_DrawString(0, 296, 48, 0, emmy2);
-	V_DrawString(0, 240, 56, 0, "EMMY3");
-	V_DrawString(0, 296, 56, 0, emmy3);
-	V_DrawString(0, 240, 64, 0, "EMMY4");
-	V_DrawString(0, 296, 64, 0, emmy4);
-	V_DrawString(0, 240, 72, 0, "EMMY5");
-	V_DrawString(0, 296, 72, 0, emmy5);
-	V_DrawString(0, 240, 80, 0, "EMMY6");
-	V_DrawString(0, 296, 80, 0, emmy6);
-	V_DrawString(0, 240, 88, 0, "EMMY7");
-	V_DrawString(0, 296, 88, 0, emmy7);*/
+	V_DrawString(0, 296, 24, 0, sspeed);*/
+
+	// Was GONNA make it animate but that didn't work :(
+	sprintf(emmypatchname, "EMMYA0", leveltime % 21);
+
+	emmypatch = W_CachePatchName(emmypatchname, PU_CACHE);
+
+	V_DrawFlatFill(320-144, 64, 144, 32, W_GetNumForName("FLOOR0_3"));
+	//V_DrawFlatFill(320-144, 96, 144, 1, W_GetNumForName("FLOOR0_3"));
+
+	if (emeralds & EMERALD1)
+		V_DrawSmallScaledPatch(320, 120, 0, emmypatch);
+	if (emeralds & EMERALD2)
+		V_DrawSmallScaledPatch(320-24, 120, 0, emmypatch);
+	if (emeralds & EMERALD3)
+		V_DrawSmallScaledPatch(320-48, 120, 0, emmypatch);
+	if (emeralds & EMERALD4)
+		V_DrawSmallScaledPatch(320-72, 120, 0, emmypatch);
+	if (emeralds & EMERALD5)
+		V_DrawSmallScaledPatch(320-96, 120, 0, emmypatch);
+	if (emeralds & EMERALD6)
+		V_DrawSmallScaledPatch(320-120, 120, 0, emmypatch);
+	if (emeralds & EMERALD7)
+		V_DrawSmallScaledPatch(320-144, 120, 0, emmypatch);		
+
 	V_DrawString(0, 320 - (strlen(d2uver) << 3), 0, 0, d2uver);
 	V_DrawString(V_REDMAP, 320 - (strlen(sx) << 3), 8, 0, sx);
 	V_DrawString(V_GREENMAP, 320 - (strlen(sy) << 3), 16, 0, sy);
@@ -840,6 +847,8 @@ static void ST_drawDebugInfo(void)
 	V_DrawString(0, 320 - (strlen(smomx) << 3), 40, 0, smomx);
 	V_DrawString(0, 320 - (strlen(smomy) << 3), 48, 0, smomy);
 	V_DrawString(0, 320 - (strlen(smomz) << 3), 56, 0, smomz);
+	
+	
 	/*V_DrawString(0, 192, 152, 0, "Underwater =");
 	V_DrawString(0, 288, 152, 0, sunderwater);
 	V_DrawString(0, 192, 160, 0, "MF_JUMPED =");
