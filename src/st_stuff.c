@@ -178,9 +178,9 @@ hudinfo_t hudinfo[NUMHUDITEMS] =
 
 // title card stuff
 
-int ttlnumxpos,ttlnumypos, ttlnumtargetxpos, ttlnumtargetypos;
-int lvlttlxpos,lvlttlypos, lvlttltargetxpos, lvlttltargetypos;
-int zonexpos,zoneypos, zonetargetxpos, zonetargetypos;
+int ttlnumxpos,ttlnumypos, ttlnumscroll, ttlnumtargetscroll;
+int lvlttlxpos,lvlttlypos, lvlttlscroll, lvlttltargetscroll;
+int zonexpos,zoneypos, zonescroll, zonetargetscroll;
 
 int actnum;
 
@@ -477,20 +477,13 @@ void ST_Start(void)
 		ttlnum = act3;
 	}
 
-	lvlttlypos = 0;
-	zoneypos = 200;
-	ttlnumypos = 200;
+	lvlttlypos = 80;
+	zoneypos = 104;
+	ttlnumypos = 104;
 
-	lvlttltargetxpos = lvlttlxpos;
-	lvlttltargetypos = 80;
-
-	zonetargetxpos = zonexpos;
-	zonetargetypos = 104;
-
-	ttlnumtargetxpos = ttlnumxpos;
-	ttlnumtargetypos = 104;
-
-	targetreached = false;
+	lvlttlscroll = 80;
+	zonescroll = 96;
+	ttlnumscroll = 96;
 
 	if (!st_stopped)
 		ST_Stop();
@@ -881,55 +874,44 @@ static void ST_drawEggsNeeded(void)
 
 static void ST_drawLevelTitle(void)
 {
+	int realypos;
 	if (!leveltime)
 		return;
 
 	if (leveltime < 105) {
-		if (lvlttlypos < lvlttltargetypos)
-			lvlttlypos += 12;
-		else if (lvlttlypos > lvlttltargetypos)
-			lvlttlypos = lvlttltargetypos;
-	
+		if (lvlttlscroll > 0)
+			lvlttlscroll -= (lvlttlscroll >> 3);
 
-		if (zoneypos > zonetargetypos) 
-			zoneypos -= 12;
-		else if (zoneypos < zonetargetypos)
-			zoneypos = zonetargetypos;
+		if (zonescroll > 0)
+			zonescroll -= (zonescroll >> 3);
 
-		if (ttlnumypos > ttlnumtargetypos)
-			ttlnumypos -= 12;
-		else if (ttlnumypos < ttlnumtargetypos)
-			ttlnumypos = ttlnumtargetypos;
-		
+		if (lvlttlscroll > 0)
+			lvlttlscroll -= (lvlttlscroll >> 3);
 	} else {
-		lvlttltargetypos = 200;
-		zonetargetypos = 0;
-		ttlnumtargetypos = 0;
-
-		if (lvlttlypos < lvlttltargetypos)
+		if (lvlttlypos < 200)
 			lvlttlypos += 12;
-		else if (lvlttlypos > lvlttltargetypos)
-			lvlttlypos = lvlttltargetypos;
-	
-		if (zoneypos > zonetargetypos) 
-			zoneypos -= 12;
-		else if (zoneypos < zonetargetypos)
-			zoneypos = zonetargetypos;
+		else if (lvlttlypos > 200)
+			lvlttlypos = 200;
 
-		if (ttlnumypos > ttlnumtargetypos)
+		if (zoneypos > 0) 
+			zoneypos -= 12;
+		else if (zoneypos < 0)
+			zoneypos = 0;
+
+		if (ttlnumypos > 0)
 			ttlnumypos -= 12;
-		else if (ttlnumypos < ttlnumtargetypos)
-			ttlnumypos = ttlnumtargetypos;
+		else if (ttlnumypos < 0)
+			ttlnumypos = 0;
 	}
 
-	if (lvlttlypos > 0 && lvlttlypos < 200) 
-		V_DrawScaledPatch (SCX(lvlttlxpos),SCY(lvlttlypos), V_NOSCALESTART,lvlttl);
-	
-	if (zoneypos > 0 && zoneypos < 200) 	
-		V_DrawScaledPatch (SCX(zonexpos),SCY(zoneypos), V_NOSCALESTART,ttlzone);
-
-	if (ttlnumypos > 0 && ttlnumypos < 200) 
-		V_DrawScaledPatch (SCX(ttlnumxpos),SCY(ttlnumypos), V_NOSCALESTART,ttlnum);
+	realypos = lvlttlypos - lvlttlscroll;
+	if (realypos > 0 && realypos < 190) 
+		V_DrawScaledPatch (SCX(lvlttlxpos),SCY(realypos), V_NOSCALESTART,lvlttl);
+	realypos = zoneypos - zonescroll;
+	if (realypos > 0 && realypos < 200) 	
+		V_DrawScaledPatch (SCX(zonexpos),SCY(realypos), V_NOSCALESTART,ttlzone);
+	if (realypos > 0 && realypos < 200) 
+		V_DrawScaledPatch (SCX(ttlnumxpos),SCY(realypos), V_NOSCALESTART,ttlnum);
 }
 
 static void ST_drawFirstPersonHUD(void)

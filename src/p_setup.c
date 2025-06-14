@@ -1163,7 +1163,6 @@ static void P_LoadSideDefs2(int lump)
 				//l16 Colormap
 				//Save 18-05-2025
 				case 272: //SoM: 4/4/2000: Just colormap transfer
-				case 16: // Tails
 					// SoM: R_CreateColormap will only create a colormap in software mode...
 					// Perhaps we should just call it instead of doing the calculations here.
 					if (rendermode == render_soft || rendermode == render_none)
