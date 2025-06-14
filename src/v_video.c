@@ -1437,7 +1437,7 @@ void V_DrawCharacter(int x, int y, int c)
 // Write a string using the hu_font
 // NOTE: the text is centered for screens larger than the base width
 //
-void V_DrawString(int x, int y, int option, const char *string)
+void V_DrawString(int option2, int x, int y, int option, const char *string)
 {
 	int r, w, c, cx = x, cy = y, dupx, dupy, scrwidth = BASEVIDWIDTH;
 	const char *ch = string, *q;
@@ -1506,6 +1506,12 @@ void V_DrawString(int x, int y, int option, const char *string)
 			|| (option & V_8020TRANS)
 			|| (option & V_9010TRANS))
 			V_DrawTranslucentPatch(cx, cy, option & ~V_TRANSLUCENT, hu_font[c]);
+		else if (option2 & V_REDMAP)	
+			V_DrawMappedPatch(cx, cy, option, hu_font[c], redmap);
+		else if (option2 & V_GREENMAP)	
+			V_DrawMappedPatch(cx, cy, option, hu_font[c], lgreenmap);
+		else if (option2 & V_BLUEMAP)	
+			V_DrawMappedPatch(cx, cy, option, hu_font[c], bluemap);
 		else
 			V_DrawScaledPatch(cx, cy, option, hu_font[c]);
 		cx += w;
@@ -1515,13 +1521,13 @@ void V_DrawString(int x, int y, int option, const char *string)
 void V_DrawCenteredString(int x, int y, int option, const char *string)
 {
 	x -= V_StringWidth(string)/2;
-	V_DrawString(x, y, option, string);
+	V_DrawString(0, x, y, option, string);
 }
 
 void V_DrawRightAlignedString(int x, int y, int option, const char *string)
 {
 	x -= V_StringWidth(string);
-	V_DrawString(x, y, option, string);
+	V_DrawString(0, x, y, option, string);
 }
 
 // Write a string using the credit font

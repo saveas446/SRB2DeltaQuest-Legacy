@@ -292,11 +292,11 @@ void Y_IntermissionDrawer(void)
 				V_DrawRightAlignedString(x+152, 32, V_YELLOWMAP, "SCORE");
 
 			V_DrawCenteredString(x+(BASEVIDWIDTH/2)+6, 32, V_YELLOWMAP, "#");
-			V_DrawString(x+(BASEVIDWIDTH/2)+36, 32, V_YELLOWMAP, "NAME");
+			V_DrawString(0, x+(BASEVIDWIDTH/2)+36, 32, V_YELLOWMAP, "NAME");
 		}
 
 		V_DrawCenteredString(x+6, 32, V_YELLOWMAP, "#");
-		V_DrawString(x+36, 32, V_YELLOWMAP, "NAME");
+		V_DrawString(0, x+36, 32, V_YELLOWMAP, "NAME");
 
 		if (inttype == int_timerace)
 			V_DrawRightAlignedString(x+(BASEVIDWIDTH/2)+152, 32, V_YELLOWMAP, "TIME");
@@ -328,7 +328,7 @@ void Y_IntermissionDrawer(void)
 				else
 					STRBUFCPY(name, data.match.name[i]);
 				
-				V_DrawString(x+36, y, 0, name);
+				V_DrawString(0, x+36, y, 0, name);
 
 				if (data.match.numplayers > 9)
 				{

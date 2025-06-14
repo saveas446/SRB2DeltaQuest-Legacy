@@ -70,6 +70,11 @@ void V_DrawMappedPatch(int x, int y, int scrn, patch_t *patch, const byte *color
 #define V_SNAPTOLEFT         0x40000000 // for centering
 #define V_SNAPTORIGHT        0x80000000 // for centering
 
+// option2 flags
+#define V_REDMAP                0x00000001  // draw red (for v_drawstring)
+#define V_GREENMAP              0x00000002  // draw green (for v_drawstring)
+#define V_BLUEMAP               0x00000004  // draw blue (for v_drawstring)
+
 // default params: scale patch and scale start
 void V_DrawScaledPatch(int x, int y, int scrn, patch_t *patch);
 
@@ -101,7 +106,7 @@ void V_DrawCharacter(int x, int y, int c);
 void V_DrawLevelTitle(int x, int y, int option, const char *string);
 
 // draw a string using the hu_font
-void V_DrawString(int x, int y, int option, const char *string);
+void V_DrawString(int option2, int x, int y, int option, const char *string);
 void V_DrawCenteredString(int x, int y, int option, const char *string);
 void V_DrawRightAlignedString(int x, int y, int option, const char *string);
 

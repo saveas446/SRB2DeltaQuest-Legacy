@@ -642,8 +642,8 @@ static void WalkBSPNode(int bspnum, poly_t *poly, unsigned short *leafnode, fixe
 				x = BASEVIDWIDTH/2;
 				y = BASEVIDHEIGHT/2;
 				M_DrawTextBox(x-58, y-8, 13, 1);
-				V_DrawString(x-50, y, V_YELLOWMAP, "Loading...");
-				V_DrawString(x+50-V_StringWidth(s), y, V_YELLOWMAP, s);
+				V_DrawString(0, x-50, y, V_YELLOWMAP, "Loading...");
+				V_DrawString(0, x+50-V_StringWidth(s), y, V_YELLOWMAP, s);
 
 				V_DrawCenteredString(BASEVIDWIDTH/2, 40, V_YELLOWMAP, "OPENGL MODE IS UNSUPPORTED");
 				V_DrawCenteredString(BASEVIDWIDTH/2, 50, V_YELLOWMAP, "AND MAY CRASH YOUR");

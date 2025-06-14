@@ -478,13 +478,13 @@ static void D_Display(void)
 			char s[50];
 			Net_GetNetStat();
 			snprintf(s, sizeof s, "get %d b/s", getbps);
-			V_DrawString(BASEVIDWIDTH - V_StringWidth(s), BASEVIDHEIGHT-ST_HEIGHT-40, V_YELLOWMAP, s);
+			V_DrawString(0, BASEVIDWIDTH - V_StringWidth(s), BASEVIDHEIGHT-ST_HEIGHT-40, V_YELLOWMAP, s);
 			snprintf(s, sizeof s, "send %d b/s", sendbps);
-			V_DrawString(BASEVIDWIDTH - V_StringWidth(s), BASEVIDHEIGHT-ST_HEIGHT-30, V_YELLOWMAP, s);
+			V_DrawString(0, BASEVIDWIDTH - V_StringWidth(s), BASEVIDHEIGHT-ST_HEIGHT-30, V_YELLOWMAP, s);
 			snprintf(s, sizeof s, "GameMiss %.2f%%", gamelostpercent);
-			V_DrawString(BASEVIDWIDTH - V_StringWidth(s), BASEVIDHEIGHT-ST_HEIGHT-20, V_YELLOWMAP, s);
+			V_DrawString(0, BASEVIDWIDTH - V_StringWidth(s), BASEVIDHEIGHT-ST_HEIGHT-20, V_YELLOWMAP, s);
 			snprintf(s, sizeof s, "SysMiss %.2f%%", lostpercent);
-			V_DrawString(BASEVIDWIDTH-V_StringWidth(s), BASEVIDHEIGHT-ST_HEIGHT-10, V_YELLOWMAP, s);
+			V_DrawString(0, BASEVIDWIDTH-V_StringWidth(s), BASEVIDHEIGHT-ST_HEIGHT-10, V_YELLOWMAP, s);
 		}
 
 		I_FinishUpdate(); // page flip or blit buffer
@@ -986,9 +986,6 @@ void D_SRB2Main(int sys)
 
 	int pstartmap = 1;
 	boolean autostart = false;
-
-	// This should be the VERY FIRST thing the game does to minize chances of crashing before it's calculated
-	TINYVER = calc_TINYVER();
 
 	// Figure out our windowing system
 	wnd_system = (window_system)sys;

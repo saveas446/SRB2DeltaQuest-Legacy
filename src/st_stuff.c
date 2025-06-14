@@ -744,6 +744,7 @@ static void ST_DrawNightsOverlayNum(int x /* right border */, int y, int num,
 
 static void ST_drawDebugInfo(void)
 {
+	char d2uver[33];
 	char smomx[33];
 	char smomy[33];
 	char smomz[33];
@@ -777,7 +778,7 @@ static void ST_drawDebugInfo(void)
 	char emmy6[33];
 	char emmy7[33];
 
-	sprintf(smomx, "%d", stplyr->rmomx >> FRACBITS);
+	/*sprintf(smomx, "%d", stplyr->rmomx >> FRACBITS);
 	sprintf(smomy, "%d", stplyr->rmomy >> FRACBITS);
 	sprintf(smomz, "%d", stplyr->mo->momz >> FRACBITS);
 	sprintf(sspeed, "%d", stplyr->speed);
@@ -789,11 +790,13 @@ static void ST_drawDebugInfo(void)
 	sprintf(sstrcolor, "%d", stplyr->starttranscolor);
 	sprintf(sendcolor, "%d", stplyr->endtranscolor);
 	sprintf(sdedtimer, "%d", stplyr->deadtimer);
-	sprintf(sjumpfact, "%d", stplyr->jumpfactor);
-	sprintf(sx, "%d", stplyr->mo->x >> FRACBITS);
-	sprintf(sy, "%d", stplyr->mo->y >> FRACBITS);
-	sprintf(sz, "%d", stplyr->mo->z >> FRACBITS);
-	sprintf(sangle, "%d", stplyr->mo->angle >> FRACBITS);
+	sprintf(sjumpfact, "%d", stplyr->jumpfactor);*/
+	sprintf(sx, "X: %d", stplyr->mo->x >> FRACBITS);
+	sprintf(sy, "Y: %d", stplyr->mo->y >> FRACBITS);
+	sprintf(sz, "Z: %d", stplyr->mo->z >> FRACBITS);
+
+	sprintf(d2uver, "DEMO 2 ULTIMATE %d.%d.%d", MAJORVER, MINORVER, TINYVER);
+	/*sprintf(sangle, "%d", stplyr->mo->angle >> FRACBITS);
 	sprintf(sunderwater, "%d", stplyr->powers[pw_underwater]);
 	sprintf(smfjumped, "%d", stplyr->mfjumped);
 	sprintf(smfspinning, "%d", stplyr->mfspinning);
@@ -808,52 +811,50 @@ static void ST_drawDebugInfo(void)
 	sprintf(emmy4, "%d", emeralds & EMERALD4);
 	sprintf(emmy5, "%d", emeralds & EMERALD5);
 	sprintf(emmy6, "%d", emeralds & EMERALD6);
-	sprintf(emmy7, "%d", emeralds & EMERALD7);
+	sprintf(emmy7, "%d", emeralds & EMERALD7);*/
 	
-	V_DrawString(248, 0, 0, "MOMX =");
-	V_DrawString(296, 0, 0, smomx);
-	V_DrawString(248, 8, 0, "MOMY =");
-	V_DrawString(296, 8, 0, smomy);
-	V_DrawString(248, 16, 0, "MOMZ =");
-	V_DrawString(296, 16, 0, smomz);
-	V_DrawString(240, 24, 0, "SPEED =");
-	V_DrawString(296, 24, 0, sspeed);
-	V_DrawString(224, 32, 0, "EMERALDS");
-	V_DrawString(288, 32, 0, emmys);
-	V_DrawString(240, 40, 0, "EMMY1");
-	V_DrawString(296, 40, 0, emmy1);
-	V_DrawString(240, 48, 0, "EMMY2");
-	V_DrawString(296, 48, 0, emmy2);
-	V_DrawString(240, 56, 0, "EMMY3");
-	V_DrawString(296, 56, 0, emmy3);
-	V_DrawString(240, 64, 0, "EMMY4");
-	V_DrawString(296, 64, 0, emmy4);
-	V_DrawString(240, 72, 0, "EMMY5");
-	V_DrawString(296, 72, 0, emmy5);
-	V_DrawString(240, 80, 0, "EMMY6");
-	V_DrawString(296, 80, 0, emmy6);
-	V_DrawString(240, 88, 0, "EMMY7");
-	V_DrawString(296, 88, 0, emmy7);
-	V_DrawString(240, 104, 0, "X =");
-	V_DrawString(264, 104, 0, sx);
-	V_DrawString(240, 112, 0, "Y =");
-	V_DrawString(264, 112, 0, sy);
-	V_DrawString(240, 120, 0, "Z =");
-	V_DrawString(264, 120, 0, sz);
-	V_DrawString(216, 128, 0, "Angle =");
-	V_DrawString(272, 128, 0, sangle);
-	V_DrawString(192, 152, 0, "Underwater =");
-	V_DrawString(288, 152, 0, sunderwater);
-	V_DrawString(192, 160, 0, "MF_JUMPED =");
-	V_DrawString(288, 160, 0, smfjumped);
-	V_DrawString(192, 168, 0, "MF_SPINNING =");
-	V_DrawString(296, 168, 0, smfspinning);
-	V_DrawString(192, 176, 0, "MF_STARDASH =");
-	V_DrawString(296, 176, 0, smfstartdash);
-	V_DrawString(192, 184, 0, "Jumping =");
-	V_DrawString(288, 184, 0, sjumping);
-	V_DrawString(192, 192, 0, "Scoreadd =");
-	V_DrawString(288, 192, 0, sscoreadd);
+	/*V_DrawString(0, 248, 0, 0, "MOMX =");
+	V_DrawString(0, 296, 0, 0, smomx);
+	V_DrawString(0, 248, 8, 0, "MOMY =");
+	V_DrawString(0, 296, 8, 0, smomy);
+	V_DrawString(0, 248, 16, 0, "MOMZ =");
+	V_DrawString(0, 296, 16, 0, smomz);
+	V_DrawString(0, 240, 24, 0, "SPEED =");
+	V_DrawString(0, 296, 24, 0, sspeed);
+	V_DrawString(0, 224, 32, 0, "EMERALDS");
+	V_DrawString(0, 288, 32, 0, emmys);
+	V_DrawString(0, 240, 40, 0, "EMMY1");
+	V_DrawString(0, 296, 40, 0, emmy1);
+	V_DrawString(0, 240, 48, 0, "EMMY2");
+	V_DrawString(0, 296, 48, 0, emmy2);
+	V_DrawString(0, 240, 56, 0, "EMMY3");
+	V_DrawString(0, 296, 56, 0, emmy3);
+	V_DrawString(0, 240, 64, 0, "EMMY4");
+	V_DrawString(0, 296, 64, 0, emmy4);
+	V_DrawString(0, 240, 72, 0, "EMMY5");
+	V_DrawString(0, 296, 72, 0, emmy5);
+	V_DrawString(0, 240, 80, 0, "EMMY6");
+	V_DrawString(0, 296, 80, 0, emmy6);
+	V_DrawString(0, 240, 88, 0, "EMMY7");
+	V_DrawString(0, 296, 88, 0, emmy7);*/
+	V_DrawString(0, 320 - (strlen(d2uver) << 3), 0, 0, d2uver);
+	V_DrawString(V_REDMAP, 320 - (strlen(sx) << 3), 8, 0, sx);
+	V_DrawString(V_GREENMAP, 320 - (strlen(sy) << 3), 16, 0, sy);
+	V_DrawString(V_BLUEMAP, 320 - (strlen(sz) << 3), 24, 0, sz);
+	/*V_DrawString(0, 216, 128, 0, "Angle =");
+	V_DrawString(0, 272, 128, 0, sangle);
+	V_DrawString(0, 192, 152, 0, "Underwater =");
+	V_DrawString(0, 288, 152, 0, sunderwater);
+	V_DrawString(0, 192, 160, 0, "MF_JUMPED =");
+	V_DrawString(0, 288, 160, 0, smfjumped);
+	V_DrawString(0, 192, 168, 0, "MF_SPINNING =");
+	V_DrawString(0, 296, 168, 0, smfspinning);
+	V_DrawString(0, 192, 176, 0, "MF_STARDASH =");
+	V_DrawString(0, 296, 176, 0, smfstartdash);
+	V_DrawString(0, 192, 184, 0, "Jumping =");
+	V_DrawString(0, 288, 184, 0, sjumping);
+	V_DrawString(0, 192, 192, 0, "Scoreadd =");
+	V_DrawString(0, 288, 192, 0, sscoreadd);*/
 }
 
 static void ST_drawEggsNeeded(void)
@@ -1194,11 +1195,11 @@ static void ST_drawTagHUD(void)
 		sprintf(stagit, "%d", stplyr->tagit/TICRATE);
 
 		if (cv_splitscreen.value)
-			V_DrawString(120, STRINGY(168), 0, "YOU'RE IT!");
+			V_DrawString(0, 120, STRINGY(168), 0, "YOU'RE IT!");
 		else
-			V_DrawString(120, STRINGY(176), 0, "YOU'RE IT!");
+			V_DrawString(0, 120, STRINGY(176), 0, "YOU'RE IT!");
 
-		V_DrawString(158 - (V_StringWidth(stagit))/2, STRINGY(184), 0, stagit);
+		V_DrawString(0, 158 - (V_StringWidth(stagit))/2, STRINGY(184), 0, stagit);
 	}
 
 	if (stplyr->tagzone)
@@ -1207,13 +1208,13 @@ static void ST_drawTagHUD(void)
 		sprintf(stagzone, "%d", stplyr->tagzone/TICRATE);
 		if (cv_splitscreen.value)
 		{
-			V_DrawString(201, STRINGY(168), 0, "IN NO-TAG ZONE");
-			V_DrawString(254 - (V_StringWidth(stagzone))/2, STRINGY(184), 0, stagzone);
+			V_DrawString(0, 201, STRINGY(168), 0, "IN NO-TAG ZONE");
+			V_DrawString(0, 254 - (V_StringWidth(stagzone))/2, STRINGY(184), 0, stagzone);
 		}
 		else
 		{
-			V_DrawString(104, STRINGY(160), 0, "IN NO-TAG ZONE");
-			V_DrawString(158 - (V_StringWidth(stagzone))/2, STRINGY(168), 0, stagzone);
+			V_DrawString(0, 104, STRINGY(160), 0, "IN NO-TAG ZONE");
+			V_DrawString(0, 158 - (V_StringWidth(stagzone))/2, STRINGY(168), 0, stagzone);
 		}
 	}
 	else if (stplyr->taglag)
@@ -1223,13 +1224,13 @@ static void ST_drawTagHUD(void)
 
 		if (cv_splitscreen.value)
 		{
-			V_DrawString(30, STRINGY(168), 0, "NO-TAG LAG");
-			V_DrawString(62 - (V_StringWidth(staglag))/2, STRINGY(184), 0, staglag);
+			V_DrawString(0, 30, STRINGY(168), 0, "NO-TAG LAG");
+			V_DrawString(0, 62 - (V_StringWidth(staglag))/2, STRINGY(184), 0, staglag);
 		}
 		else
 		{
-			V_DrawString(120, STRINGY(160), 0, "NO-TAG LAG");
-			V_DrawString(158 - (V_StringWidth(staglag))/2, STRINGY(168), 0, staglag);
+			V_DrawString(0, 120, STRINGY(160), 0, "NO-TAG LAG");
+			V_DrawString(0, 158 - (V_StringWidth(staglag))/2, STRINGY(168), 0, staglag);
 		}
 	}
 }
@@ -1356,16 +1357,16 @@ static void ST_drawCTFHUD(void)
 	if (stplyr->ctfteam == 1)
 	{
 		if (cv_splitscreen.value)
-			V_DrawString(256, STRINGY(184), V_TRANSLUCENT, "RED TEAM");
+			V_DrawString(0, 256, STRINGY(184), V_TRANSLUCENT, "RED TEAM");
 		else
-			V_DrawString(256, STRINGY(192), V_TRANSLUCENT, "RED TEAM");
+			V_DrawString(0, 256, STRINGY(192), V_TRANSLUCENT, "RED TEAM");
 	}
 	else if (stplyr->ctfteam == 2)
 	{
 		if (cv_splitscreen.value)
-			V_DrawString(248, STRINGY(184), V_TRANSLUCENT, "BLUE TEAM");
+			V_DrawString(0, 248, STRINGY(184), V_TRANSLUCENT, "BLUE TEAM");
 		else
-			V_DrawString(248, STRINGY(192), V_TRANSLUCENT, "BLUE TEAM");
+			V_DrawString(0, 248, STRINGY(192), V_TRANSLUCENT, "BLUE TEAM");
 	}
 	else
 	{
@@ -1380,7 +1381,7 @@ static void ST_drawChaosHUD(void)
 {
 	char chains[33];
 	sprintf(chains, "CHAINS: %d", stplyr->scoreadd);
-	V_DrawString(8, STRINGY(184), V_TRANSLUCENT, chains);
+	V_DrawString(0, 8, STRINGY(184), V_TRANSLUCENT, chains);
 }
 #endif
 
@@ -1402,7 +1403,7 @@ static void ST_drawSpecialStageHUD(void)
 
 	if (sstimer)
 	{
-		V_DrawString(hudinfo[HUD_TIMELEFT].x, STRINGY(hudinfo[HUD_TIMELEFT].y), 0, "TIME LEFT");
+		V_DrawString(0, hudinfo[HUD_TIMELEFT].x, STRINGY(hudinfo[HUD_TIMELEFT].y), 0, "TIME LEFT");
 		ST_DrawNightsOverlayNum(SCX(hudinfo[HUD_TIMELEFTNUM].x), SCY(hudinfo[HUD_TIMELEFTNUM].y), sstimer/TICRATE, tallnum, 13);
 	}
 	else
@@ -1636,18 +1637,18 @@ static void ST_overlayDrawer(void)
 		sprintf(z, "%d", stplyr->mo->z >> FRACBITS);
 		sprintf(doomednum, "%d", stplyr->mo->target->info->doomednum);
 		sprintf(thingflags, "%d", cv_objflags.value);
-		V_DrawString(16, 98, 0, "X =");
-		V_DrawString(48, 98, 0, x);
-		V_DrawString(16, 108, 0, "Y =");
-		V_DrawString(48, 108, 0, y);
-		V_DrawString(16, 118, 0, "Z =");
-		V_DrawString(48, 118, 0, z);
-		V_DrawString(16, 128, 0, "thing # =");
-		V_DrawString(16+84, 128, 0, doomednum);
-		V_DrawString(16, 138, 0, "flags =");
-		V_DrawString(16+56, 138, 0, thingflags);
-		V_DrawString(16, 148, 0, "snap =");
-		V_DrawString(16+48, 148, 0, cv_snapto.string);
+		V_DrawString(0, 16, 98, 0, "X =");
+		V_DrawString(0, 48, 98, 0, x);
+		V_DrawString(0, 16, 108, 0, "Y =");
+		V_DrawString(0, 48, 108, 0, y);
+		V_DrawString(0, 16, 118, 0, "Z =");
+		V_DrawString(0, 48, 118, 0, z);
+		V_DrawString(0, 16, 128, 0, "thing # =");
+		V_DrawString(0, 16+84, 128, 0, doomednum);
+		V_DrawString(0, 16, 138, 0, "flags =");
+		V_DrawString(0, 16+56, 138, 0, thingflags);
+		V_DrawString(0, 16, 148, 0, "snap =");
+		V_DrawString(0, 16+48, 148, 0, cv_snapto.string);
 	}
 
 	// Countdown timer for Race Mode

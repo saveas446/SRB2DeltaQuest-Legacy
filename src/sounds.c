@@ -200,6 +200,7 @@ musicinfo_t S_music[NUMMUSIC] =
     { "eggfac"    , 0 },
     { "slmvly"    , 0 },
     { "fsz1\0\0\0", 0 },
+    { "fsz2\0\0\0", 0 },
     { "fszbos"    , 0 },
     // End of level tracks
     { "dm2ttl"  , 0 }, // Moved it up Tails 01-06-2001

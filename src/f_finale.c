@@ -2114,15 +2114,15 @@ void F_DemoEndDrawer(void)
 	{
 		case 6:
 		case 5:
-			V_DrawString(8, 184, 0, "Returning to title screen...");
+			V_DrawString(0, 8, 184, 0, "Returning to title screen...");
 		case 4:
-			V_DrawString(8, 152, 0, "3) Stop by the #srb2fun\nchatroom at irc.esper.net.");
+			V_DrawString(0, 8, 152, 0, "3) Stop by the #srb2fun\nchatroom at irc.esper.net.");
 		case 3:
-			V_DrawString(8, 120, 0, "2) Poke around the addons\nsection of the website.");
+			V_DrawString(0, 8, 120, 0, "2) Poke around the addons\nsection of the website.");
 		case 2:
-			V_DrawString(8, 80, 0, "1) Visit the SRB2 website\nat www.srb2.org for\nnews and updates.");
+			V_DrawString(0, 8, 80, 0, "1) Visit the SRB2 website\nat www.srb2.org for\nnews and updates.");
 		case 1:
-			V_DrawString(8, 4, 0, "Thanks for playing the SRB2\ndemo. This is the last release\nbefore the final game comes\nout, but here are several\nthings you you can do to\ntide you over:");
+			V_DrawString(0, 8, 4, 0, "Thanks for playing the SRB2\ndemo. This is the last release\nbefore the final game comes\nout, but here are several\nthings you you can do to\ntide you over:");
 		default:
 			break;
 	}
@@ -2142,7 +2142,7 @@ void F_GameEvaluationDrawer(void)
 	// Draw all the good crap here.
 	if (animtimer == 64)
 	{
-		V_DrawString(114, 16, 0, "GOT THEM ALL!");
+		V_DrawString(0, 114, 16, 0, "GOT THEM ALL!");
 
 		if (gameskill <= sk_easy)
 		{
@@ -2151,7 +2151,7 @@ void F_GameEvaluationDrawer(void)
 		}
 	}
 	else
-		V_DrawString(124, 16, 0, "TRY AGAIN!");
+		V_DrawString(0, 124, 16, 0, "TRY AGAIN!");
 
 	finalestage++;
 	timetonext = finalestage;
@@ -2302,7 +2302,7 @@ void F_GameEvaluationDrawer(void)
 		if (drawchaosemblem)
 			V_DrawScaledPatch(200, 192, 0, W_CachePatchName("NWNGA0", PU_CACHE));
 
-		V_DrawString(8, 16, V_YELLOWMAP, "Unlocked:");
+		V_DrawString(0, 8, 16, V_YELLOWMAP, "Unlocked:");
 
 		if (savemoddata)
 		{
@@ -2328,7 +2328,7 @@ void F_GameEvaluationDrawer(void)
 
 				if (unlocked)
 				{
-					V_DrawString(8, startcoord, 0, customsecretinfo[i].name);
+					V_DrawString(0, 8, startcoord, 0, customsecretinfo[i].name);
 
 					startcoord += 8;
 				}
@@ -2337,33 +2337,33 @@ void F_GameEvaluationDrawer(void)
 		else
 		{
 			if (grade & 8 && !modifiedgame)
-				V_DrawString(8, 32, 0, "Mario");
+				V_DrawString(0, 8, 32, 0, "Mario");
 
 			if (grade & 16)
-				V_DrawString(8, 40, 0, "NiGHTS");
+				V_DrawString(0, 8, 40, 0, "NiGHTS");
 
 			if (grade & 32)
-				V_DrawString(8, 48, 0, "Christmas Hunt");
+				V_DrawString(0, 8, 48, 0, "Christmas Hunt");
 
 			if (grade & 64)
-				V_DrawString(8, 56, 0, "Adventure");
+				V_DrawString(0, 8, 56, 0, "Adventure");
 
 			if (grade & 1)
-				V_DrawString(8, 64, 0, "Level Select");
+				V_DrawString(0, 8, 64, 0, "Level Select");
 
 			if (grade & 128)
-				V_DrawString(8, 72, 0, "'Ultimate' Skill");
+				V_DrawString(0, 8, 72, 0, "'Ultimate' Skill");
 
 			if (grade & 256)
-				V_DrawString(8, 80, 0, "Time Attack Reward");
+				V_DrawString(0, 8, 80, 0, "Time Attack Reward");
 
 			if (grade & 512)
-				V_DrawString(8, 88, 0, "Easter Egg Reward");
+				V_DrawString(0, 8, 88, 0, "Easter Egg Reward");
 
 			if (netgame)
-				V_DrawString(8, 96, V_YELLOWMAP, "Prizes only\nawarded in\nsingle player!");
+				V_DrawString(0, 8, 96, V_YELLOWMAP, "Prizes only\nawarded in\nsingle player!");
 			else if (modifiedgame)
-				V_DrawString(8, 96, V_YELLOWMAP, "Prizes not\nawarded in\nmodified games!");
+				V_DrawString(0, 8, 96, V_YELLOWMAP, "Prizes not\nawarded in\nmodified games!");
 		}
 	}
 }

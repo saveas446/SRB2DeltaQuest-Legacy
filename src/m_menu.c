@@ -261,9 +261,9 @@ void M_DrawGenericMenu(void)
 					cursory = y;
 
 				if ((currentMenu->menuitems[i].status & IT_DISPLAY)==IT_STRING)
-					V_DrawString(x, y, 0, currentMenu->menuitems[i].text);
+					V_DrawString(0, x, y, 0, currentMenu->menuitems[i].text);
 				else
-					V_DrawString(x, y, V_YELLOWMAP, currentMenu->menuitems[i].text);
+					V_DrawString(0, x, y, V_YELLOWMAP, currentMenu->menuitems[i].text);
 
 				// Cvar specific handling
 				switch (currentMenu->menuitems[i].status & IT_TYPE)
@@ -280,14 +280,14 @@ void M_DrawGenericMenu(void)
 								break;
 							case IT_CV_STRING:
 								M_DrawTextBox(x, y + 4, MAXSTRINGLENGTH, 1);
-								V_DrawString(x + 8, y + 12, 0, cv->string);
+								V_DrawString(0, x + 8, y + 12, 0, cv->string);
 								if (skullAnimCounter < 4 && i == itemOn)
 									V_DrawCharacter(x + 8 + V_StringWidth(cv->string), y + 12,
 										'_' | 0x80);
 								y += 16;
 								break;
 							default:
-								V_DrawString(BASEVIDWIDTH - x - V_StringWidth(cv->string), y,
+								V_DrawString(0, BASEVIDWIDTH - x - V_StringWidth(cv->string), y,
 									V_YELLOWMAP, cv->string);
 								break;
 						}
@@ -296,7 +296,7 @@ void M_DrawGenericMenu(void)
 					y += STRINGHEIGHT;
 					break;
 			case IT_STRING2:
-				V_DrawString(x, y, 0, currentMenu->menuitems[i].text);
+				V_DrawString(0, x, y, 0, currentMenu->menuitems[i].text);
 			case IT_DYLITLSPACE:
 				y += SMALLLINEHEIGHT;
 				break;
@@ -320,7 +320,7 @@ void M_DrawGenericMenu(void)
 	{
 		V_DrawScaledPatch(currentMenu->x - 24, cursory, 0,
 			W_CachePatchName("M_CURSOR", PU_CACHE));
-		V_DrawString(currentMenu->x, cursory, V_YELLOWMAP, currentMenu->menuitems[itemOn].text);
+		V_DrawString(0, currentMenu->x, cursory, V_YELLOWMAP, currentMenu->menuitems[itemOn].text);
 	}
 }
 
@@ -658,15 +658,15 @@ static void M_DrawConnectMenu(void)
 		ConnectMenu[i].status = IT_STRING | IT_SPACE;
 
 	if (serverlistcount <= 0)
-		V_DrawString (currentMenu->x,currentMenu->y+FIRSTSERVERLINE*STRINGHEIGHT,0,"No servers found");
+		V_DrawString(0, currentMenu->x,currentMenu->y+FIRSTSERVERLINE*STRINGHEIGHT,0,"No servers found");
 	else
 	for (i = 0;i < serverlistcount && i+FIRSTSERVERLINE < (sizeof (ConnectMenu)/sizeof (menuitem_t));i++)
 	{
 		strncpy(servername, serverlist[i].info.servername, 20);
 		servername[20] = '\0';
-		V_DrawString (currentMenu->x,currentMenu->y+(FIRSTSERVERLINE+i)*STRINGHEIGHT,0,servername);
+		V_DrawString(0, currentMenu->x,currentMenu->y+(FIRSTSERVERLINE+i)*STRINGHEIGHT,0,servername);
 		p = va("%d", serverlist[i].info.time);
-		V_DrawString (currentMenu->x+200-V_StringWidth(p),currentMenu->y+(FIRSTSERVERLINE+i)*STRINGHEIGHT,0,p);
+		V_DrawString(0, currentMenu->x+200-V_StringWidth(p),currentMenu->y+(FIRSTSERVERLINE+i)*STRINGHEIGHT,0,p);
 
 		switch (serverlist[i].info.gametype)
 		{
@@ -694,7 +694,7 @@ static void M_DrawConnectMenu(void)
 		p = va("%d/%d  %c", serverlist[i].info.numberofplayer,
 		                     serverlist[i].info.maxplayer,
 		                     cgametype); // Tails 01-18-2001
-		V_DrawString (currentMenu->x+250-V_StringWidth(p),currentMenu->y+(FIRSTSERVERLINE+i)*STRINGHEIGHT,0,p);
+		V_DrawString(0, currentMenu->x+250-V_StringWidth(p),currentMenu->y+(FIRSTSERVERLINE+i)*STRINGHEIGHT,0,p);
 
 		ConnectMenu[i+FIRSTSERVERLINE].status = IT_STRING | IT_CALL;
 	}
@@ -1387,7 +1387,7 @@ static void M_DrawConnectIPMenu(void)
 
 	// draw name string
 //	M_DrawTextBox(82,8,MAXPLAYERNAME,1);
-	V_DrawString (128,40,0,setupm_ip);
+	V_DrawString(0, 128,40,0,setupm_ip);
 
 	// draw text cursor for name
 	if (itemOn == 0 &&
@@ -1428,14 +1428,14 @@ static void M_DrawSetupMultiPlayerMenu(void)
 
 	// draw name string
 	M_DrawTextBox(mx + 90, my - 8, MAXPLAYERNAME, 1);
-	V_DrawString(mx + 98, my, 0, setupm_name);
+	V_DrawString(0, mx + 98, my, 0, setupm_name);
 
 	// draw skin string
-	V_DrawString(mx + 90, my + 96, 0, setupm_cvskin->string);
+	V_DrawString(0, mx + 90, my + 96, 0, setupm_cvskin->string);
 
 	// draw the name of the color you have chosen
 	// Just so people don't go thinking that "Default" is Green.
-	V_DrawString(208, 72, 0, setupm_cvcolor->string);
+	V_DrawString(0, 208, 72, 0, setupm_cvcolor->string);
 
 	// draw text cursor for name
 	if (!itemOn && skullAnimCounter < 4) // blink cursor
@@ -1676,9 +1676,9 @@ static void M_DrawSetupChoosePlayerMenu(void)
 	// For description
 	M_DrawTextBox(mx-24, my+48, 20, 10);
 
-	V_DrawString(mx-16, my+56, V_YELLOWMAP, "Speed:\nAbility:\nNotes:");
+	V_DrawString(0, mx-16, my+56, V_YELLOWMAP, "Speed:\nAbility:\nNotes:");
 
-	V_DrawString(mx-16, my+56, 0, description[itemOn].info);
+	V_DrawString(0, mx-16, my+56, 0, description[itemOn].info);
 }
 
 //
@@ -1858,7 +1858,7 @@ static void M_DrawStats(void)
 			found++;
 	}
 
-	V_DrawString(64, 32, 0, va("x %d/%d", found, numemblems));
+	V_DrawString(0, 64, 32, 0, va("x %d/%d", found, numemblems));
 	V_DrawScaledPatch(32, 32-4, 0, W_CachePatchName("EMBLICON", PU_STATIC));
 
 	if (totalplaytime/(3600*TICRATE) < 10)
@@ -1917,14 +1917,14 @@ static void M_DrawStats(void)
 		char names[8];
 		emblem_t *emblem;
 
-		V_DrawString(32+36, y-16, 0, "LEVEL NAME");
-		V_DrawString(224+28, y-16, 0, "BEST TIME");
+		V_DrawString(0, 32+36, y-16, 0, "LEVEL NAME");
+		V_DrawString(0, 224+28, y-16, 0, "BEST TIME");
 
 		lastmapnum = 0;
 		oldlastmapnum = 0;
 
 		sprintf(names, "%c %c %c", skins[0].name[0], skins[1].name[0], skins[2].name[0]);
-		V_DrawString(32, y-16, 0, names);
+		V_DrawString(0, 32, y-16, 0, names);
 
 		for (i = oldlastmapnum; i < NUMMAPS; i++)
 		{
@@ -1971,9 +1971,9 @@ static void M_DrawStats(void)
 			}
 
 			if (mapheaderinfo[i].actnum != 0)
-				V_DrawString(32+36, y, V_YELLOWMAP, va("%s %d", mapheaderinfo[i].lvlttl, mapheaderinfo[i].actnum));
+				V_DrawString(0, 32+36, y, V_YELLOWMAP, va("%s %d", mapheaderinfo[i].lvlttl, mapheaderinfo[i].actnum));
 			else
-				V_DrawString(32+36, y, V_YELLOWMAP, mapheaderinfo[i].lvlttl);
+				V_DrawString(0, 32+36, y, V_YELLOWMAP, mapheaderinfo[i].lvlttl);
 
 			if (timedata[i].time)
 			{
@@ -1992,7 +1992,7 @@ static void M_DrawStats(void)
 				else
 					sprintf(hours, "%d", (int)(timedata[i].time % TICRATE));
 
-				V_DrawString(224+28, y, 0, va("%s:%s:%s", minutes,seconds,hours));
+				V_DrawString(0, 224+28, y, 0, va("%s:%s:%s", minutes,seconds,hours));
 			}
 
 			y += 8;
@@ -2061,9 +2061,9 @@ static void M_DrawStats2(void)
 			}
 
 			if (mapheaderinfo[i].actnum != 0)
-				V_DrawString(32+36, y, V_YELLOWMAP, va("%s %d", mapheaderinfo[i].lvlttl, mapheaderinfo[i].actnum));
+				V_DrawString(0, 32+36, y, V_YELLOWMAP, va("%s %d", mapheaderinfo[i].lvlttl, mapheaderinfo[i].actnum));
 			else
-				V_DrawString(32+36, y, V_YELLOWMAP, mapheaderinfo[i].lvlttl);
+				V_DrawString(0, 32+36, y, V_YELLOWMAP, mapheaderinfo[i].lvlttl);
 
 			if (timedata[i].time)
 			{
@@ -2082,7 +2082,7 @@ static void M_DrawStats2(void)
 				else
 					sprintf(hours, "%d", (int)(timedata[i].time % TICRATE));
 
-				V_DrawString(224+28, y, 0, va("%s:%s:%s", minutes,seconds,hours));
+				V_DrawString(0, 224+28, y, 0, va("%s:%s:%s", minutes,seconds,hours));
 			}
 
 			y += 8;
@@ -2151,9 +2151,9 @@ static void M_DrawStats3(void)
 			}
 
 			if (mapheaderinfo[i].actnum != 0)
-				V_DrawString(32+36, y, V_YELLOWMAP, va("%s %d", mapheaderinfo[i].lvlttl, mapheaderinfo[i].actnum));
+				V_DrawString(0, 32+36, y, V_YELLOWMAP, va("%s %d", mapheaderinfo[i].lvlttl, mapheaderinfo[i].actnum));
 			else
-				V_DrawString(32+36, y, V_YELLOWMAP, mapheaderinfo[i].lvlttl);
+				V_DrawString(0, 32+36, y, V_YELLOWMAP, mapheaderinfo[i].lvlttl);
 
 			if (timedata[i].time)
 			{
@@ -2172,7 +2172,7 @@ static void M_DrawStats3(void)
 				else
 					sprintf(hours, "%d", (int)(timedata[i].time % TICRATE));
 
-				V_DrawString(224+28, y, 0, va("%s:%s:%s", minutes,seconds,hours));
+				V_DrawString(0, 224+28, y, 0, va("%s:%s:%s", minutes,seconds,hours));
 			}
 
 			y += 8;
@@ -2241,9 +2241,9 @@ static void M_DrawStats4(void)
 			}
 
 			if (mapheaderinfo[i].actnum != 0)
-				V_DrawString(32+36, y, V_YELLOWMAP, va("%s %d", mapheaderinfo[i].lvlttl, mapheaderinfo[i].actnum));
+				V_DrawString(0, 32+36, y, V_YELLOWMAP, va("%s %d", mapheaderinfo[i].lvlttl, mapheaderinfo[i].actnum));
 			else
-				V_DrawString(32+36, y, V_YELLOWMAP, mapheaderinfo[i].lvlttl);
+				V_DrawString(0, 32+36, y, V_YELLOWMAP, mapheaderinfo[i].lvlttl);
 
 			if (timedata[i].time)
 			{
@@ -2267,7 +2267,7 @@ static void M_DrawStats4(void)
 				else
 					sprintf(hours, "%d", (int) (timedata[i].time % TICRATE));
 
-				V_DrawString(224+28, y, 0, va("%s:%s:%s", minutes,seconds,hours));
+				V_DrawString(0, 224+28, y, 0, va("%s:%s:%s", minutes,seconds,hours));
 			}
 
 			y += 8;
@@ -2336,9 +2336,9 @@ static void M_DrawStats5(void)
 			}
 
 			if (mapheaderinfo[i].actnum != 0)
-				V_DrawString(32+36, y, V_YELLOWMAP, va("%s %d", mapheaderinfo[i].lvlttl, mapheaderinfo[i].actnum));
+				V_DrawString(0, 32+36, y, V_YELLOWMAP, va("%s %d", mapheaderinfo[i].lvlttl, mapheaderinfo[i].actnum));
 			else
-				V_DrawString(32+36, y, V_YELLOWMAP, mapheaderinfo[i].lvlttl);
+				V_DrawString(0, 32+36, y, V_YELLOWMAP, mapheaderinfo[i].lvlttl);
 
 			if (timedata[i].time)
 			{
@@ -2357,7 +2357,7 @@ static void M_DrawStats5(void)
 				else
 					sprintf(hours, "%d", (int)(timedata[i].time % TICRATE));
 
-				V_DrawString(224+28, y, 0, va("%s:%s:%s", minutes,seconds,hours));
+				V_DrawString(0, 224+28, y, 0, va("%s:%s:%s", minutes,seconds,hours));
 			}
 
 			y += 8;
@@ -2958,13 +2958,13 @@ static void M_DrawUnlockChecklist(void)
 
 	for (i = 0; i < NUMCHECKLIST; i++)
 	{
-		V_DrawString(8, 8+(24*i), V_RETURN8, checklist[i].name);
-		V_DrawString(160, 8+(24*i), V_RETURN8, checklist[i].requirement);
+		V_DrawString(0, 8, 8+(24*i), V_RETURN8, checklist[i].name);
+		V_DrawString(0, 160, 8+(24*i), V_RETURN8, checklist[i].requirement);
 
 		if (checklist[i].unlocked)
-			V_DrawString(308, 8+(24*i), V_YELLOWMAP, "Y");
+			V_DrawString(0, 308, 8+(24*i), V_YELLOWMAP, "Y");
 		else
-			V_DrawString(308, 8+(24*i), V_YELLOWMAP, "N");
+			V_DrawString(0, 308, 8+(24*i), V_YELLOWMAP, "N");
 	}
 }
 
@@ -3052,13 +3052,13 @@ static void M_DrawCustomChecklist(void)
 		if (customsecretinfo[i].name[0] == 0)
 			continue;
 
-		V_DrawString(8, 8+(24*numcustom), V_RETURN8, customsecretinfo[i].name);
-		V_DrawString(160, 8+(24*numcustom), V_RETURN8|V_WORDWRAP, customsecretinfo[i].objective);
+		V_DrawString(0, 8, 8+(24*numcustom), V_RETURN8, customsecretinfo[i].name);
+		V_DrawString(0, 160, 8+(24*numcustom), V_RETURN8|V_WORDWRAP, customsecretinfo[i].objective);
 
 		if (checklist[i].unlocked)
-			V_DrawString(308, 8+(24*numcustom), V_YELLOWMAP, "Y");
+			V_DrawString(0, 308, 8+(24*numcustom), V_YELLOWMAP, "Y");
 		else
-			V_DrawString(308, 8+(24*numcustom), V_YELLOWMAP, "N");
+			V_DrawString(0, 308, 8+(24*numcustom), V_YELLOWMAP, "N");
 
 		numcustom++;
 
@@ -4471,9 +4471,9 @@ static void M_DrawJoystick(void)
 
 		if ((setupcontrols_secondaryplayer && (i == cv_usejoystick2.value))
 			|| (!setupcontrols_secondaryplayer && (i == cv_usejoystick.value)))
-			V_DrawString(JoystickSetDef.x,JoystickSetDef.y+LINEHEIGHT*i,V_YELLOWMAP,joystickInfo[i]);
+			V_DrawString(0, JoystickSetDef.x,JoystickSetDef.y+LINEHEIGHT*i,V_YELLOWMAP,joystickInfo[i]);
 		else
-			V_DrawString(JoystickSetDef.x,JoystickSetDef.y+LINEHEIGHT*i,0,joystickInfo[i]);
+			V_DrawString(0, JoystickSetDef.x,JoystickSetDef.y+LINEHEIGHT*i,0,joystickInfo[i]);
 	}
 }
 
@@ -4597,9 +4597,9 @@ static void M_DrawControlsGenerics(void)
 					cursory = y;
 
 				if ((currentMenu->menuitems[i].status & IT_DISPLAY)==IT_STRING)
-					V_DrawString(x, y, 0, currentMenu->menuitems[i].text);
+					V_DrawString(0, x, y, 0, currentMenu->menuitems[i].text);
 				else
-					V_DrawString(x, y, V_YELLOWMAP, currentMenu->menuitems[i].text);
+					V_DrawString(0, x, y, V_YELLOWMAP, currentMenu->menuitems[i].text);
 
 				// Cvar specific handling
 				switch (currentMenu->menuitems[i].status & IT_TYPE)
@@ -4616,14 +4616,14 @@ static void M_DrawControlsGenerics(void)
 								break;
 							case IT_CV_STRING:
 								M_DrawTextBox(x, y + 4, MAXSTRINGLENGTH, 1);
-								V_DrawString(x + 8, y + 12, 0, cv->string);
+								V_DrawString(0, x + 8, y + 12, 0, cv->string);
 								if (skullAnimCounter < 4 && i == itemOn)
 									V_DrawCharacter(x + 8 + V_StringWidth(cv->string), y + 12,
 										'_' | 0x80);
 								y += 16;
 								break;
 							default:
-								V_DrawString(BASEVIDWIDTH - x - V_StringWidth(cv->string), y,
+								V_DrawString(0, BASEVIDWIDTH - x - V_StringWidth(cv->string), y,
 									V_YELLOWMAP, cv->string);
 								break;
 						}
@@ -4632,7 +4632,7 @@ static void M_DrawControlsGenerics(void)
 					y += STRINGHEIGHT;
 					break;
 			case IT_STRING2:
-				V_DrawString(x, y, 0, currentMenu->menuitems[i].text);
+				V_DrawString(0, x, y, 0, currentMenu->menuitems[i].text);
 			case IT_DYLITLSPACE:
 				y += SMALLLINEHEIGHT;
 				break;
@@ -4656,7 +4656,7 @@ static void M_DrawControlsGenerics(void)
 	{
 		V_DrawScaledPatch(currentMenu->x - 22, cursory, 0,
 			W_CachePatchName("M_CURSOR", PU_CACHE));
-		V_DrawString(currentMenu->x, cursory, V_YELLOWMAP, currentMenu->menuitems[itemOn].text);
+		V_DrawString(0, currentMenu->x, cursory, V_YELLOWMAP, currentMenu->menuitems[itemOn].text);
 	}
 }
 //
@@ -4706,7 +4706,7 @@ static void M_DrawControl(void)
 
 
 		}
-		V_DrawString(BASEVIDWIDTH-ControlDef.x-V_StringWidth(tmp), ControlDef.y + i*8,V_YELLOWMAP, tmp);
+		V_DrawString(0, BASEVIDWIDTH-ControlDef.x-V_StringWidth(tmp), ControlDef.y + i*8,V_YELLOWMAP, tmp);
 	}
 
 }
@@ -4929,7 +4929,7 @@ static void M_DrawVideoMode(void)
 	col = VidModeDef.y;
 	for (i = 0; i < vidm_nummodes; i++)
 	{
-		V_DrawString(row, col, modedescs[i].iscur ? V_YELLOWMAP : 0, modedescs[i].desc);
+		V_DrawString(0, row, col, modedescs[i].iscur ? V_YELLOWMAP : 0, modedescs[i].desc);
 
 		col += 8;
 		if ((i % vidm_column_size) == (vidm_column_size-1))
@@ -5100,7 +5100,7 @@ static void M_DrawGameStats(void)
 
 	if (savegameinfo[saveSlotSelected].lives == -42) // Empty
 	{
-		V_DrawString(ecks + 16, 152, 0, "EMPTY");
+		V_DrawString(0, ecks + 16, 152, 0, "EMPTY");
 		return;
 	}
 
@@ -5112,21 +5112,21 @@ static void M_DrawGameStats(void)
 		V_DrawMappedPatch ((int)((LoadDef.x)*vid.fdupx),(int)((144+8)*vid.fdupy), V_NOSCALESTART,W_CachePatchName(skins[savegameinfo[saveSlotSelected].skinnum].faceprefix, PU_CACHE), colormap);
 	}
 
-	V_DrawString(ecks + 16, 152, 0, savegameinfo[saveSlotSelected].playername);
+	V_DrawString(0, ecks + 16, 152, 0, savegameinfo[saveSlotSelected].playername);
 
 	if (savegameinfo[saveSlotSelected].actnum == 0)
-		V_DrawString(ecks + 16, 160, 0, va("%s", savegameinfo[saveSlotSelected].levelname));
+		V_DrawString(0, ecks + 16, 160, 0, va("%s", savegameinfo[saveSlotSelected].levelname));
 	else
-		V_DrawString(ecks + 16, 160, 0, va("%s %d", savegameinfo[saveSlotSelected].levelname, savegameinfo[saveSlotSelected].actnum));
+		V_DrawString(0, ecks + 16, 160, 0, va("%s %d", savegameinfo[saveSlotSelected].levelname, savegameinfo[saveSlotSelected].actnum));
 	
 	V_DrawScaledPatch(ecks + 16, 168, 0, W_CachePatchName("CHAOS1", PU_CACHE));
-	V_DrawString(ecks + 36, 172, 0, va("x %d", savegameinfo[saveSlotSelected].numemeralds));
+	V_DrawString(0, ecks + 36, 172, 0, va("x %d", savegameinfo[saveSlotSelected].numemeralds));
 
 	V_DrawScaledPatch(ecks + 64, 169, 0, W_CachePatchName("ONEUP", PU_CACHE));
-	V_DrawString(ecks + 84, 172, 0, va("x %d", savegameinfo[saveSlotSelected].lives));
+	V_DrawString(0, ecks + 84, 172, 0, va("x %d", savegameinfo[saveSlotSelected].lives));
 
 	V_DrawScaledPatch(ecks + 120, 168, 0, W_CachePatchName("CONTINS", PU_CACHE));
-	V_DrawString(ecks + 140, 172, 0, va("x %d", savegameinfo[saveSlotSelected].continues));
+	V_DrawString(0, ecks + 140, 172, 0, va("x %d", savegameinfo[saveSlotSelected].continues));
 }
 
 //
@@ -5141,7 +5141,7 @@ static void M_DrawLoad(void)
 	for (i = 0;i < load_end; i++)
 	{
 		M_DrawSaveLoadBorder(LoadDef.x,LoadDef.y+LINEHEIGHT*i);
-		V_DrawString(LoadDef.x,LoadDef.y+LINEHEIGHT*i,0,savegamestrings[i]);
+		V_DrawString(0, LoadDef.x,LoadDef.y+LINEHEIGHT*i,0,savegamestrings[i]);
 	}
 	M_DrawGameStats();
 }
@@ -5405,13 +5405,13 @@ static void M_DrawSave(void)
 	for (i = 0;i < load_end; i++)
 	{
 		M_DrawSaveLoadBorder(LoadDef.x,LoadDef.y+LINEHEIGHT*i);
-		V_DrawString(LoadDef.x,LoadDef.y+LINEHEIGHT*i,0,savegamestrings[i]);
+		V_DrawString(0, LoadDef.x,LoadDef.y+LINEHEIGHT*i,0,savegamestrings[i]);
 	}
 
 	if (saveStringEnter && skullAnimCounter < 4) // Tails 11-30-2000
 	{
 		i = V_StringWidth(savegamestrings[saveSlot]);
-		V_DrawString(LoadDef.x + i,LoadDef.y+LINEHEIGHT*saveSlot,0,"_");
+		V_DrawString(0, LoadDef.x + i,LoadDef.y+LINEHEIGHT*saveSlot,0,"_");
 	}
 
 	M_DrawGameStats();
@@ -5889,7 +5889,7 @@ static void M_DrawMessageMenu(void)
 			}
 		}
 
-		V_DrawString((BASEVIDWIDTH - V_StringWidth(string))/2,y,0,string);
+		V_DrawString(0, (BASEVIDWIDTH - V_StringWidth(string))/2,y,0,string);
 		y += 8; //SHORT(hu_font[0]->height);
 	}
 }
@@ -5914,7 +5914,7 @@ static void M_CentreText(int y, const char *string)
 	int x;
 	//added : 02-02-98 : centre on 320, because V_DrawString centers on vid.width...
 	x = (BASEVIDWIDTH - V_StringWidth(string))>>1;
-	V_DrawString(x,y,0,string);
+	V_DrawString(0, x,y,0,string);
 }
 
 
@@ -6719,7 +6719,7 @@ static void M_DrawOpenGLMenu(void)
 	mx = OpenGLOptionDef.x;
 	my = OpenGLOptionDef.y;
 	M_DrawGenericMenu(); // use generic drawer for cursor, items and title
-	V_DrawString(BASEVIDWIDTH - mx - V_StringWidth(cv_scr_depth.string),
+	V_DrawString(0, BASEVIDWIDTH - mx - V_StringWidth(cv_scr_depth.string),
 		my + currentMenu->menuitems[2].alphaKey, V_YELLOWMAP, cv_scr_depth.string);
 }
 
@@ -6734,7 +6734,7 @@ static void M_OGL_DrawFogMenu(void)
 	mx = OGL_FogDef.x;
 	my = OGL_FogDef.y;
 	M_DrawGenericMenu(); // use generic drawer for cursor, items and title
-	V_DrawString(BASEVIDWIDTH - mx - V_StringWidth(cv_grfogcolor.string),
+	V_DrawString(0, BASEVIDWIDTH - mx - V_StringWidth(cv_grfogcolor.string),
 		my + currentMenu->menuitems[FOG_COLOR_ITEM].alphaKey, V_YELLOWMAP, cv_grfogcolor.string);
 	// blink cursor on FOG_COLOR_ITEM if selected
 	if (itemOn == FOG_COLOR_ITEM && skullAnimCounter < 4)
@@ -6752,7 +6752,7 @@ static void M_OGL_DrawColorMenu(void)
 	mx = OGL_ColorDef.x;
 	my = OGL_ColorDef.y;
 	M_DrawGenericMenu(); // use generic drawer for cursor, items and title
-	V_DrawString(mx, my + currentMenu->menuitems[0].alphaKey - 10,
+	V_DrawString(0, mx, my + currentMenu->menuitems[0].alphaKey - 10,
 		V_YELLOWMAP, "Gamma correction");
 }
 

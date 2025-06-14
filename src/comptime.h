@@ -9,8 +9,4 @@
 // Compile date and time.
 extern const char *compdate, *comptime;
 
-extern USHORT TINYVER;
-
-int calc_TINYVER(void);
-
 #endif

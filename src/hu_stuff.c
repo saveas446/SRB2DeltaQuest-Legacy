@@ -971,7 +971,7 @@ void HU_DrawTabRankings(int x, int y, playersort_t *tab, int scorelines, int whi
 
 	for (i = 0; i < scorelines; i++)
 	{
-		V_DrawString(cv_teamplay.value ? x : x+24, y, (tab[i].num == whiteplayer && !cv_teamplay.value) ? V_YELLOWMAP : 0, tab[i].name);
+		V_DrawString(0, cv_teamplay.value ? x : x+24, y, (tab[i].num == whiteplayer && !cv_teamplay.value) ? V_YELLOWMAP : 0, tab[i].name);
 
 		if (!cv_teamplay.value)
 		{
@@ -1142,7 +1142,7 @@ static void HU_DrawCoopOverlay(void)
 		}
 
 		sprintf(emblemsfound, "- %d/%d", found, numemblems);
-		V_DrawString(160, 96, 0, emblemsfound);
+		V_DrawString(0, 160, 96, 0, emblemsfound);
 		V_DrawScaledPatch(128, 96 - emblemicon->height/4, 0, emblemicon);
 	}
 

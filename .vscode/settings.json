@@ -12,6 +12,7 @@
         "xutility": "c",
         "P_MOBJ.C": "cpp",
         "xtr1common": "cpp",
-        "cmath": "c"
+        "cmath": "c",
+        "HW_BSP.C": "cpp"
     }
 }

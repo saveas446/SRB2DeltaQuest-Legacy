@@ -52,6 +52,9 @@
     // increment this
     #define MINORVER 1
 
+    // Increment this every day
+    #define TINYVER 4
+
     #define COMPAT_TITLESKY
 
     // Sanity checks
