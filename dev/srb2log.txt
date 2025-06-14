@@ -15,8 +15,22 @@ Added file D:\Games\SRB2\demo_2\dev\bomb.wpn (37 lumps)
 Added file D:\Games\SRB2\demo_2\dev\home.wpn (37 lumps)
 Added file D:\Games\SRB2\demo_2\dev\rail.wpn (37 lumps)
 Added file D:\Games\SRB2\demo_2\dev\infn.wpn (37 lumps)
-Added file D:\Games\SRB2\demo_2\dev\supp.wad (1466 lumps)
-Added file .\maps\extras\jelly.wad (11 lumps)
+Added file D:\Games\SRB2\demo_2\dev\supp.wad (1482 lumps)
+Added file maps\FINAL_FIGHT.wad (11 lumps)
+Added file maps\ROBOTNIROCK_3.wad (11 lumps)
+Added file maps\CRYSTAL_CAVE.wad (11 lumps)
+Added file maps\EGGFACTORY.wad (11 lumps)
+Added file maps\FREAK_SHOW_1.wad (12 lumps)
+Added file maps\HIDDEN_PALACE.wad (11 lumps)
+Added file maps\SPDHWY.wad (11 lumps)
+Added file maps\SWEET_TOOTH.wad (11 lumps)
+Added file maps\WOOD.wad (11 lumps)
+Added file maps\GREENFLOWER_1.WAD (11 lumps)
+Added file maps\GREENFLOWER_2.wad (11 lumps)
+Added file maps\GREENFLOWER_3.wad (11 lumps)
+Added file maps\DARK_CITY_1.wad (11 lumps)
+Added file maps\GRAND_EGGSHIP_2.wad (11 lumps)
+Added file maps\extras\THINGTST.wad (11 lumps)
 ===========================================================================
                    We hope you enjoy this game as
                      much as we did making it!
@@ -52,7 +66,7 @@ InitSprites...
 3 sprites added from file D:\Games\SRB2\demo_2\dev\home.wpn
 4 sprites added from file D:\Games\SRB2\demo_2\dev\rail.wpn
 5 sprites added from file D:\Games\SRB2\demo_2\dev\infn.wpn
-79 sprites added from file D:\Games\SRB2\demo_2\dev\supp.wad
+81 sprites added from file D:\Games\SRB2\demo_2\dev\supp.wad
 R_AddSkins: Unknown keyword 'name' in S_SKIN lump# 839 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
 R_AddSkins: Unknown keyword 'ability' in S_SKIN lump# 839 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
 R_AddSkins: Unknown keyword 'speed' in S_SKIN lump# 839 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
