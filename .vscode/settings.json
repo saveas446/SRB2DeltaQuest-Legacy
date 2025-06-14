@@ -10,6 +10,7 @@
         "xlocale": "c",
         "xstring": "c",
         "xutility": "c",
-        "P_MOBJ.C": "cpp"
+        "P_MOBJ.C": "cpp",
+        "xtr1common": "cpp"
     }
 }

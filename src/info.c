@@ -97,6 +97,8 @@ char sprnames[NUMSPRITES + 1][5] =
 	"WHTV","WORB",
 	#endif
 	"TURR",
+	// Demo 2 Ultimate custom things
+	"GRTV",
 };
 
 // Doesn't work with g++, needs actionf_p1 (don't modify this comment)
@@ -363,6 +365,16 @@ state_t states[NUMSTATES] =
 	{ SPR_YLTV, 6, 2, {NULL}, 0, 0, S_YLTV7 }, // S_YLTV6
 	{ SPR_YLTV, 6, 48, {A_RingShield}, 0, 0, S_DISS },  // S_YLTV7
 	{ SPR_YLTV, 7, -1, {NULL}, 0, 0, S_NULL }, // S_YLTV8
+
+	{ SPR_GRTV, 0, 1, {NULL}, 0, 0, S_GRTV1 },          // S_GRTV
+	{ SPR_GRTV, 1, 2, {NULL}, 0, 0, S_GRTV },          // S_GRTV1
+	{ SPR_GRTV, 2, 2, {A_Fall}, 0, 0, S_GRTV3 }, // S_GRTV2
+	{ SPR_GRTV, 3, 2, {A_Scream}, 0, 0, S_GRTV4 }, // S_GRTV3
+	{ SPR_GRTV, 4, 2, {NULL}, 0, 0, S_GRTV5 }, // S_GRTV4
+	{ SPR_GRTV, 5, 2, {NULL}, 0, 0, S_GRTV6 }, // S_GRTV5
+	{ SPR_GRTV, 6, 2, {NULL}, 0, 0, S_GRTV7 }, // S_GRTV6
+	{ SPR_GRTV, 6, 48, {A_RingShield}, 0, 0, S_DISS },  // S_GRTV7
+	{ SPR_GRTV, 7, -1, {NULL}, 0, 0, S_NULL }, // S_GRTV8
 
 	// GFZ Flower
 	{SPR_COL5, 0, 14, {NULL}, 0, 0, S_GFZFLOWERA2}, // S_GFZFLOWERA
@@ -1978,6 +1990,32 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // meleestate
 		S_NULL,         // missilestate
 		S_YLTV2,        // deathstate
+		S_NULL,         // xdeathstate
+		sfx_slop,        // deathsound
+		0, // speed
+		16*FRACUNIT,    // radius
+		32*FRACUNIT,    // height
+		100,            // mass
+		0,  // damage
+		sfx_None,       // activesound
+		MF_SOLID|MF_SHOOTABLE|MF_MONITOR, // flags
+		S_NULL          // raisestate
+	},
+
+	{           // MT_GREENTV
+		35,             // doomednum
+		S_GRTV,         // spawnstate
+		1,              // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_GRTV,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_GRTV2,        // deathstate
 		S_NULL,         // xdeathstate
 		sfx_slop,        // deathsound
 		0, // speed

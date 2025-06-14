@@ -3964,14 +3964,15 @@ menu_t EnemyToggleDef =
 
 static menuitem_t MonitorToggleMenu[] =
 {
-	{IT_STRING|IT_CVAR, NULL, "Teleporters",       &cv_teleporters,   20},
-	{IT_STRING|IT_CVAR, NULL, "Super Ring",        &cv_superring,     30},
-	{IT_STRING|IT_CVAR, NULL, "Silver Ring",       &cv_silverring,    40},
-	{IT_STRING|IT_CVAR, NULL, "Super Sneakers",    &cv_supersneakers, 50},
-	{IT_STRING|IT_CVAR, NULL, "Invincibility",     &cv_invincibility, 60},
-	{IT_STRING|IT_CVAR, NULL, "Jump Shield",       &cv_jumpshield,    70},
-	{IT_STRING|IT_CVAR, NULL, "Liquid Shield",     &cv_watershield,   80},
-	{IT_STRING|IT_CVAR, NULL, "Attraction Shield", &cv_ringshield,    90},
+	{IT_STRING|IT_CVAR, NULL, "Teleporters",       &cv_teleporters,   10},
+	{IT_STRING|IT_CVAR, NULL, "Super Ring",        &cv_superring,     20},
+	{IT_STRING|IT_CVAR, NULL, "Silver Ring",       &cv_silverring,    30},
+	{IT_STRING|IT_CVAR, NULL, "Super Sneakers",    &cv_supersneakers, 40},
+	{IT_STRING|IT_CVAR, NULL, "Invincibility",     &cv_invincibility, 50},
+	{IT_STRING|IT_CVAR, NULL, "Jump Shield",       &cv_jumpshield,    60},
+	{IT_STRING|IT_CVAR, NULL, "Liquid Shield",     &cv_watershield,   70},
+	{IT_STRING|IT_CVAR, NULL, "Attraction Shield", &cv_ringshield,    80},
+	{IT_STRING|IT_CVAR, NULL, "Green Shield",      &cv_greenshield,   90},
 	{IT_STRING|IT_CVAR, NULL, "Inferno Shield",    &cv_fireshield,   100},
 	{IT_STRING|IT_CVAR, NULL, "Armageddon Shield", &cv_bombshield,   110},
 	{IT_STRING|IT_CVAR, NULL, "1 Up",              &cv_1up,          120},

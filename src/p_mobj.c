@@ -3376,6 +3376,7 @@ void P_MobjThinker(mobj_t *mobj)
 
 				// gargoyle and snowman handled in P_PushableThinker, not here
 				case MT_YELLOWTV: // Ring shield box
+				case MT_GREENTV: // Green shield box
 				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 				case MT_REDTV: // Fire shield box
 				case MT_WHITETV: // Jump shield box
@@ -3460,6 +3461,15 @@ void P_MobjThinker(mobj_t *mobj)
 							for (; i < oldi + cv_ringshield.value; i++)
 							{
 								spawnchance[i] = MT_YELLOWTV;
+								numchoices++;
+							}
+						}
+						if (cv_greenshield.value)
+						{
+							oldi = i;
+							for (; i < oldi + cv_greenshield.value; i++)
+							{
+								spawnchance[i] = MT_GREENTV;
 								numchoices++;
 							}
 						}
@@ -4760,6 +4770,7 @@ void P_SpawnMapThing(mapthing_t *mthing)
 				if (i == MT_REDTV && !cv_fireshield.value) return;
 				if (i == MT_WHITETV && !cv_jumpshield.value) return;
 				#endif
+				if (i == MT_GREENTV && !cv_greenshield.value) return;
 				if (i == MT_YELLOWTV && !cv_ringshield.value) return;
 				if (i == MT_BLUETV && !cv_watershield.value) return;
 				if (i == MT_BLACKTV && !cv_bombshield.value) return;
@@ -4781,6 +4792,7 @@ void P_SpawnMapThing(mapthing_t *mthing)
 			if (i == MT_REDTV && !cv_fireshield.value) return;
 			if (i == MT_WHITETV && !cv_jumpshield.value) return;
 			#endif
+			if (i == MT_GREENTV && !cv_greenshield.value) return;
 			if (i == MT_YELLOWTV && !cv_ringshield.value) return;
 			if (i == MT_BLUETV && !cv_watershield.value) return;
 			if (i == MT_BLACKTV && !cv_bombshield.value) return;
@@ -4802,7 +4814,7 @@ void P_SpawnMapThing(mapthing_t *mthing)
 		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 		|| i == MT_REDTV
 		#endif
-		|| i == MT_YELLOWTV || i == MT_BLUETV || i == MT_BLACKTV 
+		|| i == MT_YELLOWTV || i == MT_BLUETV || i == MT_BLACKTV || i == MT_GREENTV 
 		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 		|| i == MT_WHITETV
 		#endif

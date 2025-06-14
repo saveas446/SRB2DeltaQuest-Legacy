@@ -295,6 +295,7 @@ consvar_t cv_invincibility = {"invincibility", "Medium", CV_NETVAR, chances_cons
 consvar_t cv_jumpshield = {"jumpshield", "Medium", CV_NETVAR, chances_cons_t, NULL, 0, NULL, NULL, 0, 0, NULL};
 consvar_t cv_watershield = {"watershield", "Medium", CV_NETVAR, chances_cons_t, NULL, 0, NULL, NULL, 0, 0, NULL};
 consvar_t cv_ringshield = {"ringshield", "Medium", CV_NETVAR, chances_cons_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_greenshield = {"greenshield", "Medium", CV_NETVAR, chances_cons_t, NULL, 0, NULL, NULL, 0, 0, NULL};
 consvar_t cv_fireshield = {"fireshield", "Medium", CV_NETVAR, chances_cons_t, NULL, 0, NULL, NULL, 0, 0, NULL};
 consvar_t cv_bombshield = {"bombshield", "Medium", CV_NETVAR, chances_cons_t, NULL, 0, NULL, NULL, 0, 0, NULL};
 consvar_t cv_1up = {"1up", "Medium", CV_NETVAR, chances_cons_t, NULL, 0, NULL, NULL, 0, 0, NULL};
@@ -488,6 +489,7 @@ void D_RegisterServerCommands(void)
 	CV_RegisterVar(&cv_jumpshield);
 	CV_RegisterVar(&cv_watershield);
 	CV_RegisterVar(&cv_ringshield);
+	CV_RegisterVar(&cv_greenshield);
 	CV_RegisterVar(&cv_fireshield);
 	CV_RegisterVar(&cv_bombshield);
 	CV_RegisterVar(&cv_1up);

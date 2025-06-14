@@ -212,6 +212,7 @@ typedef enum
 	#endif
 
 	SPR_TURR, // Pop-Up Turret
+	SPR_GRTV,
 
 	SPR_FIRSTFREESLOT,
 	SPR_LASTFREESLOT = SPR_FIRSTFREESLOT + NUMSPRITEFREESLOTS - 1,
@@ -476,6 +477,16 @@ typedef enum
 	S_YLTV6,
 	S_YLTV7,
 	S_YLTV8,
+
+	S_GRTV,
+	S_GRTV1,
+	S_GRTV2,
+	S_GRTV3,
+	S_GRTV4,
+	S_GRTV5,
+	S_GRTV6,
+	S_GRTV7,
+	S_GRTV8,
 
 	S_GFZFLOWERA,
 	S_GFZFLOWERA2,
@@ -1717,6 +1728,7 @@ typedef enum
 	MT_BUBBLES, // Bubble source
 	MT_GFZFLOWER1,
 	MT_YELLOWTV,
+	MT_GREENTV,
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	MT_REDTV,
 	#endif

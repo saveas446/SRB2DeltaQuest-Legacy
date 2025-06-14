@@ -86,7 +86,7 @@ extern consvar_t cv_pause, cv_friendlyfire;
 extern consvar_t cv_timeattacked;
 
 extern consvar_t cv_teleporters, cv_superring, cv_silverring, cv_supersneakers, cv_invincibility;
-extern consvar_t cv_jumpshield, cv_watershield, cv_ringshield, cv_fireshield, cv_bombshield;
+extern consvar_t cv_jumpshield, cv_watershield, cv_ringshield, cv_greenshield, cv_fireshield, cv_bombshield;
 extern consvar_t cv_1up, cv_eggmanbox, cv_questionbox;
 
 extern consvar_t cv_objectplace, cv_objflags, cv_mapthingnum, cv_speed, cv_snapto, cv_grid;
