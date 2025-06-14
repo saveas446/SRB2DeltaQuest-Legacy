@@ -4876,7 +4876,7 @@ void P_SpawnMapThing(mapthing_t *mthing)
 			mobj->health >>= FRACBITS;
 		}
 	}
-	else if (mobj->type == MT_GFZFISH || mobj->type == MT_PUMA) // Custom jump height
+	else if (mobj->type == MT_GFZFISH) // Custom jump height
 	{
 		if (mthing->angle)
 			mobj->threshold = mthing->angle;

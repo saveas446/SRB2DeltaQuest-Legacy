@@ -253,7 +253,6 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[REDBALL_L],     // SPR_FLAM // Tails 09-06-2002
 
 	// Mario-specific stuff Tails 09-10-2002
-	&lspr[REDBALL_L],     // SPR_PUMA
 	&lspr[NOLIGHT],     // SPR_HAMM
 	&lspr[NOLIGHT],     // SPR_KOOP
 	&lspr[NOLIGHT],     // SPR_SHLL

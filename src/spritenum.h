@@ -128,7 +128,6 @@ typedef enum
 	SPR_FLAM, // Flame (has corona)
 
 	// Mario-specific stuff
-	SPR_PUMA,
 	SPR_HAMM,
 	SPR_KOOP,
 	SPR_SHLL,
@@ -213,6 +212,7 @@ typedef enum
 	SPR_TURR, // Pop-Up Turret
 	SPR_GRTV,
 	SPR_GORB,
+	SPR_POL3,
 
 	SPR_FIRSTFREESLOT,
 	SPR_LASTFREESLOT = SPR_FIRSTFREESLOT + NUMSPRITEFREESLOTS - 1,
@@ -1339,6 +1339,7 @@ typedef enum
 	S_GFZFLOWERB1,
 	S_GFZFLOWERB2,
 	S_GFZFLOWERC1,
+	S_DSZCORAL,
 	#endif
 
 	// Flame (has corona)
@@ -1347,13 +1348,7 @@ typedef enum
 	S_FLAME3,
 	S_FLAME4,
 
-	// Mario-specific stuff
-	S_PUMA1,
-	S_PUMA2,
-	S_PUMA3,
-	S_PUMA4,
-	S_PUMA5,
-	S_PUMA6,
+
 	S_HAMMER1,
 	S_HAMMER2,
 	S_HAMMER3,
@@ -1852,16 +1847,15 @@ typedef enum
 	MT_THROWNHOMING,
 	MT_THROWNAUTOMATIC,
 	MT_THROWNEXPLOSION,
+	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	MT_BERRYBUSH,
 	MT_BUSH,
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	MT_GFZFLOWER2,
 	MT_GFZFLOWER3,
+	MT_DSZCORAL,
 	#endif
 	MT_FLAME, // Flame (has corona)
 
-	// Mario-specific stuff
-	MT_PUMA,
 	MT_HAMMER,
 	MT_KOOPA,
 	MT_SHELL,

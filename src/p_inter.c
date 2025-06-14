@@ -408,7 +408,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			return;
 
 	
-		case MT_PUMA:
 		case MT_HAMMER:
 		case MT_KOOPA:
 			P_DamageMobj(toucher, special, special, 1);

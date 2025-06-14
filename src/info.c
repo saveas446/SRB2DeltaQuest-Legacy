@@ -64,7 +64,7 @@ char sprnames[NUMSPRITES + 1][5] =
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"HDB2","HDB3","FCAN","HDB1",
 	#endif
-	"FLAM","PUMA","HAMM","KOOP",
+	"FLAM","HAMM","KOOP",
 	"SHLL","MAXE","FFWR",
 	"SEED","JETF","NWNG",
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
@@ -98,7 +98,7 @@ char sprnames[NUMSPRITES + 1][5] =
 	#endif
 	"TURR",
 	// Demo 2 Ultimate custom things
-	"GRTV","GORB"
+	"GRTV","GORB","POL3"
 };
 
 // Doesn't work with g++, needs actionf_p1 (don't modify this comment)
@@ -1242,6 +1242,8 @@ state_t states[NUMSTATES] =
 	{SPR_FWR3, 0, -1, {NULL}, 0, 0, S_NULL},       // S_GFZFLOWERC1
 	#endif
 
+	{SPR_POL3, 0, -1, {NULL}, 0, 0, S_NULL},       // S_DSZCORAL
+
 
 	// Flame (has corona)
 	{SPR_FLAM, 32768, 3, {NULL}, 0, 0, S_FLAME2}, // S_FLAME1
@@ -1249,13 +1251,6 @@ state_t states[NUMSTATES] =
 	{SPR_FLAM, 32770, 3, {NULL}, 0, 0, S_FLAME4}, // S_FLAME3
 	{SPR_FLAM, 32771, 3, {NULL}, 0, 0, S_FLAME1}, // S_FLAME4
 
-	// Puma (Mario fireball)
-	{SPR_PUMA, 32768, 3, {A_PumaJump}, 0, 0, S_PUMA2}, // S_PUMA1
-	{SPR_PUMA, 32769, 3, {A_PumaJump}, 0, 0, S_PUMA3}, // S_PUMA2
-	{SPR_PUMA, 32770, 3, {A_PumaJump}, 0, 0, S_PUMA1}, // S_PUMA3
-	{SPR_PUMA, 32771, 3, {A_PumaJump}, 0, 0, S_PUMA5}, // S_PUMA4
-	{SPR_PUMA, 32772, 3, {A_PumaJump}, 0, 0, S_PUMA6}, // S_PUMA5
-	{SPR_PUMA, 32773, 3, {A_PumaJump}, 0, 0, S_PUMA4}, // S_PUMA6
 
 	// Hammer
 	{SPR_HAMM, 0, 3, {NULL}, 0, 0, S_HAMMER2}, // S_HAMMER1
@@ -4908,6 +4903,31 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOCLIP|MF_SCENERY, // flags
 		S_NULL          // raisestate
 	},
+	{           // MT_DSZCORAL
+		29,             // doomednum
+		S_DSZCORAL,     // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,         // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		0,              // speed
+		8*FRACUNIT,     // radius
+		32*FRACUNIT,    // height
+		100,            // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_NOCLIP|MF_SCENERY, // flags
+		S_NULL          // raisestate
+	},
 	#endif
 	{           // MT_FLAME
 		24,             // doomednum
@@ -4932,32 +4952,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		0,              // damage
 		sfx_None,       // activesound
 		MF_NOGRAVITY|MF_SPECIAL|MF_FIRE, // flags
-		S_NULL          // raisestate
-	},
-
-	{           // MT_PUMA
-		29,             // doomednum
-		S_PUMA1,        // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		0,              // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_DISS,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		0,              // speed
-		8*FRACUNIT,     // radius
-		16*FRACUNIT,    // height
-		100,            // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_SPECIAL,     // flags
 		S_NULL          // raisestate
 	},
 	{           // MT_HAMMER

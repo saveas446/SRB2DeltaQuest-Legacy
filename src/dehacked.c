@@ -862,7 +862,6 @@ static actionpointer_t actionpointers[] =
 	{{A_SuperTurretFire},      "A_SUPERTURRETFIRE"},
 	{{A_TurretStop},           "A_TURRETSTOP"},
 	{{A_SkimChase},            "A_SKIMCHASE"},
-	{{A_PumaJump},             "A_PUMAJUMP"},
 	{{A_1upThinker},           "A_1UPTHINKER"},
 	{{A_SkullAttack},          "A_SKULLATTACK"},
 	{{A_FireShot},             "A_CYBERATTACK"},

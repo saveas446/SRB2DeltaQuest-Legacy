@@ -114,7 +114,6 @@ void A_SnowBall(mobj_t *actor);
 void A_CrawlaCommanderThink(mobj_t *actor);
 void A_RingExplode(mobj_t *actor);
 void A_MixUp(mobj_t *actor);
-void A_PumaJump(mobj_t *actor);
 void A_Invinciblerize(mobj_t *actor);
 void A_DeInvinciblerize(mobj_t *actor);
 void A_Boss2PogoSFX(mobj_t *actor);
@@ -3019,28 +3018,7 @@ void A_MixUp(mobj_t *actor)
 	S_StartSound(NULL, sfx_telept);
 }
 
-// Function A_PumaJump
-//
-// Description: Like A_FishJump, but for the pumas.
-//
-// var1 = unused
-// var2 = unused
-//
-void A_PumaJump(mobj_t *actor)
-{
-	if ((actor->z <= actor->floorz) || (actor->z <= actor->watertop-(64<<FRACBITS)))
-	{
-		if (actor->threshold == 0) actor->threshold = 44;
 
-		actor->momz = actor->threshold*(FRACUNIT/4);
-	}
-
-	if (actor->momz < 0
-		&& (actor->state != &states[S_PUMA4] || actor->state != &states[S_PUMA5] || actor->state != &states[S_PUMA6]))
-		P_SetMobjStateNF(actor, S_PUMA4);
-	else if (actor->state != &states[S_PUMA1] || actor->state != &states[S_PUMA2] || actor->state != &states[S_PUMA3])
-		P_SetMobjStateNF(actor, S_PUMA1);
-}
 
 // Function: A_Boss1Chase
 //

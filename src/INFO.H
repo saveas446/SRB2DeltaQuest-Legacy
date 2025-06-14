@@ -94,7 +94,6 @@ void A_LinedefExecute(mobj_t* actor);
 void A_PlaySeeSound(mobj_t* actor);
 void A_PlayAttackSound(mobj_t* actor);
 void A_PlayActiveSound(mobj_t* actor);
-void A_PumaJump(mobj_t* actor); // Mario mode function
 void A_1upThinker(mobj_t* actor);
 void A_BossZoom(mobj_t* actor); //Usused
 void A_Boss1Chase(mobj_t* actor);
@@ -185,7 +184,6 @@ void A_LinedefExecute();
 void A_PlaySeeSound();
 void A_PlayAttackSound();
 void A_PlayActiveSound();
-void A_PumaJump(); // Mario mode function
 void A_1upThinker();
 void A_BossZoom(); //Usused
 void A_Boss1Chase();
