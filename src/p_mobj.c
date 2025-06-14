@@ -2624,6 +2624,118 @@ static void P_GimmeAxisXYPos(mobj_t *closestaxis, degenmobj_t *mobj)
 	mobj->y = closestaxis->y + FixedMul(finesine[fa],closestaxis->radius);
 }
 
+void P_SpawnHoopsAndRings(mapthing_t *mthing)
+{
+	mobj_t *mobj;
+	int r, i;
+	fixed_t x, y, z, finalx, finaly, finalz, mthingx, mthingy, mthingz;
+	TVector v, *res;
+	angle_t closestangle, fa;
+
+	x = mthing->x << FRACBITS;
+	y = mthing->y << FRACBITS;
+
+		if (gameskill >= sk_insane && !((gamemap >= sstage_start && gamemap <= sstage_end) || (maptol & TOL_NIGHTS))) // No rings in Ultimate!
+			return;
+
+	if (mthing->type == 2014) // Your basic ring.
+	{
+			unsigned int bit;
+			
+			if (gameskill >= sk_nightmare)
+				bit = 4;
+			else
+				bit = 1<<((byte)gameskill-1);
+
+			if (!(mthing->options & bit))
+				return;
+
+			if (mthing->options & MTF_AMBUSH) // Special flag for rings
+			{
+				mthing->z = (short)((R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS)->sector->floorheight + 32*FRACUNIT) >> FRACBITS);
+				mthing->z = (short)(mthing->z + (mthing->options >> 4));
+			}
+			else if (mthing->options >> 4)
+				mthing->z = (short)((R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS)->sector->floorheight + ((mthing->options >> 4) << FRACBITS)) >> FRACBITS);
+			else
+				mthing->z = (short)(R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS)->sector->floorheight >> FRACBITS);
+
+			mobj = P_SpawnMobj(mthing->x << FRACBITS, mthing->y << FRACBITS,mthing->z << FRACBITS, MT_RING);
+			mobj->spawnpoint = mthing;
+
+			if (mobj->tics > 0)
+				mobj->tics = 1 + (P_Random() % mobj->tics);
+			mobj->angle = FixedAngle(mthing->angle*FRACUNIT);
+			mobj->flags |= MF_AMBUSH;
+			mthing->mobj = mobj;
+		}
+		else if (mthing->type == 44) // Vertical Rings - Stack of 5 (suitable for Red Spring)
+		{
+			for (r = 1; r <= 5; r++)
+			{
+				if (mthing->options >> 4)
+					z = (R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS)->sector->floorheight + ((mthing->options >> 4) << FRACBITS)) + 128*FRACUNIT*r;
+				else
+					z = R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS)->sector->floorheight + 128*FRACUNIT*r;
+				mobj = P_SpawnMobj(x, y, z, MT_RING);
+
+				if (mobj->tics > 0)
+					mobj->tics = 1 + (P_Random() % mobj->tics);
+
+				mobj->angle = FixedAngle(mthing->angle*FRACUNIT);
+				if (mthing->options & MTF_AMBUSH)
+					mobj->flags |= MF_AMBUSH;
+			}
+		}
+		else if (mthing->type == 76) // Diagonal rings (5)
+		{
+			angle_t angle = ANG45 * (mthing->angle/45);
+			angle >>= ANGLETOFINESHIFT;
+
+			for (r = 1; r <= 5; r++)
+			{
+				x += FixedMul(64*FRACUNIT, finecosine[angle]);
+				y += FixedMul(64*FRACUNIT, finesine[angle]);
+				if (mthing->options >> 4)
+					z = (R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS)->sector->floorheight + ((mthing->options >> 4) << FRACBITS)) + 64*FRACUNIT*r;
+				else
+					z = R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS)->sector->floorheight + 64*FRACUNIT*r;
+				mobj = P_SpawnMobj(x, y, z, MT_RING);
+
+				if (mobj->tics > 0)
+					mobj->tics = 1 + (P_Random() % mobj->tics);
+
+				mobj->angle = FixedAngle(mthing->angle*FRACUNIT);
+				if (mthing->options & MTF_AMBUSH)
+					mobj->flags |= MF_AMBUSH;
+			}
+		}
+		else if (mthing->type == 77) // Diagonal rings (10)
+		{
+			angle_t angle = ANG45 * (mthing->angle/45);
+			angle >>= ANGLETOFINESHIFT;
+
+			for (r = 1; r <= 10; r++)
+			{
+				x += FixedMul(64*FRACUNIT, finecosine[angle]);
+				y += FixedMul(64*FRACUNIT, finesine[angle]);
+				if (mthing->options >> 4)
+					z = (R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS)->sector->floorheight + ((mthing->options >> 4) << FRACBITS)) + 64*FRACUNIT*r;
+				else
+					z = R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS)->sector->floorheight + 64*FRACUNIT*r;
+				mobj = P_SpawnMobj(x, y, z, MT_RING);
+
+				if (mobj->tics > 0)
+					mobj->tics = 1 + (P_Random() % mobj->tics);
+
+				mobj->angle = FixedAngle(mthing->angle*FRACUNIT);
+				if (mthing->options & MTF_AMBUSH)
+					mobj->flags |= MF_AMBUSH;
+			}
+		}
+}
+
+
 static void P_MoveHoop(mobj_t *mobj)
 {
 	const fixed_t fuse = (mobj->fuse*8*FRACUNIT);

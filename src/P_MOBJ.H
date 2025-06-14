@@ -377,6 +377,7 @@ void P_MobjCheckWater(mobj_t *mobj);
 
 void P_SpawnMapThing(mapthing_t *mthing);
 void P_SpawnPlayer(mapthing_t *mthing, int playernum);
+void P_SpawnHoopsAndRings(mapthing_t *mthing);
 void P_SpawnStarpostPlayer(mobj_t *mobj, int playernum);
 void P_SpawnHoopOfSomething(fixed_t x, fixed_t y, fixed_t z, fixed_t radius, int number, mobjtype_t type, angle_t rotangle);
 void P_SpawnPrecipitation(void);

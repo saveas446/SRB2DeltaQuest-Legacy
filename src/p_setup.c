@@ -812,7 +812,7 @@ static void P_LoadThings(int lump)
 				// Z for objects Tails 05-26-2002
 				mt->z = (short)(R_PointInSubsector(mt->x << FRACBITS, mt->y << FRACBITS)
 					->sector->floorheight >> FRACBITS);
-
+					P_SpawnHoopsAndRings (mt);
 				break;
 			default:
 				break;

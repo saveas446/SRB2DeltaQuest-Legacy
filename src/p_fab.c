@@ -95,6 +95,8 @@ static void P_SetTranslucencies(void)
 	R_SetTrans(S_WORB1, S_WORB8, tr_transmed);
 #endif
 
+	// chaos emerald
+	R_SetTrans(S_EMMY1, S_EMMY21, tr_transmed);
 
 
 	// translucent spark
