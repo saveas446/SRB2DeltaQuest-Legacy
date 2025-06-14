@@ -2005,7 +2005,6 @@ void G_ExitLevel(void)
 
 void G_SecretExitLevel(int exit)
 {
-	CONS_Printf("secret exit");
 	if (gamestate == GS_LEVEL)
 	{
 		secretexit = exit;
@@ -2094,7 +2093,6 @@ void G_DoCompleted(void)
 	nextmap = gamemap; // Go to next map. Save 24-05-2025
 
 	if (secretexit != 0) {
-		CONS_Printf("secret exit detected\n");
 		// DSZ2 speed highway exit
 		if (nextmap == NEXTMAP(9)) {
 			nextmap = NEXTMAP(31);

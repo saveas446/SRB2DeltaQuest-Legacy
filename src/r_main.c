@@ -526,22 +526,31 @@ fixed_t R_ScaleFromGlobalAngle(angle_t visangle)
 	return scale;
 }
 
+#define PI 3.141592654
+
 //
 // R_InitTables
 //
 static inline void R_InitTables (void)
 {
     // UNUSED: now getting from tables.c
-#if 0
     int         i;
     float       a;
     float       fv;
     int         t;
 
+	float 		pi;
+
+	if (M_CheckParm("-pi") && M_IsNextParm())
+		sscanf(M_GetNextParm(), "%f", &pi);
+	else
+		pi = PI;
+
+
     // viewangle tangent table
     for (i = 0; i < FINEANGLES/2; i++)
     {
-        a = (i-FINEANGLES/4+0.5f)*PI*2/FINEANGLES;
+        a = (i-FINEANGLES/4+0.5f)*pi*2/FINEANGLES;
         fv = FRACUNIT*tan (a);
         t = fv;
         finetangent[i] = t;
@@ -551,11 +560,10 @@ static inline void R_InitTables (void)
     for (i = 0; i < 5*FINEANGLES/4; i++)
     {
         // OPTIMIZE: mirror...
-        a = (i+0.5f)*PI*2/FINEANGLES;
+        a = (i+0.5f)*pi*2/FINEANGLES;
         t = FRACUNIT*sin (a);
         finesine[i] = t;
     }
-#endif
 
 }
 

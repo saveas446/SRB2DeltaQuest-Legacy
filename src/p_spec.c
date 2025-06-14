@@ -3800,7 +3800,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
         if(EV_DoPlat(line,blazeDWUS,0))
           line->special = 0;
         break;*/
-		case 122:
+		/*case 122:
         // Secret EXIT
 		G_SecretExitLevel(1);
         break;
@@ -3808,7 +3808,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
 		case 123:
         // Secret EXIT
 		G_SecretExitLevel(2);
-        break;
+        break;*/
 
       case 124:
         // Secret EXIT
@@ -3830,7 +3830,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
             EV_Teleport( line, side, thing );
         break;
 
-		case 127:
+		/*case 127:
         // Secret EXIT
 		G_SecretExitLevel(4);
         break;

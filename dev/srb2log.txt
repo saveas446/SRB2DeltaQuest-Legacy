@@ -83,16 +83,6 @@ added skin 'knuckles'
 InitColormaps...
 S_Init: Setting up sound.
 I_StartupSound:
- Staring up with audio driver : dsound
- configured audio device with 1024 samples/slice at 22khz(46ms buffer)
-I_InitSound: sound module ready
-Compiled for SDL_mixer version: 1.2.12
-Linked with SDL_mixer version: 1.2.12
-Temp Shutdown of SDL Audio System Done
-I_InitMusic: Staring up with audio driver : dsound with SDL_Mixer
- Reconfigured SDL Audio System with 2048 samples/slice at 44khz(46ms buffer)
-I_InitMusic: music initialized
-Loading sounds...  pre-cached all sound data
 ST_Init: Init status bar.
 D_CheckNetGame: Checking network game status.
 Starting Server....
@@ -108,6 +98,4 @@ Player 1 is in the game (node 0)
 Speeding off to level...
 Player 1 renamed to save_as
 >quit
-I_ShutdownMusic: shut down
-I_ShutdownSound: shut down
 I_ShutdownGraphics: shut down
