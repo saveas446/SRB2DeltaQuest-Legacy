@@ -4242,6 +4242,10 @@ void P_SpawnSpecials(void)
             break;
 			//l270 Old Water Save 17-05-2025
 			case 270:
+				// DSZ2 has new water so we don't need old water for it
+				if (gamemap == 8)
+					break;
+
 				sec = sides[*lines[i].sidenum].sector-sectors;
 				for (s = -1; (s = P_FindSectorFromLineTag(lines+i,s)) >= 0;)
 				{
