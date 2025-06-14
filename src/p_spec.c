@@ -4282,7 +4282,16 @@ void P_SpawnSpecials(void)
 			case 271:
 				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_RENDERALL|FF_SWIMMABLE|FF_BOTHPLANES|FF_ALLSIDES|FF_CUTEXTRA|FF_EXTRA|FF_CUTSPRITES);
 				break;
-			//l272 New Water (Translucent) Save 14-06-2025
+
+			//l272 Copy Colormaps 
+			case 272:
+				for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0 ;)
+				{
+					sectors[s].midmap = lines[i].frontsector->midmap;
+					sectors[s].altheightsec = 2;
+				}
+				break;
+			//l273 New Water (Translucent) Save 14-06-2025
 			case 273:
 				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_RENDERALL|FF_TRANSLUCENT|FF_SWIMMABLE|FF_BOTHPLANES|FF_ALLSIDES|FF_CUTEXTRA|FF_EXTRA|FF_CUTSPRITES);
 				break;

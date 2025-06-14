@@ -175,6 +175,22 @@ hudinfo_t hudinfo[NUMHUDITEMS] =
 	{   260,	20	},		// HUD_LIGHTDASHSTRING2
 };
 
+
+// title card stuff
+
+int ttlnumxpos,ttlnumypos, ttlnumtargetxpos, ttlnumtargetypos;
+int lvlttlxpos,lvlttlypos, lvlttltargetxpos, lvlttltargetypos;
+int zonexpos,zoneypos, zonetargetxpos, zonetargetypos;
+
+int actnum;
+
+boolean nonumber = false;
+boolean targetreached = false;
+
+patch_t* lvlttl; // Patch that will point to whatever level title is appropriate for this level
+patch_t* ttlnum;
+
+
 //
 // STATUS BAR CODE
 //
@@ -354,6 +370,128 @@ static void ST_Stop(void)
 
 void ST_Start(void)
 {
+		// shoot me in the head
+	// this could really use some pointers or some shit like that but i don't care
+	switch(gamemap) {
+		case 1:
+		case 2:
+		case 3:
+			lvlttl = lvlttl1;
+			break;
+		case 4:
+		case 5:
+		case 6:
+			lvlttl = lvlttl2;
+			break;
+		case 7:
+		case 8:
+		case 9:
+			lvlttl = lvlttl3;
+			break;
+		case 10:
+		case 11:
+		case 12:
+			lvlttl = lvlttl4;
+			break;
+		case 13:
+		case 14:
+		case 15:
+			lvlttl = lvlttl5;
+			break;
+		case 16:
+		case 17:
+		case 18:
+			lvlttl = lvlttl6;
+			break;
+		case 19:
+		case 20:
+		case 21:
+			lvlttl = lvlttl7;
+			break;
+		case 22:
+		case 23:
+		case 24:
+			lvlttl = lvlttl8;
+			break;
+		case 25:
+		case 26:
+		case 27:
+			lvlttl = lvlttl9;
+			break;
+		case 28:
+			lvlttl = lvlttl10;
+			break;
+		case 29:
+			lvlttl = lvlttl11;
+			break;
+		case 30:
+			lvlttl = lvlttl12;
+			break;
+		case 31:
+			lvlttl = lvlttl13;
+			break;
+		case 32:
+			lvlttl = lvlttl14;
+			break;
+		case 33:
+			lvlttl = lvlttl15;
+			break;
+		case 34:
+			lvlttl = lvlttl16;
+			break;
+		case 35:
+			lvlttl = lvlttl17;
+			break;
+		case 36:
+			lvlttl = lvlttl18;
+			break;
+		case 37:
+			lvlttl = lvlttl19;
+			break;
+		default:
+			lvlttl = lvlttl1;
+			break;
+	}
+
+	actnum = mapheaderinfo[gamemap-1].actnum;
+
+	if (actnum > 0)
+	{
+		ttlnum = W_CachePatchName(va("TTL%.2d", actnum), PU_CACHE);
+		lvlttlxpos = ((BASEVIDWIDTH/2) - ((lvlttl->width))) - ttlnum->width;
+	}
+	else
+	{
+		nonumber = true;
+		lvlttlxpos = ((BASEVIDWIDTH/2) - (lvlttl->width/2));
+	}
+
+	ttlnumxpos = lvlttlxpos + lvlttl->width;
+	zonexpos = ttlnumxpos - ttlzone->width;
+
+	if (gamemap % 3 == 1) {
+		ttlnum = act1;
+	} else if (gamemap % 3 == 2) {
+		ttlnum = act2;
+	} else if (!(gamemap % 3)) {
+		ttlnum = act3;
+	}
+
+	lvlttlypos = 0;
+	zoneypos = 200;
+	ttlnumypos = 200;
+
+	lvlttltargetxpos = lvlttlxpos;
+	lvlttltargetypos = 80;
+
+	zonetargetxpos = zonexpos;
+	zonetargetypos = 104;
+
+	ttlnumtargetxpos = ttlnumxpos;
+	ttlnumtargetypos = 104;
+
+	targetreached = false;
+
 	if (!st_stopped)
 		ST_Stop();
 
@@ -368,8 +506,7 @@ void ST_Start(void)
 // used by Glide mode, holds lumpnum of flat used to fill space around the viewwindow
 int st_borderpatchnum;
 
-void ST_Init(void)
-{
+void ST_Init(void) {
 	int i;
 
 	for (i = 0; i < MAXPLAYERS; i++)
@@ -380,7 +517,7 @@ void ST_Init(void)
 
 	if (dedicated)
 		return;
-
+	
 	// screens[4] is allocated at videomode setup, and
 	// set at V_Init(), the first time being at SCR_Recalc()
 
@@ -744,209 +881,55 @@ static void ST_drawEggsNeeded(void)
 
 static void ST_drawLevelTitle(void)
 {
-	int lvlttlxpos;
-	int ttlnumxpos;
-	int zonexpos;
-	int actnum = mapheaderinfo[gamemap-1].actnum;
-	boolean nonumber = false;
-	patch_t* lvlttl; // Patch that will point to whatever level title is appropriate for this level
-	patch_t* ttlnum;
-
-	// shoot me in the head
-	// this could really use some pointers or some shit like that but i don't care
-	switch(gamemap) {
-		case 1:
-		case 2:
-		case 3:
-			lvlttl = lvlttl1;
-			break;
-		case 4:
-		case 5:
-		case 6:
-			lvlttl = lvlttl2;
-			break;
-		case 7:
-		case 8:
-		case 9:
-			lvlttl = lvlttl3;
-			break;
-		case 10:
-		case 11:
-		case 12:
-			lvlttl = lvlttl4;
-			break;
-		case 13:
-		case 14:
-		case 15:
-			lvlttl = lvlttl5;
-			break;
-		case 16:
-		case 17:
-		case 18:
-			lvlttl = lvlttl6;
-			break;
-		case 19:
-		case 20:
-		case 21:
-			lvlttl = lvlttl7;
-			break;
-		case 22:
-		case 23:
-		case 24:
-			lvlttl = lvlttl8;
-			break;
-		case 25:
-		case 26:
-		case 27:
-			lvlttl = lvlttl9;
-			break;
-		case 28:
-			lvlttl = lvlttl10;
-			break;
-		case 29:
-			lvlttl = lvlttl11;
-			break;
-		case 30:
-			lvlttl = lvlttl12;
-			break;
-		case 31:
-			lvlttl = lvlttl13;
-			break;
-		case 32:
-			lvlttl = lvlttl14;
-			break;
-		case 33:
-			lvlttl = lvlttl15;
-			break;
-		case 34:
-			lvlttl = lvlttl16;
-			break;
-		case 35:
-			lvlttl = lvlttl17;
-			break;
-		case 36:
-			lvlttl = lvlttl18;
-			break;
-		case 37:
-			lvlttl = lvlttl19;
-			break;
-		default:
-			lvlttl = lvlttl1;
-			break;
-	}
-
-
-	// trust the process
-
-	if (!(timeinmap > 1 && timeinmap < 111))
+	if (!leveltime)
 		return;
 
-	if (actnum > 0)
-	{
-		ttlnum = W_CachePatchName(va("TTL%.2d", actnum), PU_CACHE);
-		lvlttlxpos = ((BASEVIDWIDTH/2) - ((lvlttl->width))) - ttlnum->width;
-	}
-	else
-	{
-		nonumber = true;
-		lvlttlxpos = ((BASEVIDWIDTH/2) - (lvlttl->width/2));
-	}
-
-	ttlnumxpos = lvlttlxpos + lvlttl->width;
-	zonexpos = ttlnumxpos - ttlzone->width;
-
-	if (gamemap % 3 == 1) {
-		ttlnum = act1;
-	} else if (gamemap % 3 == 2) {
-		ttlnum = act2;
-	} else if (!(gamemap % 3)) {
-		ttlnum = act3;
-	}
+	if (leveltime < 105) {
+		if (lvlttlypos < lvlttltargetypos)
+			lvlttlypos += 12;
+		else if (lvlttlypos > lvlttltargetypos)
+			lvlttlypos = lvlttltargetypos;
 	
-	// I TAKE IT BACK WHAT IS THIS CODE SSN
-	if(leveltime == 1)
-	{
-	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(0), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(zonexpos),SCY(200), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(200), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
+
+		if (zoneypos > zonetargetypos) 
+			zoneypos -= 12;
+		else if (zoneypos < zonetargetypos)
+			zoneypos = zonetargetypos;
+
+		if (ttlnumypos > ttlnumtargetypos)
+			ttlnumypos -= 12;
+		else if (ttlnumypos < ttlnumtargetypos)
+			ttlnumypos = ttlnumtargetypos;
+		
+	} else {
+		lvlttltargetypos = 200;
+		zonetargetypos = 0;
+		ttlnumtargetypos = 0;
+
+		if (lvlttlypos < lvlttltargetypos)
+			lvlttlypos += 12;
+		else if (lvlttlypos > lvlttltargetypos)
+			lvlttlypos = lvlttltargetypos;
+	
+		if (zoneypos > zonetargetypos) 
+			zoneypos -= 12;
+		else if (zoneypos < zonetargetypos)
+			zoneypos = zonetargetypos;
+
+		if (ttlnumypos > ttlnumtargetypos)
+			ttlnumypos -= 12;
+		else if (ttlnumypos < ttlnumtargetypos)
+			ttlnumypos = ttlnumtargetypos;
 	}
-	else if (leveltime == 2)
-	{
-	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(12), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(zonexpos),SCY(188), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(188), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
-	}
-	else if (leveltime == 3)
-	{
-	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(24), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(zonexpos),SCY(176), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(0),SCY(176), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
-	}
-	else if (leveltime == 4)
-	{
-	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(36), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(zonexpos),SCY(164), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(164), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
-	}
-	else if (leveltime == 5)
-	{
-	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(48), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(zonexpos),SCY(152), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(152), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
-	}
-	else if (leveltime == 6)
-	{
-	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(60), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(zonexpos),SCY(140), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(140), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
-	}
-	else if (leveltime == 7)
-	{
-	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(72), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(zonexpos),SCY(128), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(128), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
-	}
-	else if (leveltime > 7 && leveltime < 105)
-	{
-	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(80), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(zonexpos),SCY(104), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(104), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
-	}
-	else if (leveltime == 105)
-	{
-	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(104), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(zonexpos),SCY(80), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(80), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
-	}
-	else if (leveltime == 106)
-	{
-	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(128), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(zonexpos),SCY(56), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(56), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
-	}
-	else if (leveltime == 107)
-	{
-	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(152), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(zonexpos),SCY(32), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(32), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
-	}
-	else if (leveltime == 108)
-	{
-	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(176), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(zonexpos),SCY(8), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(8), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
-	}
-	else if (leveltime == 109)
-	{
-	V_DrawScaledPatch (SCX(lvlttlxpos),SCY(200), V_NOSCALESTART,lvlttl); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(zonexpos),SCY(0), V_NOSCALESTART,ttlzone); // Tails 11-01-2000
-	V_DrawScaledPatch (SCX(ttlnumxpos),SCY(0), V_NOSCALESTART,ttlnum); // Tails 11-01-2000
-	}
-	else
-	{
-		nonumber = true;
-		lvlttlxpos = ((BASEVIDWIDTH/2) - (lvlttl->width/2));
-	}
+
+	if (lvlttlypos > 0 && lvlttlypos < 200) 
+		V_DrawScaledPatch (SCX(lvlttlxpos),SCY(lvlttlypos), V_NOSCALESTART,lvlttl);
+	
+	if (zoneypos > 0 && zoneypos < 200) 	
+		V_DrawScaledPatch (SCX(zonexpos),SCY(zoneypos), V_NOSCALESTART,ttlzone);
+
+	if (ttlnumypos > 0 && ttlnumypos < 200) 
+		V_DrawScaledPatch (SCX(ttlnumxpos),SCY(ttlnumypos), V_NOSCALESTART,ttlnum);
 }
 
 static void ST_drawFirstPersonHUD(void)
