@@ -67,6 +67,8 @@ void A_Fall(mobj_t *actor);
 void A_Look(mobj_t *actor);
 void A_Chase(mobj_t *actor);
 void A_SargAttack(mobj_t *actor);
+void A_TroopSpawn(mobj_t *actor);
+void A_TroopAttack(mobj_t *actor);
 void A_SkimChase(mobj_t *actor);
 void A_FaceTarget(mobj_t *actor);
 void A_FireShot(mobj_t *actor);
@@ -837,6 +839,28 @@ void A_SargAttack (mobj_t* actor)
         damage = ((P_Random()%10)+1)*4;
         P_DamageMobj (actor->target, actor, actor, damage);
     }
+}
+
+void A_TroopAttack (mobj_t* actor)
+{
+    int         damage;
+
+    if (!actor->target)
+        return;
+
+    A_FaceTarget (actor);
+    if (P_CheckMeleeRange (actor))
+    {
+        S_StartSound (actor, sfx_claw);
+        damage = (P_Random()%8+1)*3;
+        P_DamageMobj (actor->target, actor, actor, damage);
+        return;
+    }
+}
+
+void A_TroopSpawn (mobj_t* actor)
+{
+	actor->z += 100 * FRACUNIT;
 }
 
 void A_SkimChase(mobj_t *actor)

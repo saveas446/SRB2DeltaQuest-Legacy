@@ -232,26 +232,27 @@ state_t states[NUMSTATES] =
     {SPR_SARG,8,5,{NULL}, 0, 0, S_SARG_RUN1},      // S_SARG_RAISE6
 
 	// Minus
-    {SPR_TROO,0,10,{A_Look},S_TROO_STND2,0,0},  // S_TROO_STND
-    {SPR_TROO,1,10,{A_Look},S_TROO_STND,0,0},   // S_TROO_STND2
-    {SPR_TROO,0,3,{A_Chase},S_TROO_RUN2,0,0},   // S_TROO_RUN1
-    {SPR_TROO,0,3,{A_Chase},S_TROO_RUN3,0,0},   // S_TROO_RUN2
-    {SPR_TROO,1,3,{A_Chase},S_TROO_RUN4,0,0},   // S_TROO_RUN3
-    {SPR_TROO,1,3,{A_Chase},S_TROO_RUN5,0,0},   // S_TROO_RUN4
-    {SPR_TROO,2,3,{A_Chase},S_TROO_RUN6,0,0},   // S_TROO_RUN5
-    {SPR_TROO,2,3,{A_Chase},S_TROO_RUN7,0,0},   // S_TROO_RUN6
-    {SPR_TROO,3,3,{A_Chase},S_TROO_RUN8,0,0},   // S_TROO_RUN7
-    {SPR_TROO,3,3,{A_Chase},S_TROO_RUN1,0,0},   // S_TROO_RUN8
-    {SPR_TROO,4,8,{A_FaceTarget},S_TROO_ATK2,0,0},      // S_TROO_ATK1
-    {SPR_TROO,5,8,{A_FaceTarget},S_TROO_ATK3,0,0},      // S_TROO_ATK2
-    {SPR_TROO,6,6,{A_TroopAttack},S_TROO_RUN1,0,0},     // S_TROO_ATK3
-    {SPR_TROO,7,2,{NULL},S_TROO_PAIN2,0,0},     // S_TROO_PAIN
-    {SPR_TROO,7,2,{A_Pain},S_TROO_RUN1,0,0},    // S_TROO_PAIN2
-    {SPR_TROO,8,8,{A_Fall},S_TROO_DIE2,0,0},      // S_TROO_DIE1
-    {SPR_TROO,9,8,{A_Scream},S_TROO_DIE3,0,0},  // S_TROO_DIE2
-    {SPR_TROO,10,6,{NULL},S_TROO_DIE4,0,0},     // S_TROO_DIE3
-    {SPR_TROO,11,6,{NULL},S_TROO_DIE5,0,0},   // S_TROO_DIE4
-    {SPR_TROO,12,-1,{NULL},S_NULL,0,0}, // S_TROO_DIE5
+	{SPR_TROO,0,10,{A_TroopSpawn}, 0, 0, S_TROO_STND},  // S_TROO_SPWN
+    {SPR_TROO,0,10,{A_Look}, 0, 0, S_TROO_STND2},  // S_TROO_STND
+    {SPR_TROO,1,10,{A_Look}, 0, 0, S_TROO_STND},   // S_TROO_STND2
+    {SPR_TROO,0,3,{A_Chase}, 0, 0, S_TROO_RUN2},   // S_TROO_RUN1
+    {SPR_TROO,0,3,{A_Chase}, 0, 0, S_TROO_RUN3},   // S_TROO_RUN2
+    {SPR_TROO,1,3,{A_Chase}, 0, 0, S_TROO_RUN4},   // S_TROO_RUN3
+    {SPR_TROO,1,3,{A_Chase}, 0, 0, S_TROO_RUN5},   // S_TROO_RUN4
+    {SPR_TROO,2,3,{A_Chase}, 0, 0, S_TROO_RUN6},   // S_TROO_RUN5
+    {SPR_TROO,2,3,{A_Chase}, 0, 0, S_TROO_RUN7},   // S_TROO_RUN6
+    {SPR_TROO,3,3,{A_Chase}, 0, 0, S_TROO_RUN8},   // S_TROO_RUN7
+    {SPR_TROO,3,3,{A_Chase}, 0, 0, S_TROO_RUN1},   // S_TROO_RUN8
+    {SPR_TROO,4,8,{A_FaceTarget}, 0, 0, S_TROO_ATK2},      // S_TROO_ATK1
+    {SPR_TROO,5,8,{A_FaceTarget}, 0, 0, S_TROO_ATK3},      // S_TROO_ATK2
+    {SPR_TROO,6,6,{A_FaceTarget}, 0, 0, S_TROO_RUN1},     // S_TROO_ATK3
+    {SPR_TROO,7,2,{NULL}, 0, 0, S_TROO_PAIN2},     // S_TROO_PAIN
+    {SPR_TROO,7,2,{A_Pain}, 0, 0, S_TROO_RUN1},    // S_TROO_PAIN2
+    {SPR_TROO,8,8,{A_Fall}, 0, 0, S_TROO_DIE2},      // S_TROO_DIE1
+    {SPR_TROO,9,8,{A_Scream}, 0, 0, S_TROO_DIE3},  // S_TROO_DIE2
+    {SPR_TROO,10,6,{NULL}, 0, 0, S_TROO_DIE4},     // S_TROO_DIE3
+    {SPR_TROO,11,6,{NULL}, 0, 0, S_TROO_DIE5},   // S_TROO_DIE4
+    {SPR_TROO,12,-1,{NULL},S_NULL}, // S_TROO_DIE5
 
 	// Boss 1
 	{SPR_EGGM, 0, 1, {NULL}, 0, 0, S_EGGMOBILE_STND},           // S_EGGMOBILE_STND
@@ -1764,6 +1765,33 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
         MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE,             // flags
         S_SARG_RAISE1           // raisestate
     },
+
+    {           // MT_MINUS
+        3001,           // doomednum
+        S_TROO_SPWN,            // spawnstate
+        1,             // spawnhealth -- changed to 1 by Tails : 9-13-99
+        S_TROO_RUN1,            // seestate
+        sfx_bgsit1,             // seesound
+        8,              // reactiontime
+        0,              // attacksound
+        S_TROO_PAIN,            // painstate
+        200,            // painchance
+        sfx_dmpain,             // painsound
+        S_NULL,            // meleestate
+        0,            // missilestate // Tails 9-15-99
+        S_TROO_DIE1,            // deathstate
+        S_NULL,           // xdeathstate Tails 10-25-99
+        sfx_bgdth1,             // deathsound
+        20,              // speed // Tails 9-15-99
+        28*FRACUNIT,            // radius
+        16*FRACUNIT,            // height
+        100,            // mass
+        0,              // damage
+        sfx_bgact,              // activesound
+        MF_ENEMY|MF_SPECIAL|MF_SOLID|MF_SHOOTABLE|MF_FLOAT|MF_NOGRAVITY,             // flags
+        S_NULL           // raisestate
+    },
+
 
 	{           // MT_EGGMOBILE
 		16,                // doomednum

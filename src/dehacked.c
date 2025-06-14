@@ -815,6 +815,8 @@ static actionpointer_t actionpointers[] =
 	{{A_SargChase},                "A_SARGCHASE"},
 	{{A_Chase},                "A_CHASE"},
 	{{A_SargAttack},           "A_SARGATTACK"},
+	{{A_TroopSpawn},          "A_TROOPSPAWN"},
+	{{A_TroopAttack},          "A_TROOPATTACK"},
 	{{A_FaceTarget},           "A_FACETARGET"},
 	{{A_Scream},               "A_SCREAM"},
 	{{A_BossDeath},            "A_BOSSDEATH"},
