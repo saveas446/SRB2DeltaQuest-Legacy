@@ -3447,11 +3447,11 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
 				line->special = 0;
         break;
 
-		/*case 5:
+		case 5:
 			// Raise Floor
 			if(EV_DoFloor(line,raiseFloor))
 				line->special = 0;
-        break;*/
+        break;
 
 		case 6:
 			// Fast Ceiling Crush & Raise
@@ -3459,17 +3459,17 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
 				line->special = 0;
         break;
 
-		/*case 8:
+		case 8:
 			// Build Stairs
 			if(EV_BuildStairs(line,build8))
 				line->special = 0;
-        break;*/
+        break;
 
-		/*case 10:
+		case 10:
 			// PlatDownWaitUp
 			if(EV_DoPlat(line,downWaitUpStay,0))
 				line->special = 0;
-        break;*/
+        break;
 
 		case 12:
 			// Light Turn On - brightest near
@@ -3495,7 +3495,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
 				line->special = 0;
         break;
 
-		/*case 19:
+		case 19:
 			// Lower Floor
 			if(EV_DoFloor(line,lowerFloor))
 				line->special = 0;
@@ -3505,7 +3505,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
 			// Raise floor to nearest height and change texture
 			if(EV_DoPlat(line,raiseToNearestAndChange,0))
 				line->special = 0;
-        break;*/
+        break;
 
       case 25:
         // Ceiling Crush and Raise
@@ -3513,12 +3513,12 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
           line->special = 0;
         break;
 
-      /*case 30:
+      case 30:
         // Raise floor to shortest texture height
         //  on either side of lines.
         if(EV_DoFloor(line,raiseToTexture))
           line->special = 0;
-        break;*/
+        break;
 
       case 35:
         // Lights Very Dark
@@ -3526,7 +3526,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
           line->special = 0;
         break;
 
-      /*case 36:
+      case 36:
         // Lower Floor (TURBO)
         if(EV_DoFloor(line,turboLower))
           line->special = 0;
@@ -3536,7 +3536,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
         // LowerAndChange
         if(EV_DoFloor(line,lowerAndChange))
           line->special = 0;
-        break;*/
+        break;
 
       case 38:
         // Lower Floor To Lowest
@@ -4232,9 +4232,8 @@ void P_SpawnSpecials(void)
 
 			// I don't know what these linedefs do
 			case 232:
-			EV_DoElevator(&lines[i], elevateContinuous, false); // Tails
+			EV_DoElevator(&lines[i], elevateContinuous, false);
 			break;
-         	// support for drawn heights coming from different sector
           	case 242:
             sec = sides[*lines[i].sidenum].sector-sectors;
             for (s = -1; (s = P_FindSectorFromLineTag(lines+i,s)) >= 0;)

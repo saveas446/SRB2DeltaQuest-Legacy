@@ -1906,15 +1906,22 @@ void A_DropMine(mobj_t *actor)
 //
 void A_FishJump(mobj_t *actor)
 {
-	if ((actor->z <= actor->floorz) || (actor->z <= actor->watertop - (64 << FRACBITS)))
+	if((actor->z <= actor->floorz) || (actor->z <= actor->watertop-(64*FRACUNIT)))
 	{
-		if (actor->threshold == 0) actor->threshold = 44;
-		actor->momz = actor->threshold*(FRACUNIT/4);
-		P_SetMobjState(actor, actor->info->seestate);
+		if(actor->z > actor->watertop-(48*FRACUNIT))
+		{
+			actor->momz = 11*FRACUNIT;
+			P_SetMobjState(actor, S_FISH1);
+		}
+		else
+		{
+			actor->momz = 15*FRACUNIT;
+			P_SetMobjState(actor, S_FISH1);
+		}
 	}
 
-	if (actor->momz < 0)
-		P_SetMobjState(actor, actor->info->meleestate);
+	if(actor->momz < 0)
+		P_SetMobjState(actor, S_FISH3);
 }
 
 // Function: A_SignPlayer

@@ -11,6 +11,7 @@
         "xstring": "c",
         "xutility": "c",
         "P_MOBJ.C": "cpp",
-        "xtr1common": "cpp"
+        "xtr1common": "cpp",
+        "cmath": "c"
     }
 }

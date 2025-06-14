@@ -247,6 +247,12 @@ typedef enum
 	// lower floor to lowest surrounding floor
 	lowerFloorToLowest,
 
+    // lower floor to highest surrounding floor VERY FAST
+    turboLower,
+
+    // raise floor to lowest surrounding CEILING
+    raiseFloor,
+
 	// raise floor to next highest surrounding floor
 	raiseFloorToNearestFast,
 
@@ -262,7 +268,19 @@ typedef enum
 	bounceFloor,
 	bounceFloorCrush,
 	
+    // raise floor to shortest height texture around it
+    raiseToTexture,
+
+    // lower floor to lowest surrounding floor
+    //  and change floorpic
+    lowerAndChange,
+
+    raiseFloorCrush,
+
 	donutRaise,
+
+    //new types for stair builders
+    buildStair,
 } floor_e;
 
 typedef enum
@@ -275,6 +293,13 @@ typedef enum
 	elevateHighest,
 	bridgeFall,
 } elevator_e;
+
+typedef enum
+{
+    build8,     // slowly build by 8
+    turbo16     // quickly build by 16
+
+} stair_e;
 
 typedef struct
 {
@@ -660,6 +685,15 @@ EV_SlidingDoor
 
 result_e T_MovePlane(sector_t *sector, fixed_t speed, fixed_t dest, boolean crush,
 	int floorOrCeiling, int direction);
+
+#define PLATSPEED (FRACUNIT/NEWTICRATERATIO)
+#define PLATWAIT                3
+
+void T_PlatRaise(plat_t* plat);
+
+int EV_DoPlat(line_t* line, plattype_e type, int amount);
+
+int EV_BuildStairs(line_t* line, stair_e type);
 int EV_DoFloor(line_t *line, floor_e floortype);
 int EV_DoElevator(line_t *line, elevator_e elevtype, boolean customspeed);
 void EV_CrumbleChain(sector_t *sec, ffloor_t *rover);
