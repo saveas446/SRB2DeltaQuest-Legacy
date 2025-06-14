@@ -2,20 +2,35 @@ Compiled for SDL version: 1.2.15
 Linked with SDL version: 1.2.15
 Setting up SRB2...
 Looking for WADs in: SRB2WADDIR,.
- Jun 15 2025                   Sonic Robo Blast 2                      00:25:26 
+ Jun 15 2025                   Sonic Robo Blast 2                      01:18:54 
 Sonic Robo Blast 2
 Z_Init: Init zone memory allocation daemon. 
 system memory 2047MB free 2047MB
 48 megabytes requested for Z_Init.
 W_Init: Init WADfiles.
 I_StartupTimer...
-Added file D:\Games\SRB2\demo_2\dev\srb2.srb (1618 lumps)
+Added file D:\Games\SRB2\demo_2\dev\srb2.srb (1628 lumps)
 Added file D:\Games\SRB2\demo_2\dev\auto.wpn (37 lumps)
 Added file D:\Games\SRB2\demo_2\dev\bomb.wpn (37 lumps)
 Added file D:\Games\SRB2\demo_2\dev\home.wpn (37 lumps)
 Added file D:\Games\SRB2\demo_2\dev\rail.wpn (37 lumps)
 Added file D:\Games\SRB2\demo_2\dev\infn.wpn (37 lumps)
 Added file D:\Games\SRB2\demo_2\dev\supp.wad (1458 lumps)
+Added file maps\FINAL_FIGHT.wad (11 lumps)
+Added file maps\ROBOTNIROCK_3.wad (11 lumps)
+Added file maps\CRYSTAL_CAVE.wad (11 lumps)
+Added file maps\DUST_HILL.wad (11 lumps)
+Added file maps\EGGFACTORY.wad (11 lumps)
+Added file maps\FREAK_SHOW_1.wad (12 lumps)
+Added file maps\HIDDEN_PALACE.wad (11 lumps)
+Added file maps\SPDHWY.wad (11 lumps)
+Added file maps\SWEET_TOOTH.wad (11 lumps)
+Added file maps\WOOD.wad (11 lumps)
+Added file maps\GREENFLOWER_1.WAD (11 lumps)
+Added file maps\GREENFLOWER_2.wad (11 lumps)
+Added file maps\GREENFLOWER_3.wad (11 lumps)
+Added file maps\DARK_CITY_1.wad (11 lumps)
+Added file maps\GRAND_EGGSHIP_2.wad (11 lumps)
 ===========================================================================
                    We hope you enjoy this game as
                      much as we did making it!
@@ -39,7 +54,7 @@ Current Video Mode:
 HU_Init: Setting up heads up display.
 
 executing config.cfg
-Default resolution: 320 x 200 (8 bits)
+Using resolution: 1280 x 800
 M_Init: Init miscellaneous info.
 R_Init: Init SRB2 refresh daemon - 
 InitTextures...
@@ -52,13 +67,13 @@ InitSprites...
 4 sprites added from file D:\Games\SRB2\demo_2\dev\rail.wpn
 5 sprites added from file D:\Games\SRB2\demo_2\dev\infn.wpn
 78 sprites added from file D:\Games\SRB2\demo_2\dev\supp.wad
-R_AddSkins: Unknown keyword 'name' in S_SKIN lump# 829 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
-R_AddSkins: Unknown keyword 'ability' in S_SKIN lump# 829 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
-R_AddSkins: Unknown keyword 'speed' in S_SKIN lump# 829 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'name' in S_SKIN lump# 839 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'ability' in S_SKIN lump# 839 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'speed' in S_SKIN lump# 839 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
 added skin 'tails'
-R_AddSkins: Unknown keyword 'name' in S_SKIN lump# 975 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
-R_AddSkins: Unknown keyword 'ability' in S_SKIN lump# 975 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
-R_AddSkins: Unknown keyword 'speed' in S_SKIN lump# 975 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'name' in S_SKIN lump# 985 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'ability' in S_SKIN lump# 985 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'speed' in S_SKIN lump# 985 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
 Eeeeek! Bad rotation value! Making it 8.
 Eeeeek! Bad rotation value! Making it 8.
 Eeeeek! Bad rotation value! Making it 8.
@@ -68,19 +83,31 @@ added skin 'knuckles'
 InitColormaps...
 S_Init: Setting up sound.
 I_StartupSound:
+ Staring up with audio driver : dsound
+ configured audio device with 1024 samples/slice at 22khz(46ms buffer)
+I_InitSound: sound module ready
+Compiled for SDL_mixer version: 1.2.12
+Linked with SDL_mixer version: 1.2.12
+Temp Shutdown of SDL Audio System Done
+I_InitMusic: Staring up with audio driver : dsound with SDL_Mixer
+ Reconfigured SDL Audio System with 2048 samples/slice at 44khz(46ms buffer)
+I_InitMusic: music initialized
+Loading sounds...  pre-cached all sound data
 ST_Init: Init status bar.
 D_CheckNetGame: Checking network game status.
-Entering main game loop...
-I_StartupKeyboard...
-executing .\autoexec.cfg
 Starting Server....
 Press ESC to abort
 Contacting the server...
 Checking files...
 Send join request...
 Join accepted, wait next map change...
+Entering main game loop...
+I_StartupKeyboard...
+executing .\autoexec.cfg
 Player 1 is in the game (node 0)
 Speeding off to level...
 Player 1 renamed to save_as
 >quit
+I_ShutdownMusic: shut down
+I_ShutdownSound: shut down
 I_ShutdownGraphics: shut down

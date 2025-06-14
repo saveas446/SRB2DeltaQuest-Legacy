@@ -32,6 +32,102 @@
 // Information about all the music
 //
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 musicinfo_t S_music[NUMMUSIC] =
 {
     { 0 },
@@ -67,38 +163,45 @@ musicinfo_t S_music[NUMMUSIC] =
     { "bunny\0" , 0 },
     { "victor"  , 0 },
     { "introa"  , 0 },*/
-    { "runnin"  , 0 },
-    { "stalks"  , 0 },
-    { "countd"  , 0 },
-    { "betwee"  , 0 },
-    { "doom\0\0", 0 },
-    { "the_da"  , 0 },
-    { "shawn\0" , 0 },
-    { "ddtblu"  , 0 },
-    { "in_cit"  , 0 },
-    { "dead\0\0", 0 },
-    { "stlks2"  , 0 },
-    { "theda2"  , 0 },
-    { "doom2\0" , 0 },
-    { "ddtbl2"  , 0 },
-    { "runni2"  , 0 },
-    { "dead2\0" , 0 },
-    { "stlks3"  , 0 },
-    { "romero"  , 0 },
-    { "shawn2"  , 0 },
-    { "messag"  , 0 },
-    { "count2"  , 0 },
-    { "ddtbl3"  , 0 },
-    { "ampie\0" , 0 },
-    { "theda3"  , 0 },
-    { "adrian"  , 0 },
-    { "messg2"  , 0 },
-    { "romer2"  , 0 },
-    { "tense\0" , 0 },
-    { "shawn3"  , 0 },
-    { "openin"  , 0 },
-    { "evil\0\0", 0 },
-    { "ultima"  , 0 },
+    { "gfz1\0\0\0"  , 0 },
+    { "gfz2\0\0\0"  , 0 },
+    { "boss\0\0"  , 0 },
+    { "thz1\0\0\0", 0 },
+    { "thz2\0\0\0", 0 },
+    { "boss\0\0"  , 0 },
+    { "dsz1\0\0\0", 0 },
+    { "dsz2\0\0\0", 0 },
+    { "boss\0\0"  , 0 },
+    { "mmz1\0\0\0", 0 },
+    { "mmz2\0\0\0", 0 },
+    { "boss\0\0"  , 0 },
+    { "rmz1\0\0\0", 0 },
+    { "rmz2\0\0\0", 0 },
+    { "boss\0\0"  , 0 },
+    { "rvz1\0\0\0", 0 },
+    { "rvz2\0\0\0", 0 },
+    { "boss\0\0"  , 0 },
+    { "dcz1\0\0\0", 0 },
+    { "dcz2\0\0\0", 0 },
+    { "boss\0\0"  , 0 },
+    { "gez1\0\0\0", 0 },
+    { "gez2\0\0\0", 0 },
+    { "boss\0\0"  , 0 },
+    { "rrz1\0\0\0", 0 },
+    { "rrz2\0\0\0", 0 },
+    { "final\0\0" , 0 },    
+    { "final2"    , 0 },    
+    { "wood\0\0\0", 0 },
+    { "dushil"    , 0 },
+    { "spdhwy"    , 0 },
+    { "hdnplc"    , 0 },
+    { "swtth\0"   , 0 },
+    { "crcave"    , 0 },
+    { "eggfac"    , 0 },
+    { "slmvly"    , 0 },
+    { "fsz1\0\0\0", 0 },
+    { "fszbos"    , 0 },
+    // End of level tracks
     { "dm2ttl"  , 0 }, // Moved it up Tails 01-06-2001
     { "read_m"  , 0 },
     { "dm2int"  , 0 },

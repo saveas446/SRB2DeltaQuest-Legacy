@@ -446,6 +446,7 @@ void ST_Start(void)
 			lvlttl = lvlttl18;
 			break;
 		case 37:
+		case 38:
 			lvlttl = lvlttl19;
 			break;
 		default:
@@ -910,7 +911,7 @@ static void ST_drawLevelTitle(void)
 	realypos = zoneypos - zonescroll;
 	if (realypos > 0 && realypos < 200) 	
 		V_DrawScaledPatch (SCX(zonexpos),SCY(realypos), V_NOSCALESTART,ttlzone);
-	if (realypos > 0 && realypos < 200) 
+	if (realypos > 0 && realypos < 200 && (gamemap < 28 || gamemap == 37 || gamemap == 38)) 
 		V_DrawScaledPatch (SCX(ttlnumxpos),SCY(realypos), V_NOSCALESTART,ttlnum);
 }
 

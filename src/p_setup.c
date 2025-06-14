@@ -150,7 +150,7 @@ static void P_ClearSingleMapHeaderInfo(short i)
 	mapheaderinfo[i-1].nozone = false;
 	mapheaderinfo[i-1].forcecharacter = 255;
 	mapheaderinfo[i-1].lvlttl[0] = '\0';
-	mapheaderinfo[i-1].musicslot = (short)((short)(mus_runnin + i) - 1);
+	mapheaderinfo[i-1].musicslot = (short)((short)(mus_gfz1 + i) - 1);
 	mapheaderinfo[i-1].nextlevel = (short)(i + 1);
 	mapheaderinfo[i-1].typeoflevel = 0;
 	mapheaderinfo[i-1].weather = 0;
