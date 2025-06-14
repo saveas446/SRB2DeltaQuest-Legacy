@@ -778,10 +778,10 @@ static void ST_drawDebugInfo(void)
 	char emmy6[33];
 	char emmy7[33];
 
-	/*sprintf(smomx, "%d", stplyr->rmomx >> FRACBITS);
-	sprintf(smomy, "%d", stplyr->rmomy >> FRACBITS);
-	sprintf(smomz, "%d", stplyr->mo->momz >> FRACBITS);
-	sprintf(sspeed, "%d", stplyr->speed);
+	sprintf(smomx, "MOMX: %d", stplyr->rmomx >> FRACBITS);
+	sprintf(smomy, "MOMY: %d", stplyr->rmomy >> FRACBITS);
+	sprintf(smomz, "MOMZ: %d", stplyr->mo->momz >> FRACBITS);
+	/*sprintf(sspeed, "%d", stplyr->speed);
 	sprintf(sfloorz, "%d", stplyr->mo->floorz >> FRACBITS);
 	sprintf(spmomz, "%d", stplyr->mo->ceilingz >> FRACBITS);
 	sprintf(scability, "%d", stplyr->charability);
@@ -796,8 +796,8 @@ static void ST_drawDebugInfo(void)
 	sprintf(sz, "Z: %d", stplyr->mo->z >> FRACBITS);
 
 	sprintf(d2uver, "DEMO 2 ULTIMATE %d.%d.%d", MAJORVER, MINORVER, TINYVER);
-	/*sprintf(sangle, "%d", stplyr->mo->angle >> FRACBITS);
-	sprintf(sunderwater, "%d", stplyr->powers[pw_underwater]);
+	sprintf(sangle, "Angle: %d", stplyr->mo->angle >> FRACBITS);
+	/*sprintf(sunderwater, "%d", stplyr->powers[pw_underwater]);
 	sprintf(smfjumped, "%d", stplyr->mfjumped);
 	sprintf(smfspinning, "%d", stplyr->mfspinning);
 	sprintf(smfstartdash, "%d", stplyr->mfstartdash);
@@ -813,13 +813,8 @@ static void ST_drawDebugInfo(void)
 	sprintf(emmy6, "%d", emeralds & EMERALD6);
 	sprintf(emmy7, "%d", emeralds & EMERALD7);*/
 	
-	/*V_DrawString(0, 248, 0, 0, "MOMX =");
-	V_DrawString(0, 296, 0, 0, smomx);
-	V_DrawString(0, 248, 8, 0, "MOMY =");
-	V_DrawString(0, 296, 8, 0, smomy);
-	V_DrawString(0, 248, 16, 0, "MOMZ =");
-	V_DrawString(0, 296, 16, 0, smomz);
-	V_DrawString(0, 240, 24, 0, "SPEED =");
+
+	/*V_DrawString(0, 240, 24, 0, "SPEED =");
 	V_DrawString(0, 296, 24, 0, sspeed);
 	V_DrawString(0, 224, 32, 0, "EMERALDS");
 	V_DrawString(0, 288, 32, 0, emmys);
@@ -841,9 +836,11 @@ static void ST_drawDebugInfo(void)
 	V_DrawString(V_REDMAP, 320 - (strlen(sx) << 3), 8, 0, sx);
 	V_DrawString(V_GREENMAP, 320 - (strlen(sy) << 3), 16, 0, sy);
 	V_DrawString(V_BLUEMAP, 320 - (strlen(sz) << 3), 24, 0, sz);
-	/*V_DrawString(0, 216, 128, 0, "Angle =");
-	V_DrawString(0, 272, 128, 0, sangle);
-	V_DrawString(0, 192, 152, 0, "Underwater =");
+	V_DrawString(0, 320 - (strlen(sangle) << 3), 32, V_YELLOWMAP, sangle);
+	V_DrawString(0, 320 - (strlen(smomx) << 3), 40, 0, smomx);
+	V_DrawString(0, 320 - (strlen(smomy) << 3), 48, 0, smomy);
+	V_DrawString(0, 320 - (strlen(smomz) << 3), 56, 0, smomz);
+	/*V_DrawString(0, 192, 152, 0, "Underwater =");
 	V_DrawString(0, 288, 152, 0, sunderwater);
 	V_DrawString(0, 192, 160, 0, "MF_JUMPED =");
 	V_DrawString(0, 288, 160, 0, smfjumped);

@@ -809,6 +809,9 @@ static void P_ZMovement(mobj_t *mo)
 				continue;
 			}
 
+			if (rover->flags & FF_JELLY)
+				CONS_Printf("touching jelly\n");
+
 			if (rover->flags & FF_QUICKSAND)
 			{
 				if (mo->z < *rover->topheight && *rover->bottomheight < thingtop)
@@ -829,6 +832,8 @@ static void P_ZMovement(mobj_t *mo)
 			{
 				mo->ceilingz = *rover->bottomheight;
 			}
+
+
 		}
 	}
 
@@ -1137,6 +1142,9 @@ static void P_ZMovement(mobj_t *mo)
 static void P_PlayerZMovement(mobj_t *mo)
 {
 	fixed_t gravityadd = 0;
+	fixed_t jellyceiling;
+	fixed_t jellyfloor;
+	boolean jellyfound = false;
 
 	if (!mo->player)
 		return; // mobj was removed
@@ -1153,8 +1161,9 @@ static void P_PlayerZMovement(mobj_t *mo)
 			if (!(rover->flags & FF_EXISTS))
 				continue;
 
-			if ((!(rover->flags & FF_SOLID || rover->flags & FF_QUICKSAND) && !(mo->player && !mo->player->nightsmode && (((mo->player->charflags & SF_RUNONWATER) || mo->player->powers[pw_super]) && mo->ceilingz-*rover->topheight >= mo->height) && (rover->flags & FF_SWIMMABLE) && !mo->player->mfspinning && mo->player->speed > mo->player->runspeed && /*mo->ceilingz - *rover->topheight >= mo->height && */mo->z < *rover->topheight + 30*FRACUNIT && mo->z > *rover->topheight - 30*FRACUNIT)))
+			if (((!(rover->flags & FF_SOLID || rover->flags & FF_QUICKSAND) && !(rover->flags & FF_JELLY)) && !(mo->player && !mo->player->nightsmode && (((mo->player->charflags & SF_RUNONWATER) || mo->player->powers[pw_super]) && mo->ceilingz-*rover->topheight >= mo->height) && (rover->flags & FF_SWIMMABLE) && !mo->player->mfspinning && mo->player->speed > mo->player->runspeed && /*mo->ceilingz - *rover->topheight >= mo->height && */mo->z < *rover->topheight + 30*FRACUNIT && mo->z > *rover->topheight - 30*FRACUNIT)))
 				continue;
+
 
 			if (rover->flags & FF_QUICKSAND)
 			{
@@ -1176,9 +1185,17 @@ static void P_PlayerZMovement(mobj_t *mo)
 			{
 				mo->ceilingz = *rover->bottomheight;
 			}
+
+			if (rover->flags & FF_JELLY) {
+				jellyceiling = mo->floorz;
+				jellyfloor = mo->ceilingz;
+				jellyfound = true;
+			}
+
 		}
 	}
 
+	
 	// check for smooth step up
 	if (mo->z < mo->floorz)
 	{
@@ -1203,6 +1220,7 @@ static void P_PlayerZMovement(mobj_t *mo)
 	// clip movement
 	if (mo->z <= mo->floorz)
 	{
+
 		if (mo->player && mo->player->nightsmode)
 		{
 			if (mo->player->flyangle < 90 || mo->player->flyangle >= 270)
@@ -1214,9 +1232,11 @@ static void P_PlayerZMovement(mobj_t *mo)
 			mo->player->speed *= 4;
 			goto nightsdone;
 		}
-		// Get up if you fell.
-		if (mo->state == &states[S_PLAY_PAIN] || mo->state == &states[S_PLAY_FALL2])
-			P_SetPlayerMobjState(mo, S_PLAY_STND);
+		if (!jellyfound) {
+			// Get up if you fell.
+			if (mo->state == &states[S_PLAY_PAIN] || mo->state == &states[S_PLAY_FALL2])
+				P_SetPlayerMobjState(mo, S_PLAY_STND);
+		}
 
 		mo->z = mo->floorz;
 
@@ -1268,30 +1288,32 @@ static void P_PlayerZMovement(mobj_t *mo)
 
 				if (mo->health)
 				{
-					if (!mo->player->mfspinning || !mo->player->usedown || mo->player->mfjumped)
-					{
-						if (mo->player->cmomx || mo->player->cmomy)
+					if (!jellyfound) {
+						if (!mo->player->mfspinning || !mo->player->usedown || mo->player->mfjumped)
 						{
-							if (mo->player->speed > mo->player->runspeed && !mo->player->running)
-								P_SetPlayerMobjState(mo, S_PLAY_SPD1);
-							else if ((mo->player->rmomx > STOPSPEED
-								|| mo->player->rmomy > STOPSPEED) && !mo->player->walking)
-								P_SetPlayerMobjState(mo, S_PLAY_RUN1);
-							else if ((mo->player->rmomx < -STOPSPEED
-								|| mo->player->rmomy < -STOPSPEED) && !mo->player->walking)
-								P_SetPlayerMobjState(mo, S_PLAY_RUN1);
-							else if ((mo->player->rmomx < FRACUNIT
-								&& mo->player->rmomx > -FRACUNIT && mo->player->rmomy < FRACUNIT && mo->player->rmomy > -FRACUNIT) && !(mo->player->walking || mo->player->running))
-								P_SetPlayerMobjState(mo, S_PLAY_STND);
-						}
-						else
-						{
-							if (mo->player->speed > mo->player->runspeed && !mo->player->running)
-								P_SetPlayerMobjState(mo, S_PLAY_SPD1);
-							else if ((mo->momx || mo->momy) && !mo->player->walking)
-								P_SetPlayerMobjState(mo, S_PLAY_RUN1);
-							else if (!mo->momx && !mo->momy && !(mo->player->walking || mo->player->running))
-								P_SetPlayerMobjState(mo, S_PLAY_STND);
+							if (mo->player->cmomx || mo->player->cmomy)
+							{
+								if (mo->player->speed > mo->player->runspeed && !mo->player->running)
+									P_SetPlayerMobjState(mo, S_PLAY_SPD1);
+								else if ((mo->player->rmomx > STOPSPEED
+									|| mo->player->rmomy > STOPSPEED) && !mo->player->walking)
+									P_SetPlayerMobjState(mo, S_PLAY_RUN1);
+								else if ((mo->player->rmomx < -STOPSPEED
+									|| mo->player->rmomy < -STOPSPEED) && !mo->player->walking)
+									P_SetPlayerMobjState(mo, S_PLAY_RUN1);
+								else if ((mo->player->rmomx < FRACUNIT
+									&& mo->player->rmomx > -FRACUNIT && mo->player->rmomy < FRACUNIT && mo->player->rmomy > -FRACUNIT) && !(mo->player->walking || mo->player->running))
+									P_SetPlayerMobjState(mo, S_PLAY_STND);
+							}
+							else
+							{
+								if (mo->player->speed > mo->player->runspeed && !mo->player->running)
+									P_SetPlayerMobjState(mo, S_PLAY_SPD1);
+								else if ((mo->momx || mo->momy) && !mo->player->walking)
+									P_SetPlayerMobjState(mo, S_PLAY_RUN1);
+								else if (!mo->momx && !mo->momy && !(mo->player->walking || mo->player->running))
+									P_SetPlayerMobjState(mo, S_PLAY_STND);
+							}
 						}
 					}
 
@@ -1303,12 +1325,14 @@ static void P_PlayerZMovement(mobj_t *mo)
 					if (!(mo->player->mfspinning && mo->player->usedown))
 						P_ResetScore(mo->player);
 
-					mo->player->mfjumped = 0; // Spin Attack
-					mo->player->secondjump = 0;
-					mo->player->thokked = false;
-					mo->player->gliding = 0;
-					mo->player->glidetime = 0;
-					mo->player->climbing = 0;
+					if (!jellyfound) {
+						mo->player->mfjumped = 0; // Spin Attack
+						mo->player->secondjump = 0;
+						mo->player->thokked = false;
+						mo->player->gliding = 0;
+						mo->player->glidetime = 0;
+						mo->player->climbing = 0;
+					}
 				}
 			}
 			if (mo->player && !mo->player->mfspinning)
@@ -1319,7 +1343,14 @@ static void P_PlayerZMovement(mobj_t *mo)
 			|| tmfloorthing->type == MT_FLOORSPIKE
 			#endif
 			))
+			if (!jellyfound) {
 				mo->momz = 0;
+			} else {
+				if (!(mo->player->cmd.buttons & BT_JUMP))
+					mo->momz = (mo->momz * -0.8);
+				else 
+					mo->momz = (mo->momz * -0.95);
+			}
 		}
 	}
 	else if (!(mo->flags & MF_NOGRAVITY)) // Gravity here!
@@ -1407,28 +1438,7 @@ nightsdone:
 		{
 			msecnode_t *node;
 
-			if (CheckForMarioBlocks && mo->player && !(gametype == GT_CTF && !mo->player->ctfteam)) // Only let the player punch
-			{
-				// Search the touching sectors, from side-to-side...
-				for (node = mo->touching_sectorlist; node; node = node->m_snext)
-				{
-					if (node->m_sector->ffloors)
-					{
-	 					ffloor_t *rover;
 
-						for (rover = node->m_sector->ffloors; rover; rover = rover->next)
-						{
-							// Come on, it's time to go...
-							if (rover->flags & FF_MARIO
-								&& *rover->bottomheight == mo->ceilingz) // The player's head hit the bottom!
-							{
-								// DO THE MARIO!
-								EV_MarioBlock(rover->master->frontsector, node->m_sector, *rover->topheight, rover->master, mo);
-							}
-						}
-					}
-				} // Ugly ugly billions of braces! Argh!
-			}
 			
 			if (!(mo->player && mo->player->climbing))
 				mo->momz = 0;

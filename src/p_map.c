@@ -3179,6 +3179,9 @@ static void P_FakeZMovement(mobj_t *mo)
 			if ((!(rover->flags & FF_SOLID || rover->flags & FF_QUICKSAND) && !(mo->player && !mo->player->nightsmode && (((mo->player->charflags & SF_RUNONWATER) || mo->player->powers[pw_super]) && mo->ceilingz-*rover->topheight >= mo->height)  && (rover->flags & FF_SWIMMABLE) && !mo->player->mfspinning && mo->player->speed > mo->player->runspeed && /*mo->ceilingz - *rover->topheight >= mo->height &&*/ mo->z < *rover->topheight + 30*FRACUNIT && mo->z > *rover->topheight - 30*FRACUNIT)))
 				continue;
 
+			if (rover->flags & FF_JELLY)
+				CONS_Printf("touching jelly\n");
+
 			if (rover->flags & FF_QUICKSAND)
 			{
 				if (mo->z < *rover->topheight && *rover->bottomheight < thingtop)

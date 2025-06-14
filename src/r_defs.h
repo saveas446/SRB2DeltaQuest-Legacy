@@ -125,7 +125,7 @@ typedef enum
 	FF_NORETURN          = 0x40000,   ///< Used with ::FF_CRUMBLE. Will not return to its original position after falling.
 	FF_CRUMBLE           = 0x80000,   ///< Falls 2 seconds after being stepped on, and randomly brings all touching crumbling 3dfloors down with it, providing their master sectors share the same tag (allows crumble platforms above or below, to also exist).
 	FF_SHATTERBOTTOM     = 0x100000,  ///< Used with ::FF_BUSTUP. Like FF_SHATTER, but only breaks from the bottom. Good for springing up through rubble.
-	FF_MARIO             = 0x200000,  ///< Acts like a question block when hit from underneath. Goodie spawned at top is determined by master sector.
+	FF_JELLY             = 0x200000,
 	FF_BUSTUP            = 0x400000,  ///< You can spin through/punch this block and it will crumble!
 	FF_QUICKSAND         = 0x800000,  ///< Quicksand!
 	FF_PLATFORM          = 0x1000000, ///< You can jump up through this to the top.

@@ -2416,12 +2416,6 @@ static ffloor_t *P_AddFakeFloor(sector_t *sec, sector_t *sec2, line_t *master, i
 	if ((flags & FF_BUSTUP) || (flags & FF_SHATTER) || (flags & FF_SPINBUST))
 		CheckForBustableBlocks = true;
 
-	if ((flags & FF_MARIO))
-	{
-		P_AddBlockThinker(sec2, sec, master);
-		CheckForMarioBlocks = true;
-	}
-
 	if ((flags & FF_CRUMBLE))
 		sec2->crumblestate = 1;
 
@@ -2543,11 +2537,6 @@ static ffloor_t *P_AddOldWater(sector_t *sec, sector_t *sec2, line_t *master, in
 	if ((flags & FF_BUSTUP) || (flags & FF_SHATTER) || (flags & FF_SPINBUST))
 		CheckForBustableBlocks = true;
 
-	if ((flags & FF_MARIO))
-	{
-		P_AddBlockThinker(sec2, sec, master);
-		CheckForMarioBlocks = true;
-	}
 
 	if ((flags & FF_CRUMBLE))
 		sec2->crumblestate = 1;
@@ -4320,6 +4309,10 @@ void P_SpawnSpecials(void)
 				if (!(lines[i].flags & ML_NOCLIMB))
 					ffloorflags |= FF_NOSHADE;
 				P_AddFakeFloorsByLine(i, ffloorflags);
+			break;
+			//l302 FOF, Solid, Translucent Save 18-05-2025
+			case 302:
+				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_JELLY|FF_RENDERALL|FF_NOSHADE|FF_TRANSLUCENT|FF_EXTRA|FF_CUTEXTRA);
 			break;
 		}
 	}
