@@ -721,6 +721,109 @@ nomissile:
 		P_NewChaseDir(actor);
 }
 
+// Function: A_SargChase
+//
+// Description: Special chase function for Drillakilla
+//
+// var1 = unused
+// var2 = unused
+//
+void A_SargChase(mobj_t *actor)
+{
+	int delta;
+	fixed_t dist; // Distance to current target
+
+	dist = P_AproxDistance(actor->x - actor->target->x, actor->y - actor->target->y);
+
+
+	if (actor->reactiontime)
+		actor->reactiontime--;
+
+	// modify target threshold
+	if (actor->threshold)
+	{
+		if (!actor->target || actor->target->health <= 0)
+			actor->threshold = 0;
+		else
+			actor->threshold--;
+	}
+
+		// turn towards movement direction if not there yet
+		if (actor->movedir < NUMDIRS)
+		{
+			actor->angle &= (7<<29);
+			delta = actor->angle - (actor->movedir << 29);
+
+			if (delta > 0) {
+				actor->angle -= ANG90/2;
+				actor->info->speed = 10;
+			} else if (delta < 0) {
+				actor->angle += ANG90/2;
+				actor->info->speed = 10;
+			}
+		}
+
+	if (!actor->target || !(actor->target->flags & MF_SHOOTABLE))
+	{
+		// look for a new target
+		if (P_LookForPlayers(actor, true, false)) {
+			return; // got a new target
+		}
+			
+		actor->info->speed = 10;
+		P_SetMobjState(actor, actor->info->spawnstate);
+		return;
+	}
+
+	// do not attack twice in a row
+	if (actor->flags2 & MF2_JUSTATTACKED)
+	{
+		actor->info->speed = 10;
+		actor->flags2 &= ~MF2_JUSTATTACKED;
+		P_NewChaseDir(actor);
+		return;
+	}
+
+	// check for melee attack
+	if (actor->info->meleestate && P_CheckMeleeRange(actor))
+	{
+		if (actor->info->attacksound)
+			S_StartAttackSound(actor, actor->info->attacksound);
+
+		P_SetMobjState(actor, actor->info->meleestate);
+		return;
+	}
+
+	// check for missile attack
+	if (actor->info->missilestate)
+	{
+		if (actor->movecount || !P_CheckMissileRange(actor))
+			goto nomissile;
+		P_SetMobjState(actor, actor->info->missilestate);
+		actor->flags2 |= MF2_JUSTATTACKED;
+		return;
+	}
+nomissile:
+	// possibly choose another target
+	if (multiplayer && !actor->threshold && (actor->target->health <= 0 || !P_CheckSight(actor, actor->target))) {
+		actor->info->speed = 10;
+		return; // got a new target
+	}
+
+	// If there's a straight line between you and target and we're not too far away, START CHARGIN'!
+	if (P_CheckSight(actor, actor->target) && (dist <= 500 * FRACUNIT)) {
+		actor->info->speed += 2;
+		actor->frame = 14;
+	} else {
+		actor->info->speed = 10;
+	}
+
+	// chase towards player
+	if (--actor->movecount < 0 || !P_Move(actor))
+		P_NewChaseDir(actor);
+}	
+
+
 void A_SargAttack (mobj_t* actor)
 {
     int         damage;

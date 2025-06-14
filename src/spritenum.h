@@ -91,7 +91,6 @@ typedef enum
 	SPR_JETB, // Jetty-Syn Bomber
 	SPR_JETG, // Jetty-Syn Gunner
 	SPR_JBUL, // Jetty-Syn Bullet
-	SPR_MOUS, // Mouse
 	SPR_DETN, // Deton
 	SPR_CHAN, // CEZ Chain
 	SPR_SNO1, // Snowflake
@@ -1020,10 +1019,6 @@ typedef enum
 	S_JETBULLET1,
 	S_JETBULLET2,
 
-	// Freed Mouse
-	S_MOUSE1,
-	S_MOUSE2,
-
 	// Deton
 	S_DETON1,
 	S_DETON2,
@@ -1846,7 +1841,6 @@ typedef enum
 	MT_JETTBOMBER, // Jetty-Syn Bomber
 	MT_JETTGUNNER, // Jetty-Syn Gunner
 	MT_JETTBULLET, // Jetty-Syn Bullet
-	MT_MOUSE, // Mouse
 	MT_DETON, // Deton
 	MT_EXPLODE, // Robot Explosion
 	MT_CHAIN, // CEZ Chain

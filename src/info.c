@@ -48,7 +48,6 @@ char sprnames[NUMSPRITES + 1][5] =
 	#endif
 	"GFLG",
 	"CEMG","CEMO","CEMP","CEMB","CEMR","CEML","CEMY","JETB","JETG","JBUL",
-	"MOUS",
 	"PAIN", // Demo 2 uses "PAIN" instead of "DETN" for some reason
 	"CHAN","SNO1","SANT",
 	"SBLL","SPIK",
@@ -202,21 +201,21 @@ state_t states[NUMSTATES] =
 	{SPR_SPOS, 18, 5, {NULL}, 0, 0, S_SPOS_DIE3},     // S_SPOS_DIE2
 	{SPR_SPOS, 19, 5, {NULL}, 0, 0, S_SPOS_DIE4},     // S_SPOS_DIE3
 	{SPR_SPOS, 20, 5, {NULL}, 0, 0, S_DISS},          // S_SPOS_DIE4
-	
+
 	// Drillakilla
 	{SPR_SARG,0,10,{A_Look}, 0, 0, S_SARG_STND2},  // S_SARG_STND
     {SPR_SARG,1,10,{A_Look}, 0, 0, S_SARG_STND},   // S_SARG_STND2
-    {SPR_SARG,0,2,{A_Chase}, 0, 0, S_SARG_RUN2},   // S_SARG_RUN1
-    {SPR_SARG,0,2,{A_Chase}, 0, 0, S_SARG_RUN3},   // S_SARG_RUN2
-    {SPR_SARG,1,2,{A_Chase}, 0, 0, S_SARG_RUN4},   // S_SARG_RUN3
-    {SPR_SARG,1,2,{A_Chase}, 0, 0, S_SARG_RUN5},   // S_SARG_RUN4
-    {SPR_SARG,2,2,{A_Chase}, 0, 0, S_SARG_RUN6},   // S_SARG_RUN5
-    {SPR_SARG,2,2,{A_Chase}, 0, 0, S_SARG_RUN7},   // S_SARG_RUN6
-    {SPR_SARG,3,2,{A_Chase}, 0, 0, S_SARG_RUN8},   // S_SARG_RUN7
-    {SPR_SARG,3,2,{A_Chase}, 0, 0, S_SARG_RUN1},   // S_SARG_RUN8
+    {SPR_SARG,0,2,{A_SargChase}, 0, 0, S_SARG_RUN2},   // S_SARG_RUN1
+    {SPR_SARG,0,2,{A_SargChase}, 0, 0, S_SARG_RUN3},   // S_SARG_RUN2
+    {SPR_SARG,1,2,{A_SargChase}, 0, 0, S_SARG_RUN4},   // S_SARG_RUN3
+    {SPR_SARG,1,2,{A_SargChase}, 0, 0, S_SARG_RUN5},   // S_SARG_RUN4
+    {SPR_SARG,2,2,{A_SargChase}, 0, 0, S_SARG_RUN6},   // S_SARG_RUN5
+    {SPR_SARG,2,2,{A_SargChase}, 0, 0, S_SARG_RUN7},   // S_SARG_RUN6
+    {SPR_SARG,3,2,{A_SargChase}, 0, 0, S_SARG_RUN8},   // S_SARG_RUN7
+    {SPR_SARG,3,2,{A_SargChase}, 0, 0, S_SARG_RUN1},   // S_SARG_RUN8
     {SPR_SARG,4,8,{A_FaceTarget}, 0, 0, S_SARG_ATK2},      // S_SARG_ATK1
     {SPR_SARG,5,8,{A_FaceTarget}, 0, 0, S_SARG_ATK3},      // S_SARG_ATK2
-    {SPR_SARG,6,8,{A_SargAttack}, 0, 0, S_SARG_RUN1},      // S_SARG_ATK3
+    {SPR_SARG,6,8,{A_FaceTarget}, 0, 0, S_SARG_RUN1},      // S_SARG_ATK3
     {SPR_SARG,7,2,{NULL}, 0, 0, S_SARG_PAIN2},     // S_SARG_PAIN
     {SPR_SARG,7,2,{A_Pain}, 0, 0, S_SARG_RUN1},    // S_SARG_PAIN2
     {SPR_SARG,8,8,{NULL}, 0, 0, S_SARG_DIE2},      // S_SARG_DIE1
@@ -231,6 +230,28 @@ state_t states[NUMSTATES] =
     {SPR_SARG,10,5,{NULL}, 0, 0, S_SARG_RAISE5},   // S_SARG_RAISE4
     {SPR_SARG,9,5,{NULL}, 0, 0, S_SARG_RAISE6},    // S_SARG_RAISE5
     {SPR_SARG,8,5,{NULL}, 0, 0, S_SARG_RUN1},      // S_SARG_RAISE6
+
+	// Minus
+    {SPR_TROO,0,10,{A_Look},S_TROO_STND2,0,0},  // S_TROO_STND
+    {SPR_TROO,1,10,{A_Look},S_TROO_STND,0,0},   // S_TROO_STND2
+    {SPR_TROO,0,3,{A_Chase},S_TROO_RUN2,0,0},   // S_TROO_RUN1
+    {SPR_TROO,0,3,{A_Chase},S_TROO_RUN3,0,0},   // S_TROO_RUN2
+    {SPR_TROO,1,3,{A_Chase},S_TROO_RUN4,0,0},   // S_TROO_RUN3
+    {SPR_TROO,1,3,{A_Chase},S_TROO_RUN5,0,0},   // S_TROO_RUN4
+    {SPR_TROO,2,3,{A_Chase},S_TROO_RUN6,0,0},   // S_TROO_RUN5
+    {SPR_TROO,2,3,{A_Chase},S_TROO_RUN7,0,0},   // S_TROO_RUN6
+    {SPR_TROO,3,3,{A_Chase},S_TROO_RUN8,0,0},   // S_TROO_RUN7
+    {SPR_TROO,3,3,{A_Chase},S_TROO_RUN1,0,0},   // S_TROO_RUN8
+    {SPR_TROO,4,8,{A_FaceTarget},S_TROO_ATK2,0,0},      // S_TROO_ATK1
+    {SPR_TROO,5,8,{A_FaceTarget},S_TROO_ATK3,0,0},      // S_TROO_ATK2
+    {SPR_TROO,6,6,{A_TroopAttack},S_TROO_RUN1,0,0},     // S_TROO_ATK3
+    {SPR_TROO,7,2,{NULL},S_TROO_PAIN2,0,0},     // S_TROO_PAIN
+    {SPR_TROO,7,2,{A_Pain},S_TROO_RUN1,0,0},    // S_TROO_PAIN2
+    {SPR_TROO,8,8,{A_Fall},S_TROO_DIE2,0,0},      // S_TROO_DIE1
+    {SPR_TROO,9,8,{A_Scream},S_TROO_DIE3,0,0},  // S_TROO_DIE2
+    {SPR_TROO,10,6,{NULL},S_TROO_DIE4,0,0},     // S_TROO_DIE3
+    {SPR_TROO,11,6,{NULL},S_TROO_DIE5,0,0},   // S_TROO_DIE4
+    {SPR_TROO,12,-1,{NULL},S_NULL,0,0}, // S_TROO_DIE5
 
 	// Boss 1
 	{SPR_EGGM, 0, 1, {NULL}, 0, 0, S_EGGMOBILE_STND},           // S_EGGMOBILE_STND
@@ -912,11 +933,6 @@ state_t states[NUMSTATES] =
 	// Jetty-Syn Bullet
 	{SPR_JBUL, 32768, 1, {NULL}, 0, 0, S_JETBULLET2}, // S_JETBULLET1
 	{SPR_JBUL, 32769, 1, {NULL}, 0, 0, S_JETBULLET1}, // S_JETBULLET2
-
-	// Freed Mouse
-	{SPR_MOUS, 0, 2, {A_MouseThink}, 0, 0, S_MOUSE2}, // S_MOUSE1
-	{SPR_MOUS, 1, 2, {A_MouseThink}, 0, 0, S_MOUSE1}, // S_MOUSE2
-
 	// Deton
 	{SPR_DETN, 0, 35, {A_Look}, 0, 0, S_DETON1},       // S_DETON1
 	{SPR_DETN, 0, 1, {A_DetonChase}, 0, 0, S_DETON3},  // S_DETON2
@@ -1745,7 +1761,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
         400,            // mass
         0,              // damage
         sfx_dmact,              // activesound
-        MF_SOLID|MF_SHOOTABLE,             // flags
+        MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE,             // flags
         S_SARG_RAISE1           // raisestate
     },
 
@@ -4042,33 +4058,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		1,              // damage
 		sfx_None,              // activesound
 		MF_NOBLOCKMAP|MF_MISSILE|MF_NOGRAVITY, // flags
-		S_NULL          // raisestate
-	},
-
-	// freed mouse
-	{           // MT_MOUSE
-		-1,             // doomednum
-		S_MOUSE1,       // spawnstate
-		1,              // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,              // seesound
-		1,              // reactiontime
-		sfx_None,              // attacksound
-		S_NULL,         // painstate
-		200,            // painchance
-		sfx_None,              // painsound
-		S_NULL,              // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		20*FRACUNIT,    // speed
-		4*FRACUNIT,     // radius
-		4*FRACUNIT,     // height
-		100,            // mass
-		0,              // damage
-		sfx_None,              // activesound
-		MF_NOCLIPTHING, // flags
 		S_NULL          // raisestate
 	},
 

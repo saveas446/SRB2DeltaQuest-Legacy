@@ -3520,10 +3520,8 @@ void P_MobjThinker(mobj_t *mobj)
 								P_SpawnMobj(x, y, z, MT_BIRD);
 								S_StartSound(mo2, sfx_slop);
 							}
-							else if (i < 16)
-								P_SpawnMobj(x, y, z, MT_SQRL);
 							else
-								P_SpawnMobj(x, y, z, MT_MOUSE);
+								P_SpawnMobj(x, y, z, MT_SQRL);
 						}
 						z -= 32*FRACUNIT;
 					}
@@ -3915,7 +3913,6 @@ mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
 			break;
 		case MT_BIRD:
 		case MT_SQRL:
-		case MT_MOUSE:
 			mobj->fuse = 300 + (P_Random() % 50);
 			break;
 		case MT_REDRING: // Make MT_REDRING red by default

@@ -1128,9 +1128,6 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source)
 				case MT_BLUECRAWLA:
 				case MT_JETTBOMBER:
 				case MT_GFZFISH:
-					item = MT_BIRD;
-					break;
-
 				case MT_JETTGUNNER:
 				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 				case MT_CRAWLACOMMANDER:
@@ -1138,7 +1135,7 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source)
 				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 				case MT_REDBUZZ:
 				#endif
-					item = MT_MOUSE;
+					item = MT_BIRD;
 					break;
 
 				default:
@@ -1146,10 +1143,8 @@ void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source)
 
 					if (prandom < 86)
 						item = MT_SQRL;
-					else if (prandom < 172)
-						item = MT_BIRD;
 					else
-						item = MT_MOUSE;
+						item = MT_BIRD;
 
 					break;
 			}
