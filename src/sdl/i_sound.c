@@ -564,8 +564,6 @@ void I_FreeSfx(sfxinfo_t * sfx)
 				channels[i].end = NULL; // Reset.
 			}
 		}
-		//Snd_UnlockAudio(); //Alam: too much?
-		if (sfx->data) Z_Free(sfx->data);
 	}
 	sfx->data = NULL;
 	sfx->lumpnum = -1;
