@@ -137,7 +137,6 @@ typedef enum
 
 	SPR_SEED, // Sonic CD flower seed
 	SPR_JETF, // Boss jet fumes
-	SPR_HOOP, // NiGHTS hoop sprite
 	SPR_NWNG, // NiGHTS Wing collectable item.
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	SPR_EGGN, // Boss 2
@@ -1382,8 +1381,6 @@ typedef enum
 	S_JETFUME3,
 	S_JETFUME4,
 
-	S_HOOP,
-
 	S_NIGHTSWING,
 
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
@@ -1885,10 +1882,7 @@ typedef enum
 
 	MT_SEED,
 	MT_JETFUME1,
-	MT_JETFUME2,
-	MT_HOOP,
-	MT_HOOPCOLLIDE, // Collision detection for NiGHTS hoops
-	MT_HOOPCENTER, // Center of a hoop
+	MT_JETFUME2,	
 	MT_BOSSFLYPOINT,
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	MT_EGGMOBILE2,

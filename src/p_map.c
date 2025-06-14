@@ -266,18 +266,6 @@ static boolean PIT_CheckThing(mobj_t *thing)
 	if (abs(thing->x - tmx) >= blockdist || abs(thing->y - tmy) >= blockdist)
 		return true; // didn't hit it
 
-	if (thing->type == MT_HOOPCOLLIDE)
-	{
-		if (thing->flags & MF_SPECIAL)
-			P_TouchSpecialThing(thing, tmthing, true);
-		return true;
-	}
-	else if (tmthing->type == MT_HOOPCOLLIDE)
-	{
-		if (tmthing->flags & MF_SPECIAL)
-			P_TouchSpecialThing(tmthing, thing, true);
-		return true;
-	}
 
 	// check for skulls slamming into things
 	if (tmthing->flags2 & MF2_SKULLFLY)
@@ -1120,33 +1108,6 @@ static inline boolean P_CheckRailPosition(mobj_t *thing, fixed_t x, fixed_t y)
 	return true;
 }
 #endif
-
-static const fixed_t hoopblockdist = 16*FRACUNIT + 8*FRACUNIT;
-static const fixed_t hoophalfheight = (56*FRACUNIT)/2;
-
-// P_CheckPosition optimized for the MT_HOOPCOLLIDE object. This needs to be as fast as possible!
-void P_CheckHoopPosition(mobj_t *hoopthing, fixed_t x, fixed_t y, fixed_t z, fixed_t radius)
-{
-	int i;
-
-	for (i = 0; i < MAXPLAYERS; i++)
-	{
-		if (!playeringame[i] || !players[i].mo)
-			continue;
-
-		if (abs(players[i].mo->x - x) >= hoopblockdist ||
-			abs(players[i].mo->y - y) >= hoopblockdist ||
-			abs((players[i].mo->z+hoophalfheight) - z) >= hoopblockdist)
-			continue; // didn't hit it
-
-		// can remove thing
-		P_TouchSpecialThing(hoopthing, players[i].mo, false);
-		break;
-	}
-
-	radius = 0; //unused
-	return;
-}
 
 //
 // P_CheckCameraPosition

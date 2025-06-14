@@ -66,7 +66,7 @@ char sprnames[NUMSPRITES + 1][5] =
 	#endif
 	"FLAM","PUMA","HAMM","KOOP",
 	"SHLL","MAXE","FFWR",
-	"SEED","JETF","HOOP","NWNG",
+	"SEED","JETF","NWNG",
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"EGGN",
 	#endif
@@ -1293,7 +1293,6 @@ state_t states[NUMSTATES] =
 	{SPR_JETF, 32769, 1, {NULL}, 0, 0, S_JETFUME4}, // S_JETFUME3
 	{SPR_DISS, 32768, 1, {NULL}, 0, 0, S_JETFUME3}, // S_JETFUME4
 
-	{SPR_HOOP, 0, -1, {NULL}, 0, 0, S_NULL}, // S_HOOP
 
 	{SPR_NWNG, 0, -1, {NULL}, 0, 0, S_NULL}, // S_NIGHTSWING
 
@@ -5451,84 +5450,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		0,              // damage
 		sfx_None,       // activesound
 		MF_NOBLOCKMAP|MF_NOGRAVITY|MF_NOCLIP, // flags
-		S_NULL          // raisestate
-	},
-
-	{           // MT_HOOP
-		-1,             // doomednum
-		S_HOOP,         // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		1,              // speed
-		8*FRACUNIT,     // radius
-		16*FRACUNIT,    // height
-		4,              // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_NOBLOCKMAP|MF_NOGRAVITY|MF_NOCLIP|MF_SCENERY, // flags
-		S_NULL          // raisestate
-	},
-
-	{           // MT_HOOPCOLLIDE
-		-1,             // doomednum
-		S_NULL,         // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		1,              // speed
-		8*FRACUNIT,     // radius
-		16*FRACUNIT,    // height
-		4,              // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_NOSECTOR|MF_NOCLIP|MF_NOGRAVITY|MF_SPECIAL|MF_NOTHINK, // flags
-		S_NULL          // raisestate
-	},
-
-	{           // MT_HOOPCENTER
-		-1,             // doomednum
-		S_NULL,         // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		1,              // speed
-		2*FRACUNIT,     // radius
-		4*FRACUNIT,     // height
-		4,              // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_NOBLOCKMAP|MF_NOSECTOR|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
 	{           // MT_BOSSFLYPOINT

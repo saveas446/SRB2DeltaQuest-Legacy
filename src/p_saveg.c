@@ -930,25 +930,11 @@ static void P_NetArchiveThinkers(void)
 		{
 			mobj = (mobj_t *)th;
 
-			// Ignore stationary hoops - these will be respawned from mapthings.
-			if (mobj->type == MT_HOOP)
-				continue;
-
-			// These are NEVER saved.
-			if (mobj->type == MT_HOOPCOLLIDE)
-				continue;
-
-			// This hoop has already been collected.
-			if (mobj->type == MT_HOOPCENTER && mobj->threshold == 4242)
-				continue;
-
-			if (mobj->spawnpoint && (mobj->info->doomednum != -1 || mobj->type == MT_HOOPCENTER))
+			if (mobj->spawnpoint && (mobj->info->doomednum != -1))
 			{
 				// spawnpoint is not modified but we must save it since it is an identifier
 				diff = MD_SPAWNPOINT;
 
-				if (mobj->type != MT_HOOPCENTER)
-				{
 					if ((mobj->x != mobj->spawnpoint->x << FRACBITS) ||
 						(mobj->y != mobj->spawnpoint->y << FRACBITS) ||
 						(mobj->angle != (unsigned)(ANG45 * (mobj->spawnpoint->angle/45))))
@@ -956,7 +942,6 @@ static void P_NetArchiveThinkers(void)
 
 					if (mobj->info->doomednum != mobj->spawnpoint->type)
 						diff |= MD_TYPE;
-				}
 			}
 			else
 				diff = MD_POS | MD_TYPE; // not a map spawned thing so make it from scratch
@@ -1029,9 +1014,6 @@ static void P_NetArchiveThinkers(void)
 				for (z = 0; z < nummapthings; z++)
 					if (&mapthings[z] == mobj->spawnpoint)
 						WRITESHORT(save_p, z);
-
-				if (mobj->type == MT_HOOPCENTER)
-					continue;
 			}
 
 			if (diff & MD_TYPE)
@@ -1450,12 +1432,6 @@ static void P_NetUnArchiveThinkers(void)
 				if (diff & MD_SPAWNPOINT)
 				{
 					short spawnpointnum = READSHORT(save_p);
-
-					if (mapthings[spawnpointnum].type == 57) // NiGHTS Hoop special case
-					{
-						P_SpawnHoopsAndRings(&mapthings[spawnpointnum]);
-						continue;
-					}
 
 					mobj = Z_Malloc(sizeof (mobj_t), PU_LEVEL, NULL);
 					memset(mobj, 0, sizeof (mobj_t));
@@ -2023,9 +1999,6 @@ static void P_RelinkPointers(void)
 		if (currentthinker->function.acp1 == (actionf_p1)P_MobjThinker)
 		{
 			mobj = (mobj_t *)currentthinker;
-
-			if (mobj->type == MT_HOOP || mobj->type == MT_HOOPCOLLIDE || mobj->type == MT_HOOPCENTER)
-				continue;
 
 			if (mobj->tracer)
 			{

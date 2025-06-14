@@ -305,22 +305,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 				G_SaveGameData();
 				return;
 			}
-		case MT_HOOPCOLLIDE:
-			// This produces a kind of 'domino effect' with the hoop's pieces.
-			for (; special->hprev != NULL; special = special->hprev); // Move to the first sprite in the hoop
-			i = 0;
-			for (; special->type == MT_HOOP; special = special->hnext)
-			{
-				special->fuse = 11;
-				special->movedir = i;
-				special->target->threshold = 4242;
-				i++;
-			}
-			// Make the collision detectors disappear.
-			for (; special != NULL; special = special->hnext)
-				P_RemoveMobj(special);
-
-			return;
 		case MT_STARPOST:
 			if (special->health > 32)
 			{

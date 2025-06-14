@@ -813,7 +813,6 @@ static void P_LoadThings(int lump)
 				mt->z = (short)(R_PointInSubsector(mt->x << FRACBITS, mt->y << FRACBITS)
 					->sector->floorheight >> FRACBITS);
 
-				P_SpawnHoopsAndRings (mt);
 				break;
 			default:
 				break;
