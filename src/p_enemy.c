@@ -66,6 +66,7 @@ static dirtype_t diags[] =
 void A_Fall(mobj_t *actor);
 void A_Look(mobj_t *actor);
 void A_Chase(mobj_t *actor);
+void A_SargAttack(mobj_t *actor);
 void A_SkimChase(mobj_t *actor);
 void A_FaceTarget(mobj_t *actor);
 void A_FireShot(mobj_t *actor);
@@ -718,6 +719,21 @@ nomissile:
 	// chase towards player
 	if (--actor->movecount < 0 || !P_Move(actor))
 		P_NewChaseDir(actor);
+}
+
+void A_SargAttack (mobj_t* actor)
+{
+    int         damage;
+
+    if (!actor->target)
+        return;
+
+    A_FaceTarget (actor);
+    if (P_CheckMeleeRange (actor))
+    {
+        damage = ((P_Random()%10)+1)*4;
+        P_DamageMobj (actor->target, actor, actor, damage);
+    }
 }
 
 void A_SkimChase(mobj_t *actor)

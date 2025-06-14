@@ -98,7 +98,9 @@ char sprnames[NUMSPRITES + 1][5] =
 	#endif
 	"TURR",
 	// Demo 2 Ultimate custom things
-	"GRTV","GORB","POL3"
+	"GRTV","GORB","POL3",
+
+	"SARG","TROO"
 };
 
 // Doesn't work with g++, needs actionf_p1 (don't modify this comment)
@@ -200,6 +202,35 @@ state_t states[NUMSTATES] =
 	{SPR_SPOS, 18, 5, {NULL}, 0, 0, S_SPOS_DIE3},     // S_SPOS_DIE2
 	{SPR_SPOS, 19, 5, {NULL}, 0, 0, S_SPOS_DIE4},     // S_SPOS_DIE3
 	{SPR_SPOS, 20, 5, {NULL}, 0, 0, S_DISS},          // S_SPOS_DIE4
+	
+	// Drillakilla
+	{SPR_SARG,0,10,{A_Look}, 0, 0, S_SARG_STND2},  // S_SARG_STND
+    {SPR_SARG,1,10,{A_Look}, 0, 0, S_SARG_STND},   // S_SARG_STND2
+    {SPR_SARG,0,2,{A_Chase}, 0, 0, S_SARG_RUN2},   // S_SARG_RUN1
+    {SPR_SARG,0,2,{A_Chase}, 0, 0, S_SARG_RUN3},   // S_SARG_RUN2
+    {SPR_SARG,1,2,{A_Chase}, 0, 0, S_SARG_RUN4},   // S_SARG_RUN3
+    {SPR_SARG,1,2,{A_Chase}, 0, 0, S_SARG_RUN5},   // S_SARG_RUN4
+    {SPR_SARG,2,2,{A_Chase}, 0, 0, S_SARG_RUN6},   // S_SARG_RUN5
+    {SPR_SARG,2,2,{A_Chase}, 0, 0, S_SARG_RUN7},   // S_SARG_RUN6
+    {SPR_SARG,3,2,{A_Chase}, 0, 0, S_SARG_RUN8},   // S_SARG_RUN7
+    {SPR_SARG,3,2,{A_Chase}, 0, 0, S_SARG_RUN1},   // S_SARG_RUN8
+    {SPR_SARG,4,8,{A_FaceTarget}, 0, 0, S_SARG_ATK2},      // S_SARG_ATK1
+    {SPR_SARG,5,8,{A_FaceTarget}, 0, 0, S_SARG_ATK3},      // S_SARG_ATK2
+    {SPR_SARG,6,8,{A_SargAttack}, 0, 0, S_SARG_RUN1},      // S_SARG_ATK3
+    {SPR_SARG,7,2,{NULL}, 0, 0, S_SARG_PAIN2},     // S_SARG_PAIN
+    {SPR_SARG,7,2,{A_Pain}, 0, 0, S_SARG_RUN1},    // S_SARG_PAIN2
+    {SPR_SARG,8,8,{NULL}, 0, 0, S_SARG_DIE2},      // S_SARG_DIE1
+    {SPR_SARG,9,8,{A_Scream}, 0, 0, S_SARG_DIE3},  // S_SARG_DIE2
+    {SPR_SARG,10,4,{NULL}, 0, 0, S_SARG_DIE4},     // S_SARG_DIE3
+    {SPR_SARG,11,4,{A_Fall}, 0, 0, S_SARG_DIE5},   // S_SARG_DIE4
+    {SPR_SARG,12,4,{NULL}, 0, 0, S_SARG_DIE6},     // S_SARG_DIE5
+    {SPR_SARG,13,-1,{NULL},S_NULL}, // S_SARG_DIE6
+    {SPR_SARG,13,5,{NULL}, 0, 0, S_SARG_RAISE2},   // S_SARG_RAISE1
+    {SPR_SARG,12,5,{NULL}, 0, 0, S_SARG_RAISE3},   // S_SARG_RAISE2
+    {SPR_SARG,11,5,{NULL}, 0, 0, S_SARG_RAISE4},   // S_SARG_RAISE3
+    {SPR_SARG,10,5,{NULL}, 0, 0, S_SARG_RAISE5},   // S_SARG_RAISE4
+    {SPR_SARG,9,5,{NULL}, 0, 0, S_SARG_RAISE6},    // S_SARG_RAISE5
+    {SPR_SARG,8,5,{NULL}, 0, 0, S_SARG_RUN1},      // S_SARG_RAISE6
 
 	// Boss 1
 	{SPR_EGGM, 0, 1, {NULL}, 0, 0, S_EGGMOBILE_STND},           // S_EGGMOBILE_STND
@@ -1691,6 +1722,32 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE, // flags
 		S_NULL          // raisestate
 	},
+
+    {           // MT_DRILLAKILLA
+        3002,           // doomednum
+        S_SARG_STND,            // spawnstate
+        4,            // spawnhealth
+        S_SARG_RUN1,            // seestate
+        sfx_sgtsit,             // seesound
+        8,              // reactiontime
+        sfx_sgtatk,             // attacksound
+        S_SARG_PAIN,            // painstate
+        180,            // painchance
+        sfx_dmpain,             // painsound
+        S_SARG_ATK1,            // meleestate
+        0,              // missilestate
+        S_SARG_DIE1,            // deathstate
+        S_NULL,         // xdeathstate
+        sfx_sgtdth,             // deathsound
+        10,             // speed
+        30*FRACUNIT,            // radius
+        56*FRACUNIT,            // height
+        400,            // mass
+        0,              // damage
+        sfx_dmact,              // activesound
+        MF_SOLID|MF_SHOOTABLE,             // flags
+        S_SARG_RAISE1           // raisestate
+    },
 
 	{           // MT_EGGMOBILE
 		16,                // doomednum

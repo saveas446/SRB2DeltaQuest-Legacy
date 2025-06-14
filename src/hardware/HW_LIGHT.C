@@ -76,7 +76,7 @@ light_t lspr[NUMLIGHTS] =
 	// tall lights
 	// YELLOWSHIELD_L
 	{ DYNLIGHT_SPR,   0.0f,   0.0f, 0x601f7baf,  32.0f, 0x601f7baf, 128.0f, 0.0f},
-
+	
 	// REDSHIELD_L
 	{ DYNLIGHT_SPR,   0.0f,   0.0f, 0x600000cb,  32.0f, 0x600000cb, 128.0f, 0.0f},
 
@@ -315,6 +315,10 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[WHITESHIELD_L],     // SPR_WORB
 	&lspr[NOLIGHT], // SPR_TURR
 #endif
+	&lspr[NOLIGHT],     // SPR_GRTV
+	&lspr[GREENSHIELD_L],     // SPR_GORB
+	&lspr[NOLIGHT],     // SPR_SARG
+	&lspr[NOLIGHT],     // SPR_TROO
 
 	// Free slots
 	&lspr[NOLIGHT],

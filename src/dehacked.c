@@ -813,6 +813,7 @@ static actionpointer_t actionpointers[] =
 	{{A_MonitorPop},           "A_MONITORPOP"},
 	{{A_Look},                 "A_LOOK"},
 	{{A_Chase},                "A_CHASE"},
+	{{A_SargAttack},           "A_SARGATTACK"},
 	{{A_FaceTarget},           "A_FACETARGET"},
 	{{A_Scream},               "A_SCREAM"},
 	{{A_BossDeath},            "A_BOSSDEATH"},
