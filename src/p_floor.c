@@ -1541,12 +1541,17 @@ int EV_DoFloor(line_t *line, floor_e floortype)
 					dofloor->floordestheight += 8*FRACUNIT;
 				break;
 
+			case raiseFloorCrushFast:
 			case raiseFloorCrush:
 				dofloor->crush = true;	
 			case raiseFloor:
 				dofloor->direction = 1;
 				dofloor->sector = sec;
-				dofloor->speed = FLOORSPEED;
+				if (floortype == raiseFloorCrushFast) {
+					dofloor->speed = FLOORSPEED * 4;
+				} else {
+					dofloor->speed = FLOORSPEED;
+				}
 				dofloor->floordestheight = P_FindLowestCeilingSurrounding(sec);
 				if (dofloor->floordestheight > sec->ceilingheight)
 					dofloor->floordestheight = sec->ceilingheight;

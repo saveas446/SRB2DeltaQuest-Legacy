@@ -252,7 +252,7 @@ typedef enum
 
     // raise floor to lowest surrounding CEILING
     raiseFloor,
-	
+
     // raise floor to next highest surrounding floor
     raiseFloorToNearest,
 
@@ -279,6 +279,7 @@ typedef enum
     lowerAndChange,
 
     raiseFloorCrush,
+	raiseFloorCrushFast,
 
 	donutRaise,
 
