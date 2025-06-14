@@ -3786,7 +3786,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
         // Blazing PlatDownWaitUpStay.
         EV_DoPlat(line,blazeDWUS,0);
         break;
-		
+
 /*
       case 121:
         // Blazing PlatDownWaitUpStay
@@ -4240,7 +4240,6 @@ void P_SpawnSpecials(void)
             for (s = -1; (s = P_FindSectorFromLineTag(lines+i,s)) >= 0;)
               sectors[s].heightsec = sec;
             break;
-
 			//l270 Old Water Save 17-05-2025
 			case 270:
 				sec = sides[*lines[i].sidenum].sector-sectors;
@@ -4255,6 +4254,14 @@ void P_SpawnSpecials(void)
 					P_AddOldWater(&sectors[s], &sectors[sec], lines+i, FF_EXISTS|FF_RENDERALL|FF_SWIMMABLE|FF_BOTHPLANES|FF_ALLSIDES|FF_CUTEXTRA|FF_EXTRA|FF_CUTSPRITES);
 				}
 			break;
+			//l271 New Water (Opaque) Save 14-06-2025
+			case 271:
+				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_RENDERALL|FF_SWIMMABLE|FF_BOTHPLANES|FF_ALLSIDES|FF_CUTEXTRA|FF_EXTRA|FF_CUTSPRITES);
+				break;
+			//l272 New Water (Translucent) Save 14-06-2025
+			case 273:
+				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_RENDERALL|FF_TRANSLUCENT|FF_SWIMMABLE|FF_BOTHPLANES|FF_ALLSIDES|FF_CUTEXTRA|FF_EXTRA|FF_CUTSPRITES);
+				break;
 			//l281 FOF, Solid, Opaque, Shadowcasting Save 17-05-2025
 			case 281:
 				sec = sides[*lines[i].sidenum].sector-sectors;

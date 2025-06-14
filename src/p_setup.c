@@ -1064,7 +1064,7 @@ static void P_LoadSideDefs2(int lump)
 			switch (sd->special)
 			{
 				case 44: // 3D floor (solid, translucent)
-				case 45: // Water (translucent)
+				case 273: // Water (translucent)
 				case 52: // 3D floor (intangible, translucent)
 				case 74: // Water (translucent, no sides)
 				case 77: // Platform (translucent, no sides)
@@ -1258,7 +1258,7 @@ static void P_LoadSideDefs2(int lump)
 
 				//Hurdler: added for alpha value with translucent 3D-floors/water
 				case 44: // 3D floor (solid, translucent)
-				case 45: // Water (translucent)
+				case 273: // Water (translucent)
 				case 52: // 3D floor (intangible, translucent)
 				case 74: // Water (translucent, no sides)
 				case 77: // Platform (translucent, no sides)
