@@ -895,13 +895,11 @@ state_t states[NUMSTATES] =
 	{SPR_DETN, 4, 1, {A_DetonChase}, 0, 0, S_DETON7},  // S_DETON6
 	{SPR_DETN, 5, 1, {A_DetonChase}, 0, 0, S_DETON8},  // S_DETON7
 	{SPR_DETN, 6, 1, {A_DetonChase}, 0, 0, S_DETON9},  // S_DETON8
-	{SPR_DETN, 7, 1, {A_DetonChase}, 0, 0, S_DETON10}, // S_DETON9
-	{SPR_DETN, 6, 1, {A_DetonChase}, 0, 0, S_DETON11}, // S_DETON10
-	{SPR_DETN, 5, 1, {A_DetonChase}, 0, 0, S_DETON12}, // S_DETON11
-	{SPR_DETN, 4, 1, {A_DetonChase}, 0, 0, S_DETON13}, // S_DETON12
-	{SPR_DETN, 3, 1, {A_DetonChase}, 0, 0, S_DETON14}, // S_DETON13
-	{SPR_DETN, 2, 1, {A_DetonChase}, 0, 0, S_DETON15}, // S_DETON14
-	{SPR_DETN, 1, 1, {A_DetonChase}, 0, 0, S_DETON2},  // S_DETON15
+	{SPR_DETN, 5, 1, {A_DetonChase}, 0, 0, S_DETON10}, // S_DETON9
+	{SPR_DETN, 4, 1, {A_DetonChase}, 0, 0, S_DETON11}, // S_DETON10
+	{SPR_DETN, 3, 1, {A_DetonChase}, 0, 0, S_DETON12}, // S_DETON11
+	{SPR_DETN, 2, 1, {A_DetonChase}, 0, 0, S_DETON13}, // S_DETON12
+	{SPR_DETN, 1, 1, {A_DetonChase}, 0, 0, S_DETON2},  // S_DETON13
 
 	// CEZ Chain
 	{SPR_CHAN, 0, -1, {NULL}, 0, 0, S_NULL}, // S_CEZCHAIN

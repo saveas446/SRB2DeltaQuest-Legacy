@@ -1493,7 +1493,7 @@ int EV_DoFloor(line_t *line, floor_e floortype)
 	floormove_t *dofloor;
 	int       minsize = MAXINT;
 	side_t*   side;
-	
+
 	while ((secnum = P_FindSectorFromLineTag(line, secnum)) >= 0)
 	{
 		sec = &sectors[secnum];
@@ -1553,6 +1553,12 @@ int EV_DoFloor(line_t *line, floor_e floortype)
 				dofloor->floordestheight -= (8*FRACUNIT)* (floortype == raiseFloorCrush);
 				break;
 
+          case raiseFloorToNearest:
+            dofloor->direction = 1;
+            dofloor->sector = sec;
+            dofloor->speed = FLOORSPEED;
+            dofloor->floordestheight = P_FindNextHighestFloor(sec,sec->floorheight);
+            break;
 			// Used for part of the Egg Capsule, when an FOF with type 666 is
 			// contacted by the player.
 			case raiseFloorToNearestFast:

@@ -3776,7 +3776,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
           line->special = 0;
         break;
 
-/*      case 119:
+      case 119:
         // Raise floor to nearest surr. floor
         if(EV_DoFloor(line,raiseFloorToNearest))
           line->special = 0;
@@ -3786,7 +3786,8 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
         // Blazing PlatDownWaitUpStay.
         EV_DoPlat(line,blazeDWUS,0);
         break;
-
+		
+/*
       case 121:
         // Blazing PlatDownWaitUpStay
         if(EV_DoPlat(line,blazeDWUS,0))

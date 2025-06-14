@@ -1008,8 +1008,6 @@ typedef enum
 	S_DETON11,
 	S_DETON12,
 	S_DETON13,
-	S_DETON14,
-	S_DETON15,
 
 	// CEZ Chain
 	S_CEZCHAIN,
