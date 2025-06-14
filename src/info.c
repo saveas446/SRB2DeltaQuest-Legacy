@@ -98,7 +98,7 @@ char sprnames[NUMSPRITES + 1][5] =
 	#endif
 	"TURR",
 	// Demo 2 Ultimate custom things
-	"GRTV",
+	"GRTV","GORB"
 };
 
 // Doesn't work with g++, needs actionf_p1 (don't modify this comment)
@@ -373,7 +373,7 @@ state_t states[NUMSTATES] =
 	{ SPR_GRTV, 4, 2, {NULL}, 0, 0, S_GRTV5 }, // S_GRTV4
 	{ SPR_GRTV, 5, 2, {NULL}, 0, 0, S_GRTV6 }, // S_GRTV5
 	{ SPR_GRTV, 6, 2, {NULL}, 0, 0, S_GRTV7 }, // S_GRTV6
-	{ SPR_GRTV, 6, 48, {A_RingShield}, 0, 0, S_DISS },  // S_GRTV7
+	{ SPR_GRTV, 6, 48, {A_GreenShield}, 0, 0, S_DISS },  // S_GRTV7
 	{ SPR_GRTV, 7, -1, {NULL}, 0, 0, S_NULL }, // S_GRTV8
 
 	// GFZ Flower
@@ -426,13 +426,23 @@ state_t states[NUMSTATES] =
 
 	// Yellow Shield Orb
 	{SPR_YORB, 0, 1, {NULL}, 0, 0, S_YORB2}, // S_YORB1
-	{SPR_YORB, 1, 1, {NULL}, 0, 0, S_YORB3}, // S_YORB1
-	{SPR_YORB, 2, 1, {NULL}, 0, 0, S_YORB4}, // S_YORB1
-	{SPR_YORB, 3, 1, {NULL}, 0, 0, S_YORB5}, // S_YORB1
-	{SPR_YORB, 4, 1, {NULL}, 0, 0, S_YORB6}, // S_YORB1
-	{SPR_YORB, 5, 1, {NULL}, 0, 0, S_YORB7}, // S_YORB1
-	{SPR_YORB, 6, 1, {NULL}, 0, 0, S_YORB8}, // S_YORB1
-	{SPR_YORB, 7, 1, {NULL}, 0, 0, S_YORB1}, // S_YORB1
+	{SPR_YORB, 1, 1, {NULL}, 0, 0, S_YORB3}, // S_YORB2
+	{SPR_YORB, 2, 1, {NULL}, 0, 0, S_YORB4}, // S_YORB3
+	{SPR_YORB, 3, 1, {NULL}, 0, 0, S_YORB5}, // S_YORB4
+	{SPR_YORB, 4, 1, {NULL}, 0, 0, S_YORB6}, // S_YORB5
+	{SPR_YORB, 5, 1, {NULL}, 0, 0, S_YORB7}, // S_YORB6
+	{SPR_YORB, 6, 1, {NULL}, 0, 0, S_YORB8}, // S_YORB7
+	{SPR_YORB, 7, 1, {NULL}, 0, 0, S_YORB1}, // S_YORB8
+
+	// Green Shield Orb
+	{SPR_GORB, 0, 1, {NULL}, 0, 0, S_GORB2}, // S_GORB1
+	{SPR_GORB, 1, 1, {NULL}, 0, 0, S_GORB3}, // S_GORB2
+	{SPR_GORB, 2, 1, {NULL}, 0, 0, S_GORB4}, // S_GORB3
+	{SPR_GORB, 3, 1, {NULL}, 0, 0, S_GORB5}, // S_GORB4
+	{SPR_GORB, 4, 1, {NULL}, 0, 0, S_GORB6}, // S_GORB5
+	{SPR_GORB, 5, 1, {NULL}, 0, 0, S_GORB7}, // S_GORB6
+	{SPR_GORB, 6, 1, {NULL}, 0, 0, S_GORB8}, // S_GORB7
+	{SPR_GORB, 7, 1, {NULL}, 0, 0, S_GORB1}, // S_GORB8
 
 	// Blue Shield Orb
 	{SPR_BORB, 0, 1, {NULL}, 0, 0, S_BORB2}, // S_BORB1
@@ -2418,6 +2428,32 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL,         // xdeathstate
 		sfx_None,       // deathsound
 		pw_ringshield,  // speed
+		64*FRACUNIT,    // radius
+		64*FRACUNIT,    // height
+		16,             // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_NOBLOCKMAP|MF_NOCLIP|MF_NOGRAVITY|MF_SCENERY, // flags
+		S_NULL          // raisestate
+	},
+
+	{           // MT_GREENORB
+		-1,             // doomednum
+		S_GORB1,        // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,         // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		pw_greenshield,  // speed
 		64*FRACUNIT,    // radius
 		64*FRACUNIT,    // height
 		16,             // mass

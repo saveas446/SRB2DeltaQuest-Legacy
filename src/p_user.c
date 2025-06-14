@@ -700,6 +700,9 @@ void P_SpawnShieldOrb(player_t *player)
 #endif
 		P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_YELLOWORB)->target =
 			player->mo;
+	else if (player->powers[pw_greenshield])
+			P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_GREENORB)->target =
+				player->mo;
 	else if (player->powers[pw_watershield])
 		P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_BLUEORB)->target =
 			player->mo;
@@ -2351,39 +2354,6 @@ static void P_MovePlayer(player_t *player)
 // EXTRA LIFE BONUSES	//
 //////////////////////////
 
-	// Ahh ahh! No ring shields in special stages!
-	if (player->powers[pw_ringshield] && gamemap >= sstage_start && gamemap <= sstage_end)
-		P_DamageMobj(player->mo, NULL, NULL, 1);
-
-	if (!(gamemap >= sstage_start && gamemap <= sstage_end)
-		&& (gametype == GT_COOP || gametype == GT_RACE)) // Don't do it in special stages.
-	{
-		if ((player->health > 100) && (!player->xtralife))
-		{
-			P_GivePlayerLives(player, 1);
-
-			if (P_IsLocalPlayer(player))
-			{
-				S_StopMusic();
-				S_ChangeMusic(mus_xtlife, false);
-			}
-			player->powers[pw_extralife] = extralifetics + 1;
-			player->xtralife = 1;
-		}
-
-		if ((player->health > 200) && (player->xtralife > 0 && player->xtralife < 2))
-		{
-			P_GivePlayerLives(player, 1);
-
-				if (P_IsLocalPlayer(player))
-				{
-					S_StopMusic();
-					S_ChangeMusic(mus_xtlife, false);
-				}
-				player->powers[pw_extralife] = extralifetics + 1;
-			player->xtralife = 2;
-		}
-	}
 
 	//////////////////////////
 	// SUPER SONIC STUFF	//
@@ -2996,7 +2966,7 @@ static void P_MovePlayer(player_t *player)
 						// and you don't have a shield, do it!
 						if (player->superready && !player->powers[pw_super]
 							&& !player->powers[pw_jumpshield] && !player->powers[pw_fireshield]
-							&& !player->powers[pw_watershield] && !player->powers[pw_ringshield]
+							&& !player->powers[pw_watershield] && !player->powers[pw_ringshield] && !player->powers[pw_greenshield]
 							&& !player->powers[pw_bombshield] && !player->powers[pw_invulnerability]
 							&& !(maptol & TOL_NIGHTS) // don't turn 'regular super' in nights levels
 							&& (player->charflags & SF_ALLOWSUPER))
@@ -3061,7 +3031,7 @@ static void P_MovePlayer(player_t *player)
 					// and you don't have a shield, do it!
 					if (player->superready && !player->powers[pw_super] && !player->powers[pw_tailsfly]
 						&& !player->powers[pw_jumpshield] && !player->powers[pw_fireshield]
-						&& !player->powers[pw_watershield] && !player->powers[pw_ringshield]
+						&& !player->powers[pw_watershield] && !player->powers[pw_ringshield] && !player->powers[pw_greenshield]
 						&& !player->powers[pw_bombshield] && !player->powers[pw_invulnerability]
 						&& !(maptol & TOL_NIGHTS) // don't turn 'regular super' in nights levels
 						&& (player->charflags & SF_ALLOWSUPER))
@@ -3102,7 +3072,7 @@ static void P_MovePlayer(player_t *player)
 					// and you don't have a shield, do it!
 					if (player->superready && !player->powers[pw_super]
 						&& !player->powers[pw_jumpshield] && !player->powers[pw_fireshield]
-						&& !player->powers[pw_watershield] && !player->powers[pw_ringshield]
+						&& !player->powers[pw_watershield] && !player->powers[pw_ringshield] && !player->powers[pw_greenshield]
 						&& !player->powers[pw_bombshield] && !player->powers[pw_invulnerability]
 						&& !(maptol & TOL_NIGHTS) // don't turn 'regular super' in nights levels
 						&& (player->charflags & SF_ALLOWSUPER))
@@ -3123,7 +3093,7 @@ static void P_MovePlayer(player_t *player)
 				case 4: // Double-Jump
 					if (player->superready && !player->powers[pw_super]
 						&& !player->powers[pw_jumpshield] && !player->powers[pw_fireshield]
-						&& !player->powers[pw_watershield] && !player->powers[pw_ringshield]
+						&& !player->powers[pw_watershield] && !player->powers[pw_ringshield] && !player->powers[pw_greenshield]
 						&& !player->powers[pw_bombshield] && !player->powers[pw_invulnerability]
 						&& !(maptol & TOL_NIGHTS) // don't turn 'regular super' in nights levels
 						&& (player->charflags & SF_ALLOWSUPER))
@@ -3141,7 +3111,7 @@ static void P_MovePlayer(player_t *player)
 				case 6: // Slow descent hover
 					if (player->superready && !player->powers[pw_super]
 						&& !player->powers[pw_jumpshield] && !player->powers[pw_fireshield]
-						&& !player->powers[pw_watershield] && !player->powers[pw_ringshield]
+						&& !player->powers[pw_watershield] && !player->powers[pw_ringshield] && !player->powers[pw_greenshield]
 						&& !player->powers[pw_bombshield] && !player->powers[pw_invulnerability]
 						&& !(maptol & TOL_NIGHTS) // don't turn 'regular super' in nights levels
 						&& (player->charflags & SF_ALLOWSUPER))

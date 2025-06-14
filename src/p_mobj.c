@@ -3023,6 +3023,7 @@ void P_MobjThinker(mobj_t *mobj)
 			#endif
 			case MT_YELLOWORB:
 			case MT_BLUEORB:
+			case MT_GREENORB:
 				if (!P_ShieldLook(mobj, mobj->info->speed))
 					return;
 				break;
@@ -3962,6 +3963,7 @@ mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
 		case MT_BLUEORB:
 		case MT_BLACKORB:
 		case MT_YELLOWORB:
+		case MT_GREENORB:
 		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 		case MT_WHITEORB:
 		case MT_REDORB:

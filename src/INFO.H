@@ -41,6 +41,7 @@ void A_BossDeath(mobj_t* actor);
 void A_CustomPower(mobj_t* actor); // Use this for a custom power
 void A_JumpShield(mobj_t* actor); // Obtained Jump Shield
 void A_RingShield(mobj_t* actor); // Obtained Ring Shield
+void A_GreenShield(mobj_t* actor); // Obtained Green Shield
 void A_RingBox(mobj_t* actor); // Obtained Ring Box Tails
 void A_Invincibility(mobj_t* actor); // Obtained Invincibility Box
 void A_SuperSneakers(mobj_t* actor); // Obtained Super Sneakers Box
@@ -131,6 +132,7 @@ void A_BossDeath();
 void A_CustomPower(); // Use this for a custom power
 void A_JumpShield(); // Obtained Jump Shield
 void A_RingShield(); // Obtained Ring Shield
+void A_GreenShield(); // Obtained Green Shield
 void A_RingBox(); // Obtained Ring Box Tails
 void A_Invincibility(); // Obtained Invincibility Box
 void A_SuperSneakers(); // Obtained Super Sneakers Box

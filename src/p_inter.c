@@ -1458,11 +1458,12 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 				P_SetPlayerMobjState(target, S_PLAY_PAIN);
 
 				// Check for a shield
-				if (target->player->powers[pw_fireshield] || target->player->powers[pw_jumpshield] || target->player->powers[pw_ringshield] || target->player->powers[pw_bombshield] || target->player->powers[pw_watershield])
+				if (target->player->powers[pw_fireshield] || target->player->powers[pw_jumpshield] || target->player->powers[pw_ringshield] || target->player->powers[pw_greenshield] || target->player->powers[pw_bombshield] || target->player->powers[pw_watershield])
 				{
 					target->player->powers[pw_fireshield] = false;
 					target->player->powers[pw_jumpshield] = false; // Get rid of shield
 					target->player->powers[pw_ringshield] = false;
+					target->player->powers[pw_greenshield] = false;
 					target->player->powers[pw_bombshield] = false;
 					target->player->powers[pw_watershield] = false;
 					S_StartSound(target, sfx_pldeth);
@@ -1536,6 +1537,7 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 			player->powers[pw_fireshield] = false;
 			player->powers[pw_jumpshield] = false; // Get rid of shield
 			player->powers[pw_ringshield] = false;
+			player->powers[pw_greenshield] = false;
 			player->powers[pw_bombshield] = false;
 			player->powers[pw_watershield] = false;
 			player->mo->momx = player->mo->momy = player->mo->momz = 0;
@@ -1612,10 +1614,11 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 				return false;
 		}
 
-		else if (damage < 10000 && (player->powers[pw_fireshield] || player->powers[pw_jumpshield] || player->powers[pw_ringshield] || player->powers[pw_bombshield] || player->powers[pw_watershield]))  //If One-Hit Shield
+		else if (damage < 10000 && (player->powers[pw_fireshield] || player->powers[pw_jumpshield] || player->powers[pw_ringshield] || player->powers[pw_greenshield] || player->powers[pw_bombshield] || player->powers[pw_watershield]))  //If One-Hit Shield
 		{
 			player->powers[pw_jumpshield] = false; // Get rid of shield
 			player->powers[pw_ringshield] = false;
+			player->powers[pw_greenshield] = false;
 			player->powers[pw_watershield] = false;
 			player->powers[pw_fireshield] = false;
 

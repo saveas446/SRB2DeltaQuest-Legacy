@@ -213,6 +213,7 @@ typedef enum
 
 	SPR_TURR, // Pop-Up Turret
 	SPR_GRTV,
+	SPR_GORB,
 
 	SPR_FIRSTFREESLOT,
 	SPR_LASTFREESLOT = SPR_FIRSTFREESLOT + NUMSPRITEFREESLOTS - 1,
@@ -543,6 +544,16 @@ typedef enum
 	S_YORB6,
 	S_YORB7,
 	S_YORB8,
+
+	// Green Shield Orb
+	S_GORB1,
+	S_GORB2,
+	S_GORB3,
+	S_GORB4,
+	S_GORB5,
+	S_GORB6,
+	S_GORB7,
+	S_GORB8,
 
 	// Blue Shield Orb
 	S_BORB1,
@@ -1748,6 +1759,7 @@ typedef enum
 	MT_REDORB, // shield mobjs
 	#endif
 	MT_YELLOWORB, // shield mobjs
+	MT_GREENORB, // shield mobjs
 	MT_BLUEORB, // shield mobjs
 	MT_BLACKORB, // shield mobjs
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)

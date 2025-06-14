@@ -94,6 +94,7 @@ typedef enum
 	pw_spacetime, // In space, no one can hear you spin!
 	pw_extralife, // Extra Life timer
 	pw_ringshield, // ring shield
+	pw_greenshield, // green shield
 	pw_bombshield, // bomb shield
 	pw_watershield, // water shield
 	pw_super, // Are you super?

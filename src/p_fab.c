@@ -88,6 +88,7 @@ static void P_SetTranslucencies(void)
 
 	R_SetTrans(S_BORB1, S_BORB8, tr_transmed);
 	R_SetTrans(S_YORB1, S_YORB8, tr_transmed);
+	R_SetTrans(S_GORB1, S_GORB8, tr_transmed);
 	R_SetTrans(S_KORB1, S_KORB8, tr_transmed);
 #if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	R_SetTrans(S_RORB1, S_RORB8, tr_transmed);

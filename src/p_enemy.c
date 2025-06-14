@@ -1382,7 +1382,7 @@ void A_JumpShield(mobj_t *actor)
 	player = actor->target->player;
 
 	player->powers[pw_fireshield] = player->powers[pw_bombshield] = false;
-	player->powers[pw_watershield] = player->powers[pw_ringshield] = false;
+	player->powers[pw_watershield] = player->powers[pw_ringshield] = player->powers[pw_greenshield] = false;
 
 	if (!(player->powers[pw_jumpshield]))
 	{
@@ -1414,11 +1414,43 @@ void A_RingShield(mobj_t *actor)
 	player = actor->target->player;
 
 	player->powers[pw_bombshield] = player->powers[pw_watershield] = false;
-	player->powers[pw_fireshield] = player->powers[pw_jumpshield] = false;
+	player->powers[pw_fireshield] = player->powers[pw_jumpshield] = player->powers[pw_greenshield] = false;
 
 	if (!(player->powers[pw_ringshield]))
 	{
 		player->powers[pw_ringshield] = true;
+		P_SpawnShieldOrb(player);
+	}
+
+	S_StartSound(player->mo, actor->info->seesound);
+}
+
+// Function: A_GreenShield
+//
+// Description: Awards the player a green shield.
+//
+// var1 = unused
+// var2 = unused
+//
+void A_GreenShield(mobj_t *actor)
+{
+	player_t *player;
+
+	if (!actor->target || !actor->target->player)
+	{
+		if(cv_debug)
+			CONS_Printf("ERROR: Powerup has no target!\n");
+		return;
+	}
+
+	player = actor->target->player;
+
+	player->powers[pw_bombshield] = player->powers[pw_watershield] = false;
+	player->powers[pw_fireshield] = player->powers[pw_jumpshield] = player->powers[pw_ringshield] = false;
+
+	if (!(player->powers[pw_greenshield]))
+	{
+		player->powers[pw_greenshield] = true;
 		P_SpawnShieldOrb(player);
 	}
 
@@ -1560,7 +1592,7 @@ void A_BombShield(mobj_t *actor)
 	player = actor->target->player;
 
 	player->powers[pw_watershield] = player->powers[pw_fireshield] = false;
-	player->powers[pw_ringshield] = player->powers[pw_jumpshield] = false;
+	player->powers[pw_ringshield] = player->powers[pw_jumpshield] = player->powers[pw_greenshield] = false;
 
 	if (!(player->powers[pw_bombshield]))
 	{
@@ -1592,7 +1624,7 @@ void A_WaterShield(mobj_t *actor)
 	player = actor->target->player;
 
 	player->powers[pw_bombshield] = player->powers[pw_fireshield] = false;
-	player->powers[pw_ringshield] = player->powers[pw_jumpshield] = false;
+	player->powers[pw_ringshield] = player->powers[pw_jumpshield] = player->powers[pw_greenshield] = false;
 
 	if (!(player->powers[pw_watershield]))
 	{
@@ -1639,7 +1671,7 @@ void A_FireShield(mobj_t *actor)
 	player = actor->target->player;
 
 	player->powers[pw_bombshield] = player->powers[pw_watershield] = false;
-	player->powers[pw_ringshield] = player->powers[pw_jumpshield] = false;
+	player->powers[pw_ringshield] = player->powers[pw_jumpshield] = player->powers[pw_greenshield] = false;
 
 	if (!(player->powers[pw_fireshield]))
 	{

@@ -92,6 +92,7 @@ static patch_t *count0;
 static patch_t *jumpshield;
 static patch_t *fireshield;
 static patch_t *ringshield;
+static patch_t *greenshield;
 static patch_t *watershield;
 static patch_t *bombshield;
 static patch_t *invincibility;
@@ -419,6 +420,7 @@ void ST_Init(void)
 	jumpshield = W_CachePatchName("WHTVB0", PU_STATIC);
 	fireshield = W_CachePatchName("RDTVB0", PU_STATIC);
 	ringshield = W_CachePatchName("YLTVB0", PU_STATIC);
+	greenshield = W_CachePatchName("GRTVB0", PU_STATIC);
 	watershield = W_CachePatchName("BLTVB0", PU_STATIC);
 	bombshield = W_CachePatchName("BKTVB0", PU_STATIC);
 	invincibility = W_CachePatchName("PINVB0", PU_STATIC);
@@ -967,6 +969,8 @@ static void ST_drawFirstPersonHUD(void)
 		V_DrawScaledPatch(304, STRINGY(32), V_SNAPTORIGHT|V_TRANSLUCENT, bombshield);
 	else if (player->powers[pw_ringshield])
 		V_DrawScaledPatch(304, STRINGY(32), V_SNAPTORIGHT|V_TRANSLUCENT, ringshield);
+		else if (player->powers[pw_greenshield])
+		V_DrawScaledPatch(304, STRINGY(32), V_SNAPTORIGHT|V_TRANSLUCENT, greenshield);
 
 	if ((player->powers[pw_invulnerability] > 3*TICRATE || (player->powers[pw_invulnerability]
 		&& leveltime & 1)) || ((player->powers[pw_flashing] && leveltime & 1)))
