@@ -305,25 +305,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 				G_SaveGameData();
 				return;
 			}
-		case MT_EASTEREGG: // Easter Egg!
-			if (timeattacking || demoplayback)
-				return;
-			P_SetMobjState(special, S_DISS);
-			P_SpawnMobj(special->x, special->y, special->z, MT_SPARK);
-			//S_StartSound(touchersfx_itemupem);
-			foundeggs |= special->health;
-			if (foundeggs == 4095)
-			{
-				grade |= 512;
-				G_SaveGameData();
-			}
-			return;
-#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
-		case MT_NIGHTSHELPER:
-			player->powers[pw_nightshelper] = helpertics;
-			P_SetMobjState(special, S_DISS);
-			return;
-#endif
 		case MT_HOOPCOLLIDE:
 			// This produces a kind of 'domino effect' with the hoop's pieces.
 			for (; special->hprev != NULL; special = special->hprev); // Move to the first sprite in the hoop

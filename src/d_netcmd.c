@@ -2668,7 +2668,7 @@ static void Command_Version_f(void)
 	else if (wnd_system == WND_DOS)
 		CONS_Printf("Windowing system: DOS\n");
 	else if (wnd_system == WND_WIN32)
-		CONS_Printf("Windowing system: Win32/Wine \n");
+		CONS_Printf("Windowing system: Win32/Wine\n");
 	else if (wnd_system == WND_SDL)
 		CONS_Printf("Windowing system: SDL1\n");
 
@@ -2683,7 +2683,8 @@ static void Command_Version_f(void)
 	CONS_Printf(FALL_SPRITES_STR);
 	CONS_Printf(INTERMISSION_BG_STR);
 	CONS_Printf(TH_TOLERANCE_STR);
-	CONS_Printf("Mind control systems: Off\n");
+	//CONS_Printf("Mind control systems: Off\n");
+	//Considering how Sam reacted to this joke, I should probably remove this...
 }
 
 

@@ -62,7 +62,7 @@ char sprnames[NUMSPRITES + 1][5] =
 	"STPT","RNGM","RNGR","RNGS",
 	"RNGA","RNGE","TAEH","TAER","THER","TAHR","THOM","TAUT","TEXP",
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
-	"BUS1","BUS2","HDB1","FCAN",
+	"HDB2","HDB3","FCAN","HDB1",
 	#endif
 	"FLAM","PUMA","HAMM","KOOP",
 	"SHLL","MAXE","FFWR",
@@ -1240,7 +1240,7 @@ state_t states[NUMSTATES] =
 	{SPR_BUS1, 0, -1, {NULL}, 0, 0, S_NULL},       // S_BERRYBUSH
 	{SPR_BUS2, 0, -1, {NULL}, 0, 0, S_NULL},       // S_BUSH
 	{SPR_FWR2, 0, 7, {NULL}, 0, 0, S_GFZFLOWERB2}, // S_GFZFLOWERB1
-	{SPR_FWR2, 1, 7, {NULL}, 0, 0, S_GFZFLOWERB1}, // S_GFZFLOWERB1
+	{SPR_FWR2, 3, 7, {NULL}, 0, 0, S_GFZFLOWERB1}, // S_GFZFLOWERB1
 	{SPR_FWR3, 0, -1, {NULL}, 0, 0, S_NULL},       // S_GFZFLOWERC1
 	#endif
 

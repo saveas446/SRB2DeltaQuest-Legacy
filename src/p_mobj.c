@@ -920,7 +920,7 @@ static void P_ZMovement(mobj_t *mo)
 		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 		mo->type == MT_EGGMOBILE2) &&
 		#endif
-		mo->target->health > 0))
+		mo->target->health > 0)
 	{
 		// float down towards target if too close
 		if (!(mo->flags2 & MF2_SKULLFLY) && !(mo->flags2 & MF2_INFLOAT))
