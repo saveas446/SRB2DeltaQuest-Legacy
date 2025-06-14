@@ -318,6 +318,11 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[GREENSHIELD_L],     // SPR_GORB
 	&lspr[NOLIGHT],     // SPR_SARG
 	&lspr[NOLIGHT],     // SPR_TROO
+	&lspr[NOLIGHT],     // SPR_CAND
+	&lspr[NOLIGHT],     // SPR_TRE2
+	&lspr[NOLIGHT],     // SPR_SMIT
+	&lspr[NOLIGHT],     // SPR_HDB4
+
 
 	// Free slots
 	&lspr[NOLIGHT],

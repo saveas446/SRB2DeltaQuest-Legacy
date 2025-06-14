@@ -97,9 +97,10 @@ char sprnames[NUMSPRITES + 1][5] =
 	#endif
 	"TURR",
 	// Demo 2 Ultimate custom things
-	"GRTV","GORB","POL3",
-
-	"SARG","TROO"
+	"GRTV","GORB", // Green shield
+	"POL3", // DSZ Coral
+	"SARG","TROO", // Minus and Drillakilla
+	"CAND","TRE2","SMIT","HDB4"
 };
 
 // Doesn't work with g++, needs actionf_p1 (don't modify this comment)
@@ -1291,6 +1292,10 @@ state_t states[NUMSTATES] =
 	#endif
 
 	{SPR_POL3, 0, -1, {NULL}, 0, 0, S_NULL},       // S_DSZCORAL
+	{SPR_CAND, 0, -1, {NULL}, 0, 0, S_NULL},       // S_RMZGRASS
+	{SPR_TRE2, 0, -1, {NULL}, 0, 0, S_NULL},       // S_RMZTREE1
+	{SPR_SMIT, 0, -1, {NULL}, 0, 0, S_NULL},       // S_RMZTREE2
+	{SPR_HDB4, 0, -1, {NULL}, 0, 0, S_NULL},       // S_RMZTREE3
 
 
 	// Flame (has corona)
@@ -4977,6 +4982,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOCLIP|MF_SCENERY, // flags
 		S_NULL          // raisestate
 	},
+	#endif
 	{           // MT_DSZCORAL
 		29,             // doomednum
 		S_DSZCORAL,     // spawnstate
@@ -5002,7 +5008,106 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOCLIP|MF_SCENERY, // flags
 		S_NULL          // raisestate
 	},
-	#endif
+	{           // MT_RMZGRASS
+		34,             // doomednum
+		S_RMZGRASS,     // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,         // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		0,              // speed
+		8*FRACUNIT,     // radius
+		32*FRACUNIT,    // height
+		100,            // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_NOCLIP|MF_SCENERY, // flags
+		S_NULL          // raisestate
+	},
+	{           // MT_RMZTREE1
+		54,             // doomednum
+		S_RMZTREE1,     // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,         // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		0,              // speed
+		8*FRACUNIT,     // radius
+		32*FRACUNIT,    // height
+		100,            // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_NOCLIP|MF_SCENERY, // flags
+		S_NULL          // raisestate
+	},
+	{           // MT_RMZTREE2
+		47,             // doomednum
+		S_RMZTREE2,     // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,         // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		0,              // speed
+		8*FRACUNIT,     // radius
+		32*FRACUNIT,    // height
+		100,            // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_NOCLIP|MF_SCENERY, // flags
+		S_NULL          // raisestate
+	},
+	{           // MT_RMZTREE3
+		76,             // doomednum
+		S_RMZTREE3,     // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,         // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		0,              // speed
+		8*FRACUNIT,     // radius
+		32*FRACUNIT,    // height
+		100,            // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_NOCLIP|MF_SCENERY, // flags
+		S_NULL          // raisestate
+	},
 	{           // MT_FLAME
 		24,             // doomednum
 		S_FLAME1,       // spawnstate

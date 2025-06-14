@@ -3580,14 +3580,14 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
         break;
 	
 	case 55:
-        // Raise Floor Crush Fast
+        // Raise Floor to Ceiling Crush Fast
         if(EV_DoFloor(line,raiseFloorCrushFast))
           line->special = 0;
         break;
 
 
       case 56:
-        // Raise Floor Crush
+        // Raise Floor to 8 below Ceiling Crush
         if(EV_DoFloor(line,raiseFloorCrush))
           line->special = 0;
         break;
