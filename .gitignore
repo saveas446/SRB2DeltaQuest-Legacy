@@ -21,6 +21,7 @@ SRB2*.png
 log.txt
 gamedata.dat
 ogllog.txt
+srb2log.txt
 
 # Visual Studio + source code stuff
 *.lib
