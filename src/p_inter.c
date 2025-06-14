@@ -1887,19 +1887,6 @@ void P_PlayerRingBurst(player_t* player, int num_rings)
 			player->powers[pw_automaticring] = 0;
 			mo->fuse = 12 * TICRATE;
 		}
-		else if (player->powers[pw_explosionring])
-		{
-			mo = P_SpawnMobj(player->mo->x,
-				player->mo->y,
-				player->mo->z,
-				MT_EXPLOSIONRING);
-			mo->health = player->powers[pw_explosionring];
-			mo->flags2 |= MF2_DONTRESPAWN;
-			mo->flags &= ~MF_NOGRAVITY;
-			mo->flags2 &= ~MF2_NOCLIPHEIGHT;
-			player->powers[pw_explosionring] = 0;
-			mo->fuse = 12 * TICRATE;
-		}
 		else
 		{
 			mo = P_SpawnMobj(player->mo->x,

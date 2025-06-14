@@ -4671,33 +4671,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SLIDEME|MF_SPECIAL|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 	},
-
-	{           // MT_EXPLOSIONRING
-		54,             // doomednum
-		S_EXPLOSIONRING1, // spawnstate
-		45*TICRATE,     // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_None,       // deathsound
-		60*FRACUNIT,    // speed
-		24*FRACUNIT,    // radius
-		24*FRACUNIT,    // height
-		100,            // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_SLIDEME|MF_SPECIAL|MF_NOGRAVITY, // flags
-		S_NULL          // raisestate
-	},
-
 	{           // MT_THROWNAUTOMATICEXPLOSIONHOMING
 		-1,             // doomednum
 		S_THROWNAUTOMATICEXPLOSIONHOMING1, // spawnstate

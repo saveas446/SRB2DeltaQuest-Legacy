@@ -1992,13 +1992,23 @@ void G_AddPlayer(int playernum)
 	p->playerstate = PST_REBORN;
 }
 
-static boolean secretexit;
+int secretexit;
 
 void G_ExitLevel(void)
 {
 	if (gamestate == GS_LEVEL)
 	{
-		secretexit = false;
+		secretexit = 0;
+		gameaction = ga_completed;
+	}
+}
+
+void G_SecretExitLevel(int exit)
+{
+	CONS_Printf("secret exit");
+	if (gamestate == GS_LEVEL)
+	{
+		secretexit = exit;
 		gameaction = ga_completed;
 	}
 }
@@ -2055,6 +2065,8 @@ static int RandMap(short tolflags)
 	return okmaps[mapnum]+1;
 }
 
+#define NEXTMAP(x) ((x) - 1)
+
 //
 // G_DoCompleted
 //
@@ -2080,6 +2092,18 @@ void G_DoCompleted(void)
 	
 
 	nextmap = gamemap; // Go to next map. Save 24-05-2025
+
+	if (secretexit != 0) {
+		CONS_Printf("secret exit detected\n");
+		// DSZ2 speed highway exit
+		if (nextmap == NEXTMAP(9)) {
+			nextmap = NEXTMAP(31);
+		}
+
+		if (nextmap == NEXTMAP(15)) {
+			nextmap = NEXTMAP(32);
+		}
+	}
 
 	//If Sam wants me to, I can restore this part.
 

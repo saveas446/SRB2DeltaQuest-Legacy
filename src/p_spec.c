@@ -3800,11 +3800,19 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
         if(EV_DoPlat(line,blazeDWUS,0))
           line->special = 0;
         break;*/
+		case 122:
+        // Secret EXIT
+		G_SecretExitLevel(1);
+        break;
+
+		case 123:
+        // Secret EXIT
+		G_SecretExitLevel(2);
+        break;
 
       case 124:
         // Secret EXIT
-		//! TODO: ADD SECRET EXIT FUNCTIONALITY *LATER* Save 19-05-2025
-		G_ExitLevel ();
+		G_SecretExitLevel(3);
         break;
 
       case 125:
@@ -3820,6 +3828,11 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
         // TELEPORT MonsterONLY.
         if (!thing->player)
             EV_Teleport( line, side, thing );
+        break;
+
+		case 127:
+        // Secret EXIT
+		G_SecretExitLevel(4);
         break;
 
 /*    case 128:

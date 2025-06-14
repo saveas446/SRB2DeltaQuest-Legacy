@@ -901,7 +901,6 @@ static void P_ZMovement(mobj_t *mo)
 		case MT_AUTOMATICRING:
 		case MT_INFINITYRING:
 		case MT_RAILRING:
-		case MT_EXPLOSIONRING:
 			if (!(mo->momx || mo->momy || mo->momz))
 				return;
 			break;
@@ -1017,8 +1016,8 @@ static void P_ZMovement(mobj_t *mo)
 				|| mo->type == MT_HOMINGRING
 				|| mo->type == MT_AUTOMATICRING
 				|| mo->type == MT_INFINITYRING
-				|| mo->type == MT_RAILRING
-				|| mo->type == MT_EXPLOSIONRING)
+				|| mo->type == MT_RAILRING)
+			
 			{
 				if (maptol & TOL_NIGHTS)
 					mo->momz = -FixedDiv(mo->momz,10*FRACUNIT);
@@ -2687,7 +2686,7 @@ void P_SpawnHoopsAndRings(mapthing_t *mthing)
 					mobj->flags |= MF_AMBUSH;
 			}
 		}
-		else if (mthing->type == 76) // Diagonal rings (5)
+		else if (mthing->type == 77) // Diagonal rings (5)
 		{
 			angle_t angle = ANG45 * (mthing->angle/45);
 			angle >>= ANGLETOFINESHIFT;
@@ -4047,7 +4046,6 @@ mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
 		case MT_RAILRING:
 		case MT_INFINITYRING:
 		case MT_AUTOMATICRING:
-		case MT_EXPLOSIONRING:
 		case MT_BLUEORB:
 		case MT_BLACKORB:
 		case MT_YELLOWORB:
@@ -4210,7 +4208,6 @@ void P_RemoveMobj(mobj_t *mobj)
 	  || mobj->type == MT_RAILRING
 	  || mobj->type == MT_INFINITYRING
 	  || mobj->type == MT_AUTOMATICRING
-	  || mobj->type == MT_EXPLOSIONRING
 	) && !(mobj->flags2 & MF2_DONTRESPAWN)
 	)
 	{
@@ -4763,9 +4760,9 @@ void P_SpawnMapThing(mapthing_t *mthing)
 	}
 
 	else if (mthing->type == 57 || mthing->type == 84
-		|| mthing->type == 44 || mthing->type == 76
-		|| mthing->type == 77 || mthing->type == 47
-		|| mthing->type == 2014 || mthing->type == 47
+		|| mthing->type == 44
+		|| mthing->type == 77
+		|| mthing->type == 2014
 		|| mthing->type == 2007 || mthing->type == 2048
 		|| mthing->type == 2010 || mthing->type == 2046
 		|| mthing->type == 2047 || mthing->type == 37
@@ -4831,7 +4828,6 @@ void P_SpawnMapThing(mapthing_t *mthing)
 			case MT_RAILRING:
 			case MT_INFINITYRING:
 			case MT_AUTOMATICRING:
-			case MT_EXPLOSIONRING:
 				return;
 			default:
 				break;
@@ -4936,8 +4932,7 @@ void P_SpawnMapThing(mapthing_t *mthing)
 		}
 		else if (i == MT_SPECIALSPIKEBALL
 			|| i == MT_HOMINGRING || i == MT_RAILRING
-			|| i == MT_INFINITYRING || i == MT_AUTOMATICRING
-			|| i == MT_EXPLOSIONRING)
+			|| i == MT_INFINITYRING || i == MT_AUTOMATICRING)
 		{
 			z = ss->sector->floorheight;
 

@@ -801,9 +801,7 @@ static void P_LoadThings(int lump)
 			case 10005:
 			case 84:
 			case 44:
-			case 76:
 			case 77:
-			case 47:
 			case 2007:
 			case 2046:
 			case 2047:

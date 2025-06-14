@@ -53,6 +53,9 @@ extern int prevmap, nextmap;
 extern int gameovertics;
 extern tic_t timeinmap; // Ticker for time spent in level (used for levelcard display)
 
+
+extern int secretexit;
+
 // used in game menu
 extern consvar_t cv_crosshair, cv_crosshair2;
 extern consvar_t cv_invertmouse, cv_alwaysfreelook, cv_mousemove;
@@ -112,6 +115,7 @@ void G_StopDemo(void);
 boolean G_CheckDemoStatus(void);
 
 void G_ExitLevel(void);
+void G_SecretLevel(void);
 void G_NextLevel(void);
 void G_AfterIntermission(void);
 
