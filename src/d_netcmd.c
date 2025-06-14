@@ -1152,7 +1152,8 @@ static void Got_NameAndColor(char **cp, int playernum)
 
 	extrainfo = READBYTE(*cp);
 
-	if (playernum == consoleplayer && ((extrainfo&31) % MAXSKINCOLORS) != cv_playercolor.value
+	// stfu
+	/*if (playernum == consoleplayer && ((extrainfo&31) % MAXSKINCOLORS) != cv_playercolor.value
 		&& !snacpending && !chmappending)
 	{
 		I_Error("consoleplayer color received as %d, cv_playercolor.value is %d",
@@ -1164,7 +1165,7 @@ static void Got_NameAndColor(char **cp, int playernum)
 	{
 		I_Error("secondarydisplayplayer color received as %d, cv_playercolor2.value is %d",
 			(extrainfo&31) % MAXSKINCOLORS, cv_playercolor2.value);
-	}
+	}*/
 
 	str = (char *)*cp; // name
 	SKIPSTRING(*cp);

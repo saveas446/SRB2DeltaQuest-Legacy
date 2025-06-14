@@ -71,12 +71,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="SDL.lib SDL_mixer.lib opengl32.lib glu32.lib wsock32.lib"
-				OutputFile="..\..\build\srb2sdldebug.exe"
+				OutputFile="..\..\dev\srb2sdldebug.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="c:\srb2demo2\srb2sdldebug.pdb"
+				ProgramDatabaseFile="D:\Games\SRB2\demo_2\dev\srb2sdldebug.pdb"
 				SubSystem="1"
 				TargetMachine="1"
 			/>

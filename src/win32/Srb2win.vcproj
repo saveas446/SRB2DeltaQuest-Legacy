@@ -76,11 +76,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="dxguid.lib dinput.lib dsound.lib ddraw.lib winmm.lib wsock32.lib fmodvc.lib"
-				OutputFile="D:\Games\SRB2\demo_2\build\srb2debug.exe"
+				OutputFile="D:\Games\SRB2\demo_2\dev\srb2debug.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="D:\Games\SRB2\demo_2\build\srb2debug.pdb"
+				ProgramDatabaseFile="D:\Games\SRB2\demo_2\dev\srb2debug.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 				CLRThreadAttribute="0"

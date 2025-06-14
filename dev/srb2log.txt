@@ -1,0 +1,133 @@
+Compiled for SDL version: 1.2.15
+Linked with SDL version: 1.2.15
+Setting up SRB2...
+Looking for WADs in: SRB2WADDIR,.
+ Jun 14 2025                   Sonic Robo Blast 2                      19:55:48 
+Sonic Robo Blast 2
+Z_Init: Init zone memory allocation daemon. 
+system memory 2047MB free 2047MB
+48 megabytes requested for Z_Init.
+W_Init: Init WADfiles.
+I_StartupTimer...
+Added file D:\Games\SRB2\demo_2\dev\..\dev\srb2.srb (1617 lumps)
+Added file D:\Games\SRB2\demo_2\dev\auto.wpn (37 lumps)
+Added file D:\Games\SRB2\demo_2\dev\bomb.wpn (37 lumps)
+Added file D:\Games\SRB2\demo_2\dev\home.wpn (37 lumps)
+Added file D:\Games\SRB2\demo_2\dev\rail.wpn (37 lumps)
+Added file D:\Games\SRB2\demo_2\dev\infn.wpn (37 lumps)
+Added file D:\Games\SRB2\demo_2\dev\supp.wad (1454 lumps)
+Added file ..\dev\supp.wad (1454 lumps)
+Added file ..\dev\maps\GREENFLOWER_1.wad (11 lumps)
+===========================================================================
+                   We hope you enjoy this game as
+                     much as we did making it!
+                            ...wait. =P
+===========================================================================
+I_StartupGraphics...
+Staring up with video driver : windib
+Found 19 FullScreen Video Modes:
+1920x1080 and 1680x1050 and 1600x1024 and 1600x900 and 1440x1080 and 1366x768 and 1360x768 and 1280x1024 and 1280x960 and 1280x800 and 1280x768 and 1280x720 and 1176x664 and 1152x864 and 1024x768 and 800x600 and 720x576 and 720x480 and 640x480 and None
+Video Interface Capabilities:
+ Window manager
+ Accelerated blits HW-2-HW with Alpha
+ There no video memory for SDL
+Current Video Mode:
+ 320x200 at 8 bit color
+ Stored in system memory
+ Uses synchronous blits if possible
+ Has exclusive palette access
+ No hardware flipping
+ Resizable window
+HU_Init: Setting up heads up display.
+
+executing config.cfg
+Unknown command '_chatmacro9'
+Unknown command '_chatmacro8'
+Unknown command '_chatmacro7'
+Unknown command '_chatmacro6'
+Unknown command '_chatmacro5'
+Unknown command '_chatmacro4'
+Unknown command '_chatmacro3'
+Unknown command '_chatmacro2'
+Unknown command '_chatmacro1'
+Unknown command '_chatmacro0'
+Unknown command 'screenlink'
+Unknown command 'overlay'
+Unknown command 'bloodtime'
+Unknown command 'musicvolume'
+Unknown command 'autorun'
+"light_red" is not a possible value for "color2"
+Unknown command 'originalweaponswitch'
+Unknown command 'weaponpref'
+"Gray" is not a possible value for "color"
+Control 'speed' unknown
+Control 'weapon1' unknown
+Control 'weapon2' unknown
+Control 'weapon3' unknown
+Control 'weapon4' unknown
+Control 'weapon5' unknown
+Control 'weapon6' unknown
+Control 'weapon7' unknown
+Control 'weapon8' unknown
+Control 'nextweapon' unknown
+Control 'prevweapon' unknown
+Control 'speed' unknown
+Control 'weapon1' unknown
+Control 'weapon2' unknown
+Control 'weapon3' unknown
+Control 'weapon4' unknown
+Control 'weapon5' unknown
+Control 'weapon6' unknown
+Control 'weapon7' unknown
+Control 'weapon8' unknown
+Control 'nextweapon' unknown
+Control 'prevweapon' unknown
+Default resolution: 320 x 200 (8 bits)
+M_Init: Init miscellaneous info.
+R_Init: Init SRB2 refresh daemon - 
+InitTextures...
+InitFlats...
+InitSprites...
+0 sprites added from file D:\Games\SRB2\demo_2\dev\..\dev\srb2.srb
+1 sprites added from file D:\Games\SRB2\demo_2\dev\auto.wpn
+2 sprites added from file D:\Games\SRB2\demo_2\dev\bomb.wpn
+3 sprites added from file D:\Games\SRB2\demo_2\dev\home.wpn
+4 sprites added from file D:\Games\SRB2\demo_2\dev\rail.wpn
+5 sprites added from file D:\Games\SRB2\demo_2\dev\infn.wpn
+77 sprites added from file D:\Games\SRB2\demo_2\dev\supp.wad
+77 sprites added from file ..\dev\supp.wad
+R_AddSkins: Unknown keyword 'name' in S_SKIN lump# 828 (WAD D:\Games\SRB2\demo_2\dev\..\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'ability' in S_SKIN lump# 828 (WAD D:\Games\SRB2\demo_2\dev\..\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'speed' in S_SKIN lump# 828 (WAD D:\Games\SRB2\demo_2\dev\..\dev\srb2.srb)
+added skin 'tails'
+R_AddSkins: Unknown keyword 'name' in S_SKIN lump# 974 (WAD D:\Games\SRB2\demo_2\dev\..\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'ability' in S_SKIN lump# 974 (WAD D:\Games\SRB2\demo_2\dev\..\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'speed' in S_SKIN lump# 974 (WAD D:\Games\SRB2\demo_2\dev\..\dev\srb2.srb)
+Eeeeek! Bad rotation value! Making it 8.
+Eeeeek! Bad rotation value! Making it 8.
+Eeeeek! Bad rotation value! Making it 8.
+Eeeeek! Bad rotation value! Making it 8.
+added skin 'knuckles'
+
+InitColormaps...
+S_Init: Setting up sound.
+I_StartupSound:
+ Staring up with audio driver : dsound
+ configured audio device with 1024 samples/slice at 22khz(46ms buffer)
+I_InitSound: sound module ready
+Compiled for SDL_mixer version: 1.2.12
+Linked with SDL_mixer version: 1.2.12
+Temp Shutdown of SDL Audio System Done
+I_InitMusic: Staring up with audio driver : dsound with SDL_Mixer
+ Reconfigured SDL Audio System with 2048 samples/slice at 44khz(46ms buffer)
+I_InitMusic: music initialized
+Loading sounds...  pre-cached all sound data
+ST_Init: Init status bar.
+D_CheckNetGame: Checking network game status.
+Entering main game loop...
+I_StartupKeyboard...
+executing .\autoexec.cfg
+>quit
+I_ShutdownMusic: shut down
+I_ShutdownSound: shut down
+I_ShutdownGraphics: shut down

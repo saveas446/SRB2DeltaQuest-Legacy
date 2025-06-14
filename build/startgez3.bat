@@ -1,1 +1,0 @@
-srb2debug -win -nomusic -nosound -iwad ../dev/srb2.srb -file ../dev/supp.wad ../dev/maps/GRAND_EGGSHIP_3.wad -warp 24

@@ -888,6 +888,7 @@ static void IdentifyVersion(void)
 	D_AddFile(va(pandf,srb2waddir,"home.wpn")); //home.wpn
 	D_AddFile(va(pandf,srb2waddir,"rail.wpn")); //rail.wpn
 	D_AddFile(va(pandf,srb2waddir,"infn.wpn")); //infn.wpn
+	D_AddFile(va(pandf,srb2waddir,"supp.wad")); //supp.wad
 
 	// Add... nights?
 	
