@@ -9,28 +9,15 @@ system memory 2047MB free 2047MB
 48 megabytes requested for Z_Init.
 W_Init: Init WADfiles.
 I_StartupTimer...
-Added file D:\Games\SRB2\demo_2\dev\srb2.srb (1628 lumps)
+Added file D:\Games\SRB2\demo_2\dev\srb2.srb (1666 lumps)
+Loading main config from D:\Games\SRB2\demo_2\dev\srb2.srb
 Added file D:\Games\SRB2\demo_2\dev\auto.wpn (37 lumps)
 Added file D:\Games\SRB2\demo_2\dev\bomb.wpn (37 lumps)
 Added file D:\Games\SRB2\demo_2\dev\home.wpn (37 lumps)
 Added file D:\Games\SRB2\demo_2\dev\rail.wpn (37 lumps)
 Added file D:\Games\SRB2\demo_2\dev\infn.wpn (37 lumps)
-Added file D:\Games\SRB2\demo_2\dev\supp.wad (1482 lumps)
-Added file maps\FINAL_FIGHT.wad (11 lumps)
-Added file maps\ROBOTNIROCK_3.wad (11 lumps)
-Added file maps\CRYSTAL_CAVE.wad (11 lumps)
-Added file maps\EGGFACTORY.wad (11 lumps)
-Added file maps\FREAK_SHOW_1.wad (12 lumps)
-Added file maps\HIDDEN_PALACE.wad (11 lumps)
-Added file maps\SPDHWY.wad (11 lumps)
-Added file maps\SWEET_TOOTH.wad (11 lumps)
-Added file maps\WOOD.wad (11 lumps)
-Added file maps\GREENFLOWER_1.WAD (11 lumps)
-Added file maps\GREENFLOWER_2.wad (11 lumps)
-Added file maps\GREENFLOWER_3.wad (11 lumps)
-Added file maps\DARK_CITY_1.wad (11 lumps)
-Added file maps\GRAND_EGGSHIP_2.wad (11 lumps)
-Added file maps\extras\THINGTST.wad (11 lumps)
+Added file D:\Games\SRB2\demo_2\dev\supp.wad (1499 lumps)
+Added file maps\dm\GREENFLOWER_DM.wad (11 lumps)
 ===========================================================================
                    We hope you enjoy this game as
                      much as we did making it!
@@ -66,14 +53,14 @@ InitSprites...
 3 sprites added from file D:\Games\SRB2\demo_2\dev\home.wpn
 4 sprites added from file D:\Games\SRB2\demo_2\dev\rail.wpn
 5 sprites added from file D:\Games\SRB2\demo_2\dev\infn.wpn
-81 sprites added from file D:\Games\SRB2\demo_2\dev\supp.wad
-R_AddSkins: Unknown keyword 'name' in S_SKIN lump# 839 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
-R_AddSkins: Unknown keyword 'ability' in S_SKIN lump# 839 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
-R_AddSkins: Unknown keyword 'speed' in S_SKIN lump# 839 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+82 sprites added from file D:\Games\SRB2\demo_2\dev\supp.wad
+R_AddSkins: Unknown keyword 'name' in S_SKIN lump# 877 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'ability' in S_SKIN lump# 877 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'speed' in S_SKIN lump# 877 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
 added skin 'tails'
-R_AddSkins: Unknown keyword 'name' in S_SKIN lump# 985 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
-R_AddSkins: Unknown keyword 'ability' in S_SKIN lump# 985 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
-R_AddSkins: Unknown keyword 'speed' in S_SKIN lump# 985 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'name' in S_SKIN lump# 1023 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'ability' in S_SKIN lump# 1023 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'speed' in S_SKIN lump# 1023 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
 Eeeeek! Bad rotation value! Making it 8.
 Eeeeek! Bad rotation value! Making it 8.
 Eeeeek! Bad rotation value! Making it 8.
@@ -85,17 +72,8 @@ S_Init: Setting up sound.
 I_StartupSound:
 ST_Init: Init status bar.
 D_CheckNetGame: Checking network game status.
-Starting Server....
-Press ESC to abort
-Contacting the server...
-Checking files...
-Send join request...
-Join accepted, wait next map change...
 Entering main game loop...
 I_StartupKeyboard...
 executing .\autoexec.cfg
-Player 1 is in the game (node 0)
-Speeding off to level...
-Player 1 renamed to save_as
 >quit
 I_ShutdownGraphics: shut down

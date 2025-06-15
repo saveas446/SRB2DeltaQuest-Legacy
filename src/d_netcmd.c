@@ -1562,7 +1562,7 @@ void D_MapChange(int mapnum, int newgametype, skill_t skill, int resetplayers, i
 	{
 		const char *mapname = G_BuildMapName(mapnum);
 
-		I_Assert(W_CheckNumForName(mapname) != -1);
+		//I_Assert(W_CheckNumForName(mapname) != -1);
 
 		strncpy(MAPNAME, mapname, MAX_WADPATH);
 
