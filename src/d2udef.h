@@ -28,6 +28,9 @@
     #define IS_FDBG 2 // INTERSCR or INTERSCW, like in vanilla Final Demo
     // "This could be done with an enum!!!!" Well yeah but that wasn't fucking working
 
+    //comment this out to remove time attack and statics menus
+    //#define FD_SPMENUOPTIONS
+
     #define INTERMISSION_BG IS_CHARBG
 
 
@@ -56,6 +59,8 @@
     #define TINYVER 4
 
     #define COMPAT_TITLESKY
+
+    #define LTFNT
 
     // Sanity checks
     #if BUILD_TYPE > DEV_RELEASE || BUILD_TYPE < DEMO

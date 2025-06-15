@@ -103,7 +103,9 @@ void V_DrawFadeConsBack(int x1, int y1, int x2, int y2, int color);
 // draw a single character
 void V_DrawCharacter(int x, int y, int c);
 
+#ifdef LTFNT
 void V_DrawLevelTitle(int x, int y, int option, const char *string);
+#endif
 
 // draw a string using the hu_font
 void V_DrawString(int option2, int x, int y, int option, const char *string);

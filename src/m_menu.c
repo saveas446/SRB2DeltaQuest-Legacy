@@ -528,8 +528,6 @@ static void M_SaveGame(int choice);
 static void M_Statistics(int choice);
 static void M_TimeAttack(int choice);
 
-//comment this out to remove time attack and statics menus
-//#define FD_SPMENUOPTIONS
 
 typedef enum
 {
@@ -804,43 +802,12 @@ CV_PossibleValue_t skill_cons_t[] = {{1,"Easy"} // Tails 01-18-2001
 
 //WHAT THE FUCK SSN
 static CV_PossibleValue_t map_cons_t[LEVELARRAYSIZE] = {{1,"MAP01"},
-                                                 {2,"MAP02"},
-                                                 {3,"MAP03"},
-                                                 {4,"MAP04"},
-                                                 {5,"MAP05"},
-                                                 {6,"MAP06"},
-                                                 {7,"MAP07"},
-                                                 {8,"MAP08"},
-                                                 {9,"MAP09"},
-                                                 {10,"MAP10"},
-                                                 {11,"MAP11"},
-                                                 {12,"MAP12"},
-                                                 {13,"MAP13"},
-                                                 {14,"MAP14"},
-                                                 {15,"MAP15"},
-                                                 {16,"MAP16"},
-                                                 {17,"MAP17"},
-                                                 {18,"MAP18"},
-                                                 {19,"MAP19"},
-                                                 {20,"MAP20"},
-                                                 {21,"MAP21"},
-                                                 {22,"MAP22"},
-                                                 {23,"MAP23"},
-                                                 {24,"MAP24"},
-                                                 {25,"MAP25"},
-                                                 {26,"MAP26"},
-                                                 {27,"MAP27"},
-                                                 {28,"MAP28"},
-                                                 {29,"MAP29"},
-                                                 {30,"MAP30"},
-                                                 {31,"MAP31"},
-                                                 {32,"MAP32"},
-                                                 {33,"MAP33"},
-                                                 {34,"MAP34"},
-                                                 {35,"MAP35"},
-                                                 {36,"MAP36"},
-                                                 {37,"MAP37"},
-                                                 {32767, NULL}
+{2,"MAP02"},
+{3,"MAP03"},
+{4,"MAP04"},
+{5,"MAP05"},
+{6,"MAP06"},		
+{32767, NULL}
 };
 
 static void Newgametype_OnChange(void);
@@ -848,7 +815,7 @@ static void Nextmap_OnChange(void);
 
 // GT_* defined in doomstat.h
 static consvar_t cv_skill = {"skill", "Normal", CV_HIDEN, skill_cons_t, NULL, 0, NULL, NULL, 0, 0, NULL};
-consvar_t cv_nextmap = {"nextmap", "MAP01", /*CV_HIDEN|CV_CALL*/NULL, map_cons_t, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_nextmap = {"nextmap", "MAP01", CV_CALL|CV_HIDEN, map_cons_t, Nextmap_OnChange, 0, NULL, NULL, 0, 0, NULL};
 
 static CV_PossibleValue_t skins_cons_t[MAXSKINS+1] = {{1, DEFAULTSKIN}};
 consvar_t cv_chooseskin = {"chooseskin", DEFAULTSKIN, CV_HIDEN|CV_CALL, skins_cons_t, Nextmap_OnChange, 0, NULL, NULL, 0, 0, NULL};
@@ -892,21 +859,7 @@ static void M_StartServer(int choice)
 
 	multiplayer = true;
 
-	// Special Cases
-	if (cv_newgametype.value == GTF_TEAMMATCH)
-	{
-		CV_SetValue(&cv_newgametype, GT_MATCH);
-		CV_SetValue(&cv_teamplay, 1);
-	}
-	else if (cv_newgametype.value == GTF_TIMEONLYRACE)
-	{
-		CV_SetValue(&cv_newgametype, GT_RACE);
-		CV_SetValue(&cv_racetype, 1);
-	}
-	else if (cv_newgametype.value == GT_MATCH)
-		CV_SetValue(&cv_teamplay, 0);
-	else if (cv_newgametype.value == GT_RACE)
-		CV_SetValue(&cv_racetype, 0);
+	CV_SetValue(&cv_teamplay, 0);
 
 	if (!StartSplitScreenGame)
 	{
@@ -957,7 +910,7 @@ static menuitem_t ServerMenu[] =
 	{IT_STRING|IT_CVAR,              NULL, "Advertise on Internet", &cv_internetserver, 20},
 	{IT_STRING|IT_CVAR|IT_CV_STRING, NULL, "Server Name",           &cv_servername,     30},
 
-	{IT_STRING|IT_CVAR,              NULL, "Level",                 &cv_nextmap,        60},
+	{IT_STRING|IT_CVAR,              NULL, "Level",                 &cv_nextmap,     60},
 
 
 	{IT_WHITESTRING|IT_CALL,         NULL, "Start",                 M_StartServer,     120},
@@ -998,7 +951,7 @@ static boolean M_PatchLevelNameTable(int mode)
 		i = 0;
 		currentmap = map_cons_t[j].value-1;
 
-		if (mapheaderinfo[currentmap].lvlttl[0] && ((mode == 0 && !mapheaderinfo[currentmap].hideinmenu) || (mode == 1 && mapheaderinfo[currentmap].levelselect) || (mode == 2 && mapheaderinfo[currentmap].timeattack && mapvisited[currentmap])))
+		if (mapheaderinfo[currentmap].lvlttl[0] && ((mode == 0 && !mapheaderinfo[currentmap].hideinmenu) || (mode == 1 && mapheaderinfo[currentmap].levelselect) || mode == 2))
 		{
 			strncpy(lvltable[j], mapheaderinfo[currentmap].lvlttl, strlen(mapheaderinfo[currentmap].lvlttl));
 

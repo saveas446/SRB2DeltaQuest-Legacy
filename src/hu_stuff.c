@@ -44,6 +44,8 @@
 
 #include "p_tick.h"
 
+#include "d2udef.h"
+
 #ifdef HWRENDER
 #include "hardware/hw_main.h"
 #endif
@@ -61,6 +63,7 @@
 patch_t *hu_font[HU_FONTSIZE];
 
 // Level title and credits fonts
+patch_t *lt_font[LT_FONTSIZE];
 patch_t *cred_font[CRED_FONTSIZE];
 
 static player_t *plr;
@@ -191,6 +194,32 @@ void HU_Init(void)
 			continue;
 		hu_font[i] = (patch_t *)W_CachePatchName(buffer, PU_STATIC);
 	}
+
+	#ifdef LTFNT
+
+	// cache the level title font for entire game execution
+	lt_font[0] = (patch_t *)W_CachePatchName("LTFNT039", PU_STATIC); /// \note fake start hack
+
+	// Number support
+	lt_font[9] = (patch_t *)W_CachePatchName("LTFNT048", PU_STATIC);
+	lt_font[10] = (patch_t *)W_CachePatchName("LTFNT049", PU_STATIC);
+	lt_font[11] = (patch_t *)W_CachePatchName("LTFNT050", PU_STATIC);
+	lt_font[12] = (patch_t *)W_CachePatchName("LTFNT051", PU_STATIC);
+	lt_font[13] = (patch_t *)W_CachePatchName("LTFNT052", PU_STATIC);
+	lt_font[14] = (patch_t *)W_CachePatchName("LTFNT053", PU_STATIC);
+	lt_font[15] = (patch_t *)W_CachePatchName("LTFNT054", PU_STATIC);
+	lt_font[16] = (patch_t *)W_CachePatchName("LTFNT055", PU_STATIC);
+	lt_font[17] = (patch_t *)W_CachePatchName("LTFNT056", PU_STATIC);
+	lt_font[18] = (patch_t *)W_CachePatchName("LTFNT057", PU_STATIC);
+
+		j = LT_REALFONTSTART;
+		for (i = LT_REALFONTSTART - LT_FONTSTART; i < LT_FONTSIZE; i++)
+		{
+			sprintf(buffer, "LTFNT%.3d", j);
+			j++;
+			lt_font[i] = (patch_t *)W_CachePatchName(buffer, PU_STATIC);
+		}
+	#endif
 
 	// cache the credits font for entire game execution (why not?)
 	j = CRED_FONTSTART;

@@ -368,6 +368,8 @@ static void ST_Stop(void)
 	st_stopped = true;
 }
 
+boolean actdraw;
+
 void ST_Start(void)
 {
 		// shoot me in the head
@@ -454,28 +456,37 @@ void ST_Start(void)
 			break;
 	}
 
-	actnum = mapheaderinfo[gamemap-1].actnum;
+	// horrifying mix of fd and demo 2 logic
 
+	actnum = mapheaderinfo[gamemap - 1].actnum;
+
+	lvlttlxpos = ((BASEVIDWIDTH/2) - (lvlttl->width/2));
+
+	// Could probably just be done with noactdraw = (actnum > 0); or something
 	if (actnum > 0)
-	{
-		ttlnum = W_CachePatchName(va("TTL%.2d", actnum), PU_CACHE);
-		lvlttlxpos = ((BASEVIDWIDTH/2) - ((lvlttl->width))) - ttlnum->width;
-	}
+		actdraw = true;
 	else
-	{
-		nonumber = true;
-		lvlttlxpos = ((BASEVIDWIDTH/2) - (lvlttl->width/2));
-	}
+		actdraw = false;
 
 	ttlnumxpos = lvlttlxpos + lvlttl->width;
 	zonexpos = ttlnumxpos - ttlzone->width;
 
-	if (gamemap % 3 == 1) {
-		ttlnum = act1;
-	} else if (gamemap % 3 == 2) {
-		ttlnum = act2;
-	} else if (!(gamemap % 3)) {
-		ttlnum = act3;
+	if (!(actnum == 1 || actnum == 2 || actnum == 3)) {
+		if (gamemap % 3 == 1)
+			ttlnum = act1;
+		else if (gamemap % 3 == 2)
+			ttlnum = act2;
+		else if (!(gamemap % 3))
+			ttlnum = act3;
+	} else {
+		if (actnum == 1)
+			ttlnum = act1;
+		else if (actnum == 2)
+			ttlnum = act2;
+		else if (actnum == 3)
+			ttlnum = act3;
+		else
+			actdraw = false;
 	}
 
 	lvlttlypos = 80;
@@ -912,13 +923,20 @@ static void ST_drawLevelTitle(void)
 			ttlnumypos = 0;
 	}
 
+
 	realypos = lvlttlypos - lvlttlscroll;
-	if (realypos > 0 && realypos < 190) 
-		V_DrawScaledPatch (SCX(lvlttlxpos),SCY(realypos), V_NOSCALESTART,lvlttl);
+	if (realypos > 0 && realypos < 190) {
+		if (!strcmp("", mapheaderinfo[gamemap - 1].lvlttl)) {
+			V_DrawScaledPatch (SCX(lvlttlxpos),SCY(realypos), V_NOSCALESTART,lvlttl);
+		} else {
+			V_DrawLevelTitle(lvlttlxpos, realypos, 0, mapheaderinfo[gamemap - 1].lvlttl);
+		}
+	}
 	realypos = zoneypos - zonescroll;
 	if (realypos > 0 && realypos < 200) 	
 		V_DrawScaledPatch (SCX(zonexpos),SCY(realypos), V_NOSCALESTART,ttlzone);
-	if (realypos > 0 && realypos < 200 && (gamemap < 28 || gamemap == 37 || gamemap == 38)) 
+
+	if (realypos > 0 && realypos < 200 && actdraw) 
 		V_DrawScaledPatch (SCX(ttlnumxpos),SCY(realypos), V_NOSCALESTART,ttlnum);
 }
 

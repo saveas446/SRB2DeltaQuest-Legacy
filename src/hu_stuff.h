@@ -34,6 +34,13 @@
 #define HU_REALFONTSIZE (HU_REALFONTEND - HU_FONTSTART + 1)
 #define HU_FONTSIZE (HU_FONTEND - HU_FONTSTART + 1)
 
+// Level title font
+#define LT_FONTSTART '\'' // the first font characters
+#define LT_REALFONTSTART 'A'
+#define LT_FONTEND 'Z' // the last font characters
+#define LT_FONTSIZE (LT_FONTEND - LT_FONTSTART + 1)
+#define LT_REALFONTSIZE (LT_FONTEND - LT_REALFONTSTART + 1)
+
 #define CRED_FONTSTART 'A' // the first font character
 #define CRED_FONTEND 'Z' // the last font character
 #define CRED_FONTSIZE (CRED_FONTEND - CRED_FONTSTART + 1)
@@ -66,6 +73,7 @@ typedef struct
 #define HU_MAXMSGLEN 80
 
 extern patch_t *hu_font[HU_FONTSIZE];
+extern patch_t *lt_font[LT_FONTSIZE];
 extern patch_t *cred_font[CRED_FONTSIZE];
 extern patch_t *emerald1, *emerald2, *emerald3, *emerald4,
 	*emerald5, *emerald6, *emerald7, *emerald8;

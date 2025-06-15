@@ -1594,6 +1594,98 @@ int V_CreditStringWidth(const char *string)
 	return w;
 }
 
+#ifdef LTFNT
+
+
+// Write a string using the level title font
+// NOTE: the text is centered for screens larger than the base width
+//
+void V_DrawLevelTitle(int x, int y, int option, const char *string)
+{
+	int w, c, cx = x, cy = y, dupx, dupy, scrwidth = BASEVIDWIDTH;
+	const char *ch = string;
+
+	if (option & V_NOSCALESTART)
+	{
+		dupx = vid.dupx;
+		dupy = vid.dupy;
+		scrwidth = vid.width;
+	}
+	else
+		dupx = dupy = 1;
+
+	for (;;)
+	{
+		c = *ch++;
+		if (!c)
+			break;
+		if (c == '\n')
+		{
+			cx = x;
+			cy += 12*dupy;
+			continue;
+		}
+
+		c = toupper(c);
+		if ((c != LT_FONTSTART && (c < '0' || c > '9')) && (c < LT_REALFONTSTART || c > LT_FONTEND))
+		{ /// \note font start hack
+			cx += 16*dupx;
+			continue;
+		}
+
+		c -= LT_FONTSTART;
+
+		w = lt_font[c]->width * dupx;
+		if (cx + w > scrwidth)
+			break;
+
+		V_DrawScaledPatch(cx, cy, option, lt_font[c]);
+		cx += w;
+	}
+}
+
+// Find string width from lt_font chars
+//
+int V_LevelNameWidth(const char *string)
+{
+	int c, w = 0;
+	size_t i;
+
+	for (i = 0; i < strlen(string); i++)
+	{
+		c = toupper(string[i]) - LT_FONTSTART;
+		if (c < 0 || (c > 0 && c < LT_REALFONTSTART - LT_FONTSTART) || c >= LT_FONTSIZE)
+			w += 16;
+		else
+			w += lt_font[c]->width;
+	}
+
+	return w;
+}
+
+// Find max height of the string
+//
+int V_LevelNameHeight(const char *string)
+{
+	int c, w = 0;
+	size_t i;
+
+	for (i = 0; i < strlen(string); i++)
+	{
+		c = toupper(string[i]) - LT_FONTSTART;
+		if (c < 0 || (c >= HU_REALFONTSIZE && c != '~' - HU_FONTSTART && c != '`' - HU_FONTSTART)
+		 || hu_font[c] == NULL)
+			continue;	
+
+		if (lt_font[c]->height > w)
+			w = lt_font[c]->height;
+	}
+
+	return w;
+}
+
+#endif
+
 //
 // Find string width from hu_font chars
 //
