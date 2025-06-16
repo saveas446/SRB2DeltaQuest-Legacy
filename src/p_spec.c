@@ -4291,6 +4291,33 @@ void P_SpawnSpecials(void)
 			case 273:
 				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_RENDERALL|FF_TRANSLUCENT|FF_SWIMMABLE|FF_BOTHPLANES|FF_ALLSIDES|FF_CUTEXTRA|FF_EXTRA|FF_CUTSPRITES);
 				break;
+			//l274 Continuous Floor And Ceiling Mover
+			case 274:
+			//l275 Continuous Floor Mover
+			case 275:
+				if (lines[i].backsector)
+					EV_DoFloor(&lines[i], bounceFloor);
+				if (lines[i].special == 275)
+					break;
+			//l276 Continuous Ceiling Mover
+			case 276:
+				if (lines[i].backsector)
+					EV_DoCeiling(&lines[i], bounceCeiling);
+				break;
+			
+			//l277 Continuous Floor And Ceiling Mover (fast)
+			case 277:
+			//l278 Continuous Floor Mover (fast)
+			case 278:
+				if (lines[i].backsector)
+					EV_DoFloor(&lines[i], bounceFloorCrush);
+				if (lines[i].special == 277)
+					break;
+			//l279 Continuous Ceiling Mover
+			case 279:
+				if (lines[i].backsector)
+					EV_DoCeiling(&lines[i], bounceCeilingCrush);
+				break;
 			//l281 FOF, Solid, Opaque, Shadowcasting Save 17-05-2025
 			case 281:
 				sec = sides[*lines[i].sidenum].sector-sectors;

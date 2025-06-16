@@ -100,7 +100,8 @@ char sprnames[NUMSPRITES + 1][5] =
 	"GRTV","GORB", // Green shield
 	"POL3", // DSZ Coral
 	"SARG","TROO", // Minus and Drillakilla
-	"CAND","TRE2","SMIT","HDB4"
+	"CAND","TRE2","SMIT","HDB4", // RMZ Deco
+	"MCRT"
 };
 
 // Doesn't work with g++, needs actionf_p1 (don't modify this comment)
@@ -1663,6 +1664,8 @@ state_t states[NUMSTATES] =
 	{SPR_TURR, 2, 3, {NULL}, 0, 0, S_TURRETPOPDOWN3},        // S_TURRETPOPDOWN2
 	{SPR_TURR, 1, 3, {NULL}, 0, 0, S_TURRETPOPDOWN4},        // S_TURRETPOPDOWN3
 	{SPR_TURR, 0, 69,{A_SetTics}, 0, 1, S_TURRETLOOK},            // S_TURRETPOPDOWN4
+
+	{SPR_MCRT, 0, -1, {NULL}, 0, 0, S_NULL},       // S_MINECART
 };
 
 mobjinfo_t mobjinfo[NUMMOBJTYPES] =
@@ -7123,6 +7126,31 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,       // activesound
 		MF_NOSECTOR|MF_NOBLOCKMAP|MF_NOGRAVITY|MF_AMBIENT, // flags
 		S_NULL          // raisestate
+	},
+	{           // MT_MINECART
+		98,             // doomednum
+		S_MINECART,     // spawnstate
+		1,              // spawnhealth
+		S_NULL, 		// seestate
+		sfx_None,       // seesound
+		0,              // reactiontime
+		sfx_rlaunc,     // attacksound
+		S_NULL,         // painstate
+		1024,           // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_POSS_DIE1,        // deathstate
+		S_NULL,         // xdeathstate
+		sfx_slop,        // deathsound
+		0,              // speed
+		12*FRACUNIT,    // radius
+		64*FRACUNIT,    // height
+		100,            // mass
+		0,              // damage
+		sfx_None,       // activesound
+		NULL, // flags
+		S_NULL   // raisestate
 	}
 };
 
@@ -7137,7 +7165,7 @@ void P_PatchInfoTables(void)
 	char *tempname;
 
 #if NUMSPRITEFREESLOTS > 1000
-"Update P_PatchInfoTables, you big dumb head"
+#error "Update P_PatchInfoTables, you big dumb head"
 #endif
 
 	// empty out free slots

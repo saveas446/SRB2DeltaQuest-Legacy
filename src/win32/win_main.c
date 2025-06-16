@@ -481,7 +481,7 @@ static int WINAPI HandledWinMain(HINSTANCE hInstance,
 	myInstance = hInstance;
 
 	// open a dummy window, both 3dfx Glide and DirectX need one.
-	if ((hWndMain = OpenMainWindow(hInstance,nCmdShow,"Sonic Robo Blast 2 v0.5")) == (HANDLE)-1)
+	if ((hWndMain = OpenMainWindow(hInstance,nCmdShow,va("Demo 2 Ultimate v%d.%d.%d", MAJORVER, MINORVER, TINYVER))) == (HANDLE)-1)
 	{
 		tlErrorMessage(TEXT("Couldn't open window"));
 		return FALSE;

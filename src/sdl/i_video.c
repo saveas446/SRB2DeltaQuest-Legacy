@@ -1240,7 +1240,7 @@ int VID_SetMode(int modeNum)
 	BitsPerPixel = (Uint8)cv_scr_depth.value;
 	//vid.bpp = BitsPerPixel==8?1:2;
 	// Window title
-	SDL_WM_SetCaption("SRB2"VERSIONSTRING, "SRB2");
+	SDL_WM_SetCaption(va("Demo 2 Ultimate v%d.%d.%d", MAJORVER, MINORVER, TINYVER), "SRB2");
 
 	if (render_soft == rendermode)
 	{
@@ -1396,9 +1396,9 @@ void I_StartupGraphics(void)
 
 	// Window title
 #ifdef _WIN32_WCE
-	SDL_WM_SetCaption("SRB2"VERSIONSTRING, "SRB2");
+	SDL_WM_SetCaption(va("Demo 2 Ultimate v%d.%d.%d", MAJORVER, MINORVER, TINYVER), "SRB2");
 #else
-	SDL_WM_SetCaption("SRB2: Starting up", "SRB2");
+	SDL_WM_SetCaption(va("Demo 2 Ultimate v%d.%d.%d", MAJORVER, MINORVER, TINYVER), "SRB2");
 #endif
 
 	// Window icon
