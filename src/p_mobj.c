@@ -611,9 +611,6 @@ void P_XYMovement(mobj_t *mo)
 		P_SetThingPosition(mo);
 	}
 
-	if (mo->type == MT_SHELL)
-		return;
-
 	if ((((mo->flags & MF_MISSILE) || (mo->flags2 & MF2_SKULLFLY)) || mo->type == MT_SNOWBALL)
 		&& !mo->type == MT_DETON)
 	{
@@ -3082,15 +3079,6 @@ static void P_KoopaThinker(mobj_t *koopa)
 	if (koopa->z > koopa->floorz)
 		koopa->momz += FRACUNIT/4;
 		
-	if (P_Random() > 250 && gameskill >= sk_hard)
-	{
-		mobj_t *hammer;
-		hammer = P_SpawnMobj(koopa->x - koopa->radius, koopa->y, koopa->z + koopa->height, MT_HAMMER);
-		if (!hammer)
-			return;
-		hammer->momx = -5*FRACUNIT;
-		hammer->momz = 7*FRACUNIT;
-	}
 }
 
 //
@@ -3227,34 +3215,11 @@ void P_MobjThinker(mobj_t *mobj)
 	}
 	else switch (mobj->type)
 	{
-		case MT_ROCKCRUMBLE1:
-		case MT_ROCKCRUMBLE2:
-		case MT_ROCKCRUMBLE3:
-		case MT_ROCKCRUMBLE4:
-		case MT_ROCKCRUMBLE5:
-		case MT_ROCKCRUMBLE6:
-		case MT_ROCKCRUMBLE7:
-		case MT_ROCKCRUMBLE8:
-		case MT_ROCKCRUMBLE9:
-		case MT_ROCKCRUMBLE10:
-		case MT_ROCKCRUMBLE11:
-		case MT_ROCKCRUMBLE12:
-		case MT_ROCKCRUMBLE13:
-		case MT_ROCKCRUMBLE14:
-		case MT_ROCKCRUMBLE15:
-		case MT_ROCKCRUMBLE16:
 			if (mobj->z <= mobj->floorz)
 			{
 				P_SetMobjState(mobj, mobj->info->deathstate);
 				return;
 			}
-			break;
-		case MT_HAMMER:
-			if (mobj->z <= mobj->floorz)
-				P_SetMobjState(mobj,S_DISS);
-			break;
-		case MT_KOOPA:
-			P_KoopaThinker(mobj);
 			break;
 		case MT_STREETLIGHT:
 			if (mobj->z + mobj->height != mobj->ceilingz && leveltime > 0)
@@ -3392,16 +3357,6 @@ void P_MobjThinker(mobj_t *mobj)
 			if (mobj->flags2 & MF2_NIGHTSPULL)
 				P_NightsItemChase(mobj);
 			return;
-		case MT_SHELL:
-			if (mobj->threshold > TICRATE)
-				mobj->threshold--;
-
-			if (mobj->state != &states[S_SHELL])
-			{
-				mobj->angle = R_PointToAngle2(mobj->x, mobj->y, mobj->x+mobj->momx, mobj->y+mobj->momy);
-				P_InstaThrust(mobj, mobj->angle, mobj->info->speed);
-			}
-			break;
 #if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 		case MT_TURRET:
 			P_MobjCheckWater(mobj);
@@ -4821,12 +4776,6 @@ void P_SpawnMapThing(mapthing_t *mthing)
 		CONS_Printf("\2P_SpawnMapThing: Unknown type %d at (%d, %d)\n", mthing->type,
 			mthing->x, mthing->y);
 		return;
-	}
-
-	if (i >= MT_EMERALD1 && i <= MT_EMERALD8) // Pickupable Emeralds
-	{
-		if (emeralds & mobjinfo[i].speed) // You already have this emerald!
-			return;
 	}
 
 	if ((!(gametype == GT_MATCH)

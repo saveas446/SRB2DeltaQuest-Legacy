@@ -339,6 +339,8 @@ typedef struct player_s
 
 	boolean thokked; // You already thokked on this jump.
 
+	mobj_t* linkedminecart; // A pointer to the minecart we're in. If it's NULL, we're not in a minecart
+
 	int onconveyor; // You are on a conveyor belt if nonzero
 
 	mobj_t *awayviewmobj;

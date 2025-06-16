@@ -1532,7 +1532,6 @@ static void P_ObjectplaceMovement(player_t *player)
 			|| player->currentthing == MT_CHAOSSPAWNER
 			|| player->currentthing == MT_STREETLIGHT
 			|| player->currentthing == MT_TELEPORTMAN
-			|| player->currentthing == MT_ALTVIEWMAN
 			|| player->currentthing == MT_TUBEWAYPOINT
 			|| (player->currentthing >= MT_AWATERA
 				&& player->currentthing <= MT_AWATERH));
@@ -1556,7 +1555,6 @@ static void P_ObjectplaceMovement(player_t *player)
 			|| player->currentthing == MT_CHAOSSPAWNER
 			|| player->currentthing == MT_STREETLIGHT
 			|| player->currentthing == MT_TELEPORTMAN
-			|| player->currentthing == MT_ALTVIEWMAN
 			|| player->currentthing == MT_TUBEWAYPOINT
 			|| (player->currentthing >= MT_AWATERA
 				&& player->currentthing <= MT_AWATERH));
@@ -1893,37 +1891,39 @@ static void P_MovePlayer(player_t *player)
 
 			// Sonic steps out of the phone booth...
 //			P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height, MT_CAPE)->target = player->mo; // A cape... "Super" Sonic, get it? Ha...ha...
-
-
-
-
-
-
-
-
-
-
-
-
 // 			GET OUT
-
-
-			if (emeralds & EMERALD8) // 'Hyper' Sonic
-			{
-				mobj_t *mo;
-
-				for (i = 0; i < 8; i++)
-				{
-					mo = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z + player->mo->height, MT_HYPERSPARK);
-
-					mo->target = player->mo;
-					mo->angle = i*ANG45;
-				}
-			}
 		}
 	}
 
 	cmd = &player->cmd;
+
+	// Minecart movement
+	if (player->linkedminecart) {
+		// TODO: Not sure if all of this most likely redundant setting of player values is a good idea to do every frame...
+		player->mo->momx = 0;
+		player->mo->momy = 0;
+		player->mo->momz = 0;
+
+		P_UnsetThingPosition(player->mo);
+		player->mo->x = player->linkedminecart->x;
+		player->mo->y = player->linkedminecart->y;
+		player->mo->z = player->linkedminecart->z;
+		P_SetThingPosition(player->mo);
+		player->mo->angle = player->linkedminecart->angle;
+
+		P_SetPlayerMobjState (player->mo, S_PLAY_STND);
+
+		// Make the minecart jump
+		if (cmd->buttons & BT_JUMP && player->linkedminecart->z <= player->linkedminecart->floorz) {
+			player->linkedminecart->momz = 9*FRACUNIT;
+		}
+		
+		player->linkedminecart->friction = FRACUNIT;
+
+		// Move minecart in current direction
+		P_InstaThrust(player->linkedminecart, player->linkedminecart->angle, 8*FRACUNIT);
+		return;
+	}
 
 	// Even if not NiGHTS, pull in nearby objects when walking around as John Q. Elliot.
 	if (!cv_objectplace.value && !(gametype == GT_CTF && !player->ctfteam) && ((maptol & TOL_NIGHTS) || cv_timeattacked.value) && (!player->nightsmode || player->powers[pw_nightshelper]))

@@ -320,53 +320,6 @@ static boolean PIT_CheckThing(mobj_t *thing)
 		// don't traverse any more
 			return true;
 	}
-
-	// missiles can hit other things
-	if (tmthing->flags & MF_MISSILE || tmthing->type == MT_SHELL)
-	{
-		// see if it went over / under
-		if (tmthing->z > thing->z + thing->height)
-			return true; // overhead
-		if (tmthing->z + tmthing->height < thing->z)
-			return true; // underneath
-
-		if (tmthing->type != MT_SHELL && tmthing->target && tmthing->target->type == thing->type)
-		{
-			// Don't hit same species as originator.
-			if (thing == tmthing->target)
-				return true;
-
-			if (thing->type != MT_PLAYER)
-			{
-				// Explode, but do no damage.
-				// Let players missile other players.
-				return false;
-			}
-		}
-
-		if (gametype == GT_CTF && thing->player && !thing->player->ctfteam && !cv_solidspectator.value)
-			return true;
-
-		if (!(thing->flags & MF_SHOOTABLE))
-		{
-			// didn't do any damage
-			return !(thing->flags & MF_SOLID);
-		}
-
-		if (tmthing->type == MT_SHELL && tmthing->threshold > TICRATE)
-			return true;
-
-		// damage / explode
-		damage = 1;
-		if (tmthing->flags & MF_ENEMY) // An actual ENEMY! (Like the deton, for example)
-			P_DamageMobj(thing, tmthing, tmthing, damage);
-		else
-			P_DamageMobj(thing, tmthing, tmthing->target, damage);
-
-		// don't traverse any more
-		return false;
-	}
-
 	if ((thing->flags & MF_PUSHABLE) && (tmthing->player || tmthing->flags & MF_PUSHABLE)
 		&& tmthing->z + tmthing->height > thing->z && tmthing->z < thing->z + thing->height
 		&& !(gametype == GT_CTF && tmthing->player && !tmthing->player->ctfteam)) // Push thing!
@@ -984,12 +937,7 @@ boolean P_CheckPosition(mobj_t *thing, fixed_t x, fixed_t y)
 		for (bx = xl; bx <= xh; bx++)
 			for (by = yl; by <= yh; by++)
 				if (!P_BlockThingsIterator(bx, by, PIT_CheckThing))
-				{
-					if (thing->type == MT_SHELL) // Oh YUCK!
-						return true;
-
 					return false;
-				}
 	}
 
 	// check lines
@@ -2165,17 +2113,8 @@ bounceback:
 	if (bestslidefrac <= 0)
 		return;
 
-	if (mo->type == MT_SHELL)
-	{
-		tmxmove = mmomx;
-		tmymove = mmomy;
-		S_StartSound(mo, sfx_tink);
-	}
-	else
-	{
 		tmxmove = FixedMul(mmomx, (FRACUNIT - (FRACUNIT>>2) - (FRACUNIT>>3)));
 		tmymove = FixedMul(mmomy, (FRACUNIT - (FRACUNIT>>2) - (FRACUNIT>>3)));
-	}
 
 	P_HitBounceLine(bestslideline); // clip the moves
 

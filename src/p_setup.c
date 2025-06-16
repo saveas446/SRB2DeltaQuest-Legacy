@@ -865,22 +865,6 @@ void P_SpawnSecretItems(boolean loademblems)
 
 	if (modifiedgame)
 		return;
-
-	for (i = 0; i < NUMEGGS; i++)
-	{
-		if (egglocations[i].level != gamemap)
-			continue;
-
-		if (foundeggs & 1<<i) // They already found this egg... drat!
-			continue;
-
-		emblemmobj = P_SpawnMobj(
-			egglocations[i].x<<FRACBITS,
-			egglocations[i].y<<FRACBITS,
-			egglocations[i].z<<FRACBITS, MT_EASTEREGG);
-		emblemmobj->health = 1<<i;
-		emblemmobj->flags = (emblemmobj->flags & ~MF_TRANSLATION) | ((i % 13)<<MF_TRANSSHIFT);
-	}
 }
 
 // Experimental groovy write function!

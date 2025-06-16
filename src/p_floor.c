@@ -2295,14 +2295,7 @@ void EV_CrumbleChain(sector_t *sec, ffloor_t *rover)
 			{
 				for (c = topz; c > *rover->bottomheight; c -= (32<<FRACBITS))
 				{
-					// If the control sector has a special
-					// of 1500-1515, use the custom debris.
-					if (rover->master->frontsector->special >= 1500 && rover->master->frontsector->special <= 1515) {
-						int temp = (int)MT_ROCKCRUMBLE1;
-						P_SpawnMobj(a, b, c, (mobjtype_t)(temp+(rover->master->frontsector->special-1500)));
-					} else {
-						P_SpawnMobj(a, b, c, MT_ROCKCRUMBLE1);
-					}
+
 				}
 			}
 		}

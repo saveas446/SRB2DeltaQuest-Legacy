@@ -406,49 +406,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 				S_StartSound(NULL, sfx_firsht);
 			}
 			return;
-
-	
-		case MT_HAMMER:
-		case MT_KOOPA:
-			P_DamageMobj(toucher, special, special, 1);
-			return;
-		case MT_SHELL:
-			if (special->state == &states[S_SHELL]) // Resting anim
-			{
-				// Kick that sucker around!
-				special->angle = toucher->angle;
-				P_InstaThrust(special, special->angle, special->info->speed);
-				P_SetMobjState(special, S_SHELL1);
-				special->target = toucher;
-				special->threshold = (3*TICRATE)/2;
-			}
-			return;
-		case MT_AXE:
-			{
-				line_t junk;
-				thinker_t  *th;
-				mobj_t *mo2;
-
-				junk.tag = 649;
-				EV_DoElevator(&junk, bridgeFall, false);
-
-				// scan the remaining thinkers to find koopa
-				for (th = thinkercap.next; th != &thinkercap; th = th->next)
-				{
-					if (th->function.acp1 != (actionf_p1)P_MobjThinker)
-						continue;
-
-					mo2 = (mobj_t *)th;
-					if (mo2->type == MT_KOOPA)
-					{
-						mo2->momz = 5*FRACUNIT;
-						break;
-					}
-				}
-				P_SetMobjState(special, S_DISS);
-				return;
-			}
-	
 		case 231:
 			if (!modifiedgame && toucher->player->dbginfo == 3)
 			{
@@ -553,11 +510,16 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 	// end bubble grab Tails 03-07-2000
 		case MT_DISS:
 			break;	
+		case MT_MINECART:
+			// If we're already in a minecart, don't run this code
+			if (!player->linkedminecart) { 
+				player->linkedminecart = special;
+			}
+			return;
 		default:
 			break;
 		}
 	}
-
 	P_SetMobjState(special, S_DISS);
 	special->flags &= ~MF_NOBLOCKMAP;
 
