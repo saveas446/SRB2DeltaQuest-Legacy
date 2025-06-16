@@ -48,7 +48,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="4"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="tools\libpng-src,..\..\tools\libpng-src,..\..\tools\zlib"
+				AdditionalIncludeDirectories="D:\Games\SRB2\demo_2\include;&quot;tools\libpng-src&quot;;&quot;..\..\tools\libpng-src&quot;;..\..\tools\zlib"
 				PreprocessorDefinitions="_DEBUG;_WINDOWS;USEASM;HAVE_PNG"
 				MinimalRebuild="true"
 				RuntimeLibrary="1"
