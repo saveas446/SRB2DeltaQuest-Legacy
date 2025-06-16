@@ -3065,7 +3065,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	// jump shield box
 	{           // MT_WHITETV
-		35,             // doomednum
+		40,             // doomednum
 		S_WHTV,        // spawnstate
 		1,              // spawnhealth
 		S_NULL,         // seestate

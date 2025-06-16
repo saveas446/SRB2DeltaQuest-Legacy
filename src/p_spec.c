@@ -4317,10 +4317,13 @@ void P_SpawnSpecials(void)
 					ffloorflags |= FF_NOSHADE;
 				P_AddFakeFloorsByLine(i, ffloorflags);
 			break;
-			//l302 FOF, Solid, Translucent Save 18-05-2025
+			//l302 STZ Jelly
 			case 302:
 				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_JELLY|FF_RENDERALL|FF_NOSHADE|FF_TRANSLUCENT|FF_EXTRA|FF_CUTEXTRA);
 			break;
+			case 303: // Crumbling platform
+				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL|FF_CRUMBLE);
+				break;
 		}
 	}
 /*	sector_t *sector;
