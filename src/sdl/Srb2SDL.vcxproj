@@ -78,7 +78,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>SDL.lib;SDL_mixer.lib;opengl32.lib;glu32.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>..\..\build\srb2sdldebug.exe</OutputFile>
+      <OutputFile>..\..\dev\srb2sdldebug.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>

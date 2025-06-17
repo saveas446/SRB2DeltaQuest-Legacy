@@ -42,7 +42,7 @@
     <_ProjectFileVersion>15.0.28307.799</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>.\..\..\build\</OutDir>
+    <OutDir>.\..\..\dev\</OutDir>
     <IntDir>.\..\..\objs\VC\Debug\Win32\</IntDir>
     <LinkIncremental>true</LinkIncremental>
     <TargetName>srb2debug</TargetName>

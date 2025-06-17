@@ -746,7 +746,7 @@ void A_JetJawRoam(mobj_t *actor)
 		actor->angle += ANGLE_180;
 	}
 
-	if (P_LookForPlayers(actor, false, false, actor->radius * 16))
+	if (P_LookForPlayers(actor, false, false))
 		P_SetMobjState(actor, actor->info->seestate);
 }
 
@@ -782,7 +782,7 @@ void A_JetJawChomp(mobj_t *actor)
 	}
 
 	// chase towards player
-	if (--actor->movecount < 0 || !P_Move(actor, actor->info->speed))
+	if (--actor->movecount < 0 || !P_Move(actor))
 		P_NewChaseDir(actor);
 }
 
