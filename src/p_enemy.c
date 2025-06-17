@@ -325,6 +325,9 @@ static boolean P_Move(mobj_t *actor)
 			else
 				actor->z -= FLOATSPEED;
 
+			if (actor->type == MT_JETJAW && actor->z + actor->height > actor->watertop)
+				actor->z = actor->watertop - actor->height;
+
 			actor->flags2 |= MF2_INFLOAT;
 			return true;
 		}
@@ -720,6 +723,66 @@ nomissile:
 
 	// chase towards player
 	if (--actor->movecount < 0 || !P_Move(actor))
+		P_NewChaseDir(actor);
+}
+
+// Function: A_JetJawRoam
+//
+// Description: Roaming routine for JetJaw
+//
+// var1 = unused
+// var2 = unused
+//
+void A_JetJawRoam(mobj_t *actor)
+{
+	if (actor->reactiontime)
+	{
+		actor->reactiontime--;
+		P_InstaThrust(actor, actor->angle, actor->info->speed*FRACUNIT/4);
+	}
+	else
+	{
+		actor->reactiontime = actor->info->reactiontime;
+		actor->angle += ANGLE_180;
+	}
+
+	if (P_LookForPlayers(actor, false, false, actor->radius * 16))
+		P_SetMobjState(actor, actor->info->seestate);
+}
+
+// Function: A_JetJawChomp
+//
+// Description: Chase and chomp at the target, as long as it is in view
+//
+// var1 = unused
+// var2 = unused
+//
+void A_JetJawChomp(mobj_t *actor)
+{
+	INT32 delta;
+
+	// turn towards movement direction if not there yet
+	if (actor->movedir < NUMDIRS)
+	{
+		actor->angle &= (7<<29);
+		delta = actor->angle - (actor->movedir << 29);
+
+		if (delta > 0)
+			actor->angle -= ANGLE_45;
+		else if (delta < 0)
+			actor->angle += ANGLE_45;
+	}
+
+	// Stop chomping if target's dead or you can't see it
+	if (!actor->target || !(actor->target->flags & MF_SHOOTABLE)
+		|| actor->target->health <= 0 || !P_CheckSight(actor, actor->target))
+	{
+		P_SetMobjState(actor, actor->info->spawnstate);
+		return;
+	}
+
+	// chase towards player
+	if (--actor->movecount < 0 || !P_Move(actor, actor->info->speed))
 		P_NewChaseDir(actor);
 }
 

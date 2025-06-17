@@ -938,6 +938,8 @@ static void P_ZMovement(mobj_t *mo)
 
 			if (mo->type == MT_EGGMOBILE && mo->z < mo->floorz+33*FRACUNIT)
 				mo->z = mo->floorz+33*FRACUNIT;
+			else if (mo->type == MT_JETJAW && mo->z + mo->height > mo->watertop)
+				mo->z = mo->watertop - mo->height;
 		}
 
 	}

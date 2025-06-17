@@ -101,7 +101,9 @@ char sprnames[NUMSPRITES + 1][5] =
 	"POL3", // DSZ Coral
 	"SARG","TROO", // Minus and Drillakilla
 	"CAND","TRE2","SMIT","HDB4", // RMZ Deco
-	"MCRT"
+	"MCRT", // Minecart
+	"CORL","DSWE","BCRY", // DSZ Deco
+	"JJAW"
 };
 
 // Doesn't work with g++, needs actionf_p1 (don't modify this comment)
@@ -1293,6 +1295,19 @@ state_t states[NUMSTATES] =
 	#endif
 
 	{SPR_POL3, 0, -1, {NULL}, 0, 0, S_NULL},       // S_DSZCORAL
+	{SPR_CORL, 0, -1, {NULL}, 0, 0, S_NULL},       // S_DSZCORAL2
+	{SPR_CORL, 1, -1, {NULL}, 0, 0, S_NULL},       // S_DSZCORAL3
+
+	{SPR_DSWE, 0, 3, {NULL}, 0, 0, S_SEAWEED2},       // S_SEAWEED1
+	{SPR_DSWE, 1, 3, {NULL}, 0, 0, S_SEAWEED3},       // S_SEAWEED2
+	{SPR_DSWE, 2, 3, {NULL}, 0, 0, S_SEAWEED4},       // S_SEAWEED3
+	{SPR_DSWE, 3, 3, {NULL}, 0, 0, S_SEAWEED5},       // S_SEAWEED4
+	{SPR_DSWE, 4, 3, {NULL}, 0, 0, S_SEAWEED6},       // S_SEAWEED5
+	{SPR_DSWE, 5, 3, {NULL}, 0, 0, S_SEAWEED7},       // S_SEAWEED6
+	{SPR_DSWE, 6, 3, {NULL}, 0, 0, S_SEAWEED1},       // S_SEAWEED7
+
+	{SPR_BCRY, 0, -1, {NULL}, 0, 0, S_NULL},       // S_BLUECRYSTAL
+
 	{SPR_CAND, 0, -1, {NULL}, 0, 0, S_NULL},       // S_RMZGRASS
 	{SPR_TRE2, 0, -1, {NULL}, 0, 0, S_NULL},       // S_RMZTREE1
 	{SPR_SMIT, 0, -1, {NULL}, 0, 0, S_NULL},       // S_RMZTREE2
@@ -1666,6 +1681,33 @@ state_t states[NUMSTATES] =
 	{SPR_TURR, 0, 69,{A_SetTics}, 0, 1, S_TURRETLOOK},            // S_TURRETPOPDOWN4
 
 	{SPR_MCRT, 0, -1, {NULL}, 0, 0, S_NULL},       // S_MINECART
+
+	// Jet Jaw
+	{SPR_JJAW, 0, 1, {A_JetJawRoam},  0, 0, S_JETJAW_ROAM2},   // S_JETJAW_ROAM1
+	{SPR_JJAW, 0, 1, {A_JetJawRoam},  0, 0, S_JETJAW_ROAM3},   // S_JETJAW_ROAM2
+	{SPR_JJAW, 0, 1, {A_JetJawRoam},  0, 0, S_JETJAW_ROAM4},   // S_JETJAW_ROAM3
+	{SPR_JJAW, 0, 1, {A_JetJawRoam},  0, 0, S_JETJAW_ROAM5},   // S_JETJAW_ROAM4
+	{SPR_JJAW, 1, 1, {A_JetJawRoam},  0, 0, S_JETJAW_ROAM6},   // S_JETJAW_ROAM5
+	{SPR_JJAW, 1, 1, {A_JetJawRoam},  0, 0, S_JETJAW_ROAM7},   // S_JETJAW_ROAM6
+	{SPR_JJAW, 1, 1, {A_JetJawRoam},  0, 0, S_JETJAW_ROAM8},   // S_JETJAW_ROAM7
+	{SPR_JJAW, 1, 1, {A_JetJawRoam},  0, 0, S_JETJAW_ROAM1},   // S_JETJAW_ROAM8
+	{SPR_JJAW, 0, 1, {A_JetJawChomp}, 0, 0, S_JETJAW_CHOMP2},  // S_JETJAW_CHOMP1
+	{SPR_JJAW, 0, 1, {A_JetJawChomp}, 0, 0, S_JETJAW_CHOMP3},  // S_JETJAW_CHOMP2
+	{SPR_JJAW, 0, 1, {A_JetJawChomp}, 0, 0, S_JETJAW_CHOMP4},  // S_JETJAW_CHOMP3
+	{SPR_JJAW, 0, 1, {A_JetJawChomp}, 0, 0, S_JETJAW_CHOMP5},  // S_JETJAW_CHOMP4
+	{SPR_JJAW, 1, 1, {A_JetJawChomp}, 0, 0, S_JETJAW_CHOMP6},  // S_JETJAW_CHOMP5
+	{SPR_JJAW, 1, 1, {A_JetJawChomp}, 0, 0, S_JETJAW_CHOMP7},  // S_JETJAW_CHOMP6
+	{SPR_JJAW, 1, 1, {A_JetJawChomp}, 0, 0, S_JETJAW_CHOMP8},  // S_JETJAW_CHOMP7
+	{SPR_JJAW, 1, 1, {A_JetJawChomp}, 0, 0, S_JETJAW_CHOMP9},  // S_JETJAW_CHOMP8
+	{SPR_JJAW, 2, 1, {A_JetJawChomp}, 0, 0, S_JETJAW_CHOMP10}, // S_JETJAW_CHOMP9
+	{SPR_JJAW, 2, 1, {A_JetJawChomp}, 0, 0, S_JETJAW_CHOMP11}, // S_JETJAW_CHOMP10
+	{SPR_JJAW, 2, 1, {A_JetJawChomp}, 0, 0, S_JETJAW_CHOMP12}, // S_JETJAW_CHOMP11
+	{SPR_JJAW, 2, 1, {A_JetJawChomp}, 0, 0, S_JETJAW_CHOMP13}, // S_JETJAW_CHOMP12
+	{SPR_JJAW, 3, 1, {A_JetJawChomp}, 0, 0, S_JETJAW_CHOMP14}, // S_JETJAW_CHOMP13
+	{SPR_JJAW, 3, 1, {A_JetJawChomp}, 0, 0, S_JETJAW_CHOMP15}, // S_JETJAW_CHOMP14
+	{SPR_JJAW, 3, 1, {A_JetJawChomp}, 0, 0, S_JETJAW_CHOMP16}, // S_JETJAW_CHOMP15
+	{SPR_JJAW, 3, 1, {A_JetJawChomp}, 0, 0, S_JETJAW_CHOMP1},  // S_JETJAW_CHOMP16
+
 };
 
 mobjinfo_t mobjinfo[NUMMOBJTYPES] =
@@ -3577,7 +3619,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 	},
 
 	{           // MT_GARGOYLE
-		81,             // doomednum
+		82,             // doomednum
 		S_GARGOYLE,     // spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
@@ -3599,6 +3641,32 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		1,              // damage
 		sfx_None,       // activesound
 		MF_SLIDEME|MF_SOLID|MF_PUSHABLE, // flags
+		S_NULL          // raisestate
+	},
+
+	{           // MT_STATICGARGOYLE
+		81,             // doomednum
+		S_GARGOYLE,     // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,         // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		21*FRACUNIT,    // speed
+		16*FRACUNIT,    // radius
+		40*FRACUNIT,    // height
+		100,            // mass
+		1,              // damage
+		sfx_None,       // activesound
+		MF_SLIDEME|MF_SOLID, // flags
 		S_NULL          // raisestate
 	},
 
@@ -4984,6 +5052,106 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOCLIP|MF_SCENERY, // flags
 		S_NULL          // raisestate
 	},
+	{           // MT_DSZCORAL2
+		1003,             // doomednum
+		S_DSZCORAL2,     // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,         // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		0,              // speed
+		8*FRACUNIT,     // radius
+		32*FRACUNIT,    // height
+		100,            // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_NOCLIP|MF_SCENERY, // flags
+		S_NULL          // raisestate
+	},
+	{           // MT_DSZCORAL3
+		1004,             // doomednum
+		S_DSZCORAL3,     // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,         // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		0,              // speed
+		8*FRACUNIT,     // radius
+		32*FRACUNIT,    // height
+		100,            // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_NOCLIP|MF_SCENERY, // flags
+		S_NULL          // raisestate
+	},
+	{           // MT_SEAWEED
+		1001,             // doomednum
+		S_SEAWEED1,     // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,         // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		0,              // speed
+		8*FRACUNIT,     // radius
+		32*FRACUNIT,    // height
+		100,            // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_NOCLIP|MF_SCENERY, // flags
+		S_NULL          // raisestate
+	},
+	{           // MT_BLUECRYSTAL
+		1006,             // doomednum
+		S_BLUECRYSTAL,     // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,         // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		0,              // speed
+		8*FRACUNIT,     // radius
+		32*FRACUNIT,    // height
+		100,            // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_NOCLIP|MF_SCENERY, // flags
+		S_NULL          // raisestate
+	},
 	{           // MT_RMZGRASS
 		34,             // doomednum
 		S_RMZGRASS,     // spawnstate
@@ -6043,6 +6211,31 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,       // activesound
 		MF_SPECIAL, // flags
 		S_NULL   // raisestate
+	},
+	{           // MT_JETJAW
+		113,            // doomednum
+		S_JETJAW_ROAM1, // spawnstate
+		1,              // spawnhealth
+		S_JETJAW_CHOMP1,// seestate
+		0,              // seesound
+		4*TICRATE,      // reactiontime
+		0,              // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		0,              // painsound
+		0,              // meleestate
+		S_NULL,         // missilestate
+		S_POSS_DIE1,        // deathstate
+		S_NULL,         // xdeathstate
+		sfx_slop,        // deathsound
+		8,              // speed
+		12*FRACUNIT,    // radius
+		20*FRACUNIT,    // height
+		100,            // mass
+		0,              // damage
+		0,              // activesound
+		MF_SLIDEME|MF_FLOAT|MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE|MF_NOGRAVITY, // flags
+		S_NULL          // raisestate
 	}
 };
 

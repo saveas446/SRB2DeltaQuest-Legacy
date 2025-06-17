@@ -3146,7 +3146,7 @@ static void P_FakeZMovement(mobj_t *mo)
 
 	// adjust height
 	mo->z += mo->momz;
-	if (mo->flags & MF_FLOAT && mo->target && mo->type != MT_EGGMOBILE
+	if (mo->flags & MF_FLOAT && mo->target && mo->type != MT_JETJAW && mo->type != MT_EGGMOBILE
 		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 		&& mo->type != MT_EGGMOBILE2
 		#endif
