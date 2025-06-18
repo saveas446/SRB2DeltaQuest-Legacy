@@ -1952,6 +1952,7 @@ static void Got_Clearscores(char **cp, int playernum)
 static void Command_LTG_f(void)
 {
 	CONS_Printf("...now!\n");
+	S_StartSound(NULL, sfx_now);
 	SendNetXCmd(XD_LTG, NULL, 1);
 }
 

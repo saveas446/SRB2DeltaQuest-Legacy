@@ -32,102 +32,6 @@
 // Information about all the music
 //
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 musicinfo_t S_music[NUMMUSIC] =
 {
     { 0 },
@@ -245,7 +149,6 @@ sfxinfo_t S_sfx[NUMSFX] =
   { "dbopn\0"  , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL},
   { "dbcls\0"  , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL},
   { "dbload"   , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL},
-  //{ "plasma"   , false,  64, 0, -1, -1, 0, -1, -1, -1, NULL},
   { "bfg\0\0\0", false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL},
   { "sawup"    , false,  64, 0, -1, DATA_NONE, 0, SKSSPIN, -1, -1, NULL},
   { "sawidl"   , false,  64, 0, -1, DATA_NONE, 0, SKSPUTPUT, -1, -1, NULL}, // not as high a priority
@@ -346,17 +249,11 @@ sfxinfo_t S_sfx[NUMSFX] =
   { "skesit"   , false,  70, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL},
   { "skeatk"   , false,  70, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL},
   { "radio\0"  , false,  60, 0, -1, DATA_NONE, 0, SKSRADIO, -1, -1, NULL},
-
-  //added:22-02-98: sound when the player avatar jumps in air 'hmpf!'
   { "jump\0\0" , false,  60, 0, -1, DATA_NONE, 0, SKSJUMP, -1, -1, NULL},
   { "ouch\0\0" , false,  60, 0, -1, DATA_NONE, 0, SKSOUCH, -1, -1, NULL},
-  { "gasp\0\0" , false,  64, 0, -1, DATA_NONE, 0, SKSGASP, -1, -1, NULL},
-
-  //added:09-08-98:test water sounds
   { "gloop\0"  , false,  60, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL},
   { "splash"   , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL},
   { "floush"   , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL},
-  //Ambient Water Sounds Tails 06-10-2000
   { "amwtr1"   , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL},
   { "amwtr2"   , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL},
   { "amwtr3"   , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL},
@@ -367,6 +264,7 @@ sfxinfo_t S_sfx[NUMSFX] =
   { "amwtr8"   , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL},
   { "splish"   , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL}, // Splish Tails 12-08-2000
   { "wslap\0"  , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL}, // Water Slap Tails 12-13-2000
+  { "now\0\0\0"  , false,  128, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL}, // NOW!!!!
   // skin sounds free slots to add sounds at run time (Boris HACK!!!)
   // initialized to NULL
 };

@@ -338,11 +338,8 @@ typedef enum
     sfx_skesit,
     sfx_skeatk,
     sfx_radio,
-    //added:22-02-98: player avatar jumps
     sfx_jump,
-    //added:22-02-98: player hits something hard and says 'ouch!'
     sfx_ouch,
-    //test water
     sfx_gloop,
     sfx_splash,
     sfx_floush,
@@ -356,6 +353,7 @@ typedef enum
     sfx_amwtr8, // Tails
 	sfx_splish, // Tails 12-08-2000
 	sfx_wslap, // Water Slap Tails 12-13-2000
+    sfx_now,
 
 	// free slots for S_AddSoundFx() at run-time --------------------
 	sfx_freeslot0,
