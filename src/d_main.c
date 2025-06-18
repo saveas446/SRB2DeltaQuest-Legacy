@@ -1173,6 +1173,12 @@ void D_SRB2Main(int sys)
 		}
 	}
 
+	// this is in the launcher so i'm adding it here for convenience's sake
+
+	if (M_CheckParm("-gametype") && M_IsNextParm())
+		cv_newgametype.value = atoi(M_GetNextParm());
+
+
 	CONS_Printf(text[Z_INIT_NUM]);
 	Z_Init();
 
