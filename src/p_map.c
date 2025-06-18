@@ -320,6 +320,50 @@ static boolean PIT_CheckThing(mobj_t *thing)
 		// don't traverse any more
 			return true;
 	}
+
+	// missiles can hit other things
+	if (tmthing->flags & MF_MISSILE)
+	{
+		// see if it went over / under
+		if (tmthing->z > thing->z + thing->height)
+			return true; // overhead
+		if (tmthing->z + tmthing->height < thing->z)
+			return true; // underneath
+
+		if (tmthing->target && tmthing->target->type == thing->type)
+		{
+			// Don't hit same species as originator.
+			if (thing == tmthing->target)
+				return true;
+
+			if (thing->type != MT_PLAYER)
+			{
+				// Explode, but do no damage.
+				// Let players missile other players.
+				return false;
+			}
+		}
+
+		if (gametype == GT_CTF && thing->player && !thing->player->ctfteam && !cv_solidspectator.value)
+			return true;
+
+		if (!(thing->flags & MF_SHOOTABLE))
+		{
+			// didn't do any damage
+			return !(thing->flags & MF_SOLID);
+		}
+		
+		// damage / explode
+		damage = 1;
+		if (tmthing->flags & MF_ENEMY) // An actual ENEMY! (Like the deton, for example)
+			P_DamageMobj(thing, tmthing, tmthing, damage);
+		else
+			P_DamageMobj(thing, tmthing, tmthing->target, damage);
+
+		// don't traverse any more
+		return false;
+	}
+
 	if ((thing->flags & MF_PUSHABLE) && (tmthing->player || tmthing->flags & MF_PUSHABLE)
 		&& tmthing->z + tmthing->height > thing->z && tmthing->z < thing->z + thing->height
 		&& !(gametype == GT_CTF && tmthing->player && !tmthing->player->ctfteam)) // Push thing!

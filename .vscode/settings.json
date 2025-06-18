@@ -14,5 +14,6 @@
         "xtr1common": "cpp",
         "cmath": "c",
         "HW_BSP.C": "cpp"
-    }
+    },
+    "cmake.ignoreCMakeListsMissing": true
 }
