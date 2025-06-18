@@ -2030,7 +2030,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_BLTV,         // spawnstate
 		1,              // spawnhealth
 		S_NULL,         // seestate
-		sfx_None,       // seesound
+		sfx_getpow,       // seesound
 		8,              // reactiontime
 		sfx_None,       // attacksound
 		S_BLTV,         // painstate
@@ -2134,7 +2134,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_YLTV,         // spawnstate
 		1,              // spawnhealth
 		S_NULL,         // seestate
-		sfx_None,       // seesound
+		sfx_getpow,       // seesound
 		8,              // reactiontime
 		sfx_None,       // attacksound
 		S_YLTV,         // painstate
@@ -2160,7 +2160,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_GRTV,         // spawnstate
 		1,              // spawnhealth
 		S_NULL,         // seestate
-		sfx_None,       // seesound
+		sfx_getpow,       // seesound
 		8,              // reactiontime
 		sfx_None,       // attacksound
 		S_GRTV,         // painstate
@@ -2187,7 +2187,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_RDTV,        // spawnstate
 		1,              // spawnhealth
 		S_NULL,         // seestate
-		sfx_None,       // seesound
+		sfx_getpow,       // seesound
 		8,              // reactiontime
 		sfx_None,       // attacksound
 		S_RDTV,        // painstate
@@ -3086,7 +3086,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_BKTV1,        // spawnstate
 		1,              // spawnhealth
 		S_NULL,         // seestate
-		sfx_None,       // seesound
+		sfx_getpow,       // seesound
 		8,              // reactiontime
 		sfx_None,       // attacksound
 		S_BKTV1,        // painstate
@@ -3114,7 +3114,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_WHTV,        // spawnstate
 		1,              // spawnhealth
 		S_NULL,         // seestate
-		sfx_None,       // seesound
+		sfx_getpow,       // seesound
 		8,              // reactiontime
 		sfx_None,       // attacksound
 		S_WHTV,        // painstate
