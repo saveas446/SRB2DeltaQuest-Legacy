@@ -1366,6 +1366,11 @@ boolean G_Responder(event_t *ev)
 					CONS_Printf("Only the server can pause the game.\n");
 				return true;
 			}
+			if (paused && ev->data1 == gamecontrol[gc_jump][0]) {
+				char buf = false;
+
+				SendNetXCmd(XD_PAUSE, &buf, 1);
+			}
 			return true;
 
 		case ev_keyup:
