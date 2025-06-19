@@ -103,7 +103,8 @@ char sprnames[NUMSPRITES + 1][5] =
 	"CAND","TRE2","SMIT","HDB4", // RMZ Deco
 	"MCRT", // Minecart
 	"CORL","DSWE","BCRY", // DSZ Deco
-	"JJAW"
+	"JJAW", // Jet Jaw
+	"POL5" // Streetlight
 };
 
 // Doesn't work with g++, needs actionf_p1 (don't modify this comment)
@@ -1312,6 +1313,8 @@ state_t states[NUMSTATES] =
 	{SPR_TRE2, 0, -1, {NULL}, 0, 0, S_NULL},       // S_RMZTREE1
 	{SPR_SMIT, 0, -1, {NULL}, 0, 0, S_NULL},       // S_RMZTREE2
 	{SPR_HDB4, 0, -1, {NULL}, 0, 0, S_NULL},       // S_RMZTREE3
+
+	{SPR_POL5, 0, -1, {NULL}, 0, 0, S_NULL},       // S_STREETLIGHT
 
 
 	// Flame (has corona)
@@ -5723,31 +5726,30 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 	},
 
 	{           // MT_STREETLIGHT
-		2003,           // doomednum
-		S_LITE,         // spawnstate
+		2003,             // doomednum
+		S_STREETLIGHT,     // spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
 		sfx_None,       // seesound
 		8,              // reactiontime
 		sfx_None,       // attacksound
-		0,              // painstate
+		S_NULL,         // painstate
 		0,              // painchance
 		sfx_None,       // painsound
 		S_NULL,         // meleestate
 		S_NULL,         // missilestate
-		S_DISS,         // deathstate
+		S_NULL,         // deathstate
 		S_NULL,         // xdeathstate
 		sfx_None,       // deathsound
 		0,              // speed
-		2*FRACUNIT,     // radius
-		4*FRACUNIT,     // height
+		8*FRACUNIT,     // radius
+		32*FRACUNIT,    // height
 		100,            // mass
-		1,              // damage
+		0,              // damage
 		sfx_None,       // activesound
-		MF_NOGRAVITY,   // flags
+		MF_SCENERY, // flags
 		S_NULL          // raisestate
 	},
-
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{           // MT_TURRET
 		2004,           // doomednum

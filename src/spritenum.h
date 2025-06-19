@@ -228,6 +228,7 @@ typedef enum
 	SPR_BCRY,
 
 	SPR_JJAW, // Jet Jaw
+	SPR_POL5, // Streetlight
 
 	SPR_FIRSTFREESLOT,
 	SPR_LASTFREESLOT = SPR_FIRSTFREESLOT + NUMSPRITEFREESLOTS - 1,
@@ -1422,6 +1423,8 @@ typedef enum
 	S_RMZTREE1,
 	S_RMZTREE2,
 	S_RMZTREE3,
+
+	S_STREETLIGHT,
 
 	// Flame (has corona)
 	S_FLAME1,
