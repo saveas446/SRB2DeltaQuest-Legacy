@@ -97,6 +97,8 @@ CMakeUserPresets.json
 !tools/zlib/contrib/puff/Makefile
 !tools/zlib/contrib/untgz/Makefile
 
+!lib/*.lib
+
 # Some other things
 
 objs/*
