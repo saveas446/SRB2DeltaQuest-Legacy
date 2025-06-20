@@ -1685,9 +1685,9 @@ state_t states[NUMSTATES] =
 	{SPR_TURR, 0, 69,{A_SetTics}, 0, 1, S_TURRETLOOK},            // S_TURRETPOPDOWN4
 
 	{SPR_MCRT, 0, -1, {NULL}, 0, 0, S_NULL},       // S_MINECART
-	{SPR_JJAW, 0, -1, {NULL}, 0, 0, S_NULL},       // S_MINECARTCHANGEDIR
-	{SPR_POSS, 0, -1, {NULL}, 0, 0, S_NULL},       // S_MINECARTSPEEDUP
-	{SPR_SPOS, 0, -1, {NULL}, 0, 0, S_NULL},       // S_MINECARTSPEEDDOWN
+	{SPR_DISS, 0, -1, {NULL}, 0, 0, S_NULL},       // S_MINECARTCHANGEDIR
+	{SPR_DISS, 0, -1, {NULL}, 0, 0, S_NULL},       // S_MINECARTSPEEDUP
+	{SPR_DISS, 0, -1, {NULL}, 0, 0, S_NULL},       // S_MINECARTSPEEDDOWN
 	{SPR_MRTS, 0, -1, {NULL}, 0, 0, S_NULL},       // S_MINECARTSTOPPER
 
 	// Jet Jaw
@@ -6237,7 +6237,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_slop,        // deathsound
 		0,              // speed
 		12*FRACUNIT,    // radius
-		64*FRACUNIT,    // height
+		32*FRACUNIT,    // height
 		100,            // mass
 		0,              // damage
 		sfx_None,       // activesound
@@ -6262,7 +6262,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_slop,        // deathsound
 		0,              // speed
 		12*FRACUNIT,    // radius
-		64*FRACUNIT,    // height
+		32*FRACUNIT,    // height
 		100,            // mass
 		0,              // damage
 		sfx_None,       // activesound
@@ -6287,7 +6287,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_slop,        // deathsound
 		0,              // speed
 		12*FRACUNIT,    // radius
-		64*FRACUNIT,    // height
+		32*FRACUNIT,    // height
 		100,            // mass
 		0,              // damage
 		sfx_None,       // activesound
