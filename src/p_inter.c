@@ -161,6 +161,8 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 {
 	player_t *player;
 	int i, sound = sfx_None, emercount = 0;
+	angle_t angle;
+	fixed_t momx, momy;
 
 	if (cv_objectplace.value)
 		return;
@@ -534,6 +536,27 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 		case MT_MINECARTSPEEDDOWN:
 			if (player->linkedminecart) {
 				player->minecartspeed *= 0.95;
+			}
+			return;
+		case MT_MINECARTSTOPPER:
+			if (player->linkedminecart) {
+				// Keep minecart angle and momentum after we leave it
+				momx = player->linkedminecart->momx;
+				momy = player->linkedminecart->momy;
+				angle = player->linkedminecart->angle;
+				// Get rid of the minecart we're riding in
+				P_KillMobj(player->linkedminecart, NULL, NULL);
+				player->linkedminecart = NULL;
+
+				// Keep minecart angle
+				player->mo->angle = angle;
+				#ifndef FALL_SPRITES
+					P_SetPlayerMobjState(player->mo, S_PLAY_ATK1);
+				#else
+					P_SetPlayerMobjState(player->mo, S_PLAY_FALL1);
+				#endif
+
+				player->mo->momz = 9*FRACUNIT;
 			}
 			return;
 		default:
@@ -1361,6 +1384,12 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 		}
 		else if (damage == 10000)
 		{
+			// Destroy the minecart
+			if (player->linkedminecart != NULL) {
+				P_KillMobj(player->linkedminecart, NULL, NULL);
+				player->linkedminecart = NULL;
+			}
+
 			player->powers[pw_fireshield] = false;
 			player->powers[pw_jumpshield] = false; // Get rid of shield
 			player->powers[pw_ringshield] = false;

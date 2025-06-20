@@ -104,7 +104,8 @@ char sprnames[NUMSPRITES + 1][5] =
 	"MCRT", // Minecart
 	"CORL","DSWE","BCRY", // DSZ Deco
 	"JJAW", // Jet Jaw
-	"POL5" // Streetlight
+	"POL5", // Streetlight
+	"MRTS" // Minecart stopper
 };
 
 // Doesn't work with g++, needs actionf_p1 (don't modify this comment)
@@ -1687,6 +1688,7 @@ state_t states[NUMSTATES] =
 	{SPR_JJAW, 0, -1, {NULL}, 0, 0, S_NULL},       // S_MINECARTCHANGEDIR
 	{SPR_POSS, 0, -1, {NULL}, 0, 0, S_NULL},       // S_MINECARTSPEEDUP
 	{SPR_SPOS, 0, -1, {NULL}, 0, 0, S_NULL},       // S_MINECARTSPEEDDOWN
+	{SPR_MRTS, 0, -1, {NULL}, 0, 0, S_NULL},       // S_MINECARTSTOPPER
 
 	// Jet Jaw
 	{SPR_JJAW, 0, 1, {A_JetJawRoam},  0, 0, S_JETJAW_ROAM2},   // S_JETJAW_ROAM1
@@ -6270,6 +6272,31 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 	{           // MT_MINECARTSPEEDDOWN
 		101,             // doomednum
 		S_MINECARTSPEEDDOWN,     // spawnstate
+		1,              // spawnhealth
+		S_NULL, 		// seestate
+		sfx_None,       // seesound
+		0,              // reactiontime
+		sfx_rlaunc,     // attacksound
+		S_NULL,         // painstate
+		1024,           // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_POSS_DIE1,        // deathstate
+		S_NULL,         // xdeathstate
+		sfx_slop,        // deathsound
+		0,              // speed
+		12*FRACUNIT,    // radius
+		64*FRACUNIT,    // height
+		100,            // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_SPECIAL, // flags
+		S_NULL   // raisestate
+	},
+	{           // MT_MINECARTSTOPPER
+		102,             // doomednum
+		S_MINECARTSTOPPER,     // spawnstate
 		1,              // spawnhealth
 		S_NULL, 		// seestate
 		sfx_None,       // seesound
