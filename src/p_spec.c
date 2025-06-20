@@ -4351,6 +4351,10 @@ void P_SpawnSpecials(void)
 			case 303: // Crumbling platform
 				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL|FF_CRUMBLE);
 				break;
+			//l304 Solid, Invisible
+			case 304:
+				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_NOSHADE);
+				break;
 		}
 	}
 /*	sector_t *sector;
