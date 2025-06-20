@@ -1921,7 +1921,7 @@ static void P_MovePlayer(player_t *player)
 		player->linkedminecart->friction = FRACUNIT;
 
 		// Move minecart in current direction
-		P_InstaThrust(player->linkedminecart, player->linkedminecart->angle, 8*FRACUNIT);
+		P_InstaThrust(player->linkedminecart, player->linkedminecart->angle, player->minecartspeed);
 		return;
 	}
 

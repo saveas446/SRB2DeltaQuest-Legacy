@@ -510,10 +510,30 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 	// end bubble grab Tails 03-07-2000
 		case MT_DISS:
 			break;	
+
+		// Minecart objects
 		case MT_MINECART:
 			// If we're already in a minecart, don't run this code
 			if (!player->linkedminecart) { 
 				player->linkedminecart = special;
+				player->minecartspeed = special->info->speed;
+			}
+			return;
+		
+		case MT_MINECARTCHANGEDIR:
+			if (player->linkedminecart) {
+				player->linkedminecart->angle = special->angle;
+			}
+			return;
+
+		case MT_MINECARTSPEEDUP:
+			if (player->linkedminecart) {
+				player->minecartspeed *= 1.05;
+			}
+			return;
+		case MT_MINECARTSPEEDDOWN:
+			if (player->linkedminecart) {
+				player->minecartspeed *= 0.95;
 			}
 			return;
 		default:
