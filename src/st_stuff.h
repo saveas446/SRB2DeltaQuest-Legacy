@@ -115,4 +115,16 @@ typedef enum
 
 extern hudinfo_t hudinfo[NUMHUDITEMS];
 
+enum {
+	dm_playermovebasic,
+	dm_playermoveadv,
+	dm_emmys,
+	dm_version,
+	dm_map,
+	dm_minimap,
+	NUMDEVMODEOPTIONS
+};
+
+boolean devmodedraw[NUMDEVMODEOPTIONS];
+
 #endif

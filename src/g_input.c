@@ -223,6 +223,7 @@ static keyname_t keynames[] =
 	{KEY_CTRL, "CTRL"},
 	{KEY_ALT, "ALT"},
 
+
 	// keypad keys
 	{KEY_KPADSLASH, "KEYPAD /"},
 	{KEY_KEYPAD7, "KEYPAD 7"},

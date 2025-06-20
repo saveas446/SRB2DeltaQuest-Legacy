@@ -138,6 +138,8 @@ static patch_t *act3;
 static boolean facefreed[MAXPLAYERS];
 static boolean prefixfreed[MAXPLAYERS];
 
+boolean devmodedraw[NUMDEVMODEOPTIONS];
+
 hudinfo_t hudinfo[NUMHUDITEMS] = 
 {
 	{	52,		192	},			// HUD_LIVESNAME
@@ -783,10 +785,32 @@ static void ST_drawDebugInfo(void)
 	char smfstartdash[33];
 	char sjumping[33];
 	char sscoreadd[33];
+	char scomptime[33];
+	char scompdate[33];
+	char sbuildtype[33];
+
+	char sgamemap[33];
+	char sactnum[33];
+	char szonename[33];
+
+	char swindowsys[33];
+
+	char ssingleplayer[33];
+	char smatch[33];
+	char sskynum[33];
 
 	patch_t* emmypatch;
 
 	char emmypatchname[9];
+
+	int currentrow;
+
+	sprintf(sgamemap, "Map: %d", gamemap);
+	sprintf(sactnum, "Act: %d", mapheaderinfo[gamemap-1].actnum);
+	sprintf(szonename, "Zone name: %s", mapheaderinfo[gamemap-1].lvlttl);
+	sprintf(ssingleplayer, "Supports singleplayer: %d", mapheaderinfo[gamemap-1].typeoflevel & TOL_COOP);
+	sprintf(smatch, "Supports match: %d", mapheaderinfo[gamemap-1].typeoflevel & TOL_MATCH);
+	sprintf(sskynum, "Skynum: %d", mapheaderinfo[gamemap-1].skynum);
 
 	sprintf(smomx, "MOMX: %d", stplyr->rmomx >> FRACBITS);
 	sprintf(smomy, "MOMY: %d", stplyr->rmomy >> FRACBITS);
@@ -806,15 +830,35 @@ static void ST_drawDebugInfo(void)
 	sprintf(sz, "Z: %d", stplyr->mo->z >> FRACBITS);
 
 	sprintf(d2uver, "DEMO 2 ULTIMATE v%d.%d.%d", MAJORVER, MINORVER, TINYVER);
+	sprintf(scompdate, "Compiled on %s", __DATE__);
+	sprintf(scomptime, "Compiled at %s", __TIME__);
+
+	#if BUILD_TYPE == DEMO
+	sprintf(sbuildtype, "Build type: Demo");
+	#elif BUILD_TYPE == PLAYTEST_BUILD
+	sprintf(sbuildtype, "Build type: Playtester build");
+	#elif BUILD_TYPE == DEV_RELEASE
+	sprintf(sbuildtype, "Build type: Dev build");
+	#elif BUILD_TYPE == FULL_RELEASE
+	sprintf(sbuildtype, "Build type: Full release");
+	#endif
+
+	#ifdef SDLIO
+		sprintf(swindowsys, "Window system: SDL1");
+	#else
+		sprintf(swindowsys, "Window system: Win32");
+	#endif
+
 	sprintf(sangle, "Angle: %d", stplyr->mo->angle >> FRACBITS);
-	/*sprintf(sunderwater, "%d", stplyr->powers[pw_underwater]);
-	sprintf(smfjumped, "%d", stplyr->mfjumped);
-	sprintf(smfspinning, "%d", stplyr->mfspinning);
-	sprintf(smfstartdash, "%d", stplyr->mfstartdash);
-	sprintf(sjumping, "%d", stplyr->jumping);
-	sprintf(sscoreadd, "%d", stplyr->scoreadd);
+	//sprintf(sunderwater, "%d", stplyr->powers[pw_underwater]);
+	sprintf(smfjumped, "MF_JUMPED: %d", stplyr->mfjumped);
+	sprintf(smfspinning, "MF_SPINNING: %d", stplyr->mfspinning);
+	sprintf(smfstartdash, "MF_STARDASH: %d", stplyr->mfstartdash);
+	sprintf(sjumping, "Jumping: %d", stplyr->jumping);
+	sprintf(sscoreadd, "Scoreadd: %d", stplyr->scoreadd);
 	
-	sprintf(emmys, "%d", emeralds);
+	// Remnant of old string-based emerald drawing code
+	/*sprintf(emmys, "%d", emeralds);
 	sprintf(emmy1, "%d", emeralds & EMERALD1);
 	sprintf(emmy2, "%d", emeralds & EMERALD2);
 	sprintf(emmy3, "%d", emeralds & EMERALD3);
@@ -827,51 +871,106 @@ static void ST_drawDebugInfo(void)
 	/*V_DrawString(0, 240, 24, 0, "SPEED =");
 	V_DrawString(0, 296, 24, 0, sspeed);*/
 
-	// Was GONNA make it animate but that didn't work :(
-	sprintf(emmypatchname, "EMMYA0", leveltime % 21);
+	currentrow = 0;
 
-	emmypatch = W_CachePatchName(emmypatchname, PU_CACHE);
+	// ALWAYS draw version number. No matter what.
+	V_DrawString(0, 320 - (strlen(d2uver) << 3), currentrow, 0, d2uver);
+	currentrow += 8;
 
-	V_DrawFlatFill(320-144, 64, 144, 32, W_GetNumForName("FLOOR0_3"));
-	//V_DrawFlatFill(320-144, 96, 144, 1, W_GetNumForName("FLOOR0_3"));
+	if (devmodedraw[dm_playermovebasic]) {
+		// Player movement values (basic)
+		V_DrawString(V_REDMAP, 320 - (strlen(sx) << 3), currentrow, 0, sx);
+		currentrow += 8;
+		V_DrawString(V_GREENMAP, 320 - (strlen(sy) << 3), currentrow, 0, sy);
+		currentrow += 8;
+		V_DrawString(V_BLUEMAP, 320 - (strlen(sz) << 3), currentrow, 0, sz);
+		currentrow += 8;
+		V_DrawString(0, 320 - (strlen(sangle) << 3), currentrow, V_YELLOWMAP, sangle);
+		currentrow += 8;
+	}
 
-	if (emeralds & EMERALD1)
-		V_DrawSmallScaledPatch(320, 120, 0, emmypatch);
-	if (emeralds & EMERALD2)
-		V_DrawSmallScaledPatch(320-24, 120, 0, emmypatch);
-	if (emeralds & EMERALD3)
-		V_DrawSmallScaledPatch(320-48, 120, 0, emmypatch);
-	if (emeralds & EMERALD4)
-		V_DrawSmallScaledPatch(320-72, 120, 0, emmypatch);
-	if (emeralds & EMERALD5)
-		V_DrawSmallScaledPatch(320-96, 120, 0, emmypatch);
-	if (emeralds & EMERALD6)
-		V_DrawSmallScaledPatch(320-120, 120, 0, emmypatch);
-	if (emeralds & EMERALD7)
-		V_DrawSmallScaledPatch(320-144, 120, 0, emmypatch);		
+	if (devmodedraw[dm_playermoveadv]) {
+		// Player movement values (advanced)
+		V_DrawString(0, 320 - (strlen(smomx) << 3), currentrow, 0, smomx);
+		currentrow += 8;
+		V_DrawString(0, 320 - (strlen(smomy) << 3), currentrow, 0, smomy);
+		currentrow += 8;
+		V_DrawString(0, 320 - (strlen(smomz) << 3), currentrow, 0, smomz);
+		currentrow += 8;
+		V_DrawString(0, 320 - (strlen(smfjumped) << 3), currentrow, 0, smfjumped);
+		currentrow += 8;
+		V_DrawString(0, 320 - (strlen(smfspinning) << 3), currentrow, 0, smfspinning);
+		currentrow += 8;
+		V_DrawString(0, 320 - (strlen(smfstartdash) << 3), currentrow, 0, smfstartdash);
+		currentrow += 8;
+		V_DrawString(0, 320 - (strlen(sjumping) << 3), currentrow, 0, sjumping);
+		currentrow += 8;
+		V_DrawString(0, 320 - (strlen(sscoreadd) << 3), currentrow, 0, sscoreadd);
+		currentrow += 8;
+	}
 
-	V_DrawString(0, 320 - (strlen(d2uver) << 3), 0, 0, d2uver);
-	V_DrawString(V_REDMAP, 320 - (strlen(sx) << 3), 8, 0, sx);
-	V_DrawString(V_GREENMAP, 320 - (strlen(sy) << 3), 16, 0, sy);
-	V_DrawString(V_BLUEMAP, 320 - (strlen(sz) << 3), 24, 0, sz);
-	V_DrawString(0, 320 - (strlen(sangle) << 3), 32, V_YELLOWMAP, sangle);
-	V_DrawString(0, 320 - (strlen(smomx) << 3), 40, 0, smomx);
-	V_DrawString(0, 320 - (strlen(smomy) << 3), 48, 0, smomy);
-	V_DrawString(0, 320 - (strlen(smomz) << 3), 56, 0, smomz);
-	
+
+	if (devmodedraw[dm_emmys]) {
+		// Emerald display
+		// Was GONNA make it animate but that didn't work :(
+		printf(emmypatchname, "EMMYA0", leveltime % 21);
+
+		emmypatch = W_CachePatchName(emmypatchname, PU_CACHE);
+		
+		V_DrawFlatFill(320-144, currentrow, 144, 32, W_GetNumForName("FLOOR0_3"));
+		
+		if (emeralds & EMERALD1)
+			V_DrawSmallScaledPatch(320, currentrow+56, 0, emmypatch);
+		if (emeralds & EMERALD2)
+			V_DrawSmallScaledPatch(320-24, currentrow+56, 0, emmypatch);
+		if (emeralds & EMERALD3)
+			V_DrawSmallScaledPatch(320-48, currentrow+56, 0, emmypatch);
+		if (emeralds & EMERALD4)
+			V_DrawSmallScaledPatch(320-72, currentrow+56, 0, emmypatch);
+		if (emeralds & EMERALD5)
+			V_DrawSmallScaledPatch(320-96, currentrow+56, 0, emmypatch);
+		if (emeralds & EMERALD6)
+			V_DrawSmallScaledPatch(320-120, currentrow+56, 0, emmypatch);
+		if (emeralds & EMERALD7)
+			V_DrawSmallScaledPatch(320-144, currentrow+56, 0, emmypatch);	
+			
+		currentrow += 144;
+	}
+
+	if (devmodedraw[dm_version]) {
+		// Detailed version info, like the version command
+		V_DrawString(0, 320 - (strlen(scomptime) << 3), currentrow, 0, scomptime);
+		currentrow += 8;
+		V_DrawString(0, 320 - (strlen(scompdate) << 3), currentrow, 0, scompdate);
+		currentrow += 8;
+		V_DrawString(0, 320 - (strlen(sbuildtype) << 3), currentrow, 0, sbuildtype);
+		currentrow += 8;
+		V_DrawString(0, 320 - (strlen(swindowsys) << 3), currentrow, 0, swindowsys);
+		currentrow += 8;
+	}
+
+	if (devmodedraw[dm_map]) {
+		// Info about the map we're on
+		V_DrawString(0, 320 - (strlen(sgamemap) << 3), currentrow, 0, sgamemap);
+		currentrow += 8;
+		V_DrawString(0, 320 - (strlen(szonename) << 3), currentrow, 0, szonename);
+		currentrow += 8;
+		V_DrawString(0, 320 - (strlen(sactnum) << 3), currentrow, 0, sactnum);
+		currentrow += 8;
+		V_DrawString(0, 320 - (strlen(ssingleplayer) << 3), currentrow, 0, ssingleplayer);
+		currentrow += 8;
+		V_DrawString(0, 320 - (strlen(smatch) << 3), currentrow, 0, smatch);
+		currentrow += 8;
+		V_DrawString(0, 320 - (strlen(sskynum) << 3), currentrow, 0, sskynum);
+		currentrow += 8;
+	}
+
+	if (devmodedraw[dm_minimap]) {
+		// Minimap
+	}
 	
 	/*V_DrawString(0, 192, 152, 0, "Underwater =");
-	V_DrawString(0, 288, 152, 0, sunderwater);
-	V_DrawString(0, 192, 160, 0, "MF_JUMPED =");
-	V_DrawString(0, 288, 160, 0, smfjumped);
-	V_DrawString(0, 192, 168, 0, "MF_SPINNING =");
-	V_DrawString(0, 296, 168, 0, smfspinning);
-	V_DrawString(0, 192, 176, 0, "MF_STARDASH =");
-	V_DrawString(0, 296, 176, 0, smfstartdash);
-	V_DrawString(0, 192, 184, 0, "Jumping =");
-	V_DrawString(0, 288, 184, 0, sjumping);
-	V_DrawString(0, 192, 192, 0, "Scoreadd =");
-	V_DrawString(0, 288, 192, 0, sscoreadd);*/
+	V_DrawString(0, 288, 152, 0, sunderwater);*/
 }
 
 static void ST_drawEggsNeeded(void)

@@ -667,6 +667,21 @@ boolean HU_Responder(event_t *ev)
 
 	// only KeyDown events now...
 
+	// Handle different devmode info panels
+	if (ev->data1 == '0')
+		devmodedraw[dm_playermovebasic] = !devmodedraw[dm_playermovebasic];
+	if (ev->data1 == '1')
+		devmodedraw[dm_playermoveadv] = !devmodedraw[dm_playermoveadv];
+	if (ev->data1 == '2')
+		devmodedraw[dm_emmys] = !devmodedraw[dm_emmys];
+	if (ev->data1 == '3')
+		devmodedraw[dm_version] = !devmodedraw[dm_version];
+	if (ev->data1 == '4')
+		devmodedraw[dm_map] = !devmodedraw[dm_map];
+	if (ev->data1 == '5')
+		devmodedraw[dm_minimap] = !devmodedraw[dm_minimap];
+	
+
 	if (!chat_on)
 	{
 		// enter chat mode
