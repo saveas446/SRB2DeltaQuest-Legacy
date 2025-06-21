@@ -2927,7 +2927,7 @@ void G_MovieMode(boolean enable)
 {
 	if (enable)
 	{
-		CONS_Printf("Movie mode enabled.\n");
+		CONS_Printf("Movie mode (GIF) enabled.\n");
 		singletics = true;
 		moviemode = true;
 		M_OpenGIF();
@@ -2935,7 +2935,7 @@ void G_MovieMode(boolean enable)
 	}
 	else
 	{
-		CONS_Printf("Movie mode disabled.\n");
+		CONS_Printf("Movie mode (GIF) disabled.\n");
 		singletics = false;
 		moviemode = false;
 		M_CloseGIF();
