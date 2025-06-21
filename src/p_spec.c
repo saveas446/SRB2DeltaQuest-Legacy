@@ -105,6 +105,7 @@ animdef_t               harddefs[] =
     {false,     "SWATER4",      "SWATER1",      8},
     {false,     "LAVA4",        "LAVA1",        8},
     {false,     "BLOOD3",       "BLOOD1",       8},
+	{false,     "BWATER16",       "BWATER1",       8},
 
     {false,     "RROCK08",      "RROCK05",      8},
     {false,     "CHEMG16",      "CHEMG01",      4}, // Tails 12-11-2000 THZ Chemical gunk
@@ -137,6 +138,7 @@ animdef_t               harddefs[] =
 	{true,      "RFALL4",       "RFALL1",       4},
 	{true,      "GRFALL4",      "GRFALL1",      4},
 	{true,      "YFALL4",       "YFALL1",       4},
+	{true,      "BFALL4",       "BFALL1",       4},
 	#endif
 
     {-1}
