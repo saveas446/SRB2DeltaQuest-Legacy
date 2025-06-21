@@ -78,6 +78,7 @@
 				OutputFile="D:\Games\SRB2\demo_2\dev\r_opengl.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
+				IgnoreDefaultLibraryNames="/NODEFAULTLIB:LIBCMTD"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="..\..\..\bin\VC\Debug\r_opengl.pdb"
 				ImportLibrary=".\..\..\..\bin\VC\Debug\r_opengl/r_opengl.lib"

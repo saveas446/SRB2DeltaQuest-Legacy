@@ -622,15 +622,6 @@ void D_SRB2Loop(void)
 			// Update display, next frame, with current state.
 			D_Display();
 			supdate = false;
-
-			if (moviemode)
-			{
-#ifdef HAVE_MNG
-				M_SaveMNG();
-#else
-				COM_BufAddText("screenshot");
-#endif
-			}
 		}
 		else if (rendertimeout < entertic) // in case the server hang or netsplit
 		{
@@ -644,6 +635,10 @@ void D_SRB2Loop(void)
 			}
 			D_Display();
 		}
+
+		
+		if (moviemode)
+			M_SaveGIF();
 
 		// consoleplayer -> displayplayer (hear sounds from viewpoint)
 		S_UpdateSounds(); // move positional sounds

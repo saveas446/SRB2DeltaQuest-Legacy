@@ -1515,12 +1515,14 @@ static void Command_Stopdemo_f(void)
 
 static void Command_StartMovie_f(void)
 {
-	G_MovieMode(true);
+	if (!moviemode)
+		G_MovieMode(true);
 }
 
 static void Command_StopMovie_f(void)
 {
-	G_MovieMode(false);
+	if (moviemode)
+		G_MovieMode(false);
 }
 
 int mapchangepending = 0;

@@ -60,6 +60,7 @@
 #include "d_main.h"
 #include "m_argv.h"
 #include "i_system.h"
+#include "gif_lib.h"
 
 
 #ifdef _WIN32_WCE
@@ -705,6 +706,160 @@ boolean M_CloseMNG(void)
 }
 
 #endif
+
+// Generate a GIF color palette from raw RGB byte array
+ColorMapObject* M_CreateGIFColorMap(byte* data, int count) {
+
+	int i;
+    ColorMapObject* cmap;
+	cmap = GifMakeMapObject(count, NULL);
+    if (!cmap) return NULL;
+
+    for (i = 0; i < count; ++i) {
+        cmap->Colors[i].Red   = data[i * 3 + 0];
+        cmap->Colors[i].Green = data[i * 3 + 1];
+        cmap->Colors[i].Blue  = data[i * 3 + 2];
+    }
+
+    return cmap;
+}
+
+GifFileType* gif;
+
+int M_SetupGIF(const char* filename, byte* pal) {
+    int error;
+    
+	ColorMapObject* cmap;
+	SavedImage image;
+	byte *linear = NULL;
+
+	int datasize;
+	gif = EGifOpenFileName(filename, false, &error);
+
+    if (!gif) return error;
+	if (!filename) return GIF_ERROR;
+
+	cmap = M_CreateGIFColorMap(pal, 256);
+
+    EGifPutScreenDesc(gif, vid.width, vid.height, cmap->BitsPerPixel, 0, cmap);
+
+    // allocate savedimage
+    image.ImageDesc.Left = 0;
+    image.ImageDesc.Top = 0;
+    image.ImageDesc.Width = vid.width;
+    image.ImageDesc.Height = vid.height;
+    image.ImageDesc.Interlace = false;
+    image.ImageDesc.ColorMap = NULL;
+
+    datasize = vid.width * vid.height;
+
+    image.RasterBits = (GifByteType*)malloc(datasize);
+
+	if (rendermode == render_soft)
+	{
+		// munge planar buffer to linear
+		linear = screens[2];
+		I_ReadScreen(linear);
+	}
+
+    memcpy(image.RasterBits, linear, datasize);
+
+    // write the frame
+    EGifPutImageDesc(gif, image.ImageDesc.Left, image.ImageDesc.Top, vid.width, vid.height, false, NULL);
+    EGifPutLine(gif, image.RasterBits, datasize) ;
+
+    free(image.RasterBits);
+    return error;
+}
+
+int gif_frames;
+
+boolean M_OpenGIF(void)
+{
+	const char *freename = NULL, *pathname = ".";
+	boolean ret = false;
+
+	if (cv_screenshot_option.value == 0)
+		pathname = usehome ? srb2home : srb2path;
+	else if (cv_screenshot_option.value == 1)
+		pathname = srb2home;
+	else if (cv_screenshot_option.value == 2)
+		pathname = srb2path;
+	else if (cv_screenshot_option.value == 3 && *cv_screenshot_folder.string != '\0')
+		pathname = cv_screenshot_folder.string;
+
+	if (rendermode == render_none)
+		I_Error("Can't take a GIF movie without a render system");
+	else
+		freename = Newsnapshotfile(pathname,"gif");
+
+	if (!freename)
+		goto failure;
+
+	if (rendermode == render_soft)
+		ret = M_SetupGIF(va(pandf,pathname,freename), W_CacheLumpName("PLAYPAL", PU_CACHE));
+	else
+		ret = M_SetupGIF(va(pandf,pathname,freename), NULL);
+
+	gif_frames = 0;
+
+failure:
+	if (!ret)
+	{
+		if (freename)
+			CONS_Printf("Couldn't create GIF movie file %s in %s\n", freename, pathname);
+		else
+			CONS_Printf("Couldn't create GIF movie file (all 10000 slots used!) in %s\n", pathname);
+	}
+	return ret;
+}
+
+
+// Append a single frame to an open GIF file
+int M_SaveGIF(void) {
+	byte* linear = NULL;
+	int y;
+	GraphicsControlBlock gcb;
+    GifByteType extData[4];
+
+	if (rendermode == render_soft)
+	{
+		// munge planar buffer to linear
+		linear = screens[2];
+		I_ReadScreen(linear);
+	}
+
+	// temporary solution until we can calculate delay in a better way
+   
+	if (vid.width == 640)
+    	gcb.DelayTime = 3;  // delay in 1/100ths of a second
+
+	if (vid.width == 1280)	
+		gcb.DelayTime = 6;  // delay in 1/100ths of a second
+
+
+    gcb.DisposalMode = DISPOSAL_UNSPECIFIED;
+
+    if (EGifGCBToExtension(&gcb, extData) == GIF_ERROR) return gif->Error;
+    if (EGifPutExtension(gif, GRAPHICS_EXT_FUNC_CODE, sizeof(extData), extData) == GIF_ERROR) return gif->Error;
+
+    if (EGifPutImageDesc(gif, 0, 0, vid.width, vid.height, false, NULL) == GIF_ERROR)
+        return gif->Error;
+
+    if (EGifPutLine(gif, (GifByteType*)linear, vid.width * vid.height) == GIF_ERROR)
+        return gif->Error;
+
+	gif_frames++;
+
+    return GIF_OK;
+}
+
+M_CloseGIF(void) {
+	int error;
+	if (EGifCloseFile(gif, &error) == GIF_ERROR) return error;
+    return GIF_OK;
+}
+
 
 // ==========================================================================
 //                            SCREEN SHOTS

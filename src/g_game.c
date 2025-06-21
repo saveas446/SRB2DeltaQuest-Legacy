@@ -2930,18 +2930,15 @@ void G_MovieMode(boolean enable)
 		CONS_Printf("Movie mode enabled.\n");
 		singletics = true;
 		moviemode = true;
-#ifdef HAVE_MNG
-		M_OpenMNG();
-#endif
+		M_OpenGIF();
+
 	}
 	else
 	{
 		CONS_Printf("Movie mode disabled.\n");
 		singletics = false;
 		moviemode = false;
-#ifdef HAVE_MNG
-		M_CloseMNG();
-#endif
+		M_CloseGIF();
 	}
 }
 

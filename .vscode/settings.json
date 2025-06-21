@@ -13,7 +13,8 @@
         "P_MOBJ.C": "cpp",
         "xtr1common": "cpp",
         "cmath": "c",
-        "HW_BSP.C": "cpp"
+        "HW_BSP.C": "cpp",
+        "HW_DRAW.C": "cpp"
     },
     "cmake.ignoreCMakeListsMissing": true
 }
