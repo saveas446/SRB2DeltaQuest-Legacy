@@ -55,9 +55,10 @@ char sprnames[NUMSPRITES + 1][5] =
 	"CCOM",
 	#endif
 	"RAIN",
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+
+
 	"DSPK","USPK",
-	#endif
+
 	"STPT","RNGM","RNGR","RNGS",
 	"RNGA","RNGE","TAEH","TAER","THER","TAHR","THOM","TAUT","TEXP",
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
@@ -1000,12 +1001,11 @@ state_t states[NUMSTATES] =
 	// Rain
 	{SPR_RAIN, 32768, -1, {NULL}, 0, 0, S_NULL}, // S_RAIN1
 	{SPR_RAIN, 32768, 1, {NULL}, 0, 0, S_RAIN1}, // S_RAINRETURN
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+
 	// Ceiling Spike
 	{SPR_DSPK, 0, -1, {NULL}, 0, 0, S_NULL}, // S_CEILINGSPIKE
 	// Floor Spike
 	{SPR_USPK, 0,-1, {NULL}, 0, 0, S_NULL}, // S_FLOORSPIKE
-	#endif
 
 	// Starpost
 	{SPR_STPT, 0, -1, {NULL}, 0, 0, S_NULL},       // S_STARPOST1
@@ -4542,7 +4542,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_NOBLOCKMAP,  // flags
 		S_NULL          // raisestate
 	},
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	{           // MT_CEILINGSPIKE
 		67,             // doomednum
 		S_CEILINGSPIKE, // spawnstate
@@ -4570,7 +4569,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 	},
 
 	{           // MT_FLOORSPIKE
-		68,             // doomednum
+		69,             // doomednum
 		S_FLOORSPIKE,   // spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
@@ -4594,7 +4593,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SOLID,       // flags
 		S_NULL          // raisestate
 	},
-	#endif
 	{           // MT_STARPOST
 		3006,           // doomednum
 		S_STARPOST1,    // spawnstate

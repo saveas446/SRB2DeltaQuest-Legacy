@@ -225,10 +225,10 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT],     // SPR_CCOM
 	#endif
 	&lspr[NOLIGHT],     // SPR_RAIN
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+
 	&lspr[NOLIGHT],     // SPR_DSPK
 	&lspr[NOLIGHT],     // SPR_USPK
-	#endif
+	
 	//Fab:
 	&lspr[NOLIGHT],     // SPR_STPT
 	&lspr[RINGLIGHT_L],     // SPR_RNGM

@@ -443,7 +443,6 @@ static boolean PIT_CheckThing(mobj_t *thing)
 		return !solid;
 	}
 
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	// Sprite Spikes!
 	if (tmthing->type == MT_CEILINGSPIKE)
 	{
@@ -472,7 +471,6 @@ static boolean PIT_CheckThing(mobj_t *thing)
 			P_DamageMobj(tmthing, thing, thing, 1);
 		}
 	}
-	#endif
 
 	if ((tmthing->flags & MF_PUSHABLE) && tmthing->z <= (thing->z + thing->height + FRACUNIT)
 		&& (tmthing->z + tmthing->height) >= thing->z)

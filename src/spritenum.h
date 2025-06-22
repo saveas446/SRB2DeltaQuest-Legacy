@@ -101,10 +101,10 @@ typedef enum
 	SPR_CCOM, // Crawla Commander
 	#endif
 	SPR_RAIN, // Rain
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+
 	SPR_DSPK, // Ceiling spike
 	SPR_USPK, // Floor spike
-	#endif
+
 	SPR_STPT, // Starpost
 	SPR_RNGM, // Homing Ring
 	SPR_RNGR, // Rail Ring
@@ -1118,11 +1118,10 @@ typedef enum
 	// Rain
 	S_RAIN1,
 	S_RAINRETURN,
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	// Spikes
 	S_CEILINGSPIKE,
 	S_FLOORSPIKE,
-	#endif
+
 
 	// Starpost
 	S_STARPOST1,
@@ -1951,10 +1950,8 @@ typedef enum
 	MT_YELLOWSPRINGDOWN,
 	MT_REDSPRINGDOWN,
 	MT_RAIN, // Rain
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	MT_CEILINGSPIKE,
 	MT_FLOORSPIKE,
-	#endif
 	MT_STARPOST,
 	MT_SPECIALSPIKEBALL,
 	MT_HOMINGRING,

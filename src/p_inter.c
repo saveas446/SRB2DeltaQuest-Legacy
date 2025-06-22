@@ -1527,10 +1527,7 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 
 			P_ResetPlayer(player);
 			
-			if (source && (source->type == MT_DISS 
-				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
-				|| source->type == MT_FLOORSPIKE || source->type == MT_CEILINGSPIKE
-				#endif
+			if (source && (source->type == MT_DISS || source->type == MT_FLOORSPIKE || source->type == MT_CEILINGSPIKE
 				) && source->threshold == 43) // spikes
 				S_StartSound(target, sfx_pldeth);
 			else
@@ -1590,10 +1587,7 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 
 			P_ResetPlayer(player);
 
-			if (source && (source->type == MT_DISS 
-				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
-				|| source->type == MT_FLOORSPIKE || source->type == MT_CEILINGSPIKE
-				#endif
+			if (source && (source->type == MT_DISS || source->type == MT_FLOORSPIKE || source->type == MT_CEILINGSPIKE
 				) && source->threshold == 43) // spikes
 				S_StartSound(target, sfx_pldeth);
 
@@ -1623,10 +1617,7 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 
 			P_ResetPlayer(player);
 
-			if (source && (source->type == MT_DISS 
-				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
-				|| source->type == MT_FLOORSPIKE || source->type == MT_CEILINGSPIKE
-				#endif
+			if (source && (source->type == MT_DISS || source->type == MT_FLOORSPIKE || source->type == MT_CEILINGSPIKE
 				) && source->threshold == 43) // spikess
 				S_StartSound(target, sfx_pldeth);
 			else

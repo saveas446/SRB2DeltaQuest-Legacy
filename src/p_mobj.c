@@ -1006,9 +1006,7 @@ static void P_ZMovement(mobj_t *mo)
 			}
 			if ((mo->z <= mo->floorz) && (!(tmfloorthing) || (((tmfloorthing->flags & MF_PUSHABLE)
 				|| (tmfloorthing->flags2 & MF2_STANDONME)) || tmfloorthing->type == MT_PLAYER
-				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 				|| tmfloorthing->type == MT_FLOORSPIKE
-				#endif
 				)))
 			{
 				if (!tmfloorthing || mo->momz)
@@ -1029,9 +1027,7 @@ static void P_ZMovement(mobj_t *mo)
 					mo->momz = -FixedMul(mo->momz,(17*FRACUNIT)/20);
 			}
 			else if (!(tmfloorthing) || (((tmfloorthing->flags & MF_PUSHABLE) || (tmfloorthing->flags2 & MF2_STANDONME)) || tmfloorthing->type == MT_PLAYER 
-			#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 			|| tmfloorthing->type == MT_FLOORSPIKE
-			#endif
 			))
 				mo->momz = 0;
 		}
@@ -1090,14 +1086,13 @@ static void P_ZMovement(mobj_t *mo)
 		if (!mo->momz) // mobj at stop, no floor, so feel the push of gravity!
 			gravityadd <<= 1;
 
-		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+
 		if (mo->type == MT_CEILINGSPIKE)
 		{
 			gravityadd *= -1; // Reverse gravity for ceiling spikes
 			if (mo->z + mo->height >= mo->ceilingz)
 				gravityadd = 0;
 		}
-		#endif
 		
 		mo->momz += gravityadd/NEWTICRATERATIO;
 		if (mo->type == MT_SKIM && mo->z + mo->momz <= mo->watertop && mo->z >= mo->watertop)
@@ -1266,9 +1261,7 @@ static void P_PlayerZMovement(mobj_t *mo)
 			}
 			if ((mo->z <= mo->floorz) && (!(tmfloorthing) || (((tmfloorthing->flags & MF_PUSHABLE)
 				|| (tmfloorthing->flags2 & MF2_STANDONME)) || tmfloorthing->type == MT_PLAYER
-				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 				|| tmfloorthing->type == MT_FLOORSPIKE
-				#endif
 			))) // Spin Attack
 			{
 				if ((tmfloorthing && mo->momz) || !tmfloorthing)
@@ -1338,9 +1331,7 @@ static void P_PlayerZMovement(mobj_t *mo)
 				mo->player->mfstartdash = 0; // dashing stuff
 
 			if (!(tmfloorthing) || (((tmfloorthing->flags & MF_PUSHABLE) || (tmfloorthing->flags2 & MF2_STANDONME)) || tmfloorthing->type == MT_PLAYER 
-			#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 			|| tmfloorthing->type == MT_FLOORSPIKE
-			#endif
 			))
 			if (!jellyfound) {
 				mo->momz = 0;
@@ -1543,9 +1534,7 @@ static void P_SceneryZMovement(mobj_t *mo)
 		{
 			if ((!(tmfloorthing) || (((tmfloorthing->flags & MF_PUSHABLE)
 				|| (tmfloorthing->flags2 & MF2_STANDONME)) || tmfloorthing->type == MT_PLAYER
-				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 				|| tmfloorthing->type == MT_FLOORSPIKE
-				#endif
 			)))
 			{
 				if (!tmfloorthing || mo->momz)
