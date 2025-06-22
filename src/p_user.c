@@ -5942,49 +5942,6 @@ void P_PlayerThink(player_t *player)
 		I_Error("player %d is in PST_REBORN\n");
 #endif
 
-	if (gametype == GT_RACE)
-	{
-		int i;
-
-		// Check if all the players in the race have finished. If so, end the level.
-		for (i = 0; i < MAXPLAYERS; i++)
-		{
-			if (playeringame[i])
-			{
-				if (!players[i].exiting && players[i].lives > 0)
-					break;
-			}
-		}
-
-		if (i == MAXPLAYERS && player->exiting == 3*TICRATE) // finished
-			player->exiting = (14*TICRATE)/5 + 1;
-
-		// If 10 seconds are left on the timer,
-		// begin the drown music for countdown!
-		if (countdown == 11*TICRATE - 1)
-		{
-			if (P_IsLocalPlayer(player))
-				S_ChangeMusic(mus_drown, false);
-		}
-
-		// If you've hit the countdown and you haven't made
-		//  it to the exit, you're a goner!
-		else if (countdown == 1 && !player->exiting)
-		{
-			if (netgame && player->health > 0)
-				CONS_Printf("%s ran out of time.\n", player_names[player-players]);
-
-			player->timeover = true;
-
-			player->lives = 1; // Starts the game over music
-			P_DamageMobj(player->mo, NULL, NULL, 10000);
-			player->lives = 0;
-
-			if (player->playerstate == PST_DEAD)
-				return;
-		}
-	}
-
 	// Check if player is in the exit sector.
 	// If so, begin the level end process.
 	if (player->mo->subsector->sector->special == 982 && !player->exiting)
@@ -6022,6 +5979,13 @@ void P_PlayerThink(player_t *player)
 				if (xofs >= 0 && xofs < NUMGAMETYPES)
 					nextmapgametype = xofs;
 			}
+		}
+
+		CONS_Printf("gamemap: %d\n", gamemap);
+
+		if (gametype != GT_RACE && gamemap == 37) {
+			nextmapoverride = 33;
+			skipstats = true;
 		}
 	}
 

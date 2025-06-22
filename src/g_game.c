@@ -2095,7 +2095,7 @@ void G_DoCompleted(void)
 	prevmap = gamemap-1;
 	
 
-	nextmap = gamemap; // Go to next map. Save 24-05-2025
+	//nextmap = gamemap; // Go to next map. Save 24-05-2025
 
 	if (secretexit != 0) {
 		// DSZ2 speed highway exit
@@ -2108,15 +2108,16 @@ void G_DoCompleted(void)
 		}
 	}
 
-	//If Sam wants me to, I can restore this part.
 
-	/*// go to next level
+	// go to next level
 	// nextmap is 0-based, unlike gamemap
 	if (nextmapoverride != 0)
 		nextmap = nextmapoverride-1;
 	else
 		nextmap = mapheaderinfo[gamemap-1].nextlevel-1;
 
+
+	/*
 	// Remember last map for when you come out of the special stage.
 	if (gamemap < sstage_start || gamemap > sstage_end)
 		lastmap = nextmap;
