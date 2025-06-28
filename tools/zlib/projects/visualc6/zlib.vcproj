@@ -524,7 +524,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling..."
-						CommandLine="ml /coff /Zi /c /Flgvmat32.lst /DNOOLDPENTIUMCODE gvmat32.asm&#x0D;&#x0A;"
+						CommandLine="ml.exe /nologo /c /coff /Cx /Fo&quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>

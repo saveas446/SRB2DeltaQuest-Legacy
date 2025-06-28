@@ -5981,7 +5981,7 @@ void P_PlayerThink(player_t *player)
 			}
 		}
 
-		CONS_Printf("gamemap: %d\n", gamemap);
+		//CONS_Printf("gamemap: %d\n", gamemap);
 
 		if (gametype != GT_RACE && gamemap == 37) {
 			nextmapoverride = 33;

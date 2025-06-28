@@ -339,7 +339,7 @@ void CON_Init(void)
 	con_backpic = (pic_t *)W_CacheLumpName("CONSBACK",PU_STATIC);
 	#else
 	// load console background pic
-	con_backpic = (patch_t *)W_CacheLumpName("CREDIT",PU_STATIC);
+	con_backpic = (patch_t *)W_CacheLumpName("CONSBACK",PU_STATIC);
 	#endif
 
 	// register our commands
