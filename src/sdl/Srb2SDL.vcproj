@@ -145,7 +145,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="..\..\tools\libpng-src,..\..\tools\zlib"
+				AdditionalIncludeDirectories="..\..\tools\libpng-src;..\..\tools\zlib;..\..\tools\giflib;..\..\include;"
 				PreprocessorDefinitions="NDEBUG;SDLMAIN;NO_STDIO_REDIRECT;USE_WGL_SWAP;DIRECTFULLSCREEN;SDL;HWRENDER;HW3SOUND;HAVE_FILTER;HAVE_MIXER;USEASM;HAVE_PNG"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -171,10 +171,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDL_mixer.lib opengl32.lib glu32.lib wsock32.lib"
-				OutputFile="c:\srb2demo2\srb2sdl.exe"
+				AdditionalDependencies="SDL.lib SDL_mixer.lib giflib.lib opengl32.lib glu32.lib wsock32.lib"
+				OutputFile="..\..\dev\srb2sdl.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="..\..\lib;..\..\tools\giflib"
+				IgnoreDefaultLibraryNames="LIBCMT"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="c:\srb2demo2\srb2sdl.pdb"
 				SubSystem="2"
@@ -2394,7 +2396,6 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -2421,7 +2422,6 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"

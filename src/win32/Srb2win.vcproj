@@ -152,7 +152,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="..\..\tools\libpng-src,..\..\tools\zlib"
+				AdditionalIncludeDirectories="..\..\tools\libpng-src;..\..\tools\zlib;..\..\tools\giflib"
 				PreprocessorDefinitions="NDEBUG;_WINDOWS;USEASM;HAVE_PNG"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -179,10 +179,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dxguid.lib dinput.lib dsound.lib ddraw.lib winmm.lib wsock32.lib fmodvc.lib"
+				AdditionalDependencies="dxguid.lib dinput.lib dsound.lib ddraw.lib giflib.lib winmm.lib wsock32.lib fmodvc.lib"
 				OutputFile="..\..\dev\srb2win.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="..\..\tools\giflib;..\..\lib"
+				IgnoreDefaultLibraryNames="LIBCMT.lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="c:\srb2demo2\srb2.pdb"
 				SubSystem="2"
