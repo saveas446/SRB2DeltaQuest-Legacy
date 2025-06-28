@@ -148,7 +148,7 @@
 				AdditionalIncludeDirectories="..\..\tools\libpng-src;..\..\tools\zlib;..\..\tools\giflib;..\..\include;"
 				PreprocessorDefinitions="NDEBUG;SDLMAIN;NO_STDIO_REDIRECT;USE_WGL_SWAP;DIRECTFULLSCREEN;SDL;HWRENDER;HW3SOUND;HAVE_FILTER;HAVE_MIXER;USEASM;HAVE_PNG"
 				StringPooling="true"
-				RuntimeLibrary="0"
+				RuntimeLibrary="2"
 				PrecompiledHeaderFile=".\..\..\objs\VC\Release\SDL/Srb2SDL.pch"
 				AssemblerListingLocation=".\..\..\objs\VC\Release\SDL/"
 				ObjectFile=".\..\..\objs\VC\Release\SDL/"
@@ -171,6 +171,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/MD"
 				AdditionalDependencies="SDL.lib SDL_mixer.lib giflib.lib opengl32.lib glu32.lib wsock32.lib"
 				OutputFile="..\..\dev\srb2sdl.exe"
 				LinkIncremental="1"
