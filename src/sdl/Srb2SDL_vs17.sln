@@ -11,8 +11,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "s_openal", "..\hardware\s_o
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "..\..\tools\zlib\projects\visualc6\zlib.vcxproj", "{B869C44C-EDC8-4305-A193-C073C1FA7EE7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "giflib", "..\..\tools\giflib\giflib.vcxproj", "{0FE2EB2F-166D-4CCF-BF41-3191977DDDD3}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -35,10 +33,6 @@ Global
 		{B869C44C-EDC8-4305-A193-C073C1FA7EE7}.Debug|Win32.Build.0 = Debug|Win32
 		{B869C44C-EDC8-4305-A193-C073C1FA7EE7}.Release|Win32.ActiveCfg = Release|Win32
 		{B869C44C-EDC8-4305-A193-C073C1FA7EE7}.Release|Win32.Build.0 = Release|Win32
-		{0FE2EB2F-166D-4CCF-BF41-3191977DDDD3}.Debug|Win32.ActiveCfg = Debug|Win32
-		{0FE2EB2F-166D-4CCF-BF41-3191977DDDD3}.Debug|Win32.Build.0 = Debug|Win32
-		{0FE2EB2F-166D-4CCF-BF41-3191977DDDD3}.Release|Win32.ActiveCfg = Release|Win32
-		{0FE2EB2F-166D-4CCF-BF41-3191977DDDD3}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2926,7 +2926,7 @@ void G_TimeDemo(const char *name)
 
 void G_MovieMode(boolean enable)
 {
-	if (enable)
+	/*if (enable)
 	{
 		CONS_Printf("Movie mode (GIF) enabled.\n");
 		singletics = true;
@@ -2940,7 +2940,7 @@ void G_MovieMode(boolean enable)
 		singletics = false;
 		moviemode = false;
 		M_CloseGIF();
-	}
+	}*/
 }
 
 void G_DoneLevelLoad(void)

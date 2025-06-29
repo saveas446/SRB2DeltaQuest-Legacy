@@ -14,7 +14,7 @@
     #define DEV_RELEASE 2 // Enables dev build functionality
     #define FULL_RELEASE 3 // Enables full release functionality
 
-    #define BUILD_TYPE DEMO
+    #define BUILD_TYPE DEV_RELEASE
 
     //#define NOMAPCMD // Disables map command for singleplayer
     //#define DARKENEDMENU // Darkens menu
@@ -56,7 +56,7 @@
     #define MINORVER 1
 
     // Increment this every day
-    #define TINYVER 14
+    #define TINYVER 15
 
     #define COMPAT_TITLESKY
 

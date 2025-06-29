@@ -637,8 +637,8 @@ void D_SRB2Loop(void)
 		}
 
 		
-		if (moviemode)
-			M_SaveGIF();
+		/*if (moviemode)
+			M_SaveGIF();*/
 
 		// consoleplayer -> displayplayer (hear sounds from viewpoint)
 		S_UpdateSounds(); // move positional sounds

@@ -185,7 +185,7 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\tools\giflib;..\..\lib"
 				GenerateManifest="true"
-				IgnoreDefaultLibraryNames="LIBCMT;MSCVRTD"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="false"
 				ProgramDatabaseFile="c:\srb2demo2\srb2.pdb"
 				SubSystem="2"

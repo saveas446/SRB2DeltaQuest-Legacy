@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36119.2 d17.14
+VisualStudioVersion = 17.14.36119.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Srb2win", "Srb2win.vcxproj", "{F936D2C4-1DC7-43F7-8B99-F2CECA8BB2F4}"
 EndProject
@@ -10,8 +10,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "r_opengl", "..\hardware\r_opengl\r_opengl.vcxproj", "{48EA8F63-456A-4C3C-B3D5-B9EEA5489252}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\projects\visualc6\zlib.vcxproj", "{8F23577C-FF01-4A47-920A-6C2219EC01FA}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "giflib", "..\..\tools\giflib\giflib.vcxproj", "{0FE2EB2F-166D-4CCF-BF41-3191977DDDD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +33,6 @@ Global
 		{8F23577C-FF01-4A47-920A-6C2219EC01FA}.Debug|Win32.Build.0 = Debug|Win32
 		{8F23577C-FF01-4A47-920A-6C2219EC01FA}.Release|Win32.ActiveCfg = Release|Win32
 		{8F23577C-FF01-4A47-920A-6C2219EC01FA}.Release|Win32.Build.0 = Release|Win32
-		{0FE2EB2F-166D-4CCF-BF41-3191977DDDD3}.Debug|Win32.ActiveCfg = Debug|Win32
-		{0FE2EB2F-166D-4CCF-BF41-3191977DDDD3}.Debug|Win32.Build.0 = Debug|Win32
-		{0FE2EB2F-166D-4CCF-BF41-3191977DDDD3}.Release|Win32.ActiveCfg = Release|Win32
-		{0FE2EB2F-166D-4CCF-BF41-3191977DDDD3}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

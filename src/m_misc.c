@@ -60,7 +60,6 @@
 #include "d_main.h"
 #include "m_argv.h"
 #include "i_system.h"
-#include "gif_lib.h"
 
 
 #ifdef _WIN32_WCE
@@ -707,6 +706,7 @@ boolean M_CloseMNG(void)
 
 #endif
 
+/*
 // Generate a GIF color palette from raw RGB byte array
 ColorMapObject* M_CreateGIFColorMap(byte* data, int count) {
 
@@ -858,7 +858,7 @@ M_CloseGIF(void) {
 	int error;
 	if (EGifCloseFile(gif, &error) == GIF_ERROR) return error;
     return GIF_OK;
-}
+}*/
 
 
 // ==========================================================================
