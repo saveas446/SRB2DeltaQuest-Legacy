@@ -70,8 +70,6 @@ srb2log.txt
 *.obj
 /src/vs17/.vs/
 /src/sdl/.vs/
-/src/.vs/
-/src/win32/.vs/
 
 # Ninja
 *.ninja_deps

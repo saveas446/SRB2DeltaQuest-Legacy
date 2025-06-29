@@ -1,15 +1,25 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36203.30 d17.14
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Srb2win", "Srb2win.vcxproj", "{F936D2C4-1DC7-43F7-8B99-F2CECA8BB2F4}"
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Srb2win", "Srb2win.vcproj", "{F936D2C4-1DC7-43F7-8B99-F2CECA8BB2F4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2AD3FE7B-17D6-4950-BCF6-F4D7B8C2A78C} = {2AD3FE7B-17D6-4950-BCF6-F4D7B8C2A78C}
+		{8F23577C-FF01-4A47-920A-6C2219EC01FA} = {8F23577C-FF01-4A47-920A-6C2219EC01FA}
+	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libpng", "..\..\tools\libpng-src\projects\visualc6\libpng.vcxproj", "{DB2741D3-25FA-424B-8204-66EA7FCF9E6B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libpng", "..\..\tools\libpng-src\projects\visualc6\libpng.vcproj", "{2AD3FE7B-17D6-4950-BCF6-F4D7B8C2A78C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8F23577C-FF01-4A47-920A-6C2219EC01FA} = {8F23577C-FF01-4A47-920A-6C2219EC01FA}
+	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "r_opengl", "..\hardware\r_opengl\r_opengl.vcxproj", "{48EA8F63-456A-4C3C-B3D5-B9EEA5489252}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "r_opengl", "..\hardware\r_opengl\r_opengl.vcproj", "{48EA8F63-456A-4C3C-B3D5-B9EEA5489252}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F936D2C4-1DC7-43F7-8B99-F2CECA8BB2F4} = {F936D2C4-1DC7-43F7-8B99-F2CECA8BB2F4}
+	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "..\..\tools\zlib\projects\visualc6\zlib.vcxproj", "{B869C44C-EDC8-4305-A193-C073C1FA7EE7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "..\..\tools\zlib\projects\visualc6\zlib.vcproj", "{8F23577C-FF01-4A47-920A-6C2219EC01FA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "giflib", "..\..\tools\giflib\giflib.vcproj", "{0FE2EB2F-166D-4CCF-BF41-3191977DDDD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,23 +31,24 @@ Global
 		{F936D2C4-1DC7-43F7-8B99-F2CECA8BB2F4}.Debug|Win32.Build.0 = Debug|Win32
 		{F936D2C4-1DC7-43F7-8B99-F2CECA8BB2F4}.Release|Win32.ActiveCfg = Release|Win32
 		{F936D2C4-1DC7-43F7-8B99-F2CECA8BB2F4}.Release|Win32.Build.0 = Release|Win32
-		{DB2741D3-25FA-424B-8204-66EA7FCF9E6B}.Debug|Win32.ActiveCfg = Debug|Win32
-		{DB2741D3-25FA-424B-8204-66EA7FCF9E6B}.Debug|Win32.Build.0 = Debug|Win32
-		{DB2741D3-25FA-424B-8204-66EA7FCF9E6B}.Release|Win32.ActiveCfg = Release|Win32
-		{DB2741D3-25FA-424B-8204-66EA7FCF9E6B}.Release|Win32.Build.0 = Release|Win32
+		{2AD3FE7B-17D6-4950-BCF6-F4D7B8C2A78C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2AD3FE7B-17D6-4950-BCF6-F4D7B8C2A78C}.Debug|Win32.Build.0 = Debug|Win32
+		{2AD3FE7B-17D6-4950-BCF6-F4D7B8C2A78C}.Release|Win32.ActiveCfg = Release|Win32
+		{2AD3FE7B-17D6-4950-BCF6-F4D7B8C2A78C}.Release|Win32.Build.0 = Release|Win32
 		{48EA8F63-456A-4C3C-B3D5-B9EEA5489252}.Debug|Win32.ActiveCfg = Debug|Win32
 		{48EA8F63-456A-4C3C-B3D5-B9EEA5489252}.Debug|Win32.Build.0 = Debug|Win32
 		{48EA8F63-456A-4C3C-B3D5-B9EEA5489252}.Release|Win32.ActiveCfg = Release|Win32
 		{48EA8F63-456A-4C3C-B3D5-B9EEA5489252}.Release|Win32.Build.0 = Release|Win32
-		{B869C44C-EDC8-4305-A193-C073C1FA7EE7}.Debug|Win32.ActiveCfg = Debug|Win32
-		{B869C44C-EDC8-4305-A193-C073C1FA7EE7}.Debug|Win32.Build.0 = Debug|Win32
-		{B869C44C-EDC8-4305-A193-C073C1FA7EE7}.Release|Win32.ActiveCfg = Release|Win32
-		{B869C44C-EDC8-4305-A193-C073C1FA7EE7}.Release|Win32.Build.0 = Release|Win32
+		{8F23577C-FF01-4A47-920A-6C2219EC01FA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8F23577C-FF01-4A47-920A-6C2219EC01FA}.Debug|Win32.Build.0 = Debug|Win32
+		{8F23577C-FF01-4A47-920A-6C2219EC01FA}.Release|Win32.ActiveCfg = Release|Win32
+		{8F23577C-FF01-4A47-920A-6C2219EC01FA}.Release|Win32.Build.0 = Release|Win32
+		{0FE2EB2F-166D-4CCF-BF41-3191977DDDD3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0FE2EB2F-166D-4CCF-BF41-3191977DDDD3}.Debug|Win32.Build.0 = Debug|Win32
+		{0FE2EB2F-166D-4CCF-BF41-3191977DDDD3}.Release|Win32.ActiveCfg = Release|Win32
+		{0FE2EB2F-166D-4CCF-BF41-3191977DDDD3}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {14B41C95-8B82-45C3-A4B5-F692A5E33579}
 	EndGlobalSection
 EndGlobal
