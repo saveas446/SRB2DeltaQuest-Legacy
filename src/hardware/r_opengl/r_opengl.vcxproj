@@ -148,6 +148,10 @@
       <Project>{f936d2c4-1dc7-43f7-8b99-f2ceca8bb2f4}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\..\win32\Srb2win.vcxproj">
+      <Project>{f936d2c4-1dc7-43f7-8b99-f2ceca8bb2f4}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

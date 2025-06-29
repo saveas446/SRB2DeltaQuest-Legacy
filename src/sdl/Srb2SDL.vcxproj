@@ -107,7 +107,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>..\..\tools\libpng-src;..\..\tools\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\tools\libpng-src;..\..\tools\zlib;..\..\include;..\..\include\fmod;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;SDLMAIN;NO_STDIO_REDIRECT;USE_WGL_SWAP;DIRECTFULLSCREEN;SDL;HWRENDER;HW3SOUND;HAVE_FILTER;HAVE_MIXER;USEASM;HAVE_PNG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -126,12 +126,13 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>SDL.lib;SDL_mixer.lib;opengl32.lib;glu32.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>c:\srb2demo2\srb2sdl.exe</OutputFile>
+      <OutputFile>d:\d2u\dev\srb2sdl.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>c:\srb2demo2\srb2sdl.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>d:\d2u\dev\srb2sdl.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
