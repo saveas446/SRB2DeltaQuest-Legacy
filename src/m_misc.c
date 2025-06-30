@@ -43,7 +43,7 @@
 #endif
 
 #ifdef HAVE_MNG
-#define MNG_NO_INCLUDE_JNG
+#define MNG_NO_INCLUDE_JNG	
 #define MNG_SUPPORT_WRITE
 #define MNG_ACCESS_CHUNKS
 #include <libmng.h>

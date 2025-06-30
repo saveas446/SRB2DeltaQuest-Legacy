@@ -981,6 +981,7 @@ void D_SRB2Main(int sys)
 
 	int pstartmap = 1;
 	boolean autostart = false;
+	boolean cond = false;
 
 	// Figure out our windowing system
 	wnd_system = (window_system)sys;
@@ -1163,12 +1164,27 @@ void D_SRB2Main(int sys)
 
 	if (M_CheckParm("-warp") && M_IsNextParm())
 	{
+		// This could be implemented better but I'm paranoid that won't work
+		#if BUILD_TYPE != DEV_RELEASE
 		if ((modifiedgame && !savemoddata) || netgame)
+			cond = true;
+		else
+			cond = false;
+		#else
+		if ((!savemoddata) || netgame)
+			cond = true;
+		else
+			cond = false;
+		#endif
+
+		if (cond)
 		{
 			pstartmap = atoi(M_GetNextParm());
 			autostart = true;
 			savemoddata = false;
 		}
+
+
 	}
 
 	// this is in the launcher so i'm adding it here for convenience's sake

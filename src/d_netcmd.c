@@ -123,6 +123,10 @@ static void Command_UnloadWAD_f(void);
 static void Command_RunSOC(void);
 static void Command_Pause(void);
 
+#if BUILD_TYPE == DEV_RELEASE
+static void Command_Unmodify_f(void);
+#endif
+
 static void Command_Version_f(void);
 static void Command_ShowGametype_f(void);
 static void Command_JumpToAxis_f(void);
@@ -583,6 +587,12 @@ void D_RegisterClientCommands(void)
 	COM_AddCommand("setcontrol2", Command_Setcontrol2_f);
 
 	COM_AddCommand("screenshot", M_ScreenShot);
+
+	// Special command that "unmodifies" the game: Basically turns modifiedgame off
+	#if BUILD_TYPE == DEV_RELEASE
+	COM_AddCommand("unmodify", Command_Unmodify_f);
+	#endif
+
 	CV_RegisterVar(&cv_screenshot_option);
 	CV_RegisterVar(&cv_screenshot_folder);
 	CV_RegisterVar(&cv_splats);
@@ -2341,9 +2351,7 @@ static void Command_RunSOC(void)
 
 	if (!modifiedgame)
 	{
-		#if BUILD_TYPE != DEV_RELEASE
 		modifiedgame = true;
-		#endif
 		if (!(netgame || multiplayer))
 			CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
 	}
@@ -2432,9 +2440,7 @@ static void Command_Addfile(void)
 
 	if (!modifiedgame && !W_VerifyNMUSlumps(fn))
 	{
-		#if BUILD_TYPE != DEV_RELEASE
 		modifiedgame = true;
-		#endif
 		if (!(netgame || multiplayer))
 			CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
 	}
@@ -2530,9 +2536,7 @@ static void Got_Addfilecmd(char **cp, int playernum)
 	}
 
 	P_AddWadFile(filename, NULL);
-	#if BUILD_TYPE != DEV_RELEASE
 	modifiedgame = true;
-	#endif
 }
 
 
@@ -2724,6 +2728,14 @@ static void Command_JumpToAxis_f(void)
 	P_TransferToAxis(&players[consoleplayer], atoi(COM_Argv(1)));
 }
 
+#if BUILD_TYPE == DEV_RELEASE
+static void Command_Unmodify_f(void)
+{
+	modifiedgame = false;
+	CONS_Printf("Modified no longer!\n");
+}
+#endif
+
 /** Lists all players and their player numbers.
   * This function is named wrong. It doesn't print node numbers.
   *
@@ -2798,9 +2810,7 @@ void ObjectPlace_OnChange(void)
 				players[i].currentthing = 1;
 			if (!modifiedgame || savemoddata)
 			{
-				#if BUILD_TYPE != DEV_RELEASE
 				modifiedgame = true;
-				#endif
 				savemoddata = false;
 				if (!(netgame || multiplayer))
 					CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
@@ -2841,9 +2851,7 @@ void ObjectPlace_OnChange(void)
 	{
 		if (!modifiedgame || savemoddata)
 		{
-			#if BUILD_TYPE != DEV_RELEASE
 			modifiedgame = true;
-			#endif
 			savemoddata = false;
 			if (!(netgame || multiplayer))
 				CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
@@ -3101,9 +3109,7 @@ static void Ringslinger_OnChange(void)
 	{
 		if (!modifiedgame || savemoddata)
 		{
-			#if BUILD_TYPE != DEV_RELEASE
 			modifiedgame = true;
-			#endif
 			savemoddata = false;
 			if (!(netgame || multiplayer))
 				CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
@@ -3132,9 +3138,7 @@ static void Startrings_OnChange(void)
 
 		if (!modifiedgame || savemoddata)
 		{
-			#if BUILD_TYPE != DEV_RELEASE
 			modifiedgame = true;
-			#endif
 			savemoddata = false;
 			if (!(netgame || multiplayer))
 				CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
@@ -3160,9 +3164,7 @@ static void Startlives_OnChange(void)
 
 		if (!modifiedgame || savemoddata)
 		{
-			#if BUILD_TYPE != DEV_RELEASE
 			modifiedgame = true;
-			#endif
 			savemoddata = false;
 			if (!(netgame || multiplayer))
 				CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
@@ -3188,9 +3190,7 @@ static void Startcontinues_OnChange(void)
 
 		if (!modifiedgame || savemoddata)
 		{
-			#if BUILD_TYPE != DEV_RELEASE
 			modifiedgame = true;
-			#endif
 			savemoddata = false;
 			if (!(netgame || multiplayer))
 				CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
@@ -3477,9 +3477,7 @@ static void Fishcake_OnChange(void)
 		{
 			if (!modifiedgame || savemoddata)
 			{
-				#if BUILD_TYPE != DEV_RELEASE
 				modifiedgame = true;
-				#endif
 				savemoddata = false;
 				if (!(netgame || multiplayer))
 					CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
