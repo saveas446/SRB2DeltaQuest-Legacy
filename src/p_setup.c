@@ -832,6 +832,10 @@ static void P_SpawnEmblems(void)
 		if (emblemlocations[i].level != gamemap)
 			continue;
 
+		// If pos is 0,0,0 that means it's DUMMIED OUT.
+		if ((emblemlocations[i].x == 0) && (emblemlocations[i].y == 0) && (emblemlocations[i].z == 0))
+			continue;
+
 		emblemmobj = P_SpawnMobj(emblemlocations[i].x<<FRACBITS, emblemlocations[i].y<<FRACBITS,emblemlocations[i].z<<FRACBITS, MT_EMBLEM);
 		P_SetMobjStateNF(emblemmobj, emblemmobj->info->spawnstate);
 

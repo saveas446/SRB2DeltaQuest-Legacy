@@ -867,7 +867,7 @@ static void IdentifyVersion(void)
 	if (srb2wad2)
 		free(srb2wad2);
 
-	// 1984 NO NIGHTS GAMEMODE 1984 NO MATCH WEAPONS 1984 NO SEPARATE FILES FOR CHARACTER SPRITES 1984 NO TAG 1984 NO CTF GAMEMODE 1984 NO FUN
+	// 1984 NO NIGHTS GAMEMODE 1984 NO MATCH WEAPONS 1984 NO SEPARATE FILES FOR CHARACTER SPRITES 1984 NO TAG 1984 NO CTF GAMEMODE 1984 NO SPECIAL MATCH WEAPONS 1984 NO FUN
 
 	// if you change the ordering of this or add/remove a file, be sure to update the md5
 	// checking in D_SRB2Main
@@ -878,11 +878,14 @@ static void IdentifyVersion(void)
 	//D_AddFile(va(pandf,srb2waddir,"knux.plr")); //knux.plr
 
 	// Add the weapons
+
+	// I think it's safe to remove these now?
+	/*
 	D_AddFile(va(pandf,srb2waddir,"auto.wpn")); //auto.wpn
 	D_AddFile(va(pandf,srb2waddir,"bomb.wpn")); //bomb.wpn
 	D_AddFile(va(pandf,srb2waddir,"home.wpn")); //home.wpn
 	D_AddFile(va(pandf,srb2waddir,"rail.wpn")); //rail.wpn
-	D_AddFile(va(pandf,srb2waddir,"infn.wpn")); //infn.wpn
+	D_AddFile(va(pandf,srb2waddir,"infn.wpn")); //infn.wpn*/
 	D_AddFile(va(pandf,srb2waddir,"supp.wad")); //supp.wad
 
 	// Add... nights?
@@ -981,7 +984,6 @@ void D_SRB2Main(int sys)
 
 	int pstartmap = 1;
 	boolean autostart = false;
-	boolean cond = false;
 
 	// Figure out our windowing system
 	wnd_system = (window_system)sys;
@@ -1127,10 +1129,8 @@ void D_SRB2Main(int sys)
 
 				if (s) // Check for NULL?
 				{
-					#if BUILD_TYPE != DEV_RELEASE
 					if (!W_VerifyNMUSlumps(s))
 						modifiedgame = true;
-					#endif
 					D_AddFile(s);
 				}
 			}
@@ -1143,9 +1143,8 @@ void D_SRB2Main(int sys)
 	{
 		while (M_IsNextParm())
 			D_AddFile(M_GetNextParm());
-		#if BUILD_TYPE != DEV_RELEASE
+
 		modifiedgame = true;
-		#endif
 	}
 
 	// get skill / map from parms
@@ -1164,27 +1163,12 @@ void D_SRB2Main(int sys)
 
 	if (M_CheckParm("-warp") && M_IsNextParm())
 	{
-		// This could be implemented better but I'm paranoid that won't work
-		#if BUILD_TYPE != DEV_RELEASE
 		if ((modifiedgame && !savemoddata) || netgame)
-			cond = true;
-		else
-			cond = false;
-		#else
-		if ((!savemoddata) || netgame)
-			cond = true;
-		else
-			cond = false;
-		#endif
-
-		if (cond)
 		{
 			pstartmap = atoi(M_GetNextParm());
 			autostart = true;
 			savemoddata = false;
 		}
-
-
 	}
 
 	// this is in the launcher so i'm adding it here for convenience's sake

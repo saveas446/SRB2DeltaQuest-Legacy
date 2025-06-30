@@ -140,24 +140,30 @@ boolean gamedataloaded = 0;
 // Mystic's funky SA ripoff emblem idea
 emblem_t emblemlocations[MAXEMBLEMS] =
 {
-	{  1566,  4352,  608, 0, 1, 0}, // GFZ1 Sonic
-	{  2079, -1284,  768, 1, 1, 0}, // GFZ1 Tails
-	{  1270,  5597,  960, 2, 1, 0}, // GFZ1 Knuckles
-	{ -5560, -2865, 2816, 0, 2, 0}, // GFZ2 Sonic
-	{    29,  -589, 3840, 1, 2, 0}, // GFZ2 Tails
-	{ -3872,  4203, 3072, 2, 2, 0}, // GFZ2 Knuckles
-	{ -985, -12193, 2172, 0, 4, 0}, // THZ1 Sonic
-	{  4272, -5720, 3700, 1, 4, 0}, // THZ1 Tails
-	{ 14318, -9281, 4040, 2, 4, 0}, // THZ1 Knuckles
-	{-13402,  3822, 1312, 0, 5, 0}, // THZ2 Sonic
-	{  4674,  3917, 2300, 1, 5, 0}, // THZ2 Tails
-	{ -1330, -3505, 2432, 2, 5, 0}, // THZ2 Knuckles
-	{  2848, -4094, 3800, 0, 7, 0}, // CEZ1 Sonic
-	{ -5936,   322, 2900, 1, 7, 0}, // CEZ1 Tails
-	{   -17,  1169,  912, 2, 7, 0}, // CEZ1 Knuckles
-	{ -3264,  -544, 1080, 0, 8, 0}, // CEZ2 Sonic
-	{  4777,  4725,  460, 1, 8, 0}, // CEZ2 Tails
-	{  2186, -2447,  212, 2, 8, 0} // CEZ2 Knuckles
+	{  9449,  6088, 1475, 0, 1, 0}, // GFZ1 Sonic
+	{  0, 0, 0, 1, 1, 0}, // GFZ1 Tails
+	{  0, 0, 0, 2, 1, 0}, // GFZ1 Knuckles
+	{  0, 0, 0, 0, 2, 0}, // GFZ2 Sonic
+	{  0, 0, 0, 1, 2, 0}, // GFZ2 Tails
+	{  0, 0, 0, 2, 2, 0}, // GFZ2 Knuckles
+	{  0, 0, 0, 0, 4, 0}, // THZ1 Sonic
+	{  0, 0, 0, 1, 4, 0}, // THZ1 Tails
+	{  0, 0, 0, 2, 4, 0}, // THZ1 Knuckles
+	{  0, 0, 0, 0, 5, 0}, // THZ2 Sonic
+	{  0, 0, 0, 1, 5, 0}, // THZ2 Tails
+	{  0, 0, 0, 2, 5, 0}, // THZ2 Knuckles
+	{  0, 0, 0, 0, 7, 0}, // DSZ1 Sonic
+	{  0, 0, 0, 1, 7, 0}, // DSZ1 Tails
+	{  0, 0, 0, 2, 7, 0}, // DSZ1 Knuckles
+	{  0, 0, 0, 0, 8, 0}, // DSZ2 Sonic
+	{  0, 0, 0, 1, 8, 0}, // DSZ2 Tails
+	{  0, 0, 0, 2, 8, 0}, // DSZ2 Knuckles
+	{  0, 0, 0, 0, 10, 0}, // MMZ1 Sonic
+	{  0, 0, 0, 1, 10, 0}, // MMZ1 Tails
+	{  0, 0, 0, 2, 10, 0}, // MMZ1 Knuckles
+	{  0, 0, 0, 0, 11, 0}, // MMZ2 Sonic
+	{  0, 0, 0, 1, 11, 0}, // MMZ2 Tails
+	{  0, 0, 0, 2, 11, 0} // MMZ2 Knuckles
 };
 
 // Easter Eggs - Literally!
