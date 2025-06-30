@@ -4306,6 +4306,8 @@ void A_BossJetFume(mobj_t *actor)
 	mobj_t *filler;
 	int locvar1 = var1;
 
+	// no thanks...
+	/*
 	if (locvar1 == 0) // Boss1 jet fumes
 	{
 		fixed_t jetx, jety;
@@ -4333,7 +4335,7 @@ void A_BossJetFume(mobj_t *actor)
 		filler->target = actor;
 
 		actor->tracer = filler;
-	}
+	}*/
 }
 
 // Function: A_RandomState
