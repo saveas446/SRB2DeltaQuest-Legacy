@@ -1989,19 +1989,19 @@ static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean r
 			case 5: // instant death
 				// HELLSLIME DAMAGE
 				player->specialsector = 5;
-				P_DamageMobj(player->mo, NULL, NULL, 10000);
+				P_DamageMobj(player->mo, NULL, NULL, 10000, false);
 				break;
 
 			case 7: // Slime!
 				if (player->powers[pw_underwater] && !player->powers[pw_watershield])
-				P_DamageMobj(player->mo, NULL, NULL, 1);
+				P_DamageMobj(player->mo, NULL, NULL, 1, true);
 				break;
 			case 8: //L-l-lava! S-s-special!!!
 				// NUKAGE DAMAGE
 				if (!player->powers[pw_fireshield])
 				{
 					player->specialsector = 8;
-					P_DamageMobj(player->mo, NULL, NULL, 1);
+					P_DamageMobj(player->mo, NULL, NULL, 1, false);
 				}
 				break;
 			default:
@@ -2016,15 +2016,15 @@ static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean r
 			case 0: // no damage
 				break;
 			case 1: // 2/5 damage per 31 ticks
-				P_DamageMobj(player->mo, NULL, NULL, 5);
+				P_DamageMobj(player->mo, NULL, NULL, 5, false);
 				break;
 			case 2: // 5/10 damage per 31 ticks
-				P_DamageMobj(player->mo, NULL, NULL, 10);
+				P_DamageMobj(player->mo, NULL, NULL, 10, false);
 				break;
 			case 3: // 10/20 damage per 31 ticks
 				if (P_Random() < 5) // take damage even with suit
 				{
-					P_DamageMobj(player->mo, NULL, NULL, 20);
+					P_DamageMobj(player->mo, NULL, NULL, 20, false);
 				}
 				break;
 		}
@@ -2868,7 +2868,7 @@ void T_LaserFlash(laserthink_t *flash)
 			&& zplusheight > sourcesec->floorheight) || (thing->z < sourcesec->floorheight
 			&& zplusheight > sourcesec->ceilingheight)))
 		{
-			P_DamageMobj(thing, NULL, NULL, 1);
+			P_DamageMobj(thing, NULL, NULL, 1, false);
 		}
 	}
 }

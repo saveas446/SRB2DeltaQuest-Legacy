@@ -217,7 +217,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 				toucher->momz = -toucher->momz;
 			toucher->momx = -toucher->momx;
 			toucher->momy = -toucher->momy;
-			P_DamageMobj(special, toucher, toucher, 1);
+			P_DamageMobj(special, toucher, toucher, 1, false);
 			return;
 		}
 		else if (toucher->z + toucher->height >= special->z
@@ -231,11 +231,11 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 		{
 			toucher->momz = -toucher->momz/2;
 
-			P_DamageMobj(special, toucher, toucher, 1);
+			P_DamageMobj(special, toucher, toucher, 1, false);
 			return;
 		}
 		else
-			P_DamageMobj(toucher, special, special, 1);
+			P_DamageMobj(toucher, special, special, 1, false);
 		return;
 	}
 	else if ((special->flags & MF_ENEMY) && !(special->flags & MF_MISSILE))
@@ -249,7 +249,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 		  {
 			if (toucher->momz < 0)
 				toucher->momz = -toucher->momz;
-			P_DamageMobj(special, toucher, toucher, 1);
+			P_DamageMobj(special, toucher, toucher, 1, false);
 			return;
 		  }
 		  else if (toucher->z + toucher->height >= special->z
@@ -264,16 +264,16 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			if (toucher->momz < 0)
 				toucher->momz = -toucher->momz/2;
 
-			P_DamageMobj(special, toucher, toucher, 1);
+			P_DamageMobj(special, toucher, toucher, 1, false);
 			return;
 		  }
 		  else
-			  P_DamageMobj(toucher, special, special, 1);
+			  P_DamageMobj(toucher, special, special, 1, false);
 		  return;
 	}
 	else if (special->flags & MF_FIRE)
 	{
-		P_DamageMobj(toucher, special, special, 1);
+		P_DamageMobj(toucher, special, special, 1, false);
 		return;
 	}
 	else
@@ -358,12 +358,12 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 			return;
 		case MT_SPIKEBALL:
 		case MT_GOOP:
-			P_DamageMobj(toucher, special, special, 1);
+			P_DamageMobj(toucher, special, special, 1, false);
 			return;
 		case MT_SPECIALSPIKEBALL:
 			if (!(gamemap >= sstage_start && gamemap <= sstage_end))
 			{
-				P_DamageMobj(toucher, special, special, 1);
+				P_DamageMobj(toucher, special, special, 1, false);
 				return;
 			}
 	
@@ -1233,12 +1233,14 @@ void P_PlayTauntSound(mobj_t *source)
   *                  cases, the target will go after this object after
   *                  receiving damage. This can be NULL.
   * \param damage    Amount of damage to be dealt. 10000 is instant death.
+  * \param slimed    Special flag used to display a cute message when you die to
+  * 				 the slime in SVZ.
   * \return True if the target sustained damage, otherwise false.
   * \todo Clean up this mess, split into multiple functions.
   * \todo Get rid of the magic number 10000.
   * \sa P_KillMobj
   */
-boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int damage)
+boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int damage, boolean slimed)
 {
 	angle_t ang;
 	player_t *player;
@@ -1605,6 +1607,9 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 		}
 		else // No shield, no rings, no invincibility.
 		{
+			if (slimed && gamemap == 36)
+				CONS_Printf("%s was consumed by the slime.\n", cv_playername.string);
+
 			damage = 1;
 			player->mo->momz = 18*FRACUNIT;
 			player->mo->momx = player->mo->momy = 0;
@@ -1652,7 +1657,7 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 	}
 
 	if (cv_killingdead.value && source && source->player && P_Random() < 192)
-		P_DamageMobj(source, target, target, 1);
+		P_DamageMobj(source, target, target, 1, false);
 
 	// do the damage
 	target->health -= damage;

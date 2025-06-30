@@ -1126,8 +1126,10 @@ void D_SRB2Main(int sys)
 
 				if (s) // Check for NULL?
 				{
+					#if BUILD_TYPE != DEV_RELEASE
 					if (!W_VerifyNMUSlumps(s))
 						modifiedgame = true;
+					#endif
 					D_AddFile(s);
 				}
 			}
@@ -1140,8 +1142,9 @@ void D_SRB2Main(int sys)
 	{
 		while (M_IsNextParm())
 			D_AddFile(M_GetNextParm());
-
+		#if BUILD_TYPE != DEV_RELEASE
 		modifiedgame = true;
+		#endif
 	}
 
 	// get skill / map from parms

@@ -2106,7 +2106,7 @@ static void P_MovePlayer(player_t *player)
 		if (player->nightsfall && player->mo->z <= player->mo->floorz)
 		{
 			if (player->health > 1)
-				P_DamageMobj(player->mo, NULL, NULL, 1);
+				P_DamageMobj(player->mo, NULL, NULL, 1, false);
 			else
 				player->nightsfall = false;
 		}
@@ -2523,14 +2523,14 @@ static void P_MovePlayer(player_t *player)
 		killer = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_DISS);
 		killer->threshold = 42; // Special flag that it was drowning which killed you.
 
-		P_DamageMobj(player->mo, killer, killer, 10000);
+		P_DamageMobj(player->mo, killer, killer, 10000, false);
 	}
 	else if (player->powers[pw_spacetime] == 1)
 	{
 		if ((netgame || multiplayer) && P_IsLocalPlayer(player))
 			S_ChangeMusic(mapmusic & 2047 , true);
 
-		P_DamageMobj(player->mo, NULL, NULL, 10000);
+		P_DamageMobj(player->mo, NULL, NULL, 10000, false);
 	}
 
 	if (!(player->mo->eflags & MF_UNDERWATER) && player->powers[pw_underwater])
@@ -3914,7 +3914,7 @@ dontteeter:
 	if (cmd->buttons & BT_ATTACK || cmd->buttons & BT_FIRENORMAL)
 	{
 		if (gametype == GT_CTF && !player->ctfteam && !player->powers[pw_flashing] && !player->jumpdown)
-			P_DamageMobj(player->mo, NULL, NULL, 42000);
+			P_DamageMobj(player->mo, NULL, NULL, 42000, false);
 
 		player->bustercount++;
 
@@ -4390,7 +4390,7 @@ dontteeter:
 		else if (player->mo->ceilingz - player->mo->floorz < player->mo->height)
 		{
 			if (gametype == GT_CTF && !player->ctfteam)
-				P_DamageMobj(player->mo, NULL, NULL, 42000); // Respawn crushed spectators
+				P_DamageMobj(player->mo, NULL, NULL, 42000, false); // Respawn crushed spectators
 			else
 			{
 				mobj_t *killer;
@@ -4398,7 +4398,7 @@ dontteeter:
 				killer = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, MT_DISS);
 				killer->threshold = 43; // Special flag that it was crushing which killed you.
 
-				P_DamageMobj(player->mo, killer, killer, 10000);
+				P_DamageMobj(player->mo, killer, killer, 10000, false);
 			}
 
 			if (player->playerstate == PST_DEAD)
@@ -5112,7 +5112,7 @@ static void P_NukeAllPlayers(player_t *player)
 		if (mo == player->mo)
 			continue;
 
-		P_DamageMobj(mo, player->mo, player->mo, 1);
+		P_DamageMobj(mo, player->mo, player->mo, 1, false);
 	}
 
 	CONS_Printf("%s caused a world of pain.\n", player_names[player-players]);
@@ -5191,7 +5191,7 @@ boolean PIT_NukeEnemies(mobj_t *thing)
 
 	// Uncomment P_CheckSight to prevent bomb shield from going through walls
 	// if (P_CheckSight(thing, bombspot))
-		P_DamageMobj(thing, bombspot, bombsource, 1);
+		P_DamageMobj(thing, bombspot, bombsource, 1, false);
 
 	return true;
 }
@@ -5922,7 +5922,7 @@ void P_PlayerThink(player_t *player)
 			nextmapoverride = 0x04;
 			skipstats = true;
 			player->cheats = 0;
-			P_DamageMobj(player->mo, NULL, NULL, 10000);
+			P_DamageMobj(player->mo, NULL, NULL, 10000, false);
 		}
 	}
 

@@ -1811,7 +1811,7 @@ void P_DestroyRobots(void)
 			continue;
 
 		// Found a target enemy
-		P_DamageMobj(mo, players[consoleplayer].mo, players[consoleplayer].mo, 10000);
+		P_DamageMobj(mo, players[consoleplayer].mo, players[consoleplayer].mo, 10000, false);
 	}
 }
 
@@ -3786,7 +3786,7 @@ void P_MobjThinker(mobj_t *mobj)
 		&& mobj->flags & MF_SHOOTABLE && mobj->health > 0)
 	{
 		if (mobj->ceilingz - mobj->floorz < mobj->height)
-			P_DamageMobj(mobj, NULL, NULL, 1);
+			P_DamageMobj(mobj, NULL, NULL, 1, false);
 	}
 
 	P_CycleMobjState(mobj);

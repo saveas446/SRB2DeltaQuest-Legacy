@@ -56,7 +56,7 @@
     #define MINORVER 1
 
     // Increment this every day
-    #define TINYVER 15
+    #define TINYVER 16
 
     #define COMPAT_TITLESKY
 

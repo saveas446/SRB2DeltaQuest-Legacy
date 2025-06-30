@@ -900,7 +900,7 @@ void A_SargAttack (mobj_t* actor)
     if (P_CheckMeleeRange (actor))
     {
         damage = ((P_Random()%10)+1)*4;
-        P_DamageMobj (actor->target, actor, actor, damage);
+        P_DamageMobj (actor->target, actor, actor, damage, false);
     }
 }
 
@@ -916,7 +916,7 @@ void A_TroopAttack (mobj_t* actor)
     {
         S_StartSound (actor, sfx_claw);
         damage = (P_Random()%8+1)*3;
-        P_DamageMobj (actor->target, actor, actor, damage);
+        P_DamageMobj (actor->target, actor, actor, damage, false);
         return;
     }
 }
@@ -3527,7 +3527,7 @@ void A_Boss2PogoSFX(mobj_t *actor)
 		return;
 	}
 
-	P_DamageMobj(actor->target, actor, actor, 1); // Ow!
+	P_DamageMobj(actor->target, actor, actor, 1, false); // Ow!
 }*/
 
 void A_EggmanBox(mobj_t *actor)
@@ -3543,7 +3543,7 @@ void A_EggmanBox(mobj_t *actor)
 
 	player = actor->target->player;
 
-	P_DamageMobj(actor->target, actor, actor, 1); // Ow!
+	P_DamageMobj(actor->target, actor, actor, 1, false); // Ow!
 	if (actor->info->seesound)
 		S_StartSound(player->mo, actor->info->seesound);
 }

@@ -315,7 +315,7 @@ static boolean PIT_CheckThing(mobj_t *thing)
 
 		// damage / explode
 		damage = 1;
-		P_DamageMobj(thing, tmthing, tmthing->target, damage);
+		P_DamageMobj(thing, tmthing, tmthing->target, damage, false);
 
 		// don't traverse any more
 			return true;
@@ -356,9 +356,9 @@ static boolean PIT_CheckThing(mobj_t *thing)
 		// damage / explode
 		damage = 1;
 		if (tmthing->flags & MF_ENEMY) // An actual ENEMY! (Like the deton, for example)
-			P_DamageMobj(thing, tmthing, tmthing, damage);
+			P_DamageMobj(thing, tmthing, tmthing, damage, false);
 		else
-			P_DamageMobj(thing, tmthing, tmthing->target, damage);
+			P_DamageMobj(thing, tmthing, tmthing->target, damage, false);
 
 		// don't traverse any more
 		return false;
@@ -447,19 +447,19 @@ static boolean PIT_CheckThing(mobj_t *thing)
 	if (tmthing->type == MT_CEILINGSPIKE)
 	{
 		if (thing->z + thing->height == tmthing->z && thing->momz >= 0)
-			P_DamageMobj(thing, tmthing, tmthing, 1); // Ouch!
+			P_DamageMobj(thing, tmthing, tmthing, 1, false); // Ouch!
 	}
 	else if (thing->type == MT_CEILINGSPIKE)
 	{
 		if (tmthing->z + tmthing->height == thing->z && tmthing->momz >= 0)
-			P_DamageMobj(tmthing, thing, thing, 1);
+			P_DamageMobj(tmthing, thing, thing, 1, false);
 	}
 	else if (tmthing->type == MT_FLOORSPIKE)
 	{
 		if (thing->z == tmthing->z + tmthing->height + FRACUNIT && thing->momz <= 0)
 		{
 			tmthing->threshold = 43;
-			P_DamageMobj(thing, tmthing, tmthing, 1);
+			P_DamageMobj(thing, tmthing, tmthing, 1, false);
 		}
 	}
 	else if (thing->type == MT_FLOORSPIKE)
@@ -468,7 +468,7 @@ static boolean PIT_CheckThing(mobj_t *thing)
 			&& tmthing->momz <= 0)
 		{
 			thing->threshold = 43;
-			P_DamageMobj(tmthing, thing, thing, 1);
+			P_DamageMobj(tmthing, thing, thing, 1, false);
 		}
 	}
 
@@ -546,7 +546,7 @@ static boolean PIT_CheckThing(mobj_t *thing)
 			else if ((tmthing->flags & MF_MONITOR) || (tmthing->flags & MF_PUSHABLE))
 			{
 				if (thing != tmthing->target)
-					P_DamageMobj(thing, tmthing, tmthing->target, 10000);
+					P_DamageMobj(thing, tmthing, tmthing->target, 10000, false);
 
 				tmthing->momz = -tmthing->momz/2; // Bounce, just for fun!
 				// The tmthing->target allows the pusher of the object
@@ -559,11 +559,11 @@ static boolean PIT_CheckThing(mobj_t *thing)
 		{
 			if (thing->player->tagit < 298*TICRATE && thing->player->tagit > 0 && !(tmthing->player->powers[pw_flashing] || tmthing->player->tagzone || tmthing->player->powers[pw_invulnerability]))
 			{
-				P_DamageMobj(tmthing, thing, thing, 1); // Don't allow tag-backs
+				P_DamageMobj(tmthing, thing, thing, 1, false); // Don't allow tag-backs
 			}
 			else if (tmthing->player->tagit < 298*TICRATE && tmthing->player->tagit > 0 && !(thing->player->powers[pw_flashing] || thing->player->tagzone || thing->player->powers[pw_invulnerability]))
 			{
-				P_DamageMobj(thing, tmthing, tmthing, 1); // Don't allow tag-backs
+				P_DamageMobj(thing, tmthing, tmthing, 1, false); // Don't allow tag-backs
 			}
 		}
 
@@ -670,7 +670,7 @@ static boolean PIT_CheckThing(mobj_t *thing)
 				// Going down? Then bounce back up.
 				if (tmthing->momz < 0)
 					tmthing->momz = -tmthing->momz;
-				P_DamageMobj(thing, tmthing, tmthing, 1); // break the monitor
+				P_DamageMobj(thing, tmthing, tmthing, 1, false); // break the monitor
 			}
 			else if (thing->flags & MF_BOSS
 				&& (tmthing->player->mfjumped || tmthing->player->mfspinning
@@ -683,7 +683,7 @@ static boolean PIT_CheckThing(mobj_t *thing)
 				// Also, bounce back.
 				tmthing->momx = -tmthing->momx;
 				tmthing->momy = -tmthing->momy;
-				P_DamageMobj(thing, tmthing, tmthing, 1); // fight the boss!
+				P_DamageMobj(thing, tmthing, tmthing, 1, false); // fight the boss!
 			}
 		}
 	}
@@ -2461,7 +2461,7 @@ static boolean PIT_RadiusAttack(mobj_t *thing)
 			momy = (thing->y - bombspot->y)/dist;
 		}
 		// must be in direct path
-		P_DamageMobj(thing, bombspot, bombsource, damage); // Tails 01-11-2001
+		P_DamageMobj(thing, bombspot, bombsource, damage, false); // Tails 01-11-2001
 	}
 
 	return true;
@@ -2564,9 +2564,9 @@ static boolean PIT_ChangeSector(mobj_t *thing)
 							|| crumbler->type == elevateContinuous))
 						{
 							if (gametype == GT_CTF && thing->player && !thing->player->ctfteam)
-								P_DamageMobj(thing, NULL, NULL, 42000); // Respawn crushed spectators
+								P_DamageMobj(thing, NULL, NULL, 42000, false); // Respawn crushed spectators
 							else
-								P_DamageMobj(thing, crumbler->player->mo, crumbler->player->mo, 10000);
+								P_DamageMobj(thing, crumbler->player->mo, crumbler->player->mo, 10000, false);
 							return true;
 						}
 					}
@@ -2576,13 +2576,13 @@ static boolean PIT_ChangeSector(mobj_t *thing)
 
 		// Instant-death, but no one to blame
 		if (gametype == GT_CTF && thing->player && !thing->player->ctfteam)
-			P_DamageMobj(thing, NULL, NULL, 42000); // Respawn crushed spectators
+			P_DamageMobj(thing, NULL, NULL, 42000, false); // Respawn crushed spectators
 		else
-			P_DamageMobj(thing, NULL, NULL, 10000);
+			P_DamageMobj(thing, NULL, NULL, 10000, false);
 	}
 
 	if (crushchange)
-		P_DamageMobj(thing, NULL, NULL, 1);
+		P_DamageMobj(thing, NULL, NULL, 1, false);
 
 	// keep checking (crush other things)
 	return true;

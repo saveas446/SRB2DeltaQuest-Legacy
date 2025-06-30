@@ -138,7 +138,7 @@ void P_Ticker(void)
 				if (!players[i].mo)
 					continue;
 
-				P_DamageMobj(players[i].mo, NULL, NULL, 10000);
+				P_DamageMobj(players[i].mo, NULL, NULL, 10000, false);
 			}
 		}
 	}

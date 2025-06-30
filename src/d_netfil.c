@@ -343,7 +343,9 @@ void CL_LoadServerFiles(void)
 		else if (fileneeded[i].status == FS_FOUND)
 		{
 			P_AddWadFile(fileneeded[i].filename, NULL);
+			#if BUILD_TYPE != DEV_RELEASE
 			modifiedgame = true;
+			#endif
 			fileneeded[i].status = FS_OPEN;
 		}
 		else if (fileneeded[i].status == FS_MD5SUMBAD)
@@ -362,7 +364,9 @@ void CL_LoadServerFiles(void)
 
 			// Okay, NOW we know it's safe. Whew.
 			P_AddWadFile(fileneeded[i].filename, NULL);
+			#if BUILD_TYPE != DEV_RELEASE
 			modifiedgame = true;
+			#endif
 			fileneeded[i].status = FS_OPEN;
 			DEBFILE(va("File %s found but with different md5sum\n", fileneeded[i].filename));
 		}

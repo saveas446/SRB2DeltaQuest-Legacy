@@ -149,7 +149,9 @@ boolean cht_Responder(event_t *ev)
 		{
 			if (!modifiedgame || savemoddata)
 			{
+				#if BUILD_TYPE != DEV_RELEASE
 				modifiedgame = true;
+				#endif
 				savemoddata = false;
 				if (!(netgame || multiplayer))
 					CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
@@ -207,7 +209,9 @@ void Command_CheatNoClip_f(void)
 
 	if (!modifiedgame || savemoddata)
 	{
+		#if BUILD_TYPE != DEV_RELEASE
 		modifiedgame = true;
+		#endif
 		savemoddata = false;
 		if (!(netgame || multiplayer))
 			CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
@@ -227,7 +231,9 @@ void Command_CheatGod_f(void)
 
 	if (!modifiedgame || savemoddata)
 	{
+		#if BUILD_TYPE != DEV_RELEASE
 		modifiedgame = true;
+		#endif
 		savemoddata = false;
 		if (!(netgame || multiplayer))
 			CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
@@ -259,7 +265,9 @@ void Command_Devmode_f(void)
 
 	if (!modifiedgame || savemoddata)
 	{
+		#if BUILD_TYPE != DEV_RELEASE
 		modifiedgame = true;
+		#endif
 		savemoddata = false;
 		if (!(netgame || multiplayer))
 			CONS_Printf("WARNING: Game must be restarted to record statistics.\n");

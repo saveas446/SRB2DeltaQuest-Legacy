@@ -281,14 +281,14 @@ typedef struct BasicFF_s
 	//All
 	unsigned long Duration; ///< The total duration of the effect, in microseconds
 	long Gain; ///< /The gain to be applied to the effect, in the range from 0 through 10,000.
-	//All, CONSTANTFORCE –10,000 to 10,000
+	//All, CONSTANTFORCE ï¿½10,000 to 10,000
 	long Magnitude; ///< Magnitude of the effect, in the range from 0 through 10,000.
 } BasicFF_t;
 
 void P_ForceFeed(const player_t *player, int attack, int fade, tic_t duration, int period);
 void P_ForceConstant(const BasicFF_t *FFInfo);
 void P_RampConstant(const BasicFF_t *FFInfo, int Start, int End);
-boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int damage);
+boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int damage, boolean slimed);
 void P_KillMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source);
 void P_PlayerRingBurst(player_t *player, int num_rings); /// \todo better fit in p_user.c
 

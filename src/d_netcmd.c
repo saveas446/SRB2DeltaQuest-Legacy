@@ -2144,7 +2144,7 @@ static void Got_Teamchange(char **cp, int playernum)
 	}
 
 	if (players[playernum].mo) // Safety first!
-		P_DamageMobj(players[playernum].mo, NULL, NULL, 10000);
+		P_DamageMobj(players[playernum].mo, NULL, NULL, 10000, false);
 
 	players[playernum].ctfteam = newteam;
 
@@ -2164,7 +2164,7 @@ static void Got_Teamchange(char **cp, int playernum)
 
 static void Got_LTG(char **cp, int playernum)
 {
-	P_KillMobj(players[playernum].mo, NULL, NULL);
+	P_DamageMobj(players[playernum].mo, NULL, NULL, 10000, false);
 }
 
 
@@ -2341,7 +2341,9 @@ static void Command_RunSOC(void)
 
 	if (!modifiedgame)
 	{
+		#if BUILD_TYPE != DEV_RELEASE
 		modifiedgame = true;
+		#endif
 		if (!(netgame || multiplayer))
 			CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
 	}
@@ -2430,7 +2432,9 @@ static void Command_Addfile(void)
 
 	if (!modifiedgame && !W_VerifyNMUSlumps(fn))
 	{
+		#if BUILD_TYPE != DEV_RELEASE
 		modifiedgame = true;
+		#endif
 		if (!(netgame || multiplayer))
 			CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
 	}
@@ -2526,7 +2530,9 @@ static void Got_Addfilecmd(char **cp, int playernum)
 	}
 
 	P_AddWadFile(filename, NULL);
+	#if BUILD_TYPE != DEV_RELEASE
 	modifiedgame = true;
+	#endif
 }
 
 
@@ -2792,7 +2798,9 @@ void ObjectPlace_OnChange(void)
 				players[i].currentthing = 1;
 			if (!modifiedgame || savemoddata)
 			{
+				#if BUILD_TYPE != DEV_RELEASE
 				modifiedgame = true;
+				#endif
 				savemoddata = false;
 				if (!(netgame || multiplayer))
 					CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
@@ -2833,7 +2841,9 @@ void ObjectPlace_OnChange(void)
 	{
 		if (!modifiedgame || savemoddata)
 		{
+			#if BUILD_TYPE != DEV_RELEASE
 			modifiedgame = true;
+			#endif
 			savemoddata = false;
 			if (!(netgame || multiplayer))
 				CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
@@ -3091,7 +3101,9 @@ static void Ringslinger_OnChange(void)
 	{
 		if (!modifiedgame || savemoddata)
 		{
+			#if BUILD_TYPE != DEV_RELEASE
 			modifiedgame = true;
+			#endif
 			savemoddata = false;
 			if (!(netgame || multiplayer))
 				CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
@@ -3120,7 +3132,9 @@ static void Startrings_OnChange(void)
 
 		if (!modifiedgame || savemoddata)
 		{
+			#if BUILD_TYPE != DEV_RELEASE
 			modifiedgame = true;
+			#endif
 			savemoddata = false;
 			if (!(netgame || multiplayer))
 				CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
@@ -3146,7 +3160,9 @@ static void Startlives_OnChange(void)
 
 		if (!modifiedgame || savemoddata)
 		{
+			#if BUILD_TYPE != DEV_RELEASE
 			modifiedgame = true;
+			#endif
 			savemoddata = false;
 			if (!(netgame || multiplayer))
 				CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
@@ -3172,7 +3188,9 @@ static void Startcontinues_OnChange(void)
 
 		if (!modifiedgame || savemoddata)
 		{
+			#if BUILD_TYPE != DEV_RELEASE
 			modifiedgame = true;
+			#endif
 			savemoddata = false;
 			if (!(netgame || multiplayer))
 				CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
@@ -3459,7 +3477,9 @@ static void Fishcake_OnChange(void)
 		{
 			if (!modifiedgame || savemoddata)
 			{
+				#if BUILD_TYPE != DEV_RELEASE
 				modifiedgame = true;
+				#endif
 				savemoddata = false;
 				if (!(netgame || multiplayer))
 					CONS_Printf("WARNING: Game must be restarted to record statistics.\n");

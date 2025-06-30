@@ -185,7 +185,9 @@ static void TimeAttacked_OnChange(void)
 	{
 		if (!modifiedgame || savemoddata)
 		{
+			#if BUILD_TYPE != DEV_RELEASE
 			modifiedgame = true;
+			#endif
 			savemoddata = false;
 			if (!(netgame || multiplayer))
 				CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
