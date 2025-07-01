@@ -860,12 +860,15 @@ void P_SpawnSecretItems(boolean loademblems)
 	int i;
 	mobj_t *emblemmobj;
 
+	#if BUILD_TYPE != DEV_RELEASE
 	// Now let's spawn those funky emblem things! Tails 12-08-2002
 	if (netgame || multiplayer || (modifiedgame && !savemoddata) || timeattacking) // No cheating!!
 		return;
 
 	if (loademblems)
+	#endif
 		P_SpawnEmblems();
+	
 
 	if (modifiedgame)
 		return;
