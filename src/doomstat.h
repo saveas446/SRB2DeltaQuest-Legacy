@@ -237,8 +237,8 @@ extern int numemblems;
 #define NUMEGGS 12
 extern int foundeggs;
 
-/** Hidden emblem/egg structure.
-  */
+/// \struct
+/// \brief Hidden emblem/easter egg struct.
 typedef struct
 {
 	signed short x; ///< X coordinate.

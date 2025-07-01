@@ -138,6 +138,8 @@ int numemblems = 20;
 boolean gamedataloaded = 0;
 
 // Mystic's funky SA ripoff emblem idea
+/// \var
+/// \brief Emblem locations for the main campaign.
 emblem_t emblemlocations[MAXEMBLEMS] =
 {
 	{  9449,  6088, 1475, 0, 1, 0}, // GFZ1 Sonic

@@ -129,7 +129,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling...</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ml.exe /nologo /c /coff /Cx /Fo"$(IntDir)%(Filename).obj" "%(FullPath)"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\tools\masm_6.15\MASM\BIN\ml.exe /nologo /c /coff /Cx /Fo"$(IntDir)%(Filename).obj" "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
     </CustomBuild>
@@ -139,7 +139,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling...</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ml.exe /nologo /c /coff /Cx /Fo"$(IntDir)%(Filename).obj" "%(FullPath)"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\tools\masm_6.15\MASM\BIN\ml.exe /nologo /c /coff /Cx /Fo"$(IntDir)%(Filename).obj" "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
     </CustomBuild>

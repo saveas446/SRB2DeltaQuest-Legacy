@@ -510,9 +510,8 @@ static inline void AM_Start(void)
 	AM_initVariables();
 }
 
-//
-// set the window scale to the maximum size
-//
+
+/// \brief set the window scale to the maximum size
 static void AM_minOutWindowScale(void)
 {
 	scale_mtof = min_scale_mtof;
@@ -520,9 +519,7 @@ static void AM_minOutWindowScale(void)
 	AM_activateNewScale();
 }
 
-//
-// set the window scale to the minimum size
-//
+/// \brief set the window scale to the minimum size
 static void AM_maxOutWindowScale(void)
 {
 	scale_mtof = max_scale_mtof;
@@ -530,7 +527,8 @@ static void AM_maxOutWindowScale(void)
 	AM_activateNewScale();
 }
 
-/** Responds to user inputs in automap mode.
+/* 
+  * \brief Responds to user inputs in automap mode.
   *
   * \param ev Event to possibly respond to.
   * \return True if the automap responder ate the event.
@@ -656,7 +654,8 @@ boolean AM_Responder(event_t *ev)
 	return rc;
 }
 
-/** Makes a zooming change take effect.
+/*
+  * \brief Makes a zooming change take effect.
   */
 static inline void AM_changeWindowScale(void)
 {
@@ -685,7 +684,8 @@ static inline void AM_doFollowPlayer(void)
 	}
 }
 
-/** Updates automap on a game tic, while the automap is enabled.
+/*
+  * \brief Updates automap on a game tic, while the automap is enabled.
   */
 void AM_Ticker(void)
 {
@@ -709,7 +709,8 @@ void AM_Ticker(void)
 		AM_changeWindowLoc();
 }
 
-/** Clears the automap framebuffer.
+/**
+  * \brief Clears the automap framebuffer.
   *
   * \param color Color to erase to.
   */
@@ -783,7 +784,9 @@ static void AM_clearFB(int color)
 	}
 }
 
-/** Performs automap clipping of lines.
+/** 
+  *	\brief
+  *  Performs automap clipping of lines.
   * Based on Cohen-Sutherland clipping algorithm but with a slightly
   * faster reject and precalculated slopes. If the speed is needed,
   * use a hash algorithm to handle the common cases.
@@ -910,9 +913,10 @@ static boolean AM_clipMline(const mline_t *ml, fline_t *fl)
 }
 #undef DOOUTCODE
 
-//
-// Classic Bresenham w/ whatever optimizations needed for speed
-//
+/// \fn
+/// \brief
+/// Classic Bresenham w/ whatever optimizations needed for speed
+///
 static void AM_drawFline_soft(const fline_t *fl, int color)
 {
 	register int x, y, dx, dy, sx, sy, ax, ay, d;
@@ -980,9 +984,10 @@ static void AM_drawFline_soft(const fline_t *fl, int color)
 	}
 }
 
-//
-// Clip lines, draw visible parts of lines.
-//
+/// \fn
+/// \brief
+/// Clip lines, draw visible parts of lines.
+///
 static void AM_drawMline(const mline_t *ml, int color)
 {
 	static fline_t fl;
@@ -991,9 +996,10 @@ static void AM_drawMline(const mline_t *ml, int color)
 		AM_drawFline(&fl, color); // draws it on frame buffer using fb coords
 }
 
-//
-// Draws flat (floor/ceiling tile) aligned grid lines.
-//
+/// \fn
+/// \brief
+/// Draws flat (floor/ceiling tile) aligned grid lines.
+///
 static void AM_drawGrid(int color)
 {
 	fixed_t x, y;
@@ -1033,10 +1039,11 @@ static void AM_drawGrid(int color)
 	}
 }
 
-//
-// Determines visible lines, draws them.
-// This is LineDef based, not LineSeg based.
-//
+/// \fn
+/// \brief
+/// Determines visible lines, draws them.
+/// This is LineDef based, not LineSeg based.
+///
 static inline void AM_drawWalls(void)
 {
 	int i;

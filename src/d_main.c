@@ -990,6 +990,9 @@ static inline void D_InitCutsceneInfo(void)
 //
 // D_SRB2Main
 //
+
+/// \fn
+/// \brief The main function that initalises the stuff.
 void D_SRB2Main(int sys)
 {
 	int p;
