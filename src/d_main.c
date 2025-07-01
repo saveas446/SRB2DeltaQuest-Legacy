@@ -21,6 +21,20 @@
 ///	plus functions to parse command line parameters, configure game
 ///	parameters, and call the startup functions.
 
+// Putting this in d_main.c because it's the main file
+// Not like I have any better options
+
+/*! \mainpage Demo 2 Ultimate Index Page
+ *
+ * \section intro_sec Introduction
+ *
+ * This is the main page!
+ * To start, why not look briefly at what each file does
+ * or look at some important structures, like mobj_s (aka mobj_t) or player_s (aka player_t)?
+ *
+ */
+
+
 #ifdef UNIXLIKE
 #include <sys/stat.h>
 #include <sys/types.h>

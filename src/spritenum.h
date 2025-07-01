@@ -10,7 +10,9 @@
 #define NUMSPRITEFREESLOTS NUMMOBJFREESLOTS
 #define NUMSTATEFREESLOTS (NUMMOBJFREESLOTS*6)
 
-// Hey, moron! If you change this table, don't forget about the sprite lights in hw_light.c! (don't modify this comment, either!)
+/// \var 
+/// \brief Allows you to address each sprite name in sprnames in a readable way using an enum.
+/// \note If you're going to edit this, consider also editing sprnames in info.c and t_lspr in hw_light.c to match.
 typedef enum
 {
 	SPR_MISL,
@@ -236,7 +238,9 @@ typedef enum
 	NUMSPRITES
 } spritenum_t;
 
-// Object states (don't modify this comment!)
+/// \var 
+/// \brief Allows you to address each state in states in a readable way using an enum.
+/// \note If you're going to edit this, consider also editing states in info.c to match.
 typedef enum
 {
 	S_NULL,
@@ -1828,7 +1832,9 @@ typedef struct
 extern state_t states[NUMSTATES];
 extern char sprnames[NUMSPRITES + 1][5];
 
-// Little flag for SOC editor (don't change this comment!)
+/// \var 
+/// \brief Allows you to address each Thing in mobjinfo in a readable way using an enum.
+/// \note If you're going to edit this, consider also editing mobjinfo in info.c to match.
 typedef enum
 {
 	MT_PLAYER,

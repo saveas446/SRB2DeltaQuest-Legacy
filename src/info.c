@@ -33,6 +33,10 @@ static char sprnamesbackup[NUMSPRITES + 1][5];
 static state_t statesbackup[NUMSTATES];
 static mobjinfo_t mobjinfobackup[NUMMOBJTYPES];
 
+
+/// \var 
+/// \brief Contains the names of all of the sprites to be loaded from the IWAD.
+/// \note If you're going to edit this, consider also editing spritenum_t in spritenum.h and t_lspr in hw_light.c to match.
 char sprnames[NUMSPRITES + 1][5] =
 {
 	"MISL","PLAY","POSS","SPOS","EGGM","BON1",
@@ -109,7 +113,9 @@ char sprnames[NUMSPRITES + 1][5] =
 	"MRTS" // Minecart stopper
 };
 
-// Doesn't work with g++, needs actionf_p1 (don't modify this comment)
+/// \var 
+/// \brief Contains a list of states for Things to use.
+/// \note If you're going to edit this, consider also editing statenum_t in spritenum.h to match.
 state_t states[NUMSTATES] =
 {
 	// frame is masked through FF_FRAMEMASK
@@ -1718,6 +1724,9 @@ state_t states[NUMSTATES] =
 
 };
 
+/// \var 
+/// \brief Contains a list of Things for the rest of the code and level editors to use.
+/// \note If you're going to edit this, consider also editing mobjinfo_t in spritenum.h to match.
 mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 {
 	{           // MT_PLAYER
