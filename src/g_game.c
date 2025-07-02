@@ -145,22 +145,22 @@ emblem_t emblemlocations[MAXEMBLEMS] =
 	{  9449,  6088, 1475, 0, 1, 0}, // GFZ1 Sonic
 	{  0, 0, 0, 1, 1, 0}, // GFZ1 Tails
 	{  0, 0, 0, 2, 1, 0}, // GFZ1 Knuckles
-	{  -1693, 4830, 1505, 0, 2, 0}, // GFZ2 Sonic
+	{  0, 0, 0, 0, 2, 0}, // GFZ2 Sonic
 	{  0, 0, 0, 1, 2, 0}, // GFZ2 Tails
 	{  0, 0, 0, 2, 2, 0}, // GFZ2 Knuckles
-	{  -12451, 5230, 3008, 0, 4, 0}, // THZ1 Sonic
+	{  0, 0, 0, 0, 4, 0}, // THZ1 Sonic
 	{  0, 0, 0, 1, 4, 0}, // THZ1 Tails
 	{  0, 0, 0, 2, 4, 0}, // THZ1 Knuckles
-	{  -4944, -5236, 357, 0, 5, 0}, // THZ2 Sonic
+	{  0, 0, 0, 0, 5, 0}, // THZ2 Sonic
 	{  0, 0, 0, 1, 5, 0}, // THZ2 Tails
 	{  0, 0, 0, 2, 5, 0}, // THZ2 Knuckles
-	{  1028, 864, 336, 0, 7, 0}, // DSZ1 Sonic
+	{  0, 0, 0, 0, 7, 0}, // DSZ1 Sonic
 	{  0, 0, 0, 1, 7, 0}, // DSZ1 Tails
 	{  0, 0, 0, 2, 7, 0}, // DSZ1 Knuckles
 	{  0, 0, 0, 0, 8, 0}, // DSZ2 Sonic
 	{  0, 0, 0, 1, 8, 0}, // DSZ2 Tails
 	{  0, 0, 0, 2, 8, 0}, // DSZ2 Knuckles
-	{  9705, 1891, 1378, 0, 10, 0}, // MMZ1 Sonic
+	{  0, 0, 0, 0, 10, 0}, // MMZ1 Sonic
 	{  0, 0, 0, 1, 10, 0}, // MMZ1 Tails
 	{  0, 0, 0, 2, 10, 0}, // MMZ1 Knuckles
 	{  0, 0, 0, 0, 11, 0}, // MMZ2 Sonic

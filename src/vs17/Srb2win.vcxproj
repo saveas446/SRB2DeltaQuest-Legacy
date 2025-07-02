@@ -84,10 +84,10 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>dxguid.lib;dinput.lib;dsound.lib;ddraw.lib;winmm.lib;wsock32.lib;fmodvc.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>D:\d2u\dev\srb2debug.exe</OutputFile>
+      <OutputFile>D:\Games\SRB2\demo_2\build\srb2debug.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>D:\d2u\dev\srb2debug.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>D:\Games\SRB2\demo_2\build\srb2debug.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <CLRThreadAttribute>DefaultThreadingAttribute</CLRThreadAttribute>
@@ -114,7 +114,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>..\..\include;..\..\tools\libpng-src;..\..\tools\zlib;..\..\tools;..\..\lib;..\..\include\FMOD;d:\d2u\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\tools\libpng-src;..\..\tools\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;USEASM;HAVE_PNG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -134,14 +134,12 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>dxguid.lib;dinput.lib;dsound.lib;ddraw.lib;winmm.lib;wsock32.lib;fmodvc.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>d:\d2u\dev\srb2win.exe</OutputFile>
+      <OutputFile>c:\srb2demo2\srb2win.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>d:\d2u\dev\srb2win.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>c:\srb2demo2\srb2.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>d:\d2u\lib</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
