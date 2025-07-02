@@ -51,7 +51,7 @@
 
 **DCZ1** - 40%
 
-**DCZ2** - 20%
+**DCZ2** - 5%
 
 **DCZ3** - 0%
 
@@ -65,7 +65,7 @@
 
 ## Robotnirock Zone
 
-**RRZ1** - 0%
+**RRZ1** - 5%
 
 **RRZ2** - 0%
 
@@ -77,7 +77,7 @@
 
 ## Post-game levels
 
-**WDZ** - 5%
+**WDZ** - 10%
 
 **DHZ** - 5%
 
@@ -95,6 +95,32 @@
 
 **EFZ** - 5%
 
-**SVZ** - 0%
+**SVZ** - 30%
 
 **FSZ** - 30%
+
+## Miscellaneous
+
+**Credits** - 60%
+
+**GFZ-DM** - ???%
+
+**THZ-DM** - ???%
+
+**DSZ-DM** - ???%
+
+**MMZ-DM** - 0%
+
+**RMZ-DM** - 0%
+
+**RVZ-DM** - 0%
+
+**DCZ-DM** - 0%
+
+**GEZ-DM** - 0%
+
+**RRZ-DM** - 0%
+
+**WDZ-DM** - 0%
+
+**EFZ-DM** - 0%
