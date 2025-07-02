@@ -1309,7 +1309,7 @@ static void Y_FollowIntermission(void)
 		return;
 	}
 
-	// Go back to title screen after MAP04 if demo 2 strict compatibility is enabled OR this is a demo version of d2u
+	// Go back to title screen after MAP12 if this is a demo version of d2u
 	#if BUILD_TYPE == DEMO
 	if (nextmap < 12)
 	{
@@ -1318,7 +1318,7 @@ static void Y_FollowIntermission(void)
 		return;
 	}
 	#else
-	if (nextmap < 30)
+	if (nextmap < 39)
 	{
 		// normal level
 		G_AfterIntermission();

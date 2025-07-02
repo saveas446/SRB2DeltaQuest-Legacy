@@ -2124,55 +2124,6 @@ void G_DoCompleted(void)
 	else
 		nextmap = mapheaderinfo[gamemap-1].nextlevel-1;
 
-
-	/*
-	// Remember last map for when you come out of the special stage.
-	if (gamemap < sstage_start || gamemap > sstage_end)
-		lastmap = nextmap;
-
-	// If nextmap is actually going to get used, make sure it points to
-	// a map of the proper gametype -- skip levels that don't support
-	// the current gametype. (Helps avoid playing boss levels in Race,
-	// for instance).
-	if (!token && (gamemap < sstage_start || gamemap > sstage_end))
-	{
-		short tolflag = TOLFlag(gametype);
-
-		if (nextmap >= 0 && nextmap < NUMMAPS
-			&& !(mapheaderinfo[nextmap].typeoflevel & tolflag))
-		{
-			register int cm = nextmap;
-			unsigned char visitedmap[(NUMMAPS+7)/8];
-
-			memset(visitedmap, 0, sizeof (visitedmap));
-
-			while (!(mapheaderinfo[cm].typeoflevel & tolflag))
-			{
-				visitedmap[cm/8] |= (1<<(cm%8));
-				cm = mapheaderinfo[cm].nextlevel-1;
-				if (cm >= NUMMAPS || cm < 0) // out of range (either 1100-1102 or error)
-					break;
-				if (visitedmap[cm/8] & (1<<(cm%8))) // smells familiar
-				{
-					// We got stuck in a loop, came back
-					// to the map we started on without
-					// finding one supporting the current
-					// gametype. Thus, print a warning,
-					// and just use this map anyways.
-					CONS_Printf("Warning: Can't find a "
-						"compatible map after map %d; "
-						"using map %d even though it "
-						"is not compatible with the "
-						"current gametype\n",
-							prevmap+1, cm+1);
-					break;
-				}
-			}
-
-			nextmap = cm;
-		}
-	}*/
-
 	if (nextmap < 0 || (nextmap >= NUMMAPS && nextmap < 1100-1)
 		|| nextmap > 1102-1)
 	{
