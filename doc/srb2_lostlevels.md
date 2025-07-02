@@ -1,9 +1,0 @@
-**Sweet Tooth Zone**: "Sweet-themed level", cotton candy wall and flat, chocolate syrup anim, candy cane wall and flat (for FOFs?), Gingerbread wall (and flat?) for big gingerbread castle at the end, path flat, decoration things carry the rest of the assets
-
-**Crystal Cave Zone**: Remake udmfcave in Demo 2.
-
-**Eggfactory Zone**: Make a level kinda like SRB2 Xmas' MAP05, use old THZ2 assets
-
-**Slime Valley Zone**: Slime Canyon Zone from 1.08, but singleplayer and in Demo 2
-
-**Freak Show Zone**: Boss fight against the devs. Have it be in some sort of dingy basement with computer equipment and a Mega Drive hooked up to a CRT playing Sonic 2. Original Demo 2 devs are the ones fighting you, Samwise and save_as watching from the sidelines and cheering

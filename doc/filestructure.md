@@ -1,13 +1,12 @@
 # Repository file structure
-
-`/build/` - Current build of NewEXE
-
-`/demo/` - The files for the latest in-progress demo version
-
-`/dev/` - Current developer version including the OldEXE, maps, and raw graphics and music created for the project
+`/dev/` - Current developer version including the engine, maps, raw graphics and music created for the project
 
 `/doc/` - Documentation, like this file
 
-`/src/` - Source code for the NewEXE
+`/include/` Header files needed for building the engine
 
-`/tools/` - A couple of tools needed to build the NewEXE
+`/lib/` Library files needed for building the engine
+
+`/src/` - Source code for the engine
+
+`/tools/` - A couple of tools needed to build the engine
