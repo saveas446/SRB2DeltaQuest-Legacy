@@ -588,7 +588,7 @@ static boolean PIT_CheckThing(mobj_t *thing)
 					break;
 				#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 				case MT_STEAM: // Steam
-					if (tmthing->state == &states[S_STEAM1] && thing->z <= tmthing->z + 16*FRACUNIT) // Only when it bursts
+					if (tmthing->state == &states[S_STEAM1] && thing->z <= tmthing->z + 16 * FRACUNIT) // Only when it bursts
 					{
 						thing->momz = tmthing->info->speed;
 						P_ResetPlayer(thing->player);

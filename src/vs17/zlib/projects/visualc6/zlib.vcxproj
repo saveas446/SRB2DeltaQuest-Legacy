@@ -125,7 +125,7 @@
   <ItemGroup>
     <CustomBuild Include="..\..\contrib\masmx86\gvmat32.asm">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling...</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\Games\SRB2\demo_2\tools\masm_6.15\masm\bin\ml.exe /nologo /c /coff /Cx /Zi /Fo"$(IntDir)%(Filename).obj" "%(FullPath)"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\d2u\tools\masm_6.15\masm\bin\ml.exe /nologo /c /coff /Cx /Zi /Fo"$(IntDir)%(Filename).obj" "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling...</Message>
@@ -135,7 +135,7 @@
     </CustomBuild>
     <CustomBuild Include="..\..\contrib\masmx86\inffas32.asm">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Assembling...</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\Games\SRB2\demo_2\tools\masm_6.15\masm\bin\ml.exe /nologo /c /coff /Cx /Zi /Fo"$(IntDir)%(Filename).obj" "%(FullPath)"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\d2u\tools\masm_6.15\masm\bin\ml.exe /nologo /c /coff /Cx /Zi /Fo"$(IntDir)%(Filename).obj" "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Assembling...</Message>

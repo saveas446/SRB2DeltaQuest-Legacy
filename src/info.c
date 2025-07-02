@@ -3853,12 +3853,12 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,       // attacksound
 		S_NULL,         // painstate
 		0,              // painchance
-		0,     // painsound
+		sfx_steam2,     // painsound
 		S_NULL,         // meleestate
 		S_NULL,         // missilestate
 		S_NULL,         // deathstate
 		S_NULL,         // xdeathstate
-		0,     // deathsound
+		sfx_steam1,     // deathsound
 		20*FRACUNIT,    // speed
 		32*FRACUNIT,    // radius
 		1*FRACUNIT,     // height

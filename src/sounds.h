@@ -353,6 +353,8 @@ typedef enum
     sfx_amwtr8, // Tails
 	sfx_splish, // Tails 12-08-2000
 	sfx_wslap, // Water Slap Tails 12-13-2000
+    sfx_cgot, // Got Emerald! Sam 02/07/2025
+    sfx_crumbl, // Platform Crumble Sam 02/07/2025
     sfx_now,
 
 	// free slots for S_AddSoundFx() at run-time --------------------
