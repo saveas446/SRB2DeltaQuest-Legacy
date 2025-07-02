@@ -202,7 +202,7 @@ typedef enum
     mus_slmvly,
     mus_fsz1,
     mus_fsz2,
-    mus_fszbos,
+    mus_fszbos, // FSZ2 has 2 songs, so make the credits level use a different song later
     mus_dm2ttl, // Moved it up Tails 01-06-2001
     mus_read_m, // Story intermission Save 15-07-2025
     mus_dm2int, // Level clear! Save 15-07-2025

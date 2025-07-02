@@ -1584,6 +1584,8 @@ static void ST_drawEmeraldHuntIcon(mobj_t *hunt, int graphic)
 static void ST_overlayDrawer(void)
 {
 	int splity;
+	double temp, temp2;
+	char* creditstxt;
 
 	if (cv_splitscreen.value)
 		splity = 24;
@@ -1612,196 +1614,210 @@ static void ST_overlayDrawer(void)
 		}
 	}
 
-	// lives status
-	if ((gametype == GT_COOP || gametype == GT_RACE))
-	{
-		V_DrawScaledPatch(SCX(hudinfo[HUD_LIVESNAME].x), SCY(hudinfo[HUD_LIVESNAME].y) - (faceprefix[stplyr->skin]->height*vid.dupy),
-			V_NOSCALESTART|V_TRANSLUCENT, facenameprefix[stplyr->skin]);
+	if (gamemap == 39) {
+		// Credits text, used for Credits Zone
+		creditstxt = "Insert credits here!";
 
-		if ((stplyr->powers[pw_super] && stplyr->skin == 0) || stplyr->nightsmode) // SONIC ONLY
-			V_DrawScaledPatch(SCX(hudinfo[HUD_LIVESPIC].x), SCY(hudinfo[HUD_LIVESPIC].y) - (faceprefix[stplyr->skin]->height*vid.dupy),
-			V_NOSCALESTART|V_TRANSLUCENT, supersonic);
-		else
+
+        temp = (double)(leveltime);
+
+		// No bit shifting with floats :(
+		temp2 = sin(temp / 8) * 32;
+
+		V_DrawString(0, 160 - (strlen(creditstxt) << 2), 100 - ((int)temp2), V_YELLOWMAP, creditstxt);
+		// Y = 100 - (sin(leveltime) * 32)
+	} else {
+		// lives status
+		if ((gametype == GT_COOP || gametype == GT_RACE))
 		{
-			if (!stplyr->skincolor) // 'default' color
-			{
+			V_DrawScaledPatch(SCX(hudinfo[HUD_LIVESNAME].x), SCY(hudinfo[HUD_LIVESNAME].y) - (faceprefix[stplyr->skin]->height*vid.dupy),
+				V_NOSCALESTART|V_TRANSLUCENT, facenameprefix[stplyr->skin]);
+
+			if ((stplyr->powers[pw_super] && stplyr->skin == 0) || stplyr->nightsmode) // SONIC ONLY
 				V_DrawScaledPatch(SCX(hudinfo[HUD_LIVESPIC].x), SCY(hudinfo[HUD_LIVESPIC].y) - (faceprefix[stplyr->skin]->height*vid.dupy),
-					V_NOSCALESTART|V_TRANSLUCENT,faceprefix[stplyr->skin]);
-			}
+				V_NOSCALESTART|V_TRANSLUCENT, supersonic);
 			else
 			{
-				byte *colormap = (byte *)translationtables[stplyr->skin] - 256 + (((stplyr->powers[pw_super] && stplyr->supercolor > 0) ? stplyr->supercolor : stplyr->skincolor)<<8);
-				V_DrawMappedPatch(SCX(hudinfo[HUD_LIVESPIC].x), SCY(hudinfo[HUD_LIVESPIC].y) - (faceprefix[stplyr->skin]->height*vid.dupy),
-					V_NOSCALESTART|V_TRANSLUCENT,faceprefix[stplyr->skin], colormap);
+				if (!stplyr->skincolor) // 'default' color
+				{
+					V_DrawScaledPatch(SCX(hudinfo[HUD_LIVESPIC].x), SCY(hudinfo[HUD_LIVESPIC].y) - (faceprefix[stplyr->skin]->height*vid.dupy),
+						V_NOSCALESTART|V_TRANSLUCENT,faceprefix[stplyr->skin]);
+				}
+				else
+				{
+					byte *colormap = (byte *)translationtables[stplyr->skin] - 256 + (((stplyr->powers[pw_super] && stplyr->supercolor > 0) ? stplyr->supercolor : stplyr->skincolor)<<8);
+					V_DrawMappedPatch(SCX(hudinfo[HUD_LIVESPIC].x), SCY(hudinfo[HUD_LIVESPIC].y) - (faceprefix[stplyr->skin]->height*vid.dupy),
+						V_NOSCALESTART|V_TRANSLUCENT,faceprefix[stplyr->skin], colormap);
+				}
 			}
+
+			// draw the number of lives
+			ST_DrawOverlayNum(SCX(hudinfo[HUD_LIVESNUM].x), SCY(hudinfo[HUD_LIVESNUM].y) - (11*vid.dupy), stplyr->lives, tallnum);
+
+			// now draw the "x"
+			if (cv_splitscreen.value)
+				V_DrawScaledPatch(SCX(hudinfo[HUD_LIVESX].x), SCY(hudinfo[HUD_LIVESX].y-16), V_NOSCALESTART|V_TRANSLUCENT, stlivex);
+			else
+				V_DrawScaledPatch(SCX(hudinfo[HUD_LIVESX].x), SCY(hudinfo[HUD_LIVESX].y) - (stlivex->height*vid.dupy),
+					V_NOSCALESTART|V_TRANSLUCENT, stlivex);
 		}
 
-		// draw the number of lives
-		ST_DrawOverlayNum(SCX(hudinfo[HUD_LIVESNUM].x), SCY(hudinfo[HUD_LIVESNUM].y) - (11*vid.dupy), stplyr->lives, tallnum);
-
-		// now draw the "x"
-		if (cv_splitscreen.value)
-			V_DrawScaledPatch(SCX(hudinfo[HUD_LIVESX].x), SCY(hudinfo[HUD_LIVESX].y-16), V_NOSCALESTART|V_TRANSLUCENT, stlivex);
-		else
-			V_DrawScaledPatch(SCX(hudinfo[HUD_LIVESX].x), SCY(hudinfo[HUD_LIVESX].y) - (stlivex->height*vid.dupy),
-				V_NOSCALESTART|V_TRANSLUCENT, stlivex);
-	}
-
-	if (maptol & TOL_NIGHTS)
-	{
-		ST_drawNiGHTSHUD();
-	}
-	else
-	{
-		if (cv_splitscreen.value)
+		if (maptol & TOL_NIGHTS)
 		{
-			// rings counter
-			ST_DrawOverlayNum(SCX(hudinfo[HUD_RINGSNUMSPLIT].x), SCY(hudinfo[HUD_RINGSNUMSPLIT].y), stplyr->health > 0 ? stplyr->health - 1 : 0,
-				tallnum);
-
-			if (stplyr->health <= 1 && leveltime/5 & 1)
-				V_DrawScaledPatch(SCX(hudinfo[HUD_RINGSSPLIT].x), SCY(hudinfo[HUD_RINGSSPLIT].y), V_NOSCALESTART|V_TRANSLUCENT, rrings);
-			else
-				V_DrawScaledPatch(SCX(hudinfo[HUD_RINGSSPLIT].x), SCY(hudinfo[HUD_RINGSSPLIT].y), V_NOSCALESTART|V_TRANSLUCENT, sborings);
+			ST_drawNiGHTSHUD();
 		}
 		else
 		{
-			if (gamemap >= sstage_start && gamemap <= sstage_end)
+			if (cv_splitscreen.value)
 			{
-				int ringscollected = 0; // Total # everyone has collected
-				int i;
-
-				for (i = 0; i < MAXPLAYERS; i++)
-					if (playeringame[i] && players[i].mo && players[i].mo->health > 1)
-						ringscollected += players[i].mo->health - 1;
-
-				ST_DrawOverlayNum(SCX(hudinfo[HUD_RINGSNUM].x), SCY(hudinfo[HUD_RINGSNUM].y), ringscollected, tallnum);
-			}
-			else
-			{
-				ST_DrawOverlayNum(SCX(hudinfo[HUD_RINGSNUM].x), SCY(hudinfo[HUD_RINGSNUM].y), stplyr->health > 0 ? stplyr->health-1 : 0,
+				// rings counter
+				ST_DrawOverlayNum(SCX(hudinfo[HUD_RINGSNUMSPLIT].x), SCY(hudinfo[HUD_RINGSNUMSPLIT].y), stplyr->health > 0 ? stplyr->health - 1 : 0,
 					tallnum);
+
+				if (stplyr->health <= 1 && leveltime/5 & 1)
+					V_DrawScaledPatch(SCX(hudinfo[HUD_RINGSSPLIT].x), SCY(hudinfo[HUD_RINGSSPLIT].y), V_NOSCALESTART|V_TRANSLUCENT, rrings);
+				else
+					V_DrawScaledPatch(SCX(hudinfo[HUD_RINGSSPLIT].x), SCY(hudinfo[HUD_RINGSSPLIT].y), V_NOSCALESTART|V_TRANSLUCENT, sborings);
+			}
+			else
+			{
+				if (gamemap >= sstage_start && gamemap <= sstage_end)
+				{
+					int ringscollected = 0; // Total # everyone has collected
+					int i;
+
+					for (i = 0; i < MAXPLAYERS; i++)
+						if (playeringame[i] && players[i].mo && players[i].mo->health > 1)
+							ringscollected += players[i].mo->health - 1;
+
+					ST_DrawOverlayNum(SCX(hudinfo[HUD_RINGSNUM].x), SCY(hudinfo[HUD_RINGSNUM].y), ringscollected, tallnum);
+				}
+				else
+				{
+					ST_DrawOverlayNum(SCX(hudinfo[HUD_RINGSNUM].x), SCY(hudinfo[HUD_RINGSNUM].y), stplyr->health > 0 ? stplyr->health-1 : 0,
+						tallnum);
+				}
+
+				if (stplyr->health <= 1 && leveltime/5 & 1)
+					V_DrawScaledPatch(SCX(hudinfo[HUD_RINGS].x), SCY(hudinfo[HUD_RINGS].y), V_NOSCALESTART|V_TRANSLUCENT, rrings);
+				else
+					V_DrawScaledPatch(SCX(hudinfo[HUD_RINGS].x), SCY(hudinfo[HUD_RINGS].y), V_NOSCALESTART|V_TRANSLUCENT, sborings);
 			}
 
-			if (stplyr->health <= 1 && leveltime/5 & 1)
-				V_DrawScaledPatch(SCX(hudinfo[HUD_RINGS].x), SCY(hudinfo[HUD_RINGS].y), V_NOSCALESTART|V_TRANSLUCENT, rrings);
-			else
-				V_DrawScaledPatch(SCX(hudinfo[HUD_RINGS].x), SCY(hudinfo[HUD_RINGS].y), V_NOSCALESTART|V_TRANSLUCENT, sborings);
-		}
+			// draw score (same in splitscreen as normal, too!)
+			ST_DrawOverlayNum(SCX(hudinfo[HUD_SCORENUM].x), SCY(hudinfo[HUD_SCORENUM].y), stplyr->score, tallnum);
+			V_DrawScaledPatch(SCX(hudinfo[HUD_SCORE].x), SCY(hudinfo[HUD_SCORE].y), V_NOSCALESTART|V_TRANSLUCENT, sboscore);
 
-		// draw score (same in splitscreen as normal, too!)
-		ST_DrawOverlayNum(SCX(hudinfo[HUD_SCORENUM].x), SCY(hudinfo[HUD_SCORENUM].y), stplyr->score, tallnum);
-		V_DrawScaledPatch(SCX(hudinfo[HUD_SCORE].x), SCY(hudinfo[HUD_SCORE].y), V_NOSCALESTART|V_TRANSLUCENT, sboscore);
-
-		if (cv_splitscreen.value)
-		{
-			int seconds = stplyr->realtime/TICRATE % 60;
-
-			if (seconds < 10)
-				ST_DrawOverlayNum(SCX(hudinfo[HUD_LOWSECONDSSPLIT].x), SCY(hudinfo[HUD_LOWSECONDSSPLIT].y), 0, tallnum);
-
-			// seconds time
-			ST_DrawOverlayNum(SCX(hudinfo[HUD_SECONDSSPLIT].x), SCY(hudinfo[HUD_SECONDSSPLIT].y), stplyr->realtime/TICRATE % 60, tallnum);
-
-			// minutes time
-			ST_DrawOverlayNum(SCX(hudinfo[HUD_MINUTESSPLIT].x), SCY(hudinfo[HUD_MINUTESSPLIT].y), stplyr->realtime/(60*TICRATE), tallnum);
-
-			// colon location
-			V_DrawScaledPatch(SCX(hudinfo[HUD_TIMECOLONSPLIT].x), SCY(hudinfo[HUD_TIMECOLONSPLIT].y), V_NOSCALESTART|V_TRANSLUCENT, sbocolon);
-
-			// TIME location
-			V_DrawScaledPatch(SCX(hudinfo[HUD_TIMESPLIT].x), SCY(hudinfo[HUD_TIMESPLIT].y), V_NOSCALESTART|V_TRANSLUCENT, sbotime);
-		}
-		else
-		{
-			if (cv_timetic.value) // show tics instead of MM : SS
-				ST_DrawOverlayNum(SCX(hudinfo[HUD_SECONDS].x), SCY(hudinfo[HUD_SECONDS].y), stplyr->realtime, tallnum);
-			else
+			if (cv_splitscreen.value)
 			{
 				int seconds = stplyr->realtime/TICRATE % 60;
 
 				if (seconds < 10)
-					ST_DrawOverlayNum(SCX(hudinfo[HUD_LOWSECONDS].x), SCY(hudinfo[HUD_LOWSECONDS].y), 0, tallnum);
+					ST_DrawOverlayNum(SCX(hudinfo[HUD_LOWSECONDSSPLIT].x), SCY(hudinfo[HUD_LOWSECONDSSPLIT].y), 0, tallnum);
 
 				// seconds time
-				ST_DrawOverlayNum(SCX(hudinfo[HUD_SECONDS].x), SCY(hudinfo[HUD_SECONDS].y), stplyr->realtime/TICRATE % 60, tallnum);
+				ST_DrawOverlayNum(SCX(hudinfo[HUD_SECONDSSPLIT].x), SCY(hudinfo[HUD_SECONDSSPLIT].y), stplyr->realtime/TICRATE % 60, tallnum);
 
 				// minutes time
-				ST_DrawOverlayNum(SCX(hudinfo[HUD_MINUTES].x), SCY(hudinfo[HUD_MINUTES].y), stplyr->realtime/(60*TICRATE), tallnum);
+				ST_DrawOverlayNum(SCX(hudinfo[HUD_MINUTESSPLIT].x), SCY(hudinfo[HUD_MINUTESSPLIT].y), stplyr->realtime/(60*TICRATE), tallnum);
 
 				// colon location
-				V_DrawScaledPatch(SCX(hudinfo[HUD_TIMECOLON].x), SCY(hudinfo[HUD_TIMECOLON].y), V_NOSCALESTART|V_TRANSLUCENT, sbocolon);
+				V_DrawScaledPatch(SCX(hudinfo[HUD_TIMECOLONSPLIT].x), SCY(hudinfo[HUD_TIMECOLONSPLIT].y), V_NOSCALESTART|V_TRANSLUCENT, sbocolon);
+
+				// TIME location
+				V_DrawScaledPatch(SCX(hudinfo[HUD_TIMESPLIT].x), SCY(hudinfo[HUD_TIMESPLIT].y), V_NOSCALESTART|V_TRANSLUCENT, sbotime);
 			}
+			else
+			{
+				if (cv_timetic.value) // show tics instead of MM : SS
+					ST_DrawOverlayNum(SCX(hudinfo[HUD_SECONDS].x), SCY(hudinfo[HUD_SECONDS].y), stplyr->realtime, tallnum);
+				else
+				{
+					int seconds = stplyr->realtime/TICRATE % 60;
 
-			// TIME location
-			V_DrawScaledPatch(SCX(hudinfo[HUD_TIME].x), SCY(hudinfo[HUD_TIME].y), V_NOSCALESTART|V_TRANSLUCENT, sbotime);
+					if (seconds < 10)
+						ST_DrawOverlayNum(SCX(hudinfo[HUD_LOWSECONDS].x), SCY(hudinfo[HUD_LOWSECONDS].y), 0, tallnum);
+
+					// seconds time
+					ST_DrawOverlayNum(SCX(hudinfo[HUD_SECONDS].x), SCY(hudinfo[HUD_SECONDS].y), stplyr->realtime/TICRATE % 60, tallnum);
+
+					// minutes time
+					ST_DrawOverlayNum(SCX(hudinfo[HUD_MINUTES].x), SCY(hudinfo[HUD_MINUTES].y), stplyr->realtime/(60*TICRATE), tallnum);
+
+					// colon location
+					V_DrawScaledPatch(SCX(hudinfo[HUD_TIMECOLON].x), SCY(hudinfo[HUD_TIMECOLON].y), V_NOSCALESTART|V_TRANSLUCENT, sbocolon);
+				}
+
+				// TIME location
+				V_DrawScaledPatch(SCX(hudinfo[HUD_TIME].x), SCY(hudinfo[HUD_TIME].y), V_NOSCALESTART|V_TRANSLUCENT, sbotime);
+			}
 		}
-	}
 
-	// GAME OVER pic
-	if ((gametype == GT_COOP || gametype == GT_RACE) && stplyr->lives <= 0)
-	{
-		patch_t *p;
-
-		if (countdown == 1)
-			p = timeover;
-		else
-			p = sboover;
-
-		V_DrawScaledPatch((BASEVIDWIDTH - p->width)/2, STRINGY(BASEVIDHEIGHT/2 - (p->height/2)), 0, p);
-	}
-
-	if (cv_objectplace.value && stplyr->mo && stplyr->mo->target)
-	{
-		char x[8], y[8], z[8];
-		char doomednum[8], thingflags[8];
-		sprintf(x, "%d", stplyr->mo->x >> FRACBITS);
-		sprintf(y, "%d", stplyr->mo->y >> FRACBITS);
-		sprintf(z, "%d", stplyr->mo->z >> FRACBITS);
-		sprintf(doomednum, "%d", stplyr->mo->target->info->doomednum);
-		sprintf(thingflags, "%d", cv_objflags.value);
-		V_DrawString(0, 16, 98, 0, "X =");
-		V_DrawString(0, 48, 98, 0, x);
-		V_DrawString(0, 16, 108, 0, "Y =");
-		V_DrawString(0, 48, 108, 0, y);
-		V_DrawString(0, 16, 118, 0, "Z =");
-		V_DrawString(0, 48, 118, 0, z);
-		V_DrawString(0, 16, 128, 0, "thing # =");
-		V_DrawString(0, 16+84, 128, 0, doomednum);
-		V_DrawString(0, 16, 138, 0, "flags =");
-		V_DrawString(0, 16+56, 138, 0, thingflags);
-		V_DrawString(0, 16, 148, 0, "snap =");
-		V_DrawString(0, 16+48, 148, 0, cv_snapto.string);
-	}
-
-	// Countdown timer for Race Mode
-	if (countdown)
-	{
-		char scountdown[33];
-		sprintf(scountdown, "%d", countdown/TICRATE);
-		V_DrawCenteredString(BASEVIDWIDTH/2, STRINGY(176), 0, scountdown);
-	}
-
-	// This is where we draw all the fun cheese if you have the chasecam off!
-	if ((stplyr == &players[consoleplayer] && !cv_chasecam.value)
-		|| ((cv_splitscreen.value && stplyr == &players[secondarydisplayplayer])
-		&& !cv_chasecam2.value))
-	{
-		ST_drawFirstPersonHUD();
-	}
-
-	// draw level title Tails
-	ST_drawLevelTitle();
-
-	if (netgame && gametype == GT_RACE && stplyr->lives <= 0 && displayplayer == consoleplayer && countdown != 1)
-		V_DrawCenteredString(BASEVIDWIDTH/2, BASEVIDHEIGHT/3, 0, "Press F12 to watch another player.");
-
-	if (stplyr->deadtimer > 0 && (stplyr->deadtimer < gameovertics) && stplyr->lives <= 0)
-	{
-		if (!netgame && !multiplayer)
+		// GAME OVER pic
+		if ((gametype == GT_COOP || gametype == GT_RACE) && stplyr->lives <= 0)
 		{
-			// No continues here. Save 17-05-2025
-			Command_ExitGame_f();
+			patch_t *p;
+
+			if (countdown == 1)
+				p = timeover;
+			else
+				p = sboover;
+
+			V_DrawScaledPatch((BASEVIDWIDTH - p->width)/2, STRINGY(BASEVIDHEIGHT/2 - (p->height/2)), 0, p);
+		}
+
+		if (cv_objectplace.value && stplyr->mo && stplyr->mo->target)
+		{
+			char x[8], y[8], z[8];
+			char doomednum[8], thingflags[8];
+			sprintf(x, "%d", stplyr->mo->x >> FRACBITS);
+			sprintf(y, "%d", stplyr->mo->y >> FRACBITS);
+			sprintf(z, "%d", stplyr->mo->z >> FRACBITS);
+			sprintf(doomednum, "%d", stplyr->mo->target->info->doomednum);
+			sprintf(thingflags, "%d", cv_objflags.value);
+			V_DrawString(0, 16, 98, 0, "X =");
+			V_DrawString(0, 48, 98, 0, x);
+			V_DrawString(0, 16, 108, 0, "Y =");
+			V_DrawString(0, 48, 108, 0, y);
+			V_DrawString(0, 16, 118, 0, "Z =");
+			V_DrawString(0, 48, 118, 0, z);
+			V_DrawString(0, 16, 128, 0, "thing # =");
+			V_DrawString(0, 16+84, 128, 0, doomednum);
+			V_DrawString(0, 16, 138, 0, "flags =");
+			V_DrawString(0, 16+56, 138, 0, thingflags);
+			V_DrawString(0, 16, 148, 0, "snap =");
+			V_DrawString(0, 16+48, 148, 0, cv_snapto.string);
+		}
+
+		// Countdown timer for Race Mode
+		if (countdown)
+		{
+			char scountdown[33];
+			sprintf(scountdown, "%d", countdown/TICRATE);
+			V_DrawCenteredString(BASEVIDWIDTH/2, STRINGY(176), 0, scountdown);
+		}
+
+		// This is where we draw all the fun cheese if you have the chasecam off!
+		if ((stplyr == &players[consoleplayer] && !cv_chasecam.value)
+			|| ((cv_splitscreen.value && stplyr == &players[secondarydisplayplayer])
+			&& !cv_chasecam2.value))
+		{
+			ST_drawFirstPersonHUD();
+		}
+
+		// draw level title Tails
+		ST_drawLevelTitle();
+
+		if (netgame && gametype == GT_RACE && stplyr->lives <= 0 && displayplayer == consoleplayer && countdown != 1)
+			V_DrawCenteredString(BASEVIDWIDTH/2, BASEVIDHEIGHT/3, 0, "Press F12 to watch another player.");
+
+		if (stplyr->deadtimer > 0 && (stplyr->deadtimer < gameovertics) && stplyr->lives <= 0)
+		{
+			if (!netgame && !multiplayer)
+			{
+				// No continues here. Save 17-05-2025
+				Command_ExitGame_f();
+			}
 		}
 	}
 
