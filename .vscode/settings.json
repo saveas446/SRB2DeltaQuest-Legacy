@@ -1,7 +1,7 @@
 {
     "files.associations": {
-        "HW_MAIN.C": "cpp",
-        "HW_LIGHT.C": "cpp",
+        "HW_MAIN.C": "c",
+        "HW_LIGHT.C": "c",
         "cstddef": "c",
         "limits": "c",
         "memory": "c",
@@ -10,11 +10,11 @@
         "xlocale": "c",
         "xstring": "c",
         "xutility": "c",
-        "P_MOBJ.C": "cpp",
-        "xtr1common": "cpp",
+        "P_MOBJ.C": "c",
+        "xtr1common": "c",
         "cmath": "c",
-        "HW_BSP.C": "cpp",
-        "HW_DRAW.C": "cpp"
+        "HW_BSP.C": "c",
+        "HW_DRAW.C": "c"
     },
     "cmake.ignoreCMakeListsMissing": true
 }
