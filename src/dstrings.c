@@ -193,7 +193,7 @@ if that explosion I saw is anything to go by."
 	"What would Tails say if\nhe saw you quitting the game?",
 	"Hey!\nWhere do ya think you're goin'?",
 	"Forget your studies!\nPlay some more!",
-	"You're trying to say you\nlike Sonic Heroes better than\nthis, right?",
+	"You're trying to say you\nlike Demo 2 better than\nthis, right?",
 	"don't leave yet -- there's a\nsuper emerald around that corner!",
 	"You'd rather work than play?",
 	"go ahead and leave. see if i care...\n*sniffle*",
