@@ -353,6 +353,9 @@ typedef enum
     sfx_amwtr8, // Tails
 	sfx_splish, // Tails 12-08-2000
 	sfx_wslap, // Water Slap Tails 12-13-2000
+    sfx_steam1,
+    sfx_steam2,
+    sfx_crumbl,
     sfx_now,
 
 	// free slots for S_AddSoundFx() at run-time --------------------
