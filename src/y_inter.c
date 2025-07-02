@@ -1311,14 +1311,14 @@ static void Y_FollowIntermission(void)
 
 	// Go back to title screen after MAP04 if demo 2 strict compatibility is enabled OR this is a demo version of d2u
 	#if BUILD_TYPE == DEMO
-	if (nextmap < 13-1)
+	if (nextmap < 12)
 	{
 		// normal level
 		G_AfterIntermission();
 		return;
 	}
 	#else
-	if (nextmap < 1100-1)
+	if (nextmap < 30)
 	{
 		// normal level
 		G_AfterIntermission();
