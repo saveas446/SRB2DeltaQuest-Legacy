@@ -48,7 +48,7 @@
     <TargetName>srb2debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>.\..\..\bin\VC\Release\Win32\</OutDir>
+    <OutDir>.\..\..\dev\</OutDir>
     <IntDir>.\..\..\objs\VC\Release\Win32\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>

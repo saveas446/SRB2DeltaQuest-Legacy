@@ -14,6 +14,7 @@
     <VCProjectVersion>17.0</VCProjectVersion>
     <ProjectGuid>{DA9D69A4-FA5B-49F7-A36D-B1DD707250C6}</ProjectGuid>
     <RootNamespace>Srb2SDL</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -42,12 +43,12 @@
     <_ProjectFileVersion>17.0.36109.1</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>.\..\..\bin\VC\Debug\SDL\</OutDir>
+    <OutDir>.\..\..\dev\</OutDir>
     <IntDir>.\..\..\objs\VC\Debug\SDL\</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>.\..\..\bin\VC\Release\SDL\</OutDir>
+    <OutDir>.\..\..\dev\</OutDir>
     <IntDir>.\..\..\objs\VC\Release\SDL\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
