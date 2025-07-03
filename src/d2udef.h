@@ -107,7 +107,7 @@
 	/**
 	\brief 
 	Controls minor version number (0.x.0)
-    Each time we add something that's kinda big (minecarts, d2 iwad support, clang support, working sdl, some other custom feature or object)
+    Each time we add something that's kinda big (clang support, sdl2, some other big custom feature or object)
     increment this
 	
 	\note Don't forget to update in Doxyfile!
@@ -119,7 +119,7 @@
 	Controls "tiny" version number (0.0.x)
 	Increment this every day
 	*/
-    #define TINYVER 18
+    #define TINYVER 19
 
 	/**
 	\brief 

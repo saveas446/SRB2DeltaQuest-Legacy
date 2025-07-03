@@ -100,7 +100,7 @@ char sprnames[NUMSPRITES + 1][5] =
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"WHTV","WORB",
 	#endif
-	"TURR",
+	"BSPI",
 	// Demo 2 Ultimate custom things
 	"GRTV","GORB", // Green shield
 	"POL3", // DSZ Coral
@@ -6177,7 +6177,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 	},
 	#endif
 	{           // MT_POPUPTURRET
-		42,             // doomednum
+		68,             // doomednum
 		S_TURRETLOOK,   // spawnstate
 		1,              // spawnhealth
 		S_TURRETPOPUP1, // seestate
