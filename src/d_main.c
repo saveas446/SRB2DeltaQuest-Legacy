@@ -844,7 +844,8 @@ char* wad_filenames[50] = {
 	"EGGFACTORY_DM.wad"
 };
 
-
+/// \fn
+/// \brief Adds the necessary IWADs and PWADs to boot the game.
 static void IdentifyVersion(void)
 {
 	char *srb2wad1, *srb2wad2;
@@ -943,24 +944,26 @@ static void IdentifyVersion(void)
 	// 1984 NO NIGHTS GAMEMODE 1984 NO MATCH WEAPONS 1984 NO SEPARATE FILES FOR CHARACTER SPRITES 1984 NO TAG 1984 NO CTF GAMEMODE 1984 NO SPECIAL MATCH WEAPONS 1984 NO FUN
 	D_AddFile(va(pandf,srb2waddir,"supp.wad")); //supp.wad
 
-	// Convenient parm for adding dev maps quickly
-	if (M_CheckParm("-addmap") && M_IsNextParm()) {
-		while (M_IsNextParm())
-		{
-			s = M_GetNextParm();
+	#if BUILD_TYPE == DEV_RELEASE
+		// Convenient parm for adding dev maps quickly
+		if (M_CheckParm("-addmap") && M_IsNextParm()) {
+			while (M_IsNextParm())
+			{
+				s = M_GetNextParm();
 
-			// Convert string to double
-			sscanf(s, "%d", &d);
+				// Convert string to double
+				sscanf(s, "%d", &d);
 
-			// Check just in case the user tries to load an invalid map number
-			if (d > 0 && d < 51) {
-				// Decrement for array indexing purposes
-				d--;
+				// Check just in case the user tries to load an invalid map number
+				if (d > 0 && d < 51) {
+					// Decrement for array indexing purposes
+					d--;
 
-				D_AddFile(va(pandf,srb2waddir,wad_filenames[d]));
+					D_AddFile(va(pandf,srb2waddir,wad_filenames[d]));
+				}
 			}
 		}
-	}
+	#endif
 }
 
 /* ======================================================================== */

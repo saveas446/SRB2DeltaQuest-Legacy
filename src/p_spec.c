@@ -5489,7 +5489,7 @@ static void P_SpawnScrollers(void)
 				Add_Scroller(sc_side, -sides[s].textureoffset, sides[s].rowoffset, -1, s, accel);
 				break;
 
-			case 100: // scroll first side
+			case 45: // scroll first side
 				Add_Scroller(sc_side, FRACUNIT, 0, -1, lines[i].sidenum[0], accel);
 				break;
 
