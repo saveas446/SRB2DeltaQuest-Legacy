@@ -4397,14 +4397,14 @@ void P_SpawnSpecials(void)
 				P_AddFakeFloorsByLine(i, FF_EXISTS | FF_NOSHADE);
 				break;
 
-			case 38: // Air bobbing platform
-			case 68: // Adjustable air bobbing platform
+			case 314: // Air bobbing platform
+			case 315: // Adjustable air bobbing platform
 				P_AddFakeFloorsByLine(i, FF_EXISTS | FF_SOLID | FF_RENDERALL | FF_CUTLEVEL);
 				lines[i].flags |= ML_BLOCKMONSTERS;
 				P_AddOldAirbob(lines[i].frontsector, lines + i, (lines[i].special != 68));
 				break;
 
-			case 37: // Crumbling platform that will float when it hits water
+			case 316: // Crumbling platform that will float when it hits water
 				sec = (int)(sides[*lines[i].sidenum].sector - sectors);
 				for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
 				{
