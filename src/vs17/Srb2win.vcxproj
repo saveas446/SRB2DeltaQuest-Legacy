@@ -134,12 +134,14 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>dxguid.lib;dinput.lib;dsound.lib;ddraw.lib;winmm.lib;wsock32.lib;fmodvc.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>c:\srb2demo2\srb2win.exe</OutputFile>
+      <OutputFile>d:\d2u\dev\srb2win.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>c:\srb2demo2\srb2.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>d:\d2u\dev\srb2.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <AdditionalLibraryDirectories>d:\d2u\lib</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>

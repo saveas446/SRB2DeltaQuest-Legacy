@@ -4357,6 +4357,62 @@ void P_SpawnSpecials(void)
 			case 304:
 				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_NOSHADE);
 				break;
+
+			case 305: // Fog
+				sec = (int)(sides[*lines[i].sidenum].sector - sectors);
+				// SoM: Because it's fog, check for an extra colormap and set
+				// the fog flag...
+				if (sectors[sec].extra_colormap)
+					sectors[sec].extra_colormap->fog = 1;
+				for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
+					P_AddFakeFloor(&sectors[s], &sectors[sec], lines + i,
+						FF_EXISTS | FF_RENDERALL | FF_FOG | FF_BOTHPLANES | FF_INVERTPLANES | FF_ALLSIDES | FF_INVERTSIDES | FF_CUTEXTRA | FF_EXTRA | FF_DOUBLESHADOW | FF_CUTSPRITES);
+				break;
+
+			case 306: // Adjustable pulsating light
+				sec = (int)(sides[*lines[i].sidenum].sector - sectors);
+				for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
+					P_SpawnAdjustableGlowingLight(&sectors[sec], &sectors[s],
+						P_AproxDistance(lines[i].dx, lines[i].dy) >> FRACBITS);
+				break;
+
+			case 309: // Float/bob platform
+				sec = (int)(sides[*lines[i].sidenum].sector - sectors);
+				for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
+				{
+					P_AddFakeFloor(&sectors[s], &sectors[sec], lines + i,
+						FF_EXISTS | FF_SOLID | FF_RENDERALL | FF_CUTLEVEL | FF_FLOATBOB);
+				}
+				break;
+
+			case 310: // Activate floating platform
+				EV_DoElevator(&lines[i], elevateContinuous, false);
+				break;
+
+			case 311: // Light effect
+				P_AddFakeFloorsByLine(i, FF_EXISTS | FF_CUTSPRITES);
+				break;
+
+			case 313: // FOF (intangible, invisible) - for combining specials in a sector
+				P_AddFakeFloorsByLine(i, FF_EXISTS | FF_NOSHADE);
+				break;
+
+			case 38: // Air bobbing platform
+			case 68: // Adjustable air bobbing platform
+				P_AddFakeFloorsByLine(i, FF_EXISTS | FF_SOLID | FF_RENDERALL | FF_CUTLEVEL);
+				lines[i].flags |= ML_BLOCKMONSTERS;
+				P_AddOldAirbob(lines[i].frontsector, lines + i, (lines[i].special != 68));
+				break;
+
+			case 37: // Crumbling platform that will float when it hits water
+				sec = (int)(sides[*lines[i].sidenum].sector - sectors);
+				for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
+				{
+					P_AddFakeFloor(&sectors[s], &sectors[sec], lines + i,
+						FF_EXISTS | FF_SOLID | FF_RENDERALL | FF_CUTLEVEL | FF_CRUMBLE | FF_FLOATBOB);
+				}
+				break;
+
 		}
 	}
 /*	sector_t *sector;
