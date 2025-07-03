@@ -791,9 +791,68 @@ static inline void D_CleanFile(void)
 // Identify the SRB2 version, and IWAD file to use.
 // ==========================================================================
 
+char* wad_filenames[50] = {
+	"GREENFLOWER_1.wad",
+	"GREENFLOWER_2.wad",
+	"GREENFLOWER_3.wad",
+	"TECHNO_HILL_1.wad",
+	"TECHNO_HILL_2.wad",
+	"TECHNO_HILL_3.wad",
+	"DEEP_SEA_1.wad",
+	"DEEP_SEA_2.wad",
+	"DEEP_SEA_3.wad",
+	"MINE_MAZE_1.wad",
+	"MINE_MAZE_2.wad",
+	"MINE_MAZE_3.wad",
+	"ROCKY_MOUNTAIN_1.wad",
+	"ROCKY_MOUNTAIN_2.wad",
+	"ROCKY_MOUNTAIN_3.wad",
+	"RED_VOLCANO_1.wad",
+	"RED_VOLCANO_2.wad",
+	"RED_VOLCANO_3.wad",
+	"DARK_CITY_1.wad",
+	"DARK_CITY_2.wad",
+	"DARK_CITY_3.wad",
+	"GRAND_EGGSHIP_1.wad",
+	"GRAND_EGGSHIP_2.wad",
+	"GRAND_EGGSHIP_3.wad",
+	"ROBOTNIROCK_1.wad",
+	"ROBOTNIROCK_2.wad",
+	"ROBOTNIROCK_3.wad",
+	"FINAL_FIGHT.wad",
+	"WOOD.wad",
+	"DUST_HILL.wad",
+	"SPDHWY.wad",
+	"HIDDEN_PALACE.wad",
+	"SWEET_TOOTH.wad",
+	"CRYSTAL_CAVE.wad",
+	"EGGFACTORY.wad",
+	"SLIME_VALLEY.wad",
+	"FREAK_SHOW_1.wad",
+	"FREAK_SHOW_2.wad",
+	"CREDITS.wad",
+	"GREENFLOWER_DM.wad",
+	"TECHNO_HILL_DM.wad",
+	"DEEP_SEA_DM.wad",
+	"MINE_MAZE_DM.wad",
+	"ROCKY_MOUNTAIN_DM.wad",
+	"RED_VOLCANO_DM.wad",
+	"DARK_CITY_DM.wad",
+	"GRAND_EGGSHIP_DM.wad",
+	"ROBOTNIROCK_DM.wad",
+	"WOOD_DM.wad",
+	"EGGFACTORY_DM.wad"
+};
+
+
 static void IdentifyVersion(void)
 {
 	char *srb2wad1, *srb2wad2;
+
+	char *s;
+	int d;
+
+
 #ifdef _arch_dreamcast
 	char pathiwad[_MAX_PATH + 16] = "/cd";
 #else
@@ -882,51 +941,26 @@ static void IdentifyVersion(void)
 		free(srb2wad2);
 
 	// 1984 NO NIGHTS GAMEMODE 1984 NO MATCH WEAPONS 1984 NO SEPARATE FILES FOR CHARACTER SPRITES 1984 NO TAG 1984 NO CTF GAMEMODE 1984 NO SPECIAL MATCH WEAPONS 1984 NO FUN
-
-	// if you change the ordering of this or add/remove a file, be sure to update the md5
-	// checking in D_SRB2Main
-
-	// Add the players
-	//D_AddFile(va(pandf,srb2waddir,"sonic.plr")); //sonic.plr
-	//D_AddFile(va(pandf,srb2waddir,"tails.plr")); //tails.plr
-	//D_AddFile(va(pandf,srb2waddir,"knux.plr")); //knux.plr
-
-	// Add the weapons
-
-	// I think it's safe to remove these now?
-	/*
-	D_AddFile(va(pandf,srb2waddir,"auto.wpn")); //auto.wpn
-	D_AddFile(va(pandf,srb2waddir,"bomb.wpn")); //bomb.wpn
-	D_AddFile(va(pandf,srb2waddir,"home.wpn")); //home.wpn
-	D_AddFile(va(pandf,srb2waddir,"rail.wpn")); //rail.wpn
-	D_AddFile(va(pandf,srb2waddir,"infn.wpn")); //infn.wpn*/
 	D_AddFile(va(pandf,srb2waddir,"supp.wad")); //supp.wad
 
-	// Add... nights?
-	
-	/*D_AddFile(va(pandf,srb2waddir,"drill.dta")); //drill.dta
-	D_AddFile(va(pandf,srb2waddir,"soar.dta")); //soar.dta*/
+	// Convenient parm for adding dev maps quickly
+	if (M_CheckParm("-addmap") && M_IsNextParm()) {
+		while (M_IsNextParm())
+		{
+			s = M_GetNextParm();
 
-//And music.dta is dead!
-/*
-#if !defined (SDL) || defined (HAVE_MIXER)
-	{
-#ifdef DC
-		const char *musicfile = "music_dc.dta";
-#else
-		const char *musicfile = "music.dta";
-#endif
-		// Don't forget the music!
-		if (W_VerifyNMUSlumps(va(pandf,srb2waddir,musicfile)))
-			D_AddFile(va(pandf,srb2waddir,musicfile));
-		else
-			I_Error("File %s has been modified with non-music lumps",musicfile);
+			// Convert string to double
+			sscanf(s, "%d", &d);
+
+			// Check just in case the user tries to load an invalid map number
+			if (d > 0 && d < 51) {
+				// Decrement for array indexing purposes
+				d--;
+
+				D_AddFile(va(pandf,srb2waddir,wad_filenames[d]));
+			}
+		}
 	}
-#endif*/
-
-	// Temporary patchfile loading
-	//D_AddFile(va(pandf,srb2waddir,"srb2pat.wad"));//srb2pat.wad
-
 }
 
 /* ======================================================================== */

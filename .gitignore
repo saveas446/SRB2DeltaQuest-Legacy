@@ -120,3 +120,7 @@ doc/SRB2/*
 doc/D2U/*
 
 .vscode/*
+
+# No debug EXEs in the repo!
+srb2debug.exe
+srb2sdldebug.exe
