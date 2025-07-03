@@ -118,3 +118,5 @@ UpgradeLog2.htm
 # Doxygen stuff
 doc/SRB2/*
 doc/D2U/*
+
+.vscode/*
