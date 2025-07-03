@@ -4412,7 +4412,13 @@ void P_SpawnSpecials(void)
 						FF_EXISTS | FF_SOLID | FF_RENDERALL | FF_CUTLEVEL | FF_CRUMBLE | FF_FLOATBOB);
 				}
 				break;
+			case 317: // Light effect
+				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_CUTSPRITES);
+				break;
 
+			case 318: // Double light effect
+				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_CUTSPRITES|FF_DOUBLESHADOW);
+				break;
 		}
 	}
 /*	sector_t *sector;
