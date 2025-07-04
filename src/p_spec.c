@@ -2004,6 +2004,10 @@ static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean r
 					P_DamageMobj(player->mo, NULL, NULL, 1, false);
 				}
 				break;
+			case 974: // Linedef executor that doesn't require touching floor
+			case 975: // Linedef executor
+				P_LinedefExecute(sector->tag, player->mo, sector);
+				return;
 			default:
 				// Just ignore.
 				break;
