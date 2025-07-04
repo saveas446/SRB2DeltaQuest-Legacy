@@ -4423,6 +4423,43 @@ void P_SpawnSpecials(void)
 			case 318: // Double light effect
 				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_CUTSPRITES|FF_DOUBLESHADOW);
 				break;
+
+			case 95:
+			case 96: // Linedef executor (combines with sector special 974/975) and commands
+			case 97:
+			case 322:
+			case 99:
+				// 100 is used for a scroller
+			case 101:
+			case 102:
+			case 103:
+			case 104:
+			case 105:
+			case 106:
+			case 340:
+			case 108:
+			case 109:
+			case 110:
+			case 111:
+			case 112:
+			case 113:
+			case 114:
+			case 115:
+			case 116:
+			case 117:
+			case 118:
+			case 119:
+			case 120:
+			case 121:
+			case 122:
+			case 123:
+			case 124:
+			case 125:
+				break;
+
+			case 88: // Continuously Falling sector
+				EV_DoContinuousFall(lines[i].frontsector, lines[i].backsector, P_AproxDistance(lines[i].dx, lines[i].dy), (lines[i].flags & ML_NOCLIMB));
+				break;
 		}
 	}
 /*	sector_t *sector;
@@ -5045,11 +5082,6 @@ void P_SpawnSpecials(void)
 				}
 				else
 					I_Error("Make-Your-Own FOF (tag %d) found without a 2nd linedef side!", lines[i].tag);
-				break;
-
-			case 88: // Continuously Falling sector
-				EV_DoContinuousFall(lines[i].frontsector, lines[i].backsector, P_AproxDistance(lines[i].dx, lines[i].dy), (lines[i].flags & ML_NOCLIMB));
-				break;
 
 			case 89: // Rising Platform FOF (solid, opaque, shadows)
 				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL);
