@@ -4473,7 +4473,7 @@ void P_SpawnSpecials(void)
 	totalrings = 1;
 
 	CheckForBustableBlocks = CheckForBouncySector = CheckForQuicksand = CheckForMarioBlocks = CheckForFloatBob = false;
-
+*/
 	// Init special SECTORs.
 	sector = sectors;
 	for (i = 0; i < numsectors; i++, sector++)
@@ -4512,7 +4512,7 @@ void P_SpawnSpecials(void)
 				// SYNC STROBE FAST
 				P_SpawnStrobeFlash(sector, FASTDARK, 1);
 				break;
-
+/*
 			// Bouncy sector
 			case 14:
 				CheckForBouncySector = true;
@@ -4534,6 +4534,7 @@ void P_SpawnSpecials(void)
 			case 994: // Circuit finish line
 				circuitmap = true;
 				break;
+				*/
 		}
 	}
 
