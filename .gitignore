@@ -129,3 +129,11 @@ doc/D2U/*
 # No debug EXEs in the repo!
 srb2debug.exe
 srb2sdldebug.exe
+
+# No launcher debugging stuff
+dev/launcher.application
+dev/launcher.exe.config
+dev/launcher.exe.manifest
+dev/launcher.pdb
+
+dev/app.publish/*
