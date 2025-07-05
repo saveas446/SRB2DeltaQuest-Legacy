@@ -46,9 +46,7 @@
             this.misc_group = new System.Windows.Forms.GroupBox();
             this.soundlbl = new System.Windows.Forms.Label();
             this.console_check = new System.Windows.Forms.CheckBox();
-            this.hightimer_check = new System.Windows.Forms.CheckBox();
             this.splitmode_check = new System.Windows.Forms.CheckBox();
-            this.ultimate_check = new System.Windows.Forms.CheckBox();
             this.debug_check = new System.Windows.Forms.CheckBox();
             this.warp_check = new System.Windows.Forms.CheckBox();
             this.warp_tbox = new System.Windows.Forms.TextBox();
@@ -120,6 +118,7 @@
             this.max_check = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.name_tbox = new System.Windows.Forms.TextBox();
+            this.devMaps = new System.Windows.Forms.TabPage();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -133,6 +132,7 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.start_button = new System.Windows.Forms.Button();
             this.running_pic = new System.Windows.Forms.PictureBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.launcher_tabs.SuspendLayout();
             this.main_tab.SuspendLayout();
             this.demo_group.SuspendLayout();
@@ -148,6 +148,7 @@
             this.host_tab.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.devMaps.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.running_pic)).BeginInit();
             this.SuspendLayout();
@@ -157,7 +158,8 @@
             this.launcher_tabs.Controls.Add(this.main_tab);
             this.launcher_tabs.Controls.Add(this.wad_tab);
             this.launcher_tabs.Controls.Add(this.network_tab);
-            this.launcher_tabs.Location = new System.Drawing.Point(12, 27);
+            this.launcher_tabs.Controls.Add(this.devMaps);
+            this.launcher_tabs.Location = new System.Drawing.Point(12, 28);
             this.launcher_tabs.Name = "launcher_tabs";
             this.launcher_tabs.SelectedIndex = 0;
             this.launcher_tabs.Size = new System.Drawing.Size(387, 402);
@@ -188,6 +190,7 @@
             this.main_tab.TabIndex = 2;
             this.main_tab.Text = "Main options";
             this.main_tab.UseVisualStyleBackColor = true;
+            this.main_tab.Click += new System.EventHandler(this.main_tab_Click);
             // 
             // demo_group
             // 
@@ -315,9 +318,7 @@
             // 
             this.misc_group.Controls.Add(this.soundlbl);
             this.misc_group.Controls.Add(this.console_check);
-            this.misc_group.Controls.Add(this.hightimer_check);
             this.misc_group.Controls.Add(this.splitmode_check);
-            this.misc_group.Controls.Add(this.ultimate_check);
             this.misc_group.Controls.Add(this.debug_check);
             this.misc_group.Controls.Add(this.warp_check);
             this.misc_group.Controls.Add(this.warp_tbox);
@@ -348,16 +349,6 @@
             this.console_check.Text = "Separate console window";
             this.console_check.UseVisualStyleBackColor = true;
             // 
-            // hightimer_check
-            // 
-            this.hightimer_check.AutoSize = true;
-            this.hightimer_check.Location = new System.Drawing.Point(6, 111);
-            this.hightimer_check.Name = "hightimer_check";
-            this.hightimer_check.Size = new System.Drawing.Size(121, 17);
-            this.hightimer_check.TabIndex = 18;
-            this.hightimer_check.Text = "High-resolution timer";
-            this.hightimer_check.UseVisualStyleBackColor = true;
-            // 
             // splitmode_check
             // 
             this.splitmode_check.AutoSize = true;
@@ -367,16 +358,6 @@
             this.splitmode_check.TabIndex = 15;
             this.splitmode_check.Text = "Split-screen mode";
             this.splitmode_check.UseVisualStyleBackColor = true;
-            // 
-            // ultimate_check
-            // 
-            this.ultimate_check.AutoSize = true;
-            this.ultimate_check.Location = new System.Drawing.Point(6, 88);
-            this.ultimate_check.Name = "ultimate_check";
-            this.ultimate_check.Size = new System.Drawing.Size(109, 17);
-            this.ultimate_check.TabIndex = 17;
-            this.ultimate_check.Text = "ULTIMATE mode";
-            this.ultimate_check.UseVisualStyleBackColor = true;
             // 
             // debug_check
             // 
@@ -391,7 +372,7 @@
             // warp_check
             // 
             this.warp_check.AutoSize = true;
-            this.warp_check.Location = new System.Drawing.Point(6, 134);
+            this.warp_check.Location = new System.Drawing.Point(6, 90);
             this.warp_check.Name = "warp_check";
             this.warp_check.Size = new System.Drawing.Size(90, 17);
             this.warp_check.TabIndex = 19;
@@ -401,23 +382,22 @@
             // 
             // warp_tbox
             // 
-            this.warp_tbox.Location = new System.Drawing.Point(97, 132);
+            this.warp_tbox.Location = new System.Drawing.Point(97, 88);
             this.warp_tbox.Name = "warp_tbox";
             this.warp_tbox.ReadOnly = true;
             this.warp_tbox.Size = new System.Drawing.Size(57, 20);
             this.warp_tbox.TabIndex = 20;
-            this.warp_tbox.Text = "90";
+            this.warp_tbox.Text = "1";
+            this.warp_tbox.TextChanged += new System.EventHandler(this.warp_tbox_TextChanged);
             // 
             // sound_combo
             // 
             this.sound_combo.FormattingEnabled = true;
             this.sound_combo.ItemHeight = 13;
             this.sound_combo.Items.AddRange(new object[] {
-            "CD Music (w/ SFX)",
             "Ogg Music (w/ SFX)",
             "Midi Music (w/ SFX)",
             "SFX Only",
-            "CD Music (w/o SFX)",
             "Ogg Music (w/o SFX)",
             "MIDI Music (w/o SFX)",
             "No Sound"});
@@ -425,6 +405,7 @@
             this.sound_combo.Name = "sound_combo";
             this.sound_combo.Size = new System.Drawing.Size(135, 21);
             this.sound_combo.TabIndex = 21;
+            this.sound_combo.SelectedIndexChanged += new System.EventHandler(this.sound_combo_SelectedIndexChanged);
             // 
             // pathlbl
             // 
@@ -450,21 +431,17 @@
             // 
             this.color_combo.FormattingEnabled = true;
             this.color_combo.Items.AddRange(new object[] {
-            "Cyan",
+            "Green",
+            "Grey",
             "Peach",
-            "Lavender",
+            "Dark Red",
             "Silver",
             "Orange",
             "Red",
             "Blue",
-            "SteelBlue",
+            "Dark Blue",
             "Pink",
-            "Beige",
-            "Purple",
-            "Green",
-            "White",
-            "Gold",
-            "Yellow"});
+            "Beige"});
             this.color_combo.Location = new System.Drawing.Point(3, 134);
             this.color_combo.Name = "color_combo";
             this.color_combo.Size = new System.Drawing.Size(129, 21);
@@ -1154,6 +1131,18 @@
             this.name_tbox.TabIndex = 2;
             this.name_tbox.Text = "Sonic";
             // 
+            // devMaps
+            // 
+            this.devMaps.Controls.Add(this.button1);
+            this.devMaps.Location = new System.Drawing.Point(4, 22);
+            this.devMaps.Name = "devMaps";
+            this.devMaps.Padding = new System.Windows.Forms.Padding(3);
+            this.devMaps.Size = new System.Drawing.Size(379, 376);
+            this.devMaps.TabIndex = 6;
+            this.devMaps.Text = "Dev Maps";
+            this.devMaps.UseVisualStyleBackColor = true;
+            this.devMaps.Click += new System.EventHandler(this.devMaps_Click);
+            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1175,7 +1164,7 @@
             this.toolStripSeparator1,
             this.createBatchToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // newToolStripMenuItem
@@ -1183,7 +1172,7 @@
             this.newToolStripMenuItem.Image = global::startSRB2.Properties.Resources.NewFile_6276;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -1192,7 +1181,7 @@
             this.openToolStripMenuItem.Image = global::startSRB2.Properties.Resources.Open_6529;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
             this.openToolStripMenuItem.Text = "Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -1201,7 +1190,7 @@
             this.saveToolStripMenuItem.Image = global::startSRB2.Properties.Resources.Save_6530;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -1211,21 +1200,21 @@
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
             this.saveAsToolStripMenuItem.Text = "Save As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(190, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(192, 6);
             // 
             // createBatchToolStripMenuItem
             // 
             this.createBatchToolStripMenuItem.Image = global::startSRB2.Properties.Resources.bat;
             this.createBatchToolStripMenuItem.Name = "createBatchToolStripMenuItem";
             this.createBatchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
-            this.createBatchToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.createBatchToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
             this.createBatchToolStripMenuItem.Text = "Create Batch...";
             this.createBatchToolStripMenuItem.Click += new System.EventHandler(this.createBatchToolStripMenuItem_Click);
             // 
@@ -1234,13 +1223,13 @@
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.aboutToolStripMenuItem.Text = "About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -1268,6 +1257,16 @@
             this.running_pic.TabStop = false;
             this.running_pic.Visible = false;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(6, 6);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 75);
+            this.button1.TabIndex = 0;
+            this.button1.TabStop = false;
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // startSRB2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1283,7 +1282,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "startSRB2";
-            this.Text = "startSRB2";
+            this.Text = "Demo 2 Ultimate Launcher";
             this.Load += new System.EventHandler(this.LauncherForm_Load);
             this.launcher_tabs.ResumeLayout(false);
             this.main_tab.ResumeLayout(false);
@@ -1310,6 +1309,7 @@
             this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.devMaps.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.running_pic)).EndInit();
@@ -1324,7 +1324,6 @@
         private System.Windows.Forms.TabControl launcher_tabs;
         private System.Windows.Forms.TabPage wad_tab;
         private System.Windows.Forms.TabPage main_tab;
-        private System.Windows.Forms.CheckBox hightimer_check;
         private System.Windows.Forms.TextBox hres_tbox;
         private System.Windows.Forms.Label x_label;
         private System.Windows.Forms.TextBox wres_tbox;
@@ -1353,7 +1352,6 @@
         private System.Windows.Forms.CheckBox noautoteam_check;
         private System.Windows.Forms.CheckBox death_check;
         private System.Windows.Forms.CheckBox norings_check;
-        private System.Windows.Forms.CheckBox ultimate_check;
         private System.Windows.Forms.CheckBox console_check;
         private System.Windows.Forms.TextBox ip_tbox;
         private System.Windows.Forms.TextBox name_tbox;
@@ -1423,6 +1421,8 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.PictureBox running_pic;
+        private System.Windows.Forms.TabPage devMaps;
+        private System.Windows.Forms.Button button1;
     }
 }
 

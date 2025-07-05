@@ -626,17 +626,6 @@ namespace startSRB2
                 winmode = "";
             }
 
-            //Check High-res timer
-            string hightimer;
-            if (hightimer_check.Checked)
-            {
-                hightimer = " -timetic";
-            }
-            else
-            {
-                hightimer = "";
-            }
-
             //Check Split-screen mode
             string splitscr;
             if (splitmode_check.Checked)
@@ -708,17 +697,6 @@ namespace startSRB2
                 warpmap = "";
             }
 
-            //ULTIMATE MODE!!!!!!!!!!!!!!
-            string ultimate;
-            if (ultimate_check.Checked)
-            {
-                ultimate = " -ultimatemode";
-            }
-            else
-            {
-                ultimate = "";
-            }
-
             ///Check sound/music combo box selection
             string whatsound = "";
             if (sound_combo.SelectedIndex != -1)
@@ -767,7 +745,10 @@ namespace startSRB2
             var wads = new List<string>();
             foreach (string wadfile in wad_list.Items)
             {
-                wads.Add(" \"" + wadfile.ToString() + "\" ");
+                Uri srb2exe = new Uri(path_tbox.Text);
+                Uri waduri = new Uri(wadfile);
+                Uri relativeUri = srb2exe.MakeRelativeUri(waduri);
+                wads.Add(" \"" + Uri.UnescapeDataString(relativeUri.ToString().Replace('/', '\\')) + "\" ");
             }
             string wadlist = String.Join(" ", wads);
 
@@ -810,7 +791,11 @@ namespace startSRB2
             string color = "";
             if (color_combo.SelectedIndex != -1)
             {
-                if (color_combo.SelectedItem.ToString() == "Cyan")
+                if (color_combo.SelectedItem.ToString() == "None (Green)")
+                {
+                    color = " +color 0 ";
+                }
+                else if (color_combo.SelectedItem.ToString() == "Grey")
                 {
                     color = " +color 1 ";
                 }
@@ -818,7 +803,7 @@ namespace startSRB2
                 {
                     color = " +color 2 ";
                 }
-                else if (color_combo.SelectedItem.ToString() == "Lavender")
+                else if (color_combo.SelectedItem.ToString() == "Dark Red")
                 {
                     color = " +color 3 ";
                 }
@@ -838,7 +823,7 @@ namespace startSRB2
                 {
                     color = " +color 7 ";
                 }
-                else if (color_combo.SelectedItem.ToString() == "SteelBlue")
+                else if (color_combo.SelectedItem.ToString() == "Dark Blue")
                 {
                     color = " +color 8 ";
                 }
@@ -850,25 +835,29 @@ namespace startSRB2
                 {
                     color = " +color 10 ";
                 }
-                else if (color_combo.SelectedItem.ToString() == "Purple")
+                else if (color_combo.SelectedItem.ToString() == "Pink")
                 {
                     color = " +color 11 ";
                 }
-                else if (color_combo.SelectedItem.ToString() == "Green")
+                else if (color_combo.SelectedItem.ToString() == "Lavender")
                 {
                     color = " +color 12 ";
                 }
-                else if (color_combo.SelectedItem.ToString() == "White")
+                else if (color_combo.SelectedItem.ToString() == "Purple")
                 {
                     color = " +color 13 ";
                 }
-                else if (color_combo.SelectedItem.ToString() == "Gold")
+                else if (color_combo.SelectedItem.ToString() == "Orange")
                 {
                     color = " +color 14 ";
                 }
-                else if (color_combo.SelectedItem.ToString() == "Yellow")
+                else if (color_combo.SelectedItem.ToString() == "Rosewood")
                 {
                     color = " +color 15 ";
+                }
+                else if (color_combo.SelectedItem.ToString() == "Beige")
+                {
+                    color = " +color 16 ";
                 }
             }
             else
@@ -877,8 +866,8 @@ namespace startSRB2
             }
 
             string allparameters =
-                /*Main tab*/ manualparameters + opengl + winmode + hightimer + splitscr + debugmode + consolewindow
-                + ultimate + demo + man_res + warpmap + whatsound
+                /*Main tab*/ manualparameters + opengl + winmode + splitscr + debugmode + consolewindow
+                + demo + man_res + warpmap + whatsound
                 /*WADS tab*/+ wadfiles + skinname
                 /*Game tab*/ + loadgame + skin + color
                 /*Host sub-tab*/ + servername + password + gametype + pointlimit + timelimit + maxplayers + room + host
@@ -969,67 +958,67 @@ namespace startSRB2
         private void color_combo_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+            /*
+               Skin colors for Demo 2:
+
+                None (Green)
+                Grey
+                Peach
+                Dark Red
+                Silver
+                Orange
+                Red
+                Blue
+                Dark Blue
+                Pink
+                Beige
+            */
+
             if (color_combo.SelectedIndex != -1)
             {
-                if (color_combo.SelectedItem.ToString() == "Cyan")
+                if (color_combo.SelectedItem.ToString() == "Green")
                 {
-                    color_pic.BackColor = System.Drawing.Color.Cyan;
+                    color_pic.BackColor = Color.FromArgb(255, 70, 237, 58);
+                }
+                else if (color_combo.SelectedItem.ToString() == "Grey")
+                {
+                    color_pic.BackColor = Color.FromArgb(255, 92, 92, 92);
                 }
                 else if (color_combo.SelectedItem.ToString() == "Peach")
                 {
-                    color_pic.BackColor = System.Drawing.Color.PeachPuff;
+                    color_pic.BackColor = Color.FromArgb(255, 255, 191, 167);
                 }
-                else if (color_combo.SelectedItem.ToString() == "Lavender")
+                else if (color_combo.SelectedItem.ToString() == "Dark Red")
                 {
-                    color_pic.BackColor = System.Drawing.Color.Lavender;
+                    color_pic.BackColor = Color.FromArgb(255, 142, 1, 1);
                 }
                 else if (color_combo.SelectedItem.ToString() == "Silver")
                 {
-                    color_pic.BackColor = System.Drawing.Color.Silver;
+                    color_pic.BackColor = Color.FromArgb(255, 199, 199, 199);
                 }
                 else if (color_combo.SelectedItem.ToString() == "Orange")
                 {
-                    color_pic.BackColor = System.Drawing.Color.Orange;
+                    color_pic.BackColor = Color.FromArgb(255, 255, 143, 60);
                 }
                 else if (color_combo.SelectedItem.ToString() == "Red")
                 {
-                    color_pic.BackColor = System.Drawing.Color.Red;
+                    color_pic.BackColor = Color.FromArgb(255, 179, 1, 1);
                 }
                 else if (color_combo.SelectedItem.ToString() == "Blue")
                 {
-                    color_pic.BackColor = System.Drawing.Color.Blue;
+                    color_pic.BackColor = Color.FromArgb(255, 56, 56, 255);
                 }
-                else if (color_combo.SelectedItem.ToString() == "SteelBlue")
+                else if (color_combo.SelectedItem.ToString() == "Dark Blue")
                 {
-                    color_pic.BackColor = System.Drawing.Color.SteelBlue;
+                    color_pic.BackColor = Color.FromArgb(255, 1, 1, 131);
                 }
                 else if (color_combo.SelectedItem.ToString() == "Pink")
                 {
-                    color_pic.BackColor = System.Drawing.Color.Pink;
+                    color_pic.BackColor = Color.FromArgb(255, 243, 100, 100);
                 }
                 else if (color_combo.SelectedItem.ToString() == "Beige")
                 {
-                    color_pic.BackColor = System.Drawing.Color.Beige;
-                }
-                else if (color_combo.SelectedItem.ToString() == "Purple")
-                {
-                    color_pic.BackColor = System.Drawing.Color.Purple;
-                }
-                else if (color_combo.SelectedItem.ToString() == "Green")
-                {
-                    color_pic.BackColor = System.Drawing.Color.Green;
-                }
-                else if (color_combo.SelectedItem.ToString() == "White")
-                {
-                    color_pic.BackColor = System.Drawing.Color.White;
-                }
-                else if (color_combo.SelectedItem.ToString() == "Gold")
-                {
-                    color_pic.BackColor = System.Drawing.Color.Gold;
-                }
-                else if (color_combo.SelectedItem.ToString() == "Yellow")
-                {
-                    color_pic.BackColor = System.Drawing.Color.Yellow;
+                    color_pic.BackColor = Color.FromArgb(255, 159, 124, 88);
                 }
             }
             else { color_pic.BackColor = default(Color); }
@@ -1453,6 +1442,30 @@ namespace startSRB2
             toolTip1.SetToolTip(script_btn, "Click this to browse for a script file");
         }
 
+        private void sound_combo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void main_tab_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void devMaps_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void warp_tbox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 
 

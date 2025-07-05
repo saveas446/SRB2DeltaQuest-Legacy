@@ -114,5 +114,10 @@ namespace startSRB2
             };
             MessageBox.Show(weekDays[random.Next(6)]);
         }
+
+        private void textBoxDescription_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -125,7 +125,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="1387571421_6319.ico" />
     <None Include="Resources\knux.png" />
     <None Include="Resources\sonic.png" />
     <None Include="Resources\tails.png" />
