@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="libpng"
 	ProjectGUID="{DB2741D3-25FA-424B-8204-66EA7FCF9E6B}"
+	RootNamespace="libpng"
 	>
 	<Platforms>
 		<Platform
