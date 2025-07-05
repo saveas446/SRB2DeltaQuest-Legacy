@@ -70,6 +70,11 @@ srb2log.txt
 *.obj
 /src/vs17/.vs/
 /src/sdl/.vs/
+/tools/launcher/.vs/
+/tools/launcher/SRB2Launcher/.vs/
+/tools/launcher/SRB2Launcher/bin/*
+/tools/launcher/SRB2Launcher/obj/*
+/tools/launcher/SRB2Launcher/publish/*
 
 # Ninja
 *.ninja_deps
