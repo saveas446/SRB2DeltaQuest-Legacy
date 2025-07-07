@@ -23,6 +23,7 @@ log.txt
 gamedata.dat
 ogllog.txt
 srb2log.txt
+dev/*.xml
 
 # Visual Studio + source code stuff
 *.lib
