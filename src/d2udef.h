@@ -41,7 +41,7 @@
 	/**
 	\brief Darkens menu
 	*/	
-    //#define DARKENEDMENU
+    #define DARKENEDMENU
 	/**
 	\brief Enables the character select menu
 	*/	
@@ -119,7 +119,7 @@
 	Controls "tiny" version number (0.0.x)
 	Increment this every day
 	*/
-    #define TINYVER 21
+    #define TINYVER 22
 
 	/**
 	\brief 

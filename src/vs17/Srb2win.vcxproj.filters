@@ -623,9 +623,6 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Srb2win.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <CustomBuild Include="..\tmap.nas">
       <Filter>A_Asm</Filter>
     </CustomBuild>
@@ -640,5 +637,8 @@
     <ResourceCompile Include="..\win32\Srb2win.rc">
       <Filter>Win32app</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="C:\Users\PC\Downloads\Srb2win.ico" />
   </ItemGroup>
 </Project>

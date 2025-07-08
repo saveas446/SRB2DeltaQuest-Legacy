@@ -377,9 +377,6 @@
     <Text Include="..\..\readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Srb2win.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="libpng-src\projects\visualc6\libpng.vcxproj">
       <Project>{2ad3fe7b-17d6-4950-bcf6-f4d7b8c2a78c}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
@@ -391,6 +388,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\win32\Srb2win.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="C:\Users\PC\Downloads\Srb2win.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

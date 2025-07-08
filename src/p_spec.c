@@ -2011,6 +2011,15 @@ static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean r
 			default:
 				// Just ignore.
 				break;
+			case 978: // Ring drainer: lose one ring per 15 tics
+			case 980: // Another ring drainer, not requiring floor touch
+				if (leveltime % 15 == 0 && player->mo->health > 1)
+				{
+					player->mo->health--;
+					player->health--;
+					S_StartSound(player->mo, sfx_itemup);
+				}
+				break;
 		};
 	}
 /*	else // Extended sector types for secrets and damage
