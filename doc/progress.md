@@ -27,25 +27,25 @@
 ## Mine Maze Zone
 **MMZ1** - 100%
 
-**MMZ2** - 10%
+**MMZ2** - 30%
 
 **MMZ3** - 100% 
 
 ## Rocky Mountain Zone 
 
-**RMZ1** - 100% 
+**RMZ1** - 45% 
 
-**RMZ2** - 30%
+**RMZ2** - 0%
 
 **RMZ3** - 100%
 
 ## Red Volcano Zone
 
-**RVZ1** - 0% 
+**RVZ1** - 5% 
 
 **RVZ2** - 0%
 
-**RVZ3** - 90%
+**RVZ3** - 0%
 
 ## Dark City Zone
 
@@ -59,9 +59,9 @@
 
 **GEZ1** - 100%
 
-**GEZ2** - 15%
+**GEZ2** - 5%
 
-**GEZ3** - 5%
+**GEZ3** - 0%
 
 ## Robotnirock Zone
 
@@ -73,7 +73,7 @@
 
 ## Final Fight Zone
 
-**FFZ** - 80%
+**FFZ** - 0%
 
 ## Post-game levels
 
@@ -95,7 +95,7 @@
 
 **EFZ** - 5%
 
-**SVZ** - 30%
+**SVZ** - 40%
 
 **FSZ** - 30%
 
