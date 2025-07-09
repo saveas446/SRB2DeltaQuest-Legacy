@@ -267,15 +267,6 @@
     <ClInclude Include="..\R_defs.h">
       <Filter>R_Rend</Filter>
     </ClInclude>
-    <ClInclude Include="..\R_draw.h">
-      <Filter>R_Rend</Filter>
-    </ClInclude>
-    <ClInclude Include="..\r_draw16.h">
-      <Filter>R_Rend</Filter>
-    </ClInclude>
-    <ClInclude Include="..\r_draw8.h">
-      <Filter>R_Rend</Filter>
-    </ClInclude>
     <ClInclude Include="..\R_local.h">
       <Filter>R_Rend</Filter>
     </ClInclude>
@@ -347,6 +338,15 @@
     </ClInclude>
     <ClInclude Include="..\filesrch.h">
       <Filter>D_Doom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\r_draw.h">
+      <Filter>R_Rend</Filter>
+    </ClInclude>
+    <ClInclude Include="..\r_draw8.h">
+      <Filter>R_Rend</Filter>
+    </ClInclude>
+    <ClInclude Include="..\r_draw16.h">
+      <Filter>R_Rend</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -524,15 +524,6 @@
     <ClCompile Include="..\R_data.c">
       <Filter>R_Rend</Filter>
     </ClCompile>
-    <ClCompile Include="..\R_draw.c">
-      <Filter>R_Rend</Filter>
-    </ClCompile>
-    <ClCompile Include="..\R_DRAW16.C">
-      <Filter>R_Rend</Filter>
-    </ClCompile>
-    <ClCompile Include="..\R_DRAW8.C">
-      <Filter>R_Rend</Filter>
-    </ClCompile>
     <ClCompile Include="..\R_main.c">
       <Filter>R_Rend</Filter>
     </ClCompile>
@@ -604,6 +595,15 @@
     </ClCompile>
     <ClCompile Include="..\filesrch.c">
       <Filter>D_Doom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\r_draw.c">
+      <Filter>R_Rend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\r_draw8.c">
+      <Filter>R_Rend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\r_draw16.c">
+      <Filter>R_Rend</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -220,7 +220,7 @@
     <ClInclude Include="..\R_bsp.h" />
     <ClInclude Include="..\R_data.h" />
     <ClInclude Include="..\R_defs.h" />
-    <ClInclude Include="..\R_draw.h" />
+    <ClInclude Include="..\r_draw.h" />
     <ClInclude Include="..\r_draw16.h" />
     <ClInclude Include="..\r_draw8.h" />
     <ClInclude Include="..\R_local.h" />
@@ -307,9 +307,9 @@
     <ClCompile Include="..\P_user.c" />
     <ClCompile Include="..\R_bsp.c" />
     <ClCompile Include="..\R_data.c" />
-    <ClCompile Include="..\R_draw.c" />
-    <ClCompile Include="..\R_DRAW16.C" />
-    <ClCompile Include="..\R_DRAW8.C" />
+    <ClCompile Include="..\r_draw.c" />
+    <ClCompile Include="..\r_draw16.c" />
+    <ClCompile Include="..\r_draw8.c" />
     <ClCompile Include="..\R_main.c" />
     <ClCompile Include="..\R_plane.c" />
     <ClCompile Include="..\R_segs.c" />

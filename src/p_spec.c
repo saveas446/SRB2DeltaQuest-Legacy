@@ -104,6 +104,7 @@ animdef_t               harddefs[] =
     {false,     "FWATER16",     "FWATER1",      4},
     {false,     "SWATER4",      "SWATER1",      8},
     {false,     "LAVA4",        "LAVA1",        8},
+	{false,     "RLAVA8",        "RLAVA1",        4},
     {false,     "BLOOD3",       "BLOOD1",       8},
 	{false,     "BWATER16",       "BWATER1",       8},
 
@@ -125,7 +126,8 @@ animdef_t               harddefs[] =
     {true,      "ROCKRED3",     "ROCKRED1",     8},
 
     {true,      "BFALL4",       "BFALL1",       8},
-    {true,      "SFALL4",       "SFALL1",       8},
+ */  {true,      "SFALL4",       "SFALL1",       8},
+    {true,      "RVZFAL8",       "RVZFAL1",       4},/*
     {true,      "WFALL4",       "WFALL1",       8},
     {true,      "DBRAIN4",      "DBRAIN1",      8},*/
 	{true,      "GFALL4",       "GFALL1",       4}, // Short waterfall Tails 11-07-2000

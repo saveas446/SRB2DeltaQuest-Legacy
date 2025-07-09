@@ -52,12 +52,16 @@ typedef unsigned short USHORT;
 #define NOIPX
 #endif
 
+#if _MSC_VER>=1400
+#  define STDC99
+#endif
+
 #if defined (_MSC_VER) || defined (__OS2__)
 	// Microsoft VisualC++
-#if defined(_MSC_VER) && _MSC_VER <= 1400
-	#define vsnprintf               _vsnprintf
-	#define snprintf                _snprintf
-#endif
+    #if defined(_MSC_VER) && _MSC_VER <= 1400
+    #define vsnprintf               _vsnprintf
+    #define snprintf                _snprintf
+    #endif
 	#define strncasecmp             strnicmp
 	#define strcasecmp              stricmp
 	#define inline                  __inline
