@@ -119,7 +119,7 @@
 	Controls "tiny" version number (0.0.x)
 	Increment this every day
 	*/
-    #define TINYVER 22
+    #define TINYVER 25
 
 	/**
 	\brief 
