@@ -4404,10 +4404,6 @@ void P_SpawnSpecials(void)
 				EV_DoElevator(&lines[i], elevateContinuous, false);
 				break;
 
-			case 311: // Light effect
-				P_AddFakeFloorsByLine(i, FF_EXISTS | FF_CUTSPRITES);
-				break;
-
 			case 313: // FOF (intangible, invisible) - for combining specials in a sector
 				P_AddFakeFloorsByLine(i, FF_EXISTS | FF_NOSHADE);
 				break;
