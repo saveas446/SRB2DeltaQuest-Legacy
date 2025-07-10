@@ -1571,15 +1571,15 @@
             this.manualres_check.AutoSize = true;
             this.manualres_check.Location = new System.Drawing.Point(6, 42);
             this.manualres_check.Name = "manualres_check";
-            this.manualres_check.Size = new System.Drawing.Size(131, 17);
+            this.manualres_check.Size = new System.Drawing.Size(79, 17);
             this.manualres_check.TabIndex = 14;
-            this.manualres_check.Text = "Resolution (SDL only):";
+            this.manualres_check.Text = "Resolution:";
             this.manualres_check.UseVisualStyleBackColor = true;
             this.manualres_check.CheckedChanged += new System.EventHandler(this.manualres_check_CheckedChanged);
             // 
             // hres_tbox
             // 
-            this.hres_tbox.Location = new System.Drawing.Point(205, 39);
+            this.hres_tbox.Location = new System.Drawing.Point(157, 39);
             this.hres_tbox.Name = "hres_tbox";
             this.hres_tbox.ReadOnly = true;
             this.hres_tbox.Size = new System.Drawing.Size(42, 20);
@@ -1589,7 +1589,7 @@
             // 
             // wres_tbox
             // 
-            this.wres_tbox.Location = new System.Drawing.Point(139, 39);
+            this.wres_tbox.Location = new System.Drawing.Point(91, 39);
             this.wres_tbox.Name = "wres_tbox";
             this.wres_tbox.ReadOnly = true;
             this.wres_tbox.Size = new System.Drawing.Size(42, 20);
@@ -1600,7 +1600,7 @@
             // x_label
             // 
             this.x_label.AutoSize = true;
-            this.x_label.Location = new System.Drawing.Point(187, 43);
+            this.x_label.Location = new System.Drawing.Point(139, 43);
             this.x_label.Name = "x_label";
             this.x_label.Size = new System.Drawing.Size(12, 13);
             this.x_label.TabIndex = 13;
