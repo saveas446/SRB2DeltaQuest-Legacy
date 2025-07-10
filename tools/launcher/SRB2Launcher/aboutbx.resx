@@ -117,4 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="textBoxDescription.Text" xml:space="preserve">
+    <value>This program is a frontend that launches SRB2 with parameters.
+
+You may modify and distribute this program as long as you include the original author in your credits.
+
+Contact information:
+furryaletheia@gmail.com
+http://shardvex.blogspot.com/</value>
+  </data>
 </root>

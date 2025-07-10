@@ -21,7 +21,7 @@ using System.Runtime.InteropServices;
         /_____  / / _  __/  / ___  |   / _____/ 
        ______/ / / / \ \   / /__/  |  / /_____
 START /_______/ /_/   \_\ /_______/  /_______/  SOURCE CODE!
-Created by M. J. Spangler, known online as: TheHappyNihilist, Aletheia, Shardvex
+Created by M. J. Spangler, known online as: TheHappyNihilist, Shardvex
 Thanks to SSNTails for making the official launcher, which inspired this one.
 
 *****************************************************
@@ -43,8 +43,8 @@ Author's website:	http://shardvex.blogspot.com/
 Release Log:
 
 1/1/2014 
- * Beta v1.0
- * Original version
+ * Beta v1.0 - Released new year's day!
+ * Original version - GOD this was a terrible version!
 1/22/2014
  * Version 1.1
  * Lots and lots of bugfixes.
@@ -61,13 +61,10 @@ Release Log:
  * A few minor bugfixes
  * Bugfix - Now you can execute a script
  * Added useless Sonic eyecandy. Sonic runs across the bottom of the form.
-
-*****************************************************
-What's new in this version:
-
-*If you drag and drop a folder into the files list, It automatically filters it to all the "supported" file types.
-
-*****************************************************
+3/19/2014
+ * Now it supports all of SRB2 2.1's player colors, like Black, Rosewood, and Zim!
+ * Fixed hosting servers & deticated servers (wasn't working for 2.1)
+ * Various other little tweaks and bugfixes
 
 Features:
 
@@ -121,7 +118,7 @@ get combined into one long word.
 
 I started this when I was still a newbie to programming. So please overlook any bad coding.
 
-Many coders like to declare all their variables at the top of their fuctions, but not me!
+Many coders like to declare all their variables at the top of their functions, but not me!
 
 I think it's best to declare variables when you first use them to ensure that they are 
 always initialized to some valid value and that their intended use is always apparent. 
@@ -143,6 +140,8 @@ namespace startSRB2
     public partial class startSRB2 : Form
     {
 
+        string autosavefile = "autosave.xml";
+
         public startSRB2()
         {
             InitializeComponent();
@@ -150,7 +149,17 @@ namespace startSRB2
 
         private void LauncherForm_Load(object sender, EventArgs e)
         {
+            this.remember_ts.Checked = Properties.Settings.Default.Remember;
 
+            //Reload settings from previous session, if the "remember settings" option is checked.
+            if (remember_ts.Checked == true)
+            {
+                if (File.Exists(autosavefile))
+                {
+                    FormSerialisor.Deserialise(this, autosavefile);
+                }
+            }
+            else { }
         }
 
         private void start_button_Click(object sender, EventArgs e)
@@ -168,6 +177,7 @@ namespace startSRB2
             startInfo.Arguments = info;
             //This next line makes SRB2 able to find srb2.srb
             startInfo.WorkingDirectory = srb2path;
+            MessageBox.Show(info);
 
             //Now, execute srb2 with arguments/parameters
             try
@@ -182,42 +192,12 @@ namespace startSRB2
 
         }
 
-        private void SonicAnimation(int x, int y)
-        {
-            running_pic.Location = new Point(x, y);
-            Application.DoEvents();
-            //Stupid eye candy =P
-            running_pic.Visible = true;
-            for (int iter = 0; iter < 270; iter++)
-            {
-                running_pic.Location = new Point(running_pic.Left + 1, running_pic.Top);
-                Application.DoEvents();
-                System.Threading.Thread.Sleep(1);
-            }
-            running_pic.Visible = false;
-            running_pic.Location = new Point(x, y);
-            Application.DoEvents();
-        }
 
         private string GetParameters()
         {
 
-            //The home folder, disabled for now.
-            //string home = "-home \"" + Path.GetDirectoryName(path_tbox.Text) + "\" ";
-
             //Get manual parameters, we need spaces at the beginning and end.
             string manualparameters = " " + parameters_textbox.Text + " ";
-
-            //Script name
-            string script = null;
-            if (!String.IsNullOrWhiteSpace(script_tbox.Text))
-            { script = " +exec " + script_tbox.Text; }
-
-            //Custom skin name
-            string skinname = "";
-
-            if (skin_tbox.Text.Trim().Length > 0)
-            { skinname = " +skin " + skin_tbox.Text + " "; }
 
             //Multiplayer name
             string playername;
@@ -227,10 +207,11 @@ namespace startSRB2
             }
             else
             {
-                playername = "";
+                playername = null;
             }
 
             //Connect to IP and "join my dedicated server"
+
             string connectip;
             if (multi_check.Checked
                 && joinhost_tab.SelectedTab == joinhost_tab.TabPages["join_tab"]
@@ -242,11 +223,11 @@ namespace startSRB2
                 && joinhost_tab.SelectedTab == joinhost_tab.TabPages["join_tab"]
                     && dedicjoin_check.Checked)
             {
-                connectip = " -clientport 5030 -connect 127.0.0.1 ";
+                connectip = " -clientport 5030 -connect " + LocalIPAddress();
             }
             else
             {
-                connectip = "";
+                connectip = null;
             }
 
             //Host server
@@ -258,20 +239,9 @@ namespace startSRB2
             }
             else
             {
-                host = "";
+                host = null;
             }
 
-            //Room ID
-            string room;
-            if (multi_check.Checked
-                && joinhost_tab.SelectedTab == joinhost_tab.TabPages["host_tab"])
-            {
-                room = " -room " + room_tbox.Text;
-            }
-            else
-            {
-                room = "";
-            }
 
             //Server name
             string servername;
@@ -282,7 +252,7 @@ namespace startSRB2
             }
             else
             {
-                servername = "";
+                servername = null;
             }
 
             //Server password
@@ -295,79 +265,12 @@ namespace startSRB2
             }
             else
             {
-                password = "";
+                password = null;
             }
 
-
-            //Team battle
-            string battle = "";
-            if (multi_check.Checked
-                    && joinhost_tab.SelectedTab == joinhost_tab.TabPages["host_tab"]
-                        && battle_combo.SelectedIndex != -1
-                            && teamplay_check.Checked)
-            {
-                if (battle_combo.SelectedItem.ToString() == "None")
-                {
-                    battle = " +teamplay 0 ";
-                }
-                else if (battle_combo.SelectedItem.ToString() == "Color")
-                {
-                    battle = " +teamplay 1 ";
-                }
-                else if (battle_combo.SelectedItem.ToString() == "Skin")
-                {
-                    battle = " +teamplay 2 ";
-                }
-                else
-                { battle = ""; }
-            }
-            else
-            {
-                battle = "";
-            }
-
-            //Gametype (Nice long nested if-statements =P)
-            string gametype = "";
-            if (multi_check.Checked
-                    && joinhost_tab.SelectedTab == joinhost_tab.TabPages["host_tab"]
-                        && gametype_combo.SelectedIndex != -1)
-            {
-                if (gametype_combo.SelectedItem.ToString() == "Cooperative")
-                {
-                    gametype = " -gametype 0 ";
-                }
-                else if (gametype_combo.SelectedItem.ToString() == "Match")
-                {
-                    gametype = " -gametype 1 ";
-                }
-                else if (gametype_combo.SelectedItem.ToString() == "Team Match")
-                {
-                    gametype = " -gametype 1 +teamplay color ";
-                }
-                else if (gametype_combo.SelectedItem.ToString() == "Race")
-                {
-                    gametype = " -gametype 2 ";
-                }
-                else if (gametype_combo.SelectedItem.ToString() == "Time-Only Race")
-                {
-                    gametype = " -gametype 2  +racetype time_only ";
-                }
-                else if (gametype_combo.SelectedItem.ToString() == "Tag")
-                {
-                    gametype = " -gametype 3 ";
-                }
-                else if (gametype_combo.SelectedItem.ToString() == "Capture the Flag")
-                {
-                    gametype = " -gametype 4 ";
-                }
-            }
-            else
-            {
-                gametype = "";
-            }
 
             //Point limit
-            string pointlimit = "";
+            string pointlimit = null;
             if (multi_check.Checked
                     && joinhost_tab.SelectedTab == joinhost_tab.TabPages["host_tab"]
                         && pointlimit_check.Checked)
@@ -376,11 +279,11 @@ namespace startSRB2
             }
             else
             {
-                pointlimit = "";
+                pointlimit = null;
             }
 
             //Time limit
-            string timelimit = "";
+            string timelimit = null;
             if (multi_check.Checked
                     && joinhost_tab.SelectedTab == joinhost_tab.TabPages["host_tab"]
                         && timelimit_check.Checked)
@@ -389,11 +292,11 @@ namespace startSRB2
             }
             else
             {
-                timelimit = "";
+                timelimit = null;
             }
 
             //Maximum players
-            string maxplayers = "";
+            string maxplayers = null;
             if (multi_check.Checked
                     && joinhost_tab.SelectedTab == joinhost_tab.TabPages["host_tab"]
                         && max_check.Checked)
@@ -402,11 +305,11 @@ namespace startSRB2
             }
             else
             {
-                maxplayers = "";
+                maxplayers = null;
             }
 
             //Disable special rings
-            string specialrings = "";
+            string specialrings = null;
             if (multi_check.Checked
                     && joinhost_tab.SelectedTab == joinhost_tab.TabPages["host_tab"]
                         && norings_check.Checked)
@@ -415,24 +318,11 @@ namespace startSRB2
             }
             else
             {
-                specialrings = "";
-            }
-
-            //Disable automatic team selection (CTF)
-            string noautoteam = "";
-            if (multi_check.Checked
-                    && joinhost_tab.SelectedTab == joinhost_tab.TabPages["host_tab"]
-                        && noautoteam_check.Checked)
-            {
-                noautoteam = " +autoctf 0 ";
-            }
-            else
-            {
-                noautoteam = "";
+                specialrings = null;
             }
 
             //Sudden death
-            string suddendeath = "";
+            string suddendeath = null;
             if (multi_check.Checked
                     && joinhost_tab.SelectedTab == joinhost_tab.TabPages["host_tab"]
                         && death_check.Checked)
@@ -441,11 +331,11 @@ namespace startSRB2
             }
             else
             {
-                suddendeath = "";
+                suddendeath = null;
             }
 
             //dedicated server, host and join.
-            string dedicated = "";
+            string dedicated = null;
             if (multi_check.Checked
                     && joinhost_tab.SelectedTab == joinhost_tab.TabPages["host_tab"]
                         && dedicated_check.Checked)
@@ -454,30 +344,29 @@ namespace startSRB2
             }
             else
             {
-                dedicated = "";
+                dedicated = null;
             }
 
-            //"Host on the master server" and "don't advertise server"
-            string advertise = "";
+            //Show online/advertise on the master server
+            // As of SRB2 2.1, "-internetserver" is no longer used. Instead, "-room" handles hosting on the internet.
+            string room = null;
             if (multi_check.Checked
                     && joinhost_tab.SelectedTab == joinhost_tab.TabPages["host_tab"]
-                        && hostms_check.Checked)
+                        && online_check.Checked)
             {
-                advertise = " -internetserver  ";
+                room = " -room " + room_tbox.Text;
             }
             else if (multi_check.Checked
                     && joinhost_tab.SelectedTab == joinhost_tab.TabPages["host_tab"]
-                        && noad_check.Checked)
+                        && !online_check.Checked)
             {
-                advertise = " +internetserver 0 ";
+                room = null;
             }
             else
-            {
-                advertise = "";
-            }
+            { }
 
             //Don't advance stage
-            string advancemap = "";
+            string advancemap = null;
             if (multi_check.Checked
                     && joinhost_tab.SelectedTab == joinhost_tab.TabPages["host_tab"]
                         && noadvance_check.Checked)
@@ -486,24 +375,24 @@ namespace startSRB2
             }
             else
             {
-                advancemap = "";
+                advancemap = null;
             }
 
             //Force skin
-            string forceskin = "";
+            string forceskin = null;
             if (multi_check.Checked
                     && joinhost_tab.SelectedTab == joinhost_tab.TabPages["host_tab"]
                         && forceskin_check.Checked)
             {
-                forceskin = " +forceskin 1 ";
+                forceskin = " +forceskin 1 +skin" + forceskin_tbox.Text + " ";
             }
             else
             {
-                forceskin = "";
+                forceskin = null;
             }
 
             //No download files from server
-            string nodownload = "";
+            string nodownload = null;
             if (multi_check.Checked
                     && joinhost_tab.SelectedTab == joinhost_tab.TabPages["join_tab"]
                         && nofiles_check.Checked)
@@ -512,11 +401,11 @@ namespace startSRB2
             }
             else
             {
-                nodownload = "";
+                nodownload = null;
             }
 
             //No check server for files
-            string nocheckforfiles = "";
+            string nocheckforfiles = null;
             if (multi_check.Checked
                     && joinhost_tab.SelectedTab == joinhost_tab.TabPages["join_tab"]
                         && nocheck_check.Checked)
@@ -525,71 +414,7 @@ namespace startSRB2
             }
             else
             {
-                nocheckforfiles = "";
-            }
-
-            //Preferred Team
-            string preferredteam = "";
-            if (joinhost_tab.SelectedTab == joinhost_tab.TabPages["join_tab"]
-                    && prefer_combo.SelectedIndex != -1
-                        && multi_check.Checked)
-            {
-                if (prefer_combo.SelectedItem.ToString() == "Spectator")
-                {
-                    preferredteam = " +changeteam spectator ";
-                }
-                else if (prefer_combo.SelectedItem.ToString() == "Playing")
-                {
-                    preferredteam = " +changeteam playing ";
-                }
-                else if (prefer_combo.SelectedItem.ToString() == "Red")
-                {
-                    preferredteam = " +changeteam red ";
-                }
-                else if (prefer_combo.SelectedItem.ToString() == "Blue")
-                {
-                    preferredteam = " +changeteam blue ";
-                }
-            }
-            else
-            {
-                preferredteam = "";
-            }
-
-            //Load saved game
-            string loadgame = "";
-            if (loadgame_check.Checked
-                    && load_combo.SelectedIndex != -1
-                        && !multi_check.Checked)
-            {
-                if (load_combo.SelectedItem.ToString() == "0")
-                {
-                    loadgame = " -loadgame 0";
-                }
-                else if (load_combo.SelectedItem.ToString() == "1")
-                {
-                    loadgame = " -loadgame 1";
-                }
-                else if (load_combo.SelectedItem.ToString() == "2")
-                {
-                    loadgame = " -loadgame 2";
-                }
-                else if (load_combo.SelectedItem.ToString() == "3")
-                {
-                    loadgame = " -loadgame 3";
-                }
-                else if (load_combo.SelectedItem.ToString() == "4")
-                {
-                    loadgame = " -loadgame 4";
-                }
-                else if (load_combo.SelectedItem.ToString() == "5")
-                {
-                    loadgame = " -loadgame 5";
-                }
-            }
-            else
-            {
-                loadgame = "";
+                nocheckforfiles = null;
             }
 
 
@@ -601,18 +426,7 @@ namespace startSRB2
             }
             else
             {
-                opengl = "";
-            }
-
-            //Check Manual Resolution
-            string man_res;
-            if (manualres_check.Checked)
-            {
-                man_res = " -width " + wres_tbox.Text + " -height " + hres_tbox.Text;
-            }
-            else
-            {
-                man_res = "";
+                opengl = null;
             }
 
             //Check Win mode
@@ -623,18 +437,7 @@ namespace startSRB2
             }
             else
             {
-                winmode = "";
-            }
-
-            //Check Split-screen mode
-            string splitscr;
-            if (splitmode_check.Checked)
-            {
-                splitscr = " -splitscreen";
-            }
-            else
-            {
-                splitscr = "";
+                winmode = null;
             }
 
             //Check Debug mode
@@ -645,89 +448,119 @@ namespace startSRB2
             }
             else
             {
-                debugmode = "";
+                debugmode = null;
             }
 
-            //Check Seperate console window
-            string consolewindow;
-            if (console_check.Checked)
-            {
-                consolewindow = " -console";
-            }
-            else
-            {
-                consolewindow = "";
-            }
 
-            //Record/play demo
-            string demo = "";
-            if (demo_combo.SelectedIndex != -1)
-            {
-                if (demo_combo.SelectedIndex == 0)
-                {
-                    demo = "";
-                }
-                else if (demo_combo.SelectedIndex == 1)
-                {
-                    demo = " -record " + "\"" + demo_tbox.Text + "\"";
-                }
-                else if (demo_combo.SelectedIndex == 2)
-                {
-                    demo = " -playdemo " + "\"" + demo_tbox.Text + "\"";
-                }
-                else if (demo_combo.SelectedIndex == 3)
-                {
-                    demo = " -timedemo  " + "\"" + demo_tbox.Text + "\"";
-                }
-            }
-            else
-            {
-                demo = "";
-            }
+            /***************Warp and gametype begin*****************/
 
-            //Warp to map
-
+            //Warp to map for single player, in the main options tab.
+            //There are two warp options, one for single player and one for multiplayer
             string warpmap;
-            if (warp_check.Checked)
+            if (warp_check.Checked && !multi_check.Checked)
             {
                 warpmap = " -warp " + MapNumConverter(warp_tbox.Text); // <--This method converts extended map number to integer
             }
             else
             {
-                warpmap = "";
+                warpmap = null;
             }
 
+            /*Warp to map for multiplayer, in the network options tab.*/
+            //First, find if a gametype is selected and save the gametype number to a string
+            string gametype = null;
+            if (gametype_combo.SelectedIndex != -1)
+            {
+                if (gametype_combo.SelectedItem.ToString() == "Cooperative")
+                {
+                    gametype = "0";
+                }
+                else if (gametype_combo.SelectedItem.ToString() == "Competition")
+                {
+                    gametype = "1";
+                }
+                else if (gametype_combo.SelectedItem.ToString() == "Race")
+                {
+                    gametype = "2";
+                }
+                else if (gametype_combo.SelectedItem.ToString() == "Match")
+                {
+                    gametype = "3";
+                }
+                else if (gametype_combo.SelectedItem.ToString() == "Team Match")
+                {
+                    gametype = "4";
+                }
+                else if (gametype_combo.SelectedItem.ToString() == "Tag")
+                {
+                    gametype = "5";
+                }
+                else if (gametype_combo.SelectedItem.ToString() == "Hide and Seek")
+                {
+                    gametype = "6";
+                }
+                else if (gametype_combo.SelectedItem.ToString() == "Capture the Flag")
+                {
+                    gametype = "7";
+                }
+                else
+                {
+                }
+            }
+            string multiwarp = null;
+            //If warp is selected and gametype is not selected
+            if (multi_check.Checked
+                    && joinhost_tab.SelectedTab == joinhost_tab.TabPages["host_tab"]
+                        && multiwarp_check.Checked 
+                            && gametype_combo.SelectedIndex == -1)
+            {
+                multiwarp = " -warp " + MapNumConverter(multiwarp_tbox.Text);
+            }
+            //If warp and gametype are selected
+            else if (multi_check.Checked
+                        && joinhost_tab.SelectedTab == joinhost_tab.TabPages["host_tab"]
+                            && multiwarp_check.Checked && gametype_combo.SelectedIndex != -1)
+            {
+                multiwarp = " -warp " + MapNumConverter(multiwarp_tbox.Text) + " -gametype " + gametype + " ";
+            }
+            //If gametype is selected but warp is not
+            else if (multi_check.Checked
+                        && joinhost_tab.SelectedTab == joinhost_tab.TabPages["host_tab"]
+                            && !multiwarp_check.Checked && gametype_combo.SelectedIndex != -1)
+            {
+                multiwarp = " -gametype " + gametype + " "; //In this case, the variable multiwarp contains the gametype, rather than warp.
+            }
+            else
+            {
+                multiwarp = null;
+            }
+            //Wow,that was some pretty complex logic. @_@
+
+            /****************Warp and gametype end****************/
+
             ///Check sound/music combo box selection
-            string whatsound = "";
+
+
+            /*
+             * Music and SFX
+               Music Only
+               SFX Only
+               No Sound
+             */
+            string whatsound = null;
             if (sound_combo.SelectedIndex != -1)
             {
-                if (sound_combo.SelectedItem.ToString() == "CD Music (w/ SFX)")
+                if (sound_combo.SelectedItem.ToString() == "Music and SFX")
                 {
-                    whatsound = " -usecd";
+                    whatsound = null;
                 }
-                else if (sound_combo.SelectedItem.ToString() == "Ogg Music (w/ SFX)")
+                else if (sound_combo.SelectedItem.ToString() == "Music Only")
                 {
-                    whatsound = "";
-                }
-                else if (sound_combo.SelectedItem.ToString() == "Midi Music (w/ SFX)")
-                {
-                    whatsound = " -nodigmusic";
+                    whatsound = " -nosound";
                 }
                 else if (sound_combo.SelectedItem.ToString() == "SFX Only")
                 {
                     whatsound = " -nomusic";
-                }
-                else if (sound_combo.SelectedItem.ToString() == "CD Music (w/o SFX)")
-                {
-                    whatsound = " -usecd -nosound";
-                }
-                else if (sound_combo.SelectedItem.ToString() == "Ogg Music (w/o SFX)")
-                {
-                    whatsound = " -nosound";
-                }
-                else if (sound_combo.SelectedItem.ToString() == "MIDI Music (w/o SFX)")
-                {
-                    whatsound = " -nodigmusic -nosound";
                 }
                 else if (sound_combo.SelectedItem.ToString() == "No Sound")
                 {
@@ -736,7 +569,7 @@ namespace startSRB2
             }
             else
             {
-                whatsound = "";
+                whatsound = null;
             }
 
 
@@ -760,14 +593,14 @@ namespace startSRB2
             }
             else
             {
-                wadfiles = "";
+                wadfiles = null;
             }
 
 
             //What character: Sonic, Tails, Knux?
-            string skin = "";
+            string skin = null;
 
-            if (player_combo.SelectedIndex != -1 && skin_tbox.Text.Trim().Length == 0)
+            if (player_combo.SelectedIndex != -1)
             {
                 if (player_combo.SelectedItem.ToString() == "Sonic")
                 {
@@ -784,11 +617,28 @@ namespace startSRB2
             }
             else
             {
-                skin = "";
+                skin = null;
             }
 
+
+            /*
+               Skin colors for Demo 2:
+
+                None (Green)
+                Grey
+                Peach
+                Dark Red
+                Silver
+                Orange
+                Red
+                Blue
+                Dark Blue
+                Pink
+                Beige
+            */
+
             //Color!
-            string color = "";
+            string color = null;
             if (color_combo.SelectedIndex != -1)
             {
                 if (color_combo.SelectedItem.ToString() == "None (Green)")
@@ -861,24 +711,40 @@ namespace startSRB2
                 }
             }
             else
-            {
+            { }
 
-            }
+            //Time to join all of the parameters into one long string!!!!!
+
+            //!IMPORTANT
 
             string allparameters =
-                /*Main tab*/ manualparameters + opengl + winmode + splitscr + debugmode + consolewindow
-                + demo + man_res + warpmap + whatsound
-                /*WADS tab*/+ wadfiles + skinname
-                /*Game tab*/ + loadgame + skin + color
-                /*Host sub-tab*/ + servername + password + gametype + pointlimit + timelimit + maxplayers + room + host
-                + specialrings + dedicated + suddendeath + noautoteam + forceskin + advertise + advancemap + battle
-                /*Join sub-tab*/ + connectip + nocheckforfiles + nodownload + preferredteam
+                /*Main tab*/ manualparameters + opengl + winmode + debugmode + warpmap + whatsound
+                /*WADS tab*/+ wadfiles
+                /*Game tab*/ + skin + color
+                /*Host sub-tab*/ + servername + password + pointlimit + timelimit + maxplayers + room + host
+                + specialrings + dedicated + suddendeath + forceskin + advancemap + multiwarp
+                /*Join sub-tab*/ + connectip + nocheckforfiles + nodownload
                 /*player*/ + playername
-                /*script*/ + script
                 /*that's it! semicolon-->*/;
 
             return allparameters;
+        }
 
+
+        public string LocalIPAddress() //This is for joining dedicated servers. It returns the host's LAN IP (Local IP)
+        {
+            IPHostEntry host;
+            string localIP = "";
+            host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    localIP = ip.ToString();
+                    break;
+                }
+            }
+            return localIP;
         }
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -896,7 +762,7 @@ namespace startSRB2
 
             OpenFileDialog addWadDialog1 = new OpenFileDialog();
             addWadDialog1.Title = "Add files";
-            addWadDialog1.Filter = "Common Files|*.wad; *.soc|WAD Files|*.wad|SOC Files|*.soc|SRB Files|*.srb|DTA Files|*.dta|PLR Files|*.plr|WPN Files|*.wpn|All Supported Files|*.wad; *.soc; *.srb; *.dta; *.plr; *.wpn)|All Files|*.*";
+            addWadDialog1.Filter = "Common Files|*.wad; *.lua; *.soc|WAD Files|*.wad|LUA Files|*.lua|SOC Files|*.soc|SRB Files|*.srb|DTA Files|*.dta|PLR Files|*.plr|WPN Files|*.wpn|All Supported Files|*.wad; *.lua; *.soc; *.srb; *.dta; *.plr; *.wpn|All Files|*.*";
             addWadDialog1.FilterIndex = 1;
             addWadDialog1.CheckFileExists = true;
             addWadDialog1.CheckPathExists = true;
@@ -926,22 +792,6 @@ namespace startSRB2
 
             }
         }
-
-        private void manualres_check_CheckedChanged(object sender, EventArgs e)
-        {
-            if (manualres_check.Checked == true)
-            {
-                wres_tbox.ReadOnly = false;
-                hres_tbox.ReadOnly = false;
-            }
-            else if (manualres_check.Checked == false)
-            {
-                wres_tbox.ReadOnly = true;
-                hres_tbox.ReadOnly = true;
-            }
-            else { }
-        }
-
         private void warp_check_CheckedChanged(object sender, EventArgs e)
         {
             if (warp_check.Checked == true)
@@ -958,68 +808,113 @@ namespace startSRB2
         private void color_combo_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            /*
-               Skin colors for Demo 2:
-
-                None (Green)
-                Grey
-                Peach
-                Dark Red
-                Silver
-                Orange
-                Red
-                Blue
-                Dark Blue
-                Pink
-                Beige
-            */
-
             if (color_combo.SelectedIndex != -1)
             {
                 if (color_combo.SelectedItem.ToString() == "Green")
                 {
-                    color_pic.BackColor = Color.FromArgb(255, 70, 237, 58);
+                    color_pic.BackColor = System.Drawing.Color.Lime;
                 }
-                else if (color_combo.SelectedItem.ToString() == "Grey")
+                else if (color_combo.SelectedItem.ToString() == "White")
                 {
-                    color_pic.BackColor = Color.FromArgb(255, 92, 92, 92);
-                }
-                else if (color_combo.SelectedItem.ToString() == "Peach")
-                {
-                    color_pic.BackColor = Color.FromArgb(255, 255, 191, 167);
-                }
-                else if (color_combo.SelectedItem.ToString() == "Dark Red")
-                {
-                    color_pic.BackColor = Color.FromArgb(255, 142, 1, 1);
+                    color_pic.BackColor = System.Drawing.Color.White;
                 }
                 else if (color_combo.SelectedItem.ToString() == "Silver")
                 {
-                    color_pic.BackColor = Color.FromArgb(255, 199, 199, 199);
+                    color_pic.BackColor = System.Drawing.Color.Silver;
                 }
-                else if (color_combo.SelectedItem.ToString() == "Orange")
+                else if (color_combo.SelectedItem.ToString() == "Grey")
                 {
-                    color_pic.BackColor = Color.FromArgb(255, 255, 143, 60);
+                    color_pic.BackColor = System.Drawing.Color.Gray; //Gray or Grey? Sheeesh English make up your mind.
                 }
-                else if (color_combo.SelectedItem.ToString() == "Red")
+                else if (color_combo.SelectedItem.ToString() == "Black")
                 {
-                    color_pic.BackColor = Color.FromArgb(255, 179, 1, 1);
+                    color_pic.BackColor = System.Drawing.Color.Black; //OMG THIS CULOR IZ AHSUM
                 }
-                else if (color_combo.SelectedItem.ToString() == "Blue")
+                else if (color_combo.SelectedItem.ToString() == "Cyan")
                 {
-                    color_pic.BackColor = Color.FromArgb(255, 56, 56, 255);
+                    color_pic.BackColor = System.Drawing.Color.Cyan;
+                }
+                else if (color_combo.SelectedItem.ToString() == "Teal")
+                {
+                    color_pic.BackColor = System.Drawing.Color.Teal;
                 }
                 else if (color_combo.SelectedItem.ToString() == "Dark Blue")
                 {
-                    color_pic.BackColor = Color.FromArgb(255, 1, 1, 131);
+                    color_pic.BackColor = System.Drawing.Color.Navy;
+                }
+                else if (color_combo.SelectedItem.ToString() == "Blue")
+                {
+                    color_pic.BackColor = System.Drawing.Color.MediumBlue;
+                }
+                else if (color_combo.SelectedItem.ToString() == "Peach")
+                {
+                    color_pic.BackColor = System.Drawing.Color.PeachPuff;
+                }
+                else if (color_combo.SelectedItem.ToString() == "Tan")
+                {
+                    color_pic.BackColor = System.Drawing.Color.Tan;
                 }
                 else if (color_combo.SelectedItem.ToString() == "Pink")
                 {
-                    color_pic.BackColor = Color.FromArgb(255, 243, 100, 100);
+                    color_pic.BackColor = System.Drawing.Color.Pink;
+                }
+                else if (color_combo.SelectedItem.ToString() == "Lavender")
+                {
+                    color_pic.BackColor = System.Drawing.Color.MediumPurple; //This is the closest C# equivalent I could find.
+                }
+                else if (color_combo.SelectedItem.ToString() == "Purple")
+                {
+                    color_pic.BackColor = System.Drawing.Color.Purple;
+                }
+                else if (color_combo.SelectedItem.ToString() == "Orange")
+                {
+                    color_pic.BackColor = System.Drawing.Color.Orange;
+                }
+                else if (color_combo.SelectedItem.ToString() == "Rosewood")
+                {
+                    color_pic.BackColor = System.Drawing.Color.Chocolate; //This is the closest C# equivalent I could find. It's basically dark orange.
                 }
                 else if (color_combo.SelectedItem.ToString() == "Beige")
                 {
-                    color_pic.BackColor = Color.FromArgb(255, 159, 124, 88);
+                    color_pic.BackColor = System.Drawing.Color.Beige;
                 }
+                else if (color_combo.SelectedItem.ToString() == "Brown") //This is the closest C# equivalent I could find.
+                {
+                    color_pic.BackColor = System.Drawing.Color.Sienna;
+                }
+                else if (color_combo.SelectedItem.ToString() == "Red")
+                {
+                    color_pic.BackColor = System.Drawing.Color.Red;
+                }
+                else if (color_combo.SelectedItem.ToString() == "Dark Red")
+                {
+                    color_pic.BackColor = System.Drawing.Color.DarkRed;
+                }
+                else if (color_combo.SelectedItem.ToString() == "Neon_Green")
+                {
+                    color_pic.BackColor = System.Drawing.Color.Lime; //This is the closest C# equivalent I could find. 
+                }
+                else if (color_combo.SelectedItem.ToString() == "Green")
+                {
+                    color_pic.BackColor = System.Drawing.Color.Green;
+                }
+                else if (color_combo.SelectedItem.ToString() == "Zim")
+                {
+                    color_pic.BackColor = System.Drawing.Color.DarkSeaGreen; //This is the closest C# equivalent I could find. 
+                }
+                else if (color_combo.SelectedItem.ToString() == "Olive")
+                {
+                    color_pic.BackColor = System.Drawing.Color.Olive;
+                }
+                else if (color_combo.SelectedItem.ToString() == "Yellow")
+                {
+                    color_pic.BackColor = System.Drawing.Color.Yellow;
+                }
+                else if (color_combo.SelectedItem.ToString() == "Gold")
+                {
+                    color_pic.BackColor = System.Drawing.Color.Goldenrod;
+                }
+                else { }
             }
             else { color_pic.BackColor = default(Color); }
 
@@ -1168,7 +1063,7 @@ namespace startSRB2
 
             if (result == DialogResult.OK)
             {
-                if (startInfo.WorkingDirectory != "") //If SRB2 is in another directory
+                if (startInfo.WorkingDirectory != null) //If SRB2 is in another directory
                 {
                     StreamWriter sw = new StreamWriter(SaveBatch.FileName);
 
@@ -1192,8 +1087,6 @@ namespace startSRB2
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //Some silly eye candy =P
-            SonicAnimation(12, 435);
             aboutbx about = new aboutbx();
             about.ShowDialog();
         }
@@ -1202,7 +1095,7 @@ namespace startSRB2
 
         private void player_combo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (player_combo.SelectedIndex != -1 && skin_tbox.Text.Trim().Length == 0)
+            if (player_combo.SelectedIndex != -1)
             {
                 if (player_combo.SelectedItem.ToString() == "Sonic")
                 {
@@ -1270,13 +1163,13 @@ namespace startSRB2
             List<string> filepaths = new List<string>();
             foreach (var s in directoryName)
             {
-                if (Directory.Exists(s)) //To get inside this IF the user must drop in a folder.
+                if (Directory.Exists(s)) //To get inside of this if-statement the user must drop in a folder.
                 {
                     string[] files = Directory.GetFiles(directoryName[0]);
                     foreach (string file in files)
                     {
                         string extension = Path.GetExtension(file);
-                        if (extension == ".wad" || extension == ".soc") //We need to filter out files without the right extension!
+                        if (extension == ".wad" || extension == ".soc" || extension == ".lua" ) //We need to filter out files without the right extension!
                         {
                             //Add files from folder:
                             wad_list.Items.Add(file);
@@ -1296,44 +1189,12 @@ namespace startSRB2
             }
         }
 
-        private void script_btn_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog browseforscript = new OpenFileDialog();
-            browseforscript.Title = "Path to script";
-            browseforscript.Filter = "Script Files|*.txt|All Files|*.*";
-            browseforscript.FilterIndex = 1;
-            browseforscript.CheckFileExists = true;
-            browseforscript.CheckPathExists = true;
-            browseforscript.Multiselect = false;
-
-            if (browseforscript.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                script_tbox.Text = browseforscript.FileName;
-            }
-        }
-
-        private void demo_btn_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog browsefordemo = new OpenFileDialog();
-            browsefordemo.Title = "Path to demo";
-            browsefordemo.Filter = "Demo Files|*.lmp|All Files|*.*";
-            browsefordemo.FilterIndex = 1;
-            browsefordemo.CheckFileExists = true;
-            browsefordemo.CheckPathExists = true;
-            browsefordemo.Multiselect = false;
-
-            if (browsefordemo.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                demo_tbox.Text = browsefordemo.FileName;
-            }
-        }
-
         public string MapNumConverter(string MapNumText)
         //This method converts extended map number to integer
         {
             System.Text.RegularExpressions.Regex regex = 
                 new System.Text.RegularExpressions.Regex("^[a-zA-Z0-9]*$");
-            string mapreturn = "";
+            string mapreturn = null;
 
             MapNumText = MapNumText.Replace(" ", string.Empty);//Remove all white spaces from string
 
@@ -1427,19 +1288,108 @@ namespace startSRB2
             toolTip1.SetToolTip(down_btn, "Click this to move the selected list item down");
         }
 
-        private void demo_btn_MouseHover(object sender, EventArgs e)
-        {
-            toolTip1.SetToolTip(demo_btn, "Click this to browse for a demo");
-        }
-
         private void browse_btn_MouseHover(object sender, EventArgs e)
         {
             toolTip1.SetToolTip(browse_btn, "Click this to browse for the SRB2 executable");
         }
 
-        private void script_btn_MouseHover(object sender, EventArgs e)
+        private void roomid_label_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            toolTip1.SetToolTip(script_btn, "Click this to browse for a script file");
+            System.Diagnostics.Process.Start("http://mb.srb2.org/masterserver.php");
+        }
+
+        private void export_ts_Click(object sender, EventArgs e)
+        {
+            var ExportList = new SaveFileDialog();
+            ExportList.Title = "Export List to Text File";
+            ExportList.Filter = "Text File|*.txt|All Files|*.*";
+            ExportList.FilterIndex = 1;
+            var result = ExportList.ShowDialog();
+            string textout = "";
+
+            if (result == DialogResult.OK)
+            {
+                
+                foreach (string li in wad_list.Items)
+                {
+                    textout = textout + li + Environment.NewLine;
+                }
+
+                _filename = ExportList.FileName;
+                File.WriteAllText(ExportList.FileName, textout);
+            }
+        }
+
+        private void import_ts_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ImportList = new OpenFileDialog();
+            ImportList.Title = "Import List from Text File";
+            ImportList.Filter = "Text Files|*.txt|All Files|*.*";
+            ImportList.FilterIndex = 1;
+            ImportList.CheckFileExists = true;
+            ImportList.CheckPathExists = true;
+            ImportList.Multiselect = false;
+
+            if (ImportList.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string[] text = System.IO.File.ReadAllLines(ImportList.FileName);
+                text = text.Where(x => !string.IsNullOrEmpty(x)).ToArray(); // <--This removes all blank lines from the files list
+                wad_list.Items.AddRange(text);
+            }
+        }
+
+        private void startSRB2_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (remember_ts.Checked == true) 
+            { Properties.Settings.Default.Remember = true; }
+            else 
+            { Properties.Settings.Default.Remember = false; }
+
+            //Save the state of the the "remember settings" option
+            Properties.Settings.Default.Save();
+
+            //If the "remember settings" option is checked, save the launcher settings to an xml file called "autosave.xml"
+            if (remember_ts.Checked == true)
+            {
+                FormSerialisor.Serialise(this, autosavefile);
+            }
+            else { }
+
+        }
+
+        private void viewHelpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            help helpform = new help();
+            helpform.Show();
+        }
+
+        private void online_check_CheckedChanged(object sender, EventArgs e)
+        {
+            if (online_check.Checked == true)
+            {
+                room_tbox.Enabled = true;
+            }
+            else
+            {
+                room_tbox.Enabled = false;
+            }
+        }
+
+        private void clear_btn_Click(object sender, EventArgs e)
+        {
+            wad_list.Items.Clear();
+        }
+
+        private void dedicjoin_check_CheckedChanged(object sender, EventArgs e)
+        {
+            if (dedicjoin_check.Checked == true)
+            {
+                ip_tbox.Enabled = false;
+            }
+            else
+            {
+                ip_tbox.Enabled = true;
+            }
         }
 
         private void sound_combo_SelectedIndexChanged(object sender, EventArgs e)
@@ -1447,22 +1397,12 @@ namespace startSRB2
 
         }
 
-        private void main_tab_Click(object sender, EventArgs e)
+        private void res_group_Enter(object sender, EventArgs e)
         {
 
         }
 
-        private void devMaps_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void warp_tbox_TextChanged(object sender, EventArgs e)
+        private void path_tbox_TextChanged(object sender, EventArgs e)
         {
 
         }
