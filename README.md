@@ -12,8 +12,12 @@ The source code can be found in `/tools/launcher/` and the binary in `/dev/`.
 > When a new build of the launcher is made, you will most likely have to delete your autosave.xml file or else saving will not work.
 
 ## Editing
-Ultimate Doom Builder has been historically used due to its high stability with the Demo 2 executable and a configuration for it is present in the `/tools/` folder, however Zone Builder has been known to work and will most likely be the better editor for the NewEXE due to its previews of water and FOFs.
-
+Ultimate Doom Builder has been historically used due to its high stability with older SRB2 versions. A configuration for it is present in the `/tools/` folder.
+Zone Builder has also been tested, however the maps it creates usually crash. If this is encountered, simply open the map with Ultimate Doom Builder and save it again. If it says "Building nodes...", the map has been rebuilt and will now work.
 ## Building
 
-this section was hella out of date so i removed it
+### Visual Studio 2005
+The VS2005 project files can be found at `src/win32/Srb2win.sln` and `src/sdl/Srb2SDL.sln` respectively. Once those have been located, just press the Build Solution button in the Build menu.
+
+### Visual Studio 2022
+The VS2022 project files can be found at `src/vs17/Srb2win.sln` and `src/sdl/Srb2SDL_vs17.sln` respectively. Once those have been located, just press the Build Solution button in the Build menu.
