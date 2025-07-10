@@ -429,6 +429,17 @@ namespace startSRB2
                 opengl = null;
             }
 
+            //Check Manual Resolution
+            string man_res;
+            if (manualres_check.Checked)
+            {
+                man_res = " -width " + wres_tbox.Text + " -height " + hres_tbox.Text;
+            }
+            else
+            {
+                man_res = "";
+            }
+
             //Check Win mode
             string winmode;
             if (winmode_check.Checked)
@@ -718,7 +729,7 @@ namespace startSRB2
             //!IMPORTANT
 
             string allparameters =
-                /*Main tab*/ manualparameters + opengl + winmode + debugmode + warpmap + whatsound
+                /*Main tab*/ manualparameters + opengl + man_res + winmode + debugmode + warpmap + whatsound
                 /*WADS tab*/+ wadfiles
                 /*Game tab*/ + skin + color
                 /*Host sub-tab*/ + servername + password + pointlimit + timelimit + maxplayers + room + host
@@ -787,11 +798,25 @@ namespace startSRB2
                     wad_list.Items.RemoveAt(wad_list.SelectedIndices[i]);
                 }
             }
-            else
-            {
-
-            }
+            else { }
         }
+
+        private void manualres_check_CheckedChanged(object sender, EventArgs e)
+        {
+            if (manualres_check.Checked == true)
+            {
+                wres_tbox.ReadOnly = false;
+                hres_tbox.ReadOnly = false;
+            }
+            else if (manualres_check.Checked == false)
+            {
+                wres_tbox.ReadOnly = true;
+                hres_tbox.ReadOnly = true;
+            }
+            else { }
+        }
+
+
         private void warp_check_CheckedChanged(object sender, EventArgs e)
         {
             if (warp_check.Checked == true)
@@ -1433,6 +1458,26 @@ namespace startSRB2
         }
 
         private void checkBox1_CheckedChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void hres_tbox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void wres_tbox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void x_label_Click(object sender, EventArgs e)
         {
 
         }

@@ -37,6 +37,7 @@
             this.software_radio = new System.Windows.Forms.RadioButton();
             this.opengl_radio = new System.Windows.Forms.RadioButton();
             this.path_tbox = new System.Windows.Forms.TextBox();
+            this.color_pic = new System.Windows.Forms.PictureBox();
             this.pathlbl = new System.Windows.Forms.Label();
             this.misc_group = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -45,6 +46,7 @@
             this.warp_check = new System.Windows.Forms.CheckBox();
             this.warp_tbox = new System.Windows.Forms.TextBox();
             this.sound_combo = new System.Windows.Forms.ComboBox();
+            this.character_pic = new System.Windows.Forms.PictureBox();
             this.color_combo = new System.Windows.Forms.ComboBox();
             this.char_label = new System.Windows.Forms.Label();
             this.res_group = new System.Windows.Forms.GroupBox();
@@ -95,62 +97,66 @@
             this.label9 = new System.Windows.Forms.Label();
             this.delete_button = new System.Windows.Forms.Button();
             this.add_button = new System.Windows.Forms.Button();
+            this.down_btn = new System.Windows.Forms.Button();
+            this.up_btn = new System.Windows.Forms.Button();
             this.wad_list = new System.Windows.Forms.ListBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.checkBox21 = new System.Windows.Forms.CheckBox();
+            this.checkBox22 = new System.Windows.Forms.CheckBox();
+            this.checkBox23 = new System.Windows.Forms.CheckBox();
+            this.checkBox24 = new System.Windows.Forms.CheckBox();
+            this.checkBox17 = new System.Windows.Forms.CheckBox();
+            this.checkBox18 = new System.Windows.Forms.CheckBox();
+            this.checkBox19 = new System.Windows.Forms.CheckBox();
+            this.checkBox20 = new System.Windows.Forms.CheckBox();
+            this.checkBox13 = new System.Windows.Forms.CheckBox();
+            this.checkBox14 = new System.Windows.Forms.CheckBox();
+            this.checkBox15 = new System.Windows.Forms.CheckBox();
+            this.checkBox16 = new System.Windows.Forms.CheckBox();
+            this.checkBox9 = new System.Windows.Forms.CheckBox();
+            this.checkBox10 = new System.Windows.Forms.CheckBox();
+            this.checkBox11 = new System.Windows.Forms.CheckBox();
+            this.checkBox12 = new System.Windows.Forms.CheckBox();
+            this.mmz3 = new System.Windows.Forms.CheckBox();
+            this.mmz2 = new System.Windows.Forms.CheckBox();
+            this.mmz1 = new System.Windows.Forms.CheckBox();
+            this.dsz3 = new System.Windows.Forms.CheckBox();
+            this.dsz2 = new System.Windows.Forms.CheckBox();
+            this.dsz1 = new System.Windows.Forms.CheckBox();
+            this.thz3 = new System.Windows.Forms.CheckBox();
+            this.thz2 = new System.Windows.Forms.CheckBox();
+            this.thz1 = new System.Windows.Forms.CheckBox();
+            this.gfz3 = new System.Windows.Forms.CheckBox();
+            this.gfz2 = new System.Windows.Forms.CheckBox();
+            this.gfz1 = new System.Windows.Forms.CheckBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.createBatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.remember_ts = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.import_ts = new System.Windows.Forms.ToolStripMenuItem();
+            this.export_ts = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewHelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.start_button = new System.Windows.Forms.Button();
-            this.color_pic = new System.Windows.Forms.PictureBox();
-            this.character_pic = new System.Windows.Forms.PictureBox();
-            this.down_btn = new System.Windows.Forms.Button();
-            this.up_btn = new System.Windows.Forms.Button();
-            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.createBatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.import_ts = new System.Windows.Forms.ToolStripMenuItem();
-            this.export_ts = new System.Windows.Forms.ToolStripMenuItem();
-            this.gfz1 = new System.Windows.Forms.CheckBox();
-            this.gfz2 = new System.Windows.Forms.CheckBox();
-            this.thz1 = new System.Windows.Forms.CheckBox();
-            this.gfz3 = new System.Windows.Forms.CheckBox();
-            this.dsz2 = new System.Windows.Forms.CheckBox();
-            this.dsz1 = new System.Windows.Forms.CheckBox();
-            this.thz3 = new System.Windows.Forms.CheckBox();
-            this.thz2 = new System.Windows.Forms.CheckBox();
-            this.mmz3 = new System.Windows.Forms.CheckBox();
-            this.mmz2 = new System.Windows.Forms.CheckBox();
-            this.mmz1 = new System.Windows.Forms.CheckBox();
-            this.dsz3 = new System.Windows.Forms.CheckBox();
-            this.checkBox9 = new System.Windows.Forms.CheckBox();
-            this.checkBox10 = new System.Windows.Forms.CheckBox();
-            this.checkBox11 = new System.Windows.Forms.CheckBox();
-            this.checkBox12 = new System.Windows.Forms.CheckBox();
-            this.checkBox13 = new System.Windows.Forms.CheckBox();
-            this.checkBox14 = new System.Windows.Forms.CheckBox();
-            this.checkBox15 = new System.Windows.Forms.CheckBox();
-            this.checkBox16 = new System.Windows.Forms.CheckBox();
-            this.checkBox17 = new System.Windows.Forms.CheckBox();
-            this.checkBox18 = new System.Windows.Forms.CheckBox();
-            this.checkBox19 = new System.Windows.Forms.CheckBox();
-            this.checkBox20 = new System.Windows.Forms.CheckBox();
-            this.checkBox21 = new System.Windows.Forms.CheckBox();
-            this.checkBox22 = new System.Windows.Forms.CheckBox();
-            this.checkBox23 = new System.Windows.Forms.CheckBox();
-            this.checkBox24 = new System.Windows.Forms.CheckBox();
+            this.manualres_check = new System.Windows.Forms.CheckBox();
+            this.hres_tbox = new System.Windows.Forms.TextBox();
+            this.wres_tbox = new System.Windows.Forms.TextBox();
+            this.x_label = new System.Windows.Forms.Label();
             this.devMaps.SuspendLayout();
             this.main_tab.SuspendLayout();
             this.render_group.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.color_pic)).BeginInit();
             this.misc_group.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.character_pic)).BeginInit();
             this.res_group.SuspendLayout();
             this.network_tab.SuspendLayout();
             this.joinhost_tab.SuspendLayout();
@@ -161,8 +167,6 @@
             this.wad_tab.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.color_pic)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.character_pic)).BeginInit();
             this.SuspendLayout();
             // 
             // devMaps
@@ -174,7 +178,7 @@
             this.devMaps.Location = new System.Drawing.Point(12, 27);
             this.devMaps.Name = "devMaps";
             this.devMaps.SelectedIndex = 0;
-            this.devMaps.Size = new System.Drawing.Size(387, 370);
+            this.devMaps.Size = new System.Drawing.Size(417, 370);
             this.devMaps.TabIndex = 1;
             // 
             // main_tab
@@ -195,7 +199,7 @@
             this.main_tab.Controls.Add(this.parameters_textbox);
             this.main_tab.Location = new System.Drawing.Point(4, 22);
             this.main_tab.Name = "main_tab";
-            this.main_tab.Size = new System.Drawing.Size(379, 344);
+            this.main_tab.Size = new System.Drawing.Size(409, 344);
             this.main_tab.TabIndex = 2;
             this.main_tab.Text = "Main Options";
             this.main_tab.UseVisualStyleBackColor = true;
@@ -252,6 +256,15 @@
             this.path_tbox.TabIndex = 26;
             this.path_tbox.TextChanged += new System.EventHandler(this.path_tbox_TextChanged);
             // 
+            // color_pic
+            // 
+            this.color_pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.color_pic.Location = new System.Drawing.Point(85, 5);
+            this.color_pic.Name = "color_pic";
+            this.color_pic.Size = new System.Drawing.Size(47, 70);
+            this.color_pic.TabIndex = 14;
+            this.color_pic.TabStop = false;
+            // 
             // pathlbl
             // 
             this.pathlbl.AutoSize = true;
@@ -269,7 +282,7 @@
             this.misc_group.Controls.Add(this.warp_check);
             this.misc_group.Controls.Add(this.warp_tbox);
             this.misc_group.Controls.Add(this.sound_combo);
-            this.misc_group.Location = new System.Drawing.Point(138, 53);
+            this.misc_group.Location = new System.Drawing.Point(141, 78);
             this.misc_group.Name = "misc_group";
             this.misc_group.Size = new System.Drawing.Size(238, 102);
             this.misc_group.TabIndex = 13;
@@ -339,6 +352,17 @@
             this.sound_combo.TabIndex = 21;
             this.sound_combo.SelectedIndexChanged += new System.EventHandler(this.sound_combo_SelectedIndexChanged);
             // 
+            // character_pic
+            // 
+            this.character_pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.character_pic.ErrorImage = null;
+            this.character_pic.Location = new System.Drawing.Point(3, 5);
+            this.character_pic.Name = "character_pic";
+            this.character_pic.Size = new System.Drawing.Size(76, 70);
+            this.character_pic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.character_pic.TabIndex = 2;
+            this.character_pic.TabStop = false;
+            // 
             // color_combo
             // 
             this.color_combo.FormattingEnabled = true;
@@ -371,10 +395,14 @@
             // 
             // res_group
             // 
+            this.res_group.Controls.Add(this.manualres_check);
+            this.res_group.Controls.Add(this.hres_tbox);
+            this.res_group.Controls.Add(this.wres_tbox);
+            this.res_group.Controls.Add(this.x_label);
             this.res_group.Controls.Add(this.winmode_check);
             this.res_group.Location = new System.Drawing.Point(138, 5);
             this.res_group.Name = "res_group";
-            this.res_group.Size = new System.Drawing.Size(238, 42);
+            this.res_group.Size = new System.Drawing.Size(268, 70);
             this.res_group.TabIndex = 8;
             this.res_group.TabStop = false;
             this.res_group.Text = "Video Options";
@@ -438,7 +466,7 @@
             this.network_tab.Controls.Add(this.name_tbox);
             this.network_tab.Location = new System.Drawing.Point(4, 22);
             this.network_tab.Name = "network_tab";
-            this.network_tab.Size = new System.Drawing.Size(379, 344);
+            this.network_tab.Size = new System.Drawing.Size(409, 344);
             this.network_tab.TabIndex = 5;
             this.network_tab.Text = "Network Options";
             this.network_tab.UseVisualStyleBackColor = true;
@@ -836,7 +864,7 @@
             this.wad_tab.Location = new System.Drawing.Point(4, 22);
             this.wad_tab.Name = "wad_tab";
             this.wad_tab.Padding = new System.Windows.Forms.Padding(3);
-            this.wad_tab.Size = new System.Drawing.Size(379, 344);
+            this.wad_tab.Size = new System.Drawing.Size(409, 344);
             this.wad_tab.TabIndex = 1;
             this.wad_tab.Text = "Add Files";
             this.wad_tab.UseVisualStyleBackColor = true;
@@ -882,6 +910,32 @@
             this.add_button.Click += new System.EventHandler(this.add_button_Click);
             this.add_button.MouseHover += new System.EventHandler(this.add_button_MouseHover);
             // 
+            // down_btn
+            // 
+            this.down_btn.BackgroundImage = global::startSRB2.Properties.Resources.downbutn;
+            this.down_btn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.down_btn.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.down_btn.Location = new System.Drawing.Point(36, 316);
+            this.down_btn.Name = "down_btn";
+            this.down_btn.Size = new System.Drawing.Size(24, 23);
+            this.down_btn.TabIndex = 3;
+            this.down_btn.UseVisualStyleBackColor = true;
+            this.down_btn.Click += new System.EventHandler(this.down_btn_Click);
+            this.down_btn.MouseHover += new System.EventHandler(this.down_btn_MouseHover);
+            // 
+            // up_btn
+            // 
+            this.up_btn.BackgroundImage = global::startSRB2.Properties.Resources.upbtn;
+            this.up_btn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.up_btn.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.up_btn.Location = new System.Drawing.Point(6, 316);
+            this.up_btn.Name = "up_btn";
+            this.up_btn.Size = new System.Drawing.Size(24, 23);
+            this.up_btn.TabIndex = 2;
+            this.up_btn.UseVisualStyleBackColor = true;
+            this.up_btn.Click += new System.EventHandler(this.up_btn_Click);
+            this.up_btn.MouseHover += new System.EventHandler(this.up_btn_MouseHover);
+            // 
             // wad_list
             // 
             this.wad_list.AllowDrop = true;
@@ -889,7 +943,7 @@
             this.wad_list.Location = new System.Drawing.Point(3, 19);
             this.wad_list.Name = "wad_list";
             this.wad_list.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.wad_list.Size = new System.Drawing.Size(373, 290);
+            this.wad_list.Size = new System.Drawing.Size(400, 290);
             this.wad_list.TabIndex = 1;
             this.wad_list.DragDrop += new System.Windows.Forms.DragEventHandler(this.wad_list_DragDrop);
             this.wad_list.DragEnter += new System.Windows.Forms.DragEventHandler(this.wad_list_DragEnter);
@@ -927,11 +981,433 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(379, 344);
+            this.tabPage1.Size = new System.Drawing.Size(409, 344);
             this.tabPage1.TabIndex = 6;
             this.tabPage1.Text = "Dev Maps";
             this.tabPage1.UseVisualStyleBackColor = true;
             this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
+            // 
+            // checkBox21
+            // 
+            this.checkBox21.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox21.AutoCheck = false;
+            this.checkBox21.BackgroundImage = global::startSRB2.Properties.Resources.thz1;
+            this.checkBox21.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.checkBox21.ForeColor = System.Drawing.Color.White;
+            this.checkBox21.Location = new System.Drawing.Point(286, 297);
+            this.checkBox21.Name = "checkBox21";
+            this.checkBox21.Size = new System.Drawing.Size(77, 43);
+            this.checkBox21.TabIndex = 27;
+            this.checkBox21.Text = "THZ1";
+            this.checkBox21.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox21.UseVisualStyleBackColor = true;
+            // 
+            // checkBox22
+            // 
+            this.checkBox22.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox22.AutoCheck = false;
+            this.checkBox22.BackgroundImage = global::startSRB2.Properties.Resources.gfz3;
+            this.checkBox22.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.checkBox22.ForeColor = System.Drawing.Color.White;
+            this.checkBox22.Location = new System.Drawing.Point(203, 297);
+            this.checkBox22.Name = "checkBox22";
+            this.checkBox22.Size = new System.Drawing.Size(77, 43);
+            this.checkBox22.TabIndex = 26;
+            this.checkBox22.Text = "GFZ3";
+            this.checkBox22.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox22.UseVisualStyleBackColor = true;
+            // 
+            // checkBox23
+            // 
+            this.checkBox23.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox23.AutoCheck = false;
+            this.checkBox23.BackgroundImage = global::startSRB2.Properties.Resources.gfz2;
+            this.checkBox23.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.checkBox23.ForeColor = System.Drawing.Color.White;
+            this.checkBox23.Location = new System.Drawing.Point(120, 297);
+            this.checkBox23.Name = "checkBox23";
+            this.checkBox23.Size = new System.Drawing.Size(77, 43);
+            this.checkBox23.TabIndex = 25;
+            this.checkBox23.Text = "GFZ2";
+            this.checkBox23.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox23.UseVisualStyleBackColor = true;
+            // 
+            // checkBox24
+            // 
+            this.checkBox24.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox24.AutoCheck = false;
+            this.checkBox24.BackgroundImage = global::startSRB2.Properties.Resources.gfz1;
+            this.checkBox24.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.checkBox24.ForeColor = System.Drawing.Color.White;
+            this.checkBox24.Location = new System.Drawing.Point(37, 297);
+            this.checkBox24.Name = "checkBox24";
+            this.checkBox24.Size = new System.Drawing.Size(77, 43);
+            this.checkBox24.TabIndex = 24;
+            this.checkBox24.Text = "GFZ1";
+            this.checkBox24.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox24.UseVisualStyleBackColor = true;
+            // 
+            // checkBox17
+            // 
+            this.checkBox17.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox17.AutoCheck = false;
+            this.checkBox17.BackgroundImage = global::startSRB2.Properties.Resources.thz1;
+            this.checkBox17.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.checkBox17.ForeColor = System.Drawing.Color.White;
+            this.checkBox17.Location = new System.Drawing.Point(286, 250);
+            this.checkBox17.Name = "checkBox17";
+            this.checkBox17.Size = new System.Drawing.Size(77, 43);
+            this.checkBox17.TabIndex = 23;
+            this.checkBox17.Text = "THZ1";
+            this.checkBox17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox17.UseVisualStyleBackColor = true;
+            // 
+            // checkBox18
+            // 
+            this.checkBox18.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox18.AutoCheck = false;
+            this.checkBox18.BackgroundImage = global::startSRB2.Properties.Resources.gfz3;
+            this.checkBox18.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.checkBox18.ForeColor = System.Drawing.Color.White;
+            this.checkBox18.Location = new System.Drawing.Point(203, 250);
+            this.checkBox18.Name = "checkBox18";
+            this.checkBox18.Size = new System.Drawing.Size(77, 43);
+            this.checkBox18.TabIndex = 22;
+            this.checkBox18.Text = "GFZ3";
+            this.checkBox18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox18.UseVisualStyleBackColor = true;
+            // 
+            // checkBox19
+            // 
+            this.checkBox19.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox19.AutoCheck = false;
+            this.checkBox19.BackgroundImage = global::startSRB2.Properties.Resources.gfz2;
+            this.checkBox19.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.checkBox19.ForeColor = System.Drawing.Color.White;
+            this.checkBox19.Location = new System.Drawing.Point(120, 250);
+            this.checkBox19.Name = "checkBox19";
+            this.checkBox19.Size = new System.Drawing.Size(77, 43);
+            this.checkBox19.TabIndex = 21;
+            this.checkBox19.Text = "GFZ2";
+            this.checkBox19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox19.UseVisualStyleBackColor = true;
+            // 
+            // checkBox20
+            // 
+            this.checkBox20.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox20.AutoCheck = false;
+            this.checkBox20.BackgroundImage = global::startSRB2.Properties.Resources.gfz1;
+            this.checkBox20.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.checkBox20.ForeColor = System.Drawing.Color.White;
+            this.checkBox20.Location = new System.Drawing.Point(37, 250);
+            this.checkBox20.Name = "checkBox20";
+            this.checkBox20.Size = new System.Drawing.Size(77, 43);
+            this.checkBox20.TabIndex = 20;
+            this.checkBox20.Text = "GFZ1";
+            this.checkBox20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox20.UseVisualStyleBackColor = true;
+            // 
+            // checkBox13
+            // 
+            this.checkBox13.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox13.AutoCheck = false;
+            this.checkBox13.BackgroundImage = global::startSRB2.Properties.Resources.thz1;
+            this.checkBox13.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.checkBox13.ForeColor = System.Drawing.Color.White;
+            this.checkBox13.Location = new System.Drawing.Point(286, 201);
+            this.checkBox13.Name = "checkBox13";
+            this.checkBox13.Size = new System.Drawing.Size(77, 43);
+            this.checkBox13.TabIndex = 19;
+            this.checkBox13.Text = "THZ1";
+            this.checkBox13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox13.UseVisualStyleBackColor = true;
+            // 
+            // checkBox14
+            // 
+            this.checkBox14.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox14.AutoCheck = false;
+            this.checkBox14.BackgroundImage = global::startSRB2.Properties.Resources.gfz3;
+            this.checkBox14.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.checkBox14.ForeColor = System.Drawing.Color.White;
+            this.checkBox14.Location = new System.Drawing.Point(203, 201);
+            this.checkBox14.Name = "checkBox14";
+            this.checkBox14.Size = new System.Drawing.Size(77, 43);
+            this.checkBox14.TabIndex = 18;
+            this.checkBox14.Text = "GFZ3";
+            this.checkBox14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox14.UseVisualStyleBackColor = true;
+            // 
+            // checkBox15
+            // 
+            this.checkBox15.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox15.AutoCheck = false;
+            this.checkBox15.BackgroundImage = global::startSRB2.Properties.Resources.gfz2;
+            this.checkBox15.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.checkBox15.ForeColor = System.Drawing.Color.White;
+            this.checkBox15.Location = new System.Drawing.Point(120, 201);
+            this.checkBox15.Name = "checkBox15";
+            this.checkBox15.Size = new System.Drawing.Size(77, 43);
+            this.checkBox15.TabIndex = 17;
+            this.checkBox15.Text = "GFZ2";
+            this.checkBox15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox15.UseVisualStyleBackColor = true;
+            // 
+            // checkBox16
+            // 
+            this.checkBox16.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox16.AutoCheck = false;
+            this.checkBox16.BackgroundImage = global::startSRB2.Properties.Resources.gfz1;
+            this.checkBox16.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.checkBox16.ForeColor = System.Drawing.Color.White;
+            this.checkBox16.Location = new System.Drawing.Point(37, 201);
+            this.checkBox16.Name = "checkBox16";
+            this.checkBox16.Size = new System.Drawing.Size(77, 43);
+            this.checkBox16.TabIndex = 16;
+            this.checkBox16.Text = "GFZ1";
+            this.checkBox16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox16.UseVisualStyleBackColor = true;
+            // 
+            // checkBox9
+            // 
+            this.checkBox9.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox9.AutoCheck = false;
+            this.checkBox9.BackgroundImage = global::startSRB2.Properties.Resources.thz1;
+            this.checkBox9.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.checkBox9.ForeColor = System.Drawing.Color.White;
+            this.checkBox9.Location = new System.Drawing.Point(286, 152);
+            this.checkBox9.Name = "checkBox9";
+            this.checkBox9.Size = new System.Drawing.Size(77, 43);
+            this.checkBox9.TabIndex = 15;
+            this.checkBox9.Text = "THZ1";
+            this.checkBox9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox9.UseVisualStyleBackColor = true;
+            // 
+            // checkBox10
+            // 
+            this.checkBox10.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox10.AutoCheck = false;
+            this.checkBox10.BackgroundImage = global::startSRB2.Properties.Resources.gfz3;
+            this.checkBox10.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.checkBox10.ForeColor = System.Drawing.Color.White;
+            this.checkBox10.Location = new System.Drawing.Point(203, 152);
+            this.checkBox10.Name = "checkBox10";
+            this.checkBox10.Size = new System.Drawing.Size(77, 43);
+            this.checkBox10.TabIndex = 14;
+            this.checkBox10.Text = "GFZ3";
+            this.checkBox10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox10.UseVisualStyleBackColor = true;
+            // 
+            // checkBox11
+            // 
+            this.checkBox11.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox11.AutoCheck = false;
+            this.checkBox11.BackgroundImage = global::startSRB2.Properties.Resources.gfz2;
+            this.checkBox11.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.checkBox11.ForeColor = System.Drawing.Color.White;
+            this.checkBox11.Location = new System.Drawing.Point(120, 152);
+            this.checkBox11.Name = "checkBox11";
+            this.checkBox11.Size = new System.Drawing.Size(77, 43);
+            this.checkBox11.TabIndex = 13;
+            this.checkBox11.Text = "GFZ2";
+            this.checkBox11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox11.UseVisualStyleBackColor = true;
+            // 
+            // checkBox12
+            // 
+            this.checkBox12.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox12.AutoCheck = false;
+            this.checkBox12.BackgroundImage = global::startSRB2.Properties.Resources.gfz1;
+            this.checkBox12.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.checkBox12.ForeColor = System.Drawing.Color.White;
+            this.checkBox12.Location = new System.Drawing.Point(37, 152);
+            this.checkBox12.Name = "checkBox12";
+            this.checkBox12.Size = new System.Drawing.Size(77, 43);
+            this.checkBox12.TabIndex = 12;
+            this.checkBox12.Text = "GFZ1";
+            this.checkBox12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkBox12.UseVisualStyleBackColor = true;
+            // 
+            // mmz3
+            // 
+            this.mmz3.Appearance = System.Windows.Forms.Appearance.Button;
+            this.mmz3.AutoCheck = false;
+            this.mmz3.BackgroundImage = global::startSRB2.Properties.Resources.mmz3;
+            this.mmz3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.mmz3.ForeColor = System.Drawing.Color.White;
+            this.mmz3.Location = new System.Drawing.Point(286, 103);
+            this.mmz3.Name = "mmz3";
+            this.mmz3.Size = new System.Drawing.Size(77, 43);
+            this.mmz3.TabIndex = 11;
+            this.mmz3.Text = "MMZ3";
+            this.mmz3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.mmz3.UseVisualStyleBackColor = true;
+            // 
+            // mmz2
+            // 
+            this.mmz2.Appearance = System.Windows.Forms.Appearance.Button;
+            this.mmz2.AutoCheck = false;
+            this.mmz2.BackgroundImage = global::startSRB2.Properties.Resources.mmz2;
+            this.mmz2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.mmz2.ForeColor = System.Drawing.Color.White;
+            this.mmz2.Location = new System.Drawing.Point(203, 103);
+            this.mmz2.Name = "mmz2";
+            this.mmz2.Size = new System.Drawing.Size(77, 43);
+            this.mmz2.TabIndex = 10;
+            this.mmz2.Text = "MMZ2";
+            this.mmz2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.mmz2.UseVisualStyleBackColor = true;
+            // 
+            // mmz1
+            // 
+            this.mmz1.Appearance = System.Windows.Forms.Appearance.Button;
+            this.mmz1.AutoCheck = false;
+            this.mmz1.BackgroundImage = global::startSRB2.Properties.Resources.mmz1;
+            this.mmz1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.mmz1.ForeColor = System.Drawing.Color.White;
+            this.mmz1.Location = new System.Drawing.Point(120, 103);
+            this.mmz1.Name = "mmz1";
+            this.mmz1.Size = new System.Drawing.Size(77, 43);
+            this.mmz1.TabIndex = 9;
+            this.mmz1.Text = "MMZ1";
+            this.mmz1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.mmz1.UseVisualStyleBackColor = true;
+            // 
+            // dsz3
+            // 
+            this.dsz3.Appearance = System.Windows.Forms.Appearance.Button;
+            this.dsz3.AutoCheck = false;
+            this.dsz3.BackgroundImage = global::startSRB2.Properties.Resources.dsz3;
+            this.dsz3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.dsz3.ForeColor = System.Drawing.Color.White;
+            this.dsz3.Location = new System.Drawing.Point(37, 103);
+            this.dsz3.Name = "dsz3";
+            this.dsz3.Size = new System.Drawing.Size(77, 43);
+            this.dsz3.TabIndex = 8;
+            this.dsz3.Text = "DSZ3";
+            this.dsz3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.dsz3.UseVisualStyleBackColor = true;
+            // 
+            // dsz2
+            // 
+            this.dsz2.Appearance = System.Windows.Forms.Appearance.Button;
+            this.dsz2.AutoCheck = false;
+            this.dsz2.BackgroundImage = global::startSRB2.Properties.Resources.dsz2;
+            this.dsz2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.dsz2.ForeColor = System.Drawing.Color.White;
+            this.dsz2.Location = new System.Drawing.Point(286, 54);
+            this.dsz2.Name = "dsz2";
+            this.dsz2.Size = new System.Drawing.Size(77, 43);
+            this.dsz2.TabIndex = 7;
+            this.dsz2.Text = "DSZ2";
+            this.dsz2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.dsz2.UseVisualStyleBackColor = true;
+            // 
+            // dsz1
+            // 
+            this.dsz1.Appearance = System.Windows.Forms.Appearance.Button;
+            this.dsz1.AutoCheck = false;
+            this.dsz1.BackgroundImage = global::startSRB2.Properties.Resources.dsz1;
+            this.dsz1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.dsz1.ForeColor = System.Drawing.Color.White;
+            this.dsz1.Location = new System.Drawing.Point(203, 54);
+            this.dsz1.Name = "dsz1";
+            this.dsz1.Size = new System.Drawing.Size(77, 43);
+            this.dsz1.TabIndex = 6;
+            this.dsz1.Text = "DSZ1";
+            this.dsz1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.dsz1.UseVisualStyleBackColor = true;
+            // 
+            // thz3
+            // 
+            this.thz3.Appearance = System.Windows.Forms.Appearance.Button;
+            this.thz3.AutoCheck = false;
+            this.thz3.BackgroundImage = global::startSRB2.Properties.Resources.thz3;
+            this.thz3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.thz3.ForeColor = System.Drawing.Color.White;
+            this.thz3.Location = new System.Drawing.Point(120, 54);
+            this.thz3.Name = "thz3";
+            this.thz3.Size = new System.Drawing.Size(77, 43);
+            this.thz3.TabIndex = 5;
+            this.thz3.Text = "THZ3";
+            this.thz3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.thz3.UseVisualStyleBackColor = true;
+            // 
+            // thz2
+            // 
+            this.thz2.Appearance = System.Windows.Forms.Appearance.Button;
+            this.thz2.AutoCheck = false;
+            this.thz2.BackgroundImage = global::startSRB2.Properties.Resources.thz2;
+            this.thz2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.thz2.ForeColor = System.Drawing.Color.White;
+            this.thz2.Location = new System.Drawing.Point(37, 54);
+            this.thz2.Name = "thz2";
+            this.thz2.Size = new System.Drawing.Size(77, 43);
+            this.thz2.TabIndex = 4;
+            this.thz2.Text = "THZ2";
+            this.thz2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.thz2.UseVisualStyleBackColor = true;
+            // 
+            // thz1
+            // 
+            this.thz1.Appearance = System.Windows.Forms.Appearance.Button;
+            this.thz1.AutoCheck = false;
+            this.thz1.BackgroundImage = global::startSRB2.Properties.Resources.thz1;
+            this.thz1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.thz1.ForeColor = System.Drawing.Color.White;
+            this.thz1.Location = new System.Drawing.Point(286, 5);
+            this.thz1.Name = "thz1";
+            this.thz1.Size = new System.Drawing.Size(77, 43);
+            this.thz1.TabIndex = 3;
+            this.thz1.Text = "THZ1";
+            this.thz1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.thz1.UseVisualStyleBackColor = true;
+            // 
+            // gfz3
+            // 
+            this.gfz3.Appearance = System.Windows.Forms.Appearance.Button;
+            this.gfz3.AutoCheck = false;
+            this.gfz3.BackgroundImage = global::startSRB2.Properties.Resources.gfz3;
+            this.gfz3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.gfz3.ForeColor = System.Drawing.Color.White;
+            this.gfz3.Location = new System.Drawing.Point(203, 5);
+            this.gfz3.Name = "gfz3";
+            this.gfz3.Size = new System.Drawing.Size(77, 43);
+            this.gfz3.TabIndex = 2;
+            this.gfz3.Text = "GFZ3";
+            this.gfz3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.gfz3.UseVisualStyleBackColor = true;
+            // 
+            // gfz2
+            // 
+            this.gfz2.Appearance = System.Windows.Forms.Appearance.Button;
+            this.gfz2.AutoCheck = false;
+            this.gfz2.BackgroundImage = global::startSRB2.Properties.Resources.gfz2;
+            this.gfz2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.gfz2.ForeColor = System.Drawing.Color.White;
+            this.gfz2.Location = new System.Drawing.Point(120, 5);
+            this.gfz2.Name = "gfz2";
+            this.gfz2.Size = new System.Drawing.Size(77, 43);
+            this.gfz2.TabIndex = 1;
+            this.gfz2.Text = "GFZ2";
+            this.gfz2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.gfz2.UseVisualStyleBackColor = true;
+            this.gfz2.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_1);
+            // 
+            // gfz1
+            // 
+            this.gfz1.Appearance = System.Windows.Forms.Appearance.Button;
+            this.gfz1.AutoCheck = false;
+            this.gfz1.BackgroundImage = global::startSRB2.Properties.Resources.gfz1;
+            this.gfz1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.gfz1.ForeColor = System.Drawing.Color.White;
+            this.gfz1.Location = new System.Drawing.Point(37, 5);
+            this.gfz1.Name = "gfz1";
+            this.gfz1.Size = new System.Drawing.Size(77, 43);
+            this.gfz1.TabIndex = 0;
+            this.gfz1.Text = "GFZ1";
+            this.gfz1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.gfz1.UseVisualStyleBackColor = true;
+            this.gfz1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // menuStrip1
             // 
@@ -941,7 +1417,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(406, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(441, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -959,118 +1435,6 @@
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.fileToolStripMenuItem.Text = "Settings";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(215, 6);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(215, 6);
-            // 
-            // remember_ts
-            // 
-            this.remember_ts.Checked = true;
-            this.remember_ts.CheckOnClick = true;
-            this.remember_ts.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.remember_ts.Name = "remember_ts";
-            this.remember_ts.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.remember_ts.Size = new System.Drawing.Size(218, 22);
-            this.remember_ts.Text = "Remember Settings";
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.import_ts,
-            this.export_ts});
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(42, 20);
-            this.toolStripMenuItem1.Text = "Files";
-            // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.viewHelpToolStripMenuItem,
-            this.aboutToolStripMenuItem});
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
-            // 
-            // viewHelpToolStripMenuItem
-            // 
-            this.viewHelpToolStripMenuItem.Name = "viewHelpToolStripMenuItem";
-            this.viewHelpToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.viewHelpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.viewHelpToolStripMenuItem.Text = "View Help";
-            this.viewHelpToolStripMenuItem.Click += new System.EventHandler(this.viewHelpToolStripMenuItem_Click);
-            // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.aboutToolStripMenuItem.Text = "About...";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-            // 
-            // start_button
-            // 
-            this.start_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.start_button.BackgroundImage = global::startSRB2.Properties.Resources.sonicrunning;
-            this.start_button.Location = new System.Drawing.Point(320, 408);
-            this.start_button.Name = "start_button";
-            this.start_button.Size = new System.Drawing.Size(74, 27);
-            this.start_button.TabIndex = 0;
-            this.start_button.Text = "Start Game";
-            this.start_button.UseVisualStyleBackColor = true;
-            this.start_button.Click += new System.EventHandler(this.start_button_Click);
-            this.start_button.MouseHover += new System.EventHandler(this.start_button_MouseHover);
-            // 
-            // color_pic
-            // 
-            this.color_pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.color_pic.Location = new System.Drawing.Point(85, 5);
-            this.color_pic.Name = "color_pic";
-            this.color_pic.Size = new System.Drawing.Size(47, 70);
-            this.color_pic.TabIndex = 14;
-            this.color_pic.TabStop = false;
-            // 
-            // character_pic
-            // 
-            this.character_pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.character_pic.ErrorImage = null;
-            this.character_pic.Location = new System.Drawing.Point(3, 5);
-            this.character_pic.Name = "character_pic";
-            this.character_pic.Size = new System.Drawing.Size(76, 70);
-            this.character_pic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.character_pic.TabIndex = 2;
-            this.character_pic.TabStop = false;
-            // 
-            // down_btn
-            // 
-            this.down_btn.BackgroundImage = global::startSRB2.Properties.Resources.downbutn;
-            this.down_btn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.down_btn.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
-            this.down_btn.Location = new System.Drawing.Point(36, 316);
-            this.down_btn.Name = "down_btn";
-            this.down_btn.Size = new System.Drawing.Size(24, 23);
-            this.down_btn.TabIndex = 3;
-            this.down_btn.UseVisualStyleBackColor = true;
-            this.down_btn.Click += new System.EventHandler(this.down_btn_Click);
-            this.down_btn.MouseHover += new System.EventHandler(this.down_btn_MouseHover);
-            // 
-            // up_btn
-            // 
-            this.up_btn.BackgroundImage = global::startSRB2.Properties.Resources.upbtn;
-            this.up_btn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.up_btn.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
-            this.up_btn.Location = new System.Drawing.Point(6, 316);
-            this.up_btn.Name = "up_btn";
-            this.up_btn.Size = new System.Drawing.Size(24, 23);
-            this.up_btn.TabIndex = 2;
-            this.up_btn.UseVisualStyleBackColor = true;
-            this.up_btn.Click += new System.EventHandler(this.up_btn_Click);
-            this.up_btn.MouseHover += new System.EventHandler(this.up_btn_MouseHover);
             // 
             // newToolStripMenuItem
             // 
@@ -1109,6 +1473,11 @@
             this.saveAsToolStripMenuItem.Text = "Save As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(215, 6);
+            // 
             // createBatchToolStripMenuItem
             // 
             this.createBatchToolStripMenuItem.Image = global::startSRB2.Properties.Resources.bat;
@@ -1117,6 +1486,30 @@
             this.createBatchToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
             this.createBatchToolStripMenuItem.Text = "Create Batch...";
             this.createBatchToolStripMenuItem.Click += new System.EventHandler(this.createBatchToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(215, 6);
+            // 
+            // remember_ts
+            // 
+            this.remember_ts.Checked = true;
+            this.remember_ts.CheckOnClick = true;
+            this.remember_ts.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.remember_ts.Name = "remember_ts";
+            this.remember_ts.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.remember_ts.Size = new System.Drawing.Size(218, 22);
+            this.remember_ts.Text = "Remember Settings";
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.import_ts,
+            this.export_ts});
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(42, 20);
+            this.toolStripMenuItem1.Text = "Files";
             // 
             // import_ts
             // 
@@ -1136,434 +1529,90 @@
             this.export_ts.Text = "Export To Text File";
             this.export_ts.Click += new System.EventHandler(this.export_ts_Click);
             // 
-            // gfz1
+            // helpToolStripMenuItem
             // 
-            this.gfz1.Appearance = System.Windows.Forms.Appearance.Button;
-            this.gfz1.AutoCheck = false;
-            this.gfz1.BackgroundImage = global::startSRB2.Properties.Resources.gfz1;
-            this.gfz1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.gfz1.ForeColor = System.Drawing.Color.White;
-            this.gfz1.Location = new System.Drawing.Point(24, 6);
-            this.gfz1.Name = "gfz1";
-            this.gfz1.Size = new System.Drawing.Size(77, 43);
-            this.gfz1.TabIndex = 0;
-            this.gfz1.Text = "GFZ1";
-            this.gfz1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.gfz1.UseVisualStyleBackColor = true;
-            this.gfz1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewHelpToolStripMenuItem,
+            this.aboutToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
             // 
-            // gfz2
+            // viewHelpToolStripMenuItem
             // 
-            this.gfz2.Appearance = System.Windows.Forms.Appearance.Button;
-            this.gfz2.AutoCheck = false;
-            this.gfz2.BackgroundImage = global::startSRB2.Properties.Resources.gfz2;
-            this.gfz2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.gfz2.ForeColor = System.Drawing.Color.White;
-            this.gfz2.Location = new System.Drawing.Point(107, 6);
-            this.gfz2.Name = "gfz2";
-            this.gfz2.Size = new System.Drawing.Size(77, 43);
-            this.gfz2.TabIndex = 1;
-            this.gfz2.Text = "GFZ2";
-            this.gfz2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.gfz2.UseVisualStyleBackColor = true;
-            this.gfz2.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_1);
+            this.viewHelpToolStripMenuItem.Name = "viewHelpToolStripMenuItem";
+            this.viewHelpToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
+            this.viewHelpToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.viewHelpToolStripMenuItem.Text = "View Help";
+            this.viewHelpToolStripMenuItem.Click += new System.EventHandler(this.viewHelpToolStripMenuItem_Click);
             // 
-            // thz1
+            // aboutToolStripMenuItem
             // 
-            this.thz1.Appearance = System.Windows.Forms.Appearance.Button;
-            this.thz1.AutoCheck = false;
-            this.thz1.BackgroundImage = global::startSRB2.Properties.Resources.thz1;
-            this.thz1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.thz1.ForeColor = System.Drawing.Color.White;
-            this.thz1.Location = new System.Drawing.Point(273, 6);
-            this.thz1.Name = "thz1";
-            this.thz1.Size = new System.Drawing.Size(77, 43);
-            this.thz1.TabIndex = 3;
-            this.thz1.Text = "THZ1";
-            this.thz1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.thz1.UseVisualStyleBackColor = true;
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.aboutToolStripMenuItem.Text = "About...";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // gfz3
+            // start_button
             // 
-            this.gfz3.Appearance = System.Windows.Forms.Appearance.Button;
-            this.gfz3.AutoCheck = false;
-            this.gfz3.BackgroundImage = global::startSRB2.Properties.Resources.gfz3;
-            this.gfz3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.gfz3.ForeColor = System.Drawing.Color.White;
-            this.gfz3.Location = new System.Drawing.Point(190, 6);
-            this.gfz3.Name = "gfz3";
-            this.gfz3.Size = new System.Drawing.Size(77, 43);
-            this.gfz3.TabIndex = 2;
-            this.gfz3.Text = "GFZ3";
-            this.gfz3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.gfz3.UseVisualStyleBackColor = true;
+            this.start_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.start_button.BackgroundImage = global::startSRB2.Properties.Resources.sonicrunning;
+            this.start_button.Location = new System.Drawing.Point(355, 408);
+            this.start_button.Name = "start_button";
+            this.start_button.Size = new System.Drawing.Size(74, 27);
+            this.start_button.TabIndex = 0;
+            this.start_button.Text = "Start Game";
+            this.start_button.UseVisualStyleBackColor = true;
+            this.start_button.Click += new System.EventHandler(this.start_button_Click);
+            this.start_button.MouseHover += new System.EventHandler(this.start_button_MouseHover);
             // 
-            // dsz2
+            // manualres_check
             // 
-            this.dsz2.Appearance = System.Windows.Forms.Appearance.Button;
-            this.dsz2.AutoCheck = false;
-            this.dsz2.BackgroundImage = global::startSRB2.Properties.Resources.dsz2;
-            this.dsz2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.dsz2.ForeColor = System.Drawing.Color.White;
-            this.dsz2.Location = new System.Drawing.Point(273, 55);
-            this.dsz2.Name = "dsz2";
-            this.dsz2.Size = new System.Drawing.Size(77, 43);
-            this.dsz2.TabIndex = 7;
-            this.dsz2.Text = "DSZ2";
-            this.dsz2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.dsz2.UseVisualStyleBackColor = true;
+            this.manualres_check.AutoSize = true;
+            this.manualres_check.Location = new System.Drawing.Point(6, 42);
+            this.manualres_check.Name = "manualres_check";
+            this.manualres_check.Size = new System.Drawing.Size(131, 17);
+            this.manualres_check.TabIndex = 14;
+            this.manualres_check.Text = "Resolution (SDL only):";
+            this.manualres_check.UseVisualStyleBackColor = true;
+            this.manualres_check.CheckedChanged += new System.EventHandler(this.manualres_check_CheckedChanged);
             // 
-            // dsz1
+            // hres_tbox
             // 
-            this.dsz1.Appearance = System.Windows.Forms.Appearance.Button;
-            this.dsz1.AutoCheck = false;
-            this.dsz1.BackgroundImage = global::startSRB2.Properties.Resources.dsz1;
-            this.dsz1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.dsz1.ForeColor = System.Drawing.Color.White;
-            this.dsz1.Location = new System.Drawing.Point(190, 55);
-            this.dsz1.Name = "dsz1";
-            this.dsz1.Size = new System.Drawing.Size(77, 43);
-            this.dsz1.TabIndex = 6;
-            this.dsz1.Text = "DSZ1";
-            this.dsz1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.dsz1.UseVisualStyleBackColor = true;
+            this.hres_tbox.Location = new System.Drawing.Point(205, 39);
+            this.hres_tbox.Name = "hres_tbox";
+            this.hres_tbox.ReadOnly = true;
+            this.hres_tbox.Size = new System.Drawing.Size(42, 20);
+            this.hres_tbox.TabIndex = 16;
+            this.hres_tbox.Text = "400";
+            this.hres_tbox.TextChanged += new System.EventHandler(this.hres_tbox_TextChanged);
             // 
-            // thz3
+            // wres_tbox
             // 
-            this.thz3.Appearance = System.Windows.Forms.Appearance.Button;
-            this.thz3.AutoCheck = false;
-            this.thz3.BackgroundImage = global::startSRB2.Properties.Resources.thz3;
-            this.thz3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.thz3.ForeColor = System.Drawing.Color.White;
-            this.thz3.Location = new System.Drawing.Point(107, 55);
-            this.thz3.Name = "thz3";
-            this.thz3.Size = new System.Drawing.Size(77, 43);
-            this.thz3.TabIndex = 5;
-            this.thz3.Text = "THZ3";
-            this.thz3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.thz3.UseVisualStyleBackColor = true;
+            this.wres_tbox.Location = new System.Drawing.Point(139, 39);
+            this.wres_tbox.Name = "wres_tbox";
+            this.wres_tbox.ReadOnly = true;
+            this.wres_tbox.Size = new System.Drawing.Size(42, 20);
+            this.wres_tbox.TabIndex = 15;
+            this.wres_tbox.Text = "640";
+            this.wres_tbox.TextChanged += new System.EventHandler(this.wres_tbox_TextChanged);
             // 
-            // thz2
+            // x_label
             // 
-            this.thz2.Appearance = System.Windows.Forms.Appearance.Button;
-            this.thz2.AutoCheck = false;
-            this.thz2.BackgroundImage = global::startSRB2.Properties.Resources.thz2;
-            this.thz2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.thz2.ForeColor = System.Drawing.Color.White;
-            this.thz2.Location = new System.Drawing.Point(24, 55);
-            this.thz2.Name = "thz2";
-            this.thz2.Size = new System.Drawing.Size(77, 43);
-            this.thz2.TabIndex = 4;
-            this.thz2.Text = "THZ2";
-            this.thz2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.thz2.UseVisualStyleBackColor = true;
-            // 
-            // mmz3
-            // 
-            this.mmz3.Appearance = System.Windows.Forms.Appearance.Button;
-            this.mmz3.AutoCheck = false;
-            this.mmz3.BackgroundImage = global::startSRB2.Properties.Resources.mmz3;
-            this.mmz3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.mmz3.ForeColor = System.Drawing.Color.White;
-            this.mmz3.Location = new System.Drawing.Point(273, 104);
-            this.mmz3.Name = "mmz3";
-            this.mmz3.Size = new System.Drawing.Size(77, 43);
-            this.mmz3.TabIndex = 11;
-            this.mmz3.Text = "MMZ3";
-            this.mmz3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.mmz3.UseVisualStyleBackColor = true;
-            // 
-            // mmz2
-            // 
-            this.mmz2.Appearance = System.Windows.Forms.Appearance.Button;
-            this.mmz2.AutoCheck = false;
-            this.mmz2.BackgroundImage = global::startSRB2.Properties.Resources.mmz2;
-            this.mmz2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.mmz2.ForeColor = System.Drawing.Color.White;
-            this.mmz2.Location = new System.Drawing.Point(190, 104);
-            this.mmz2.Name = "mmz2";
-            this.mmz2.Size = new System.Drawing.Size(77, 43);
-            this.mmz2.TabIndex = 10;
-            this.mmz2.Text = "MMZ2";
-            this.mmz2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.mmz2.UseVisualStyleBackColor = true;
-            // 
-            // mmz1
-            // 
-            this.mmz1.Appearance = System.Windows.Forms.Appearance.Button;
-            this.mmz1.AutoCheck = false;
-            this.mmz1.BackgroundImage = global::startSRB2.Properties.Resources.mmz1;
-            this.mmz1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.mmz1.ForeColor = System.Drawing.Color.White;
-            this.mmz1.Location = new System.Drawing.Point(107, 104);
-            this.mmz1.Name = "mmz1";
-            this.mmz1.Size = new System.Drawing.Size(77, 43);
-            this.mmz1.TabIndex = 9;
-            this.mmz1.Text = "MMZ1";
-            this.mmz1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.mmz1.UseVisualStyleBackColor = true;
-            // 
-            // dsz3
-            // 
-            this.dsz3.Appearance = System.Windows.Forms.Appearance.Button;
-            this.dsz3.AutoCheck = false;
-            this.dsz3.BackgroundImage = global::startSRB2.Properties.Resources.dsz3;
-            this.dsz3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.dsz3.ForeColor = System.Drawing.Color.White;
-            this.dsz3.Location = new System.Drawing.Point(24, 104);
-            this.dsz3.Name = "dsz3";
-            this.dsz3.Size = new System.Drawing.Size(77, 43);
-            this.dsz3.TabIndex = 8;
-            this.dsz3.Text = "DSZ3";
-            this.dsz3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.dsz3.UseVisualStyleBackColor = true;
-            // 
-            // checkBox9
-            // 
-            this.checkBox9.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox9.AutoCheck = false;
-            this.checkBox9.BackgroundImage = global::startSRB2.Properties.Resources.thz1;
-            this.checkBox9.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.checkBox9.ForeColor = System.Drawing.Color.White;
-            this.checkBox9.Location = new System.Drawing.Point(273, 153);
-            this.checkBox9.Name = "checkBox9";
-            this.checkBox9.Size = new System.Drawing.Size(77, 43);
-            this.checkBox9.TabIndex = 15;
-            this.checkBox9.Text = "THZ1";
-            this.checkBox9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox9.UseVisualStyleBackColor = true;
-            // 
-            // checkBox10
-            // 
-            this.checkBox10.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox10.AutoCheck = false;
-            this.checkBox10.BackgroundImage = global::startSRB2.Properties.Resources.gfz3;
-            this.checkBox10.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.checkBox10.ForeColor = System.Drawing.Color.White;
-            this.checkBox10.Location = new System.Drawing.Point(190, 153);
-            this.checkBox10.Name = "checkBox10";
-            this.checkBox10.Size = new System.Drawing.Size(77, 43);
-            this.checkBox10.TabIndex = 14;
-            this.checkBox10.Text = "GFZ3";
-            this.checkBox10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox10.UseVisualStyleBackColor = true;
-            // 
-            // checkBox11
-            // 
-            this.checkBox11.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox11.AutoCheck = false;
-            this.checkBox11.BackgroundImage = global::startSRB2.Properties.Resources.gfz2;
-            this.checkBox11.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.checkBox11.ForeColor = System.Drawing.Color.White;
-            this.checkBox11.Location = new System.Drawing.Point(107, 153);
-            this.checkBox11.Name = "checkBox11";
-            this.checkBox11.Size = new System.Drawing.Size(77, 43);
-            this.checkBox11.TabIndex = 13;
-            this.checkBox11.Text = "GFZ2";
-            this.checkBox11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox11.UseVisualStyleBackColor = true;
-            // 
-            // checkBox12
-            // 
-            this.checkBox12.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox12.AutoCheck = false;
-            this.checkBox12.BackgroundImage = global::startSRB2.Properties.Resources.gfz1;
-            this.checkBox12.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.checkBox12.ForeColor = System.Drawing.Color.White;
-            this.checkBox12.Location = new System.Drawing.Point(24, 153);
-            this.checkBox12.Name = "checkBox12";
-            this.checkBox12.Size = new System.Drawing.Size(77, 43);
-            this.checkBox12.TabIndex = 12;
-            this.checkBox12.Text = "GFZ1";
-            this.checkBox12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox12.UseVisualStyleBackColor = true;
-            // 
-            // checkBox13
-            // 
-            this.checkBox13.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox13.AutoCheck = false;
-            this.checkBox13.BackgroundImage = global::startSRB2.Properties.Resources.thz1;
-            this.checkBox13.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.checkBox13.ForeColor = System.Drawing.Color.White;
-            this.checkBox13.Location = new System.Drawing.Point(273, 202);
-            this.checkBox13.Name = "checkBox13";
-            this.checkBox13.Size = new System.Drawing.Size(77, 43);
-            this.checkBox13.TabIndex = 19;
-            this.checkBox13.Text = "THZ1";
-            this.checkBox13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox13.UseVisualStyleBackColor = true;
-            // 
-            // checkBox14
-            // 
-            this.checkBox14.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox14.AutoCheck = false;
-            this.checkBox14.BackgroundImage = global::startSRB2.Properties.Resources.gfz3;
-            this.checkBox14.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.checkBox14.ForeColor = System.Drawing.Color.White;
-            this.checkBox14.Location = new System.Drawing.Point(190, 202);
-            this.checkBox14.Name = "checkBox14";
-            this.checkBox14.Size = new System.Drawing.Size(77, 43);
-            this.checkBox14.TabIndex = 18;
-            this.checkBox14.Text = "GFZ3";
-            this.checkBox14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox14.UseVisualStyleBackColor = true;
-            // 
-            // checkBox15
-            // 
-            this.checkBox15.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox15.AutoCheck = false;
-            this.checkBox15.BackgroundImage = global::startSRB2.Properties.Resources.gfz2;
-            this.checkBox15.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.checkBox15.ForeColor = System.Drawing.Color.White;
-            this.checkBox15.Location = new System.Drawing.Point(107, 202);
-            this.checkBox15.Name = "checkBox15";
-            this.checkBox15.Size = new System.Drawing.Size(77, 43);
-            this.checkBox15.TabIndex = 17;
-            this.checkBox15.Text = "GFZ2";
-            this.checkBox15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox15.UseVisualStyleBackColor = true;
-            // 
-            // checkBox16
-            // 
-            this.checkBox16.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox16.AutoCheck = false;
-            this.checkBox16.BackgroundImage = global::startSRB2.Properties.Resources.gfz1;
-            this.checkBox16.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.checkBox16.ForeColor = System.Drawing.Color.White;
-            this.checkBox16.Location = new System.Drawing.Point(24, 202);
-            this.checkBox16.Name = "checkBox16";
-            this.checkBox16.Size = new System.Drawing.Size(77, 43);
-            this.checkBox16.TabIndex = 16;
-            this.checkBox16.Text = "GFZ1";
-            this.checkBox16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox16.UseVisualStyleBackColor = true;
-            // 
-            // checkBox17
-            // 
-            this.checkBox17.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox17.AutoCheck = false;
-            this.checkBox17.BackgroundImage = global::startSRB2.Properties.Resources.thz1;
-            this.checkBox17.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.checkBox17.ForeColor = System.Drawing.Color.White;
-            this.checkBox17.Location = new System.Drawing.Point(273, 251);
-            this.checkBox17.Name = "checkBox17";
-            this.checkBox17.Size = new System.Drawing.Size(77, 43);
-            this.checkBox17.TabIndex = 23;
-            this.checkBox17.Text = "THZ1";
-            this.checkBox17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox17.UseVisualStyleBackColor = true;
-            // 
-            // checkBox18
-            // 
-            this.checkBox18.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox18.AutoCheck = false;
-            this.checkBox18.BackgroundImage = global::startSRB2.Properties.Resources.gfz3;
-            this.checkBox18.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.checkBox18.ForeColor = System.Drawing.Color.White;
-            this.checkBox18.Location = new System.Drawing.Point(190, 251);
-            this.checkBox18.Name = "checkBox18";
-            this.checkBox18.Size = new System.Drawing.Size(77, 43);
-            this.checkBox18.TabIndex = 22;
-            this.checkBox18.Text = "GFZ3";
-            this.checkBox18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox18.UseVisualStyleBackColor = true;
-            // 
-            // checkBox19
-            // 
-            this.checkBox19.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox19.AutoCheck = false;
-            this.checkBox19.BackgroundImage = global::startSRB2.Properties.Resources.gfz2;
-            this.checkBox19.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.checkBox19.ForeColor = System.Drawing.Color.White;
-            this.checkBox19.Location = new System.Drawing.Point(107, 251);
-            this.checkBox19.Name = "checkBox19";
-            this.checkBox19.Size = new System.Drawing.Size(77, 43);
-            this.checkBox19.TabIndex = 21;
-            this.checkBox19.Text = "GFZ2";
-            this.checkBox19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox19.UseVisualStyleBackColor = true;
-            // 
-            // checkBox20
-            // 
-            this.checkBox20.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox20.AutoCheck = false;
-            this.checkBox20.BackgroundImage = global::startSRB2.Properties.Resources.gfz1;
-            this.checkBox20.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.checkBox20.ForeColor = System.Drawing.Color.White;
-            this.checkBox20.Location = new System.Drawing.Point(24, 251);
-            this.checkBox20.Name = "checkBox20";
-            this.checkBox20.Size = new System.Drawing.Size(77, 43);
-            this.checkBox20.TabIndex = 20;
-            this.checkBox20.Text = "GFZ1";
-            this.checkBox20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox20.UseVisualStyleBackColor = true;
-            // 
-            // checkBox21
-            // 
-            this.checkBox21.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox21.AutoCheck = false;
-            this.checkBox21.BackgroundImage = global::startSRB2.Properties.Resources.thz1;
-            this.checkBox21.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.checkBox21.ForeColor = System.Drawing.Color.White;
-            this.checkBox21.Location = new System.Drawing.Point(273, 298);
-            this.checkBox21.Name = "checkBox21";
-            this.checkBox21.Size = new System.Drawing.Size(77, 43);
-            this.checkBox21.TabIndex = 27;
-            this.checkBox21.Text = "THZ1";
-            this.checkBox21.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox21.UseVisualStyleBackColor = true;
-            // 
-            // checkBox22
-            // 
-            this.checkBox22.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox22.AutoCheck = false;
-            this.checkBox22.BackgroundImage = global::startSRB2.Properties.Resources.gfz3;
-            this.checkBox22.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.checkBox22.ForeColor = System.Drawing.Color.White;
-            this.checkBox22.Location = new System.Drawing.Point(190, 298);
-            this.checkBox22.Name = "checkBox22";
-            this.checkBox22.Size = new System.Drawing.Size(77, 43);
-            this.checkBox22.TabIndex = 26;
-            this.checkBox22.Text = "GFZ3";
-            this.checkBox22.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox22.UseVisualStyleBackColor = true;
-            // 
-            // checkBox23
-            // 
-            this.checkBox23.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox23.AutoCheck = false;
-            this.checkBox23.BackgroundImage = global::startSRB2.Properties.Resources.gfz2;
-            this.checkBox23.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.checkBox23.ForeColor = System.Drawing.Color.White;
-            this.checkBox23.Location = new System.Drawing.Point(107, 298);
-            this.checkBox23.Name = "checkBox23";
-            this.checkBox23.Size = new System.Drawing.Size(77, 43);
-            this.checkBox23.TabIndex = 25;
-            this.checkBox23.Text = "GFZ2";
-            this.checkBox23.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox23.UseVisualStyleBackColor = true;
-            // 
-            // checkBox24
-            // 
-            this.checkBox24.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox24.AutoCheck = false;
-            this.checkBox24.BackgroundImage = global::startSRB2.Properties.Resources.gfz1;
-            this.checkBox24.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.checkBox24.ForeColor = System.Drawing.Color.White;
-            this.checkBox24.Location = new System.Drawing.Point(24, 298);
-            this.checkBox24.Name = "checkBox24";
-            this.checkBox24.Size = new System.Drawing.Size(77, 43);
-            this.checkBox24.TabIndex = 24;
-            this.checkBox24.Text = "GFZ1";
-            this.checkBox24.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.checkBox24.UseVisualStyleBackColor = true;
+            this.x_label.AutoSize = true;
+            this.x_label.Location = new System.Drawing.Point(187, 43);
+            this.x_label.Name = "x_label";
+            this.x_label.Size = new System.Drawing.Size(12, 13);
+            this.x_label.TabIndex = 13;
+            this.x_label.Text = "x";
+            this.x_label.Click += new System.EventHandler(this.x_label_Click);
             // 
             // startSRB2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(406, 447);
+            this.ClientSize = new System.Drawing.Size(441, 447);
             this.Controls.Add(this.start_button);
             this.Controls.Add(this.devMaps);
             this.Controls.Add(this.menuStrip1);
@@ -1580,8 +1629,10 @@
             this.main_tab.PerformLayout();
             this.render_group.ResumeLayout(false);
             this.render_group.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.color_pic)).EndInit();
             this.misc_group.ResumeLayout(false);
             this.misc_group.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.character_pic)).EndInit();
             this.res_group.ResumeLayout(false);
             this.res_group.PerformLayout();
             this.network_tab.ResumeLayout(false);
@@ -1599,8 +1650,6 @@
             this.tabPage1.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.color_pic)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.character_pic)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1725,6 +1774,10 @@
         private System.Windows.Forms.CheckBox thz2;
         private System.Windows.Forms.CheckBox thz1;
         private System.Windows.Forms.CheckBox gfz3;
+        private System.Windows.Forms.CheckBox manualres_check;
+        private System.Windows.Forms.TextBox hres_tbox;
+        private System.Windows.Forms.TextBox wres_tbox;
+        private System.Windows.Forms.Label x_label;
     }
 }
 
