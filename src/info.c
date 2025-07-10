@@ -4612,7 +4612,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,       // attacksound
 		S_STARPOST4,    // painstate
 		0,              // painchance
-		0,     // painsound
+		sfx_strpst,     // painsound
 		S_NULL,         // meleestate
 		S_NULL,         // missilestate
 		S_NULL,         // deathstate

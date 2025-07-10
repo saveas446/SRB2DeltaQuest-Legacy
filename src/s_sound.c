@@ -474,7 +474,7 @@ void S_StartSoundAtVolume(const void *origin_p, int sfx_id, int volume)
 #endif
 
 	// check for bogus sound #
-	I_Assert(sfx_id >= 1);
+	I_Assert(sfx_id >= 0);
 	I_Assert(sfx_id < NUMSFX);
 
 	// check for bogus sound #

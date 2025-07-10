@@ -357,6 +357,7 @@ typedef enum
     sfx_steam2,
     sfx_crumbl,
     sfx_now,
+    sfx_strpst,
 
 	// free slots for S_AddSoundFx() at run-time --------------------
 	sfx_freeslot0,

@@ -75,7 +75,7 @@
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\lib;.\..\tools\giflib"
-				IgnoreDefaultLibraryNames="LIBCMTD.lib"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="D:\Games\SRB2\demo_2\dev\srb2sdldebug.pdb"
 				SubSystem="1"
