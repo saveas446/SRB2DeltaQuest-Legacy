@@ -177,7 +177,7 @@ namespace startSRB2
             startInfo.Arguments = info;
             //This next line makes SRB2 able to find srb2.srb
             startInfo.WorkingDirectory = srb2path;
-            MessageBox.Show(info);
+            //MessageBox.Show(info);
 
             //Now, execute srb2 with arguments/parameters
             try
