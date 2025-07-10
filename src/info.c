@@ -1812,17 +1812,17 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
         S_SARG_STND,            // spawnstate
         4,            // spawnhealth
         S_SARG_RUN1,            // seestate
-        sfx_sgtsit,             // seesound
+        sfx_None,             // seesound
         8,              // reactiontime
-        sfx_sgtatk,             // attacksound
+        sfx_None,             // attacksound
         S_SARG_PAIN,            // painstate
         180,            // painchance
-        sfx_dmpain,             // painsound
+        sfx_None,             // painsound
         S_SARG_ATK1,            // meleestate
         0,              // missilestate
         S_SARG_DIE1,            // deathstate
         S_NULL,         // xdeathstate
-        sfx_sgtdth,             // deathsound
+        sfx_slop,             // deathsound
         10,             // speed
         30*FRACUNIT,            // radius
         56*FRACUNIT,            // height
@@ -1838,24 +1838,24 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
         S_TROO_SPWN,            // spawnstate
         1,             // spawnhealth -- changed to 1 by Tails : 9-13-99
         S_TROO_RUN1,            // seestate
-        sfx_bgsit1,             // seesound
+        sfx_None,             // seesound
         8,              // reactiontime
         0,              // attacksound
         S_TROO_PAIN,            // painstate
         200,            // painchance
-        sfx_dmpain,             // painsound
+        sfx_None,             // painsound
         S_NULL,            // meleestate
         0,            // missilestate // Tails 9-15-99
         S_TROO_DIE1,            // deathstate
         S_NULL,           // xdeathstate Tails 10-25-99
-        sfx_bgdth1,             // deathsound
+        sfx_slop,             // deathsound
         20,              // speed // Tails 9-15-99
         28*FRACUNIT,            // radius
         16*FRACUNIT,            // height
         100,            // mass
         0,              // damage
-        sfx_bgact,              // activesound
-        MF_ENEMY|MF_SPECIAL|MF_SOLID|MF_SHOOTABLE|MF_FLOAT|MF_NOGRAVITY,             // flags
+        sfx_None,              // activesound
+        MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE|MF_FLOAT|MF_NOGRAVITY,             // flags
         S_NULL           // raisestate
     },
 
