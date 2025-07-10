@@ -372,9 +372,9 @@ static void ST_Stop(void)
 
 boolean actdraw;
 
-void ST_Start(void)
+void ST_InitTitleCard(void)
 {
-		// shoot me in the head
+	// shoot me in the head
 	// this could really use some pointers or some shit like that but i don't care
 	switch(gamemap) {
 		case 1:
@@ -498,6 +498,12 @@ void ST_Start(void)
 	lvlttlscroll = 80;
 	zonescroll = 96;
 	ttlnumscroll = 96;
+}
+
+void ST_Start(void)
+{
+
+	ST_InitTitleCard();
 
 	if (!st_stopped)
 		ST_Stop();
@@ -993,10 +999,12 @@ static void ST_drawEggsNeeded(void)
 static void ST_drawLevelTitle(void)
 {
 	int realypos;
-	if (!leveltime)
-		return;
+	if (timeinmap == 0) {
+		ST_InitTitleCard();
+	}
 
-	if (leveltime < 105) {
+
+	if (timeinmap < 105) {
 		if (lvlttlscroll > 0)
 			lvlttlscroll -= (lvlttlscroll >> 3);
 
