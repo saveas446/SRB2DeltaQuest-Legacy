@@ -17,7 +17,7 @@ Zone Builder has also been tested, however the maps it creates usually crash. If
 ## Building
 
 ### Visual Studio 2005
-The VS2005 project files can be found at `src/win32/Srb2win.sln` and `src/sdl/Srb2SDL.sln` respectively. Once those have been located, just press the Build Solution button in the Build menu.
+The VS2005 project files can be found at `src/win32/Srb2win.sln` and `src/sdl/Srb2SDL.sln` for the Win32 and SDL builds respectively. Once those have been located, just press the Build Solution button in the Build menu.
 
 ### Visual Studio 2022
-The VS2022 project files can be found at `src/vs17/Srb2win.sln` and `src/sdl/Srb2SDL_vs17.sln` respectively. Once those have been located, just press the Build Solution button in the Build menu.
+The VS2022 project files can be found at `src/vs17/Srb2win.sln` and `src/sdl/Srb2SDL_vs17.sln` for the Win32 and SDL builds respectively. Once those have been located, just press the Build Solution button in the Build menu.
