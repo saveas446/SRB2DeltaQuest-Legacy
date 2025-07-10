@@ -160,4 +160,40 @@
   <data name="export" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\export.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="gfz1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gfz1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="gfz2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gfz2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="gfz3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gfz3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="thz1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\thz1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="thz2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\thz2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="thz3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\thz3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="dsz1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dsz1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="dsz2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dsz2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="dsz3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dsz3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="mmz1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\mmz1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="mmz2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\mmz2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="mmz3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\mmz3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

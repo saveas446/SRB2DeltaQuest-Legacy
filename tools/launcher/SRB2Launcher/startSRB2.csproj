@@ -148,6 +148,18 @@
     <None Include="Resources\sonicrunning.gif" />
     <None Include="Resources\import.png" />
     <None Include="Resources\export.png" />
+    <None Include="Resources\gfz1.png" />
+    <None Include="Resources\gfz2.png" />
+    <None Include="Resources\gfz3.png" />
+    <None Include="Resources\thz1.png" />
+    <None Include="Resources\thz2.png" />
+    <None Include="Resources\thz3.png" />
+    <None Include="Resources\dsz1.png" />
+    <None Include="Resources\dsz2.png" />
+    <None Include="Resources\dsz3.png" />
+    <None Include="Resources\mmz1.png" />
+    <None Include="Resources\mmz2.png" />
+    <None Include="Resources\mmz3.png" />
     <Content Include="sonic.ico" />
   </ItemGroup>
   <ItemGroup>

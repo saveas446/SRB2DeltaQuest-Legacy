@@ -969,7 +969,7 @@ namespace startSRB2
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            int savetabindex = launcher_tabs.SelectedIndex;
+            int savetabindex = devMaps.SelectedIndex;
             //Save the tab index so you're not inconveniently switched back to the main tab
 
             while (Controls.Count > 0)
@@ -978,7 +978,7 @@ namespace startSRB2
             }
             InitializeComponent();
 
-            launcher_tabs.SelectedIndex = savetabindex;
+            devMaps.SelectedIndex = savetabindex;
             //Reload the tab index
             _filename = null;
 
@@ -1403,6 +1403,36 @@ namespace startSRB2
         }
 
         private void path_tbox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tabPage1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox1_CheckedChanged_1(object sender, EventArgs e)
         {
 
         }
