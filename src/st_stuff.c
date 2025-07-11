@@ -462,8 +462,14 @@ void ST_InitTitleCard(void)
 
 	actnum = mapheaderinfo[gamemap - 1].actnum;
 
+#ifdef NEWTITLECARDS
+	if (gamemap == 1)
+	lvlttlxpos = ((BASEVIDWIDTH/3) - (lvlttl->width/2));
+	else
 	lvlttlxpos = ((BASEVIDWIDTH/2) - (lvlttl->width/2));
-
+#else
+	lvlttlxpos = ((BASEVIDWIDTH/2) - (lvlttl->width/2));
+#endif
 	// Could probably just be done with noactdraw = (actnum > 0); or something
 	if (actnum > 0)
 		actdraw = true;
@@ -473,6 +479,12 @@ void ST_InitTitleCard(void)
 	ttlnumxpos = lvlttlxpos + lvlttl->width;
 	zonexpos = ttlnumxpos - ttlzone->width;
 
+	#ifdef NEWTITLECARDS
+	// NOW THAT'S WHAT I CALL [A MEMORY LEAK]!
+	if (gamemap == 1) {
+		ttlnum = W_CachePatchName("TCGFZ1", PU_LEVEL);
+	} else {
+	#endif
 	if (!(actnum == 1 || actnum == 2 || actnum == 3)) {
 		if (gamemap % 3 == 1)
 			ttlnum = act1;
@@ -490,12 +502,14 @@ void ST_InitTitleCard(void)
 		else
 			actdraw = false;
 	}
-
-	lvlttlypos = 80;
+	#ifdef NEWTITLECARDS
+	}
+	#endif
+	lvlttlypos = 40;
 	zoneypos = 104;
 	ttlnumypos = 104;
 
-	lvlttlscroll = 80;
+	lvlttlscroll = 120;
 	zonescroll = 96;
 	ttlnumscroll = 96;
 }
@@ -999,52 +1013,107 @@ static void ST_drawEggsNeeded(void)
 static void ST_drawLevelTitle(void)
 {
 	int realypos;
+	int temp;
 	if (timeinmap == 0) {
 		ST_InitTitleCard();
 	}
 
-
-	if (timeinmap < 105) {
-		if (lvlttlscroll > 0)
-			lvlttlscroll -= (lvlttlscroll >> 3);
-
-		if (zonescroll > 0)
-			zonescroll -= (zonescroll >> 3);
-
-		if (lvlttlscroll > 0)
-			lvlttlscroll -= (lvlttlscroll >> 3);
-	} else {
-		if (lvlttlypos < 200)
-			lvlttlypos += 12;
-		else if (lvlttlypos > 200)
-			lvlttlypos = 200;
-
-		if (zoneypos > 0) 
-			zoneypos -= 12;
-		else if (zoneypos < 0)
-			zoneypos = 0;
-
-		if (ttlnumypos > 0)
-			ttlnumypos -= 12;
-		else if (ttlnumypos < 0)
-			ttlnumypos = 0;
-	}
-
-
-	realypos = lvlttlypos - lvlttlscroll;
-	if (realypos > 0 && realypos < 190) {
-		if (!strcmp("", mapheaderinfo[gamemap - 1].lvlttl)) {
-			V_DrawScaledPatch (SCX(lvlttlxpos),SCY(realypos), V_NOSCALESTART,lvlttl);
+	#ifdef NEWTITLECARDS
+	if (gamemap == 1) {
+		if (timeinmap < 105) {
+			if (lvlttlscroll > 0)
+				lvlttlscroll -= (lvlttlscroll >> 3);
 		} else {
-			V_DrawLevelTitle(lvlttlxpos, realypos, 0, mapheaderinfo[gamemap - 1].lvlttl);
-		}
-	}
-	realypos = zoneypos - zonescroll;
-	if (realypos > 0 && realypos < 200) 	
-		V_DrawScaledPatch (SCX(zonexpos),SCY(realypos), V_NOSCALESTART,ttlzone);
+			if (lvlttlypos < 200)
+				lvlttlypos += 12;
+			else if (lvlttlypos > 200)
+				lvlttlypos = 200;
 
-	if (realypos > 0 && realypos < 200 && actdraw) 
-		V_DrawScaledPatch (SCX(ttlnumxpos),SCY(realypos), V_NOSCALESTART,ttlnum);
+			if (zoneypos > 0) 
+				zoneypos -= 24;
+			else if (zoneypos < 0)
+				zoneypos = 0;
+
+			if (ttlnumypos > 0)
+				ttlnumypos -= 12;
+			else if (ttlnumypos < 0)
+				ttlnumypos = 0;
+		}
+	} else {
+	#endif
+		if (timeinmap < 105) {
+			if (lvlttlscroll > 0)
+				lvlttlscroll -= (lvlttlscroll >> 3);
+
+			if (zonescroll > 0)
+				zonescroll -= (zonescroll >> 3);
+
+			if (lvlttlscroll > 0)
+				lvlttlscroll -= (lvlttlscroll >> 3);
+		} else {
+			if (lvlttlypos < 200)
+				lvlttlypos += 12;
+			else if (lvlttlypos > 200)
+				lvlttlypos = 200;
+
+			if (zoneypos > 0) 
+				zoneypos -= 24;
+			else if (zoneypos < 0)
+				zoneypos = 0;
+
+			if (ttlnumypos > 0)
+				ttlnumypos -= 12;
+			else if (ttlnumypos < 0)
+				ttlnumypos = 0;
+		}
+	#ifdef NEWTITLECARDS
+	}
+	#endif
+
+	// fucking ass oml
+	#ifdef NEWTITLECARDS
+	if (gamemap == 1) {
+		realypos = lvlttlypos - lvlttlscroll;
+		lvlttl = W_CachePatchName("TCGFZ", PU_CACHE);
+		if (realypos > 0 && realypos < 190)
+			V_DrawScaledPatch (SCX(lvlttlxpos),SCY(realypos), V_NOSCALESTART, lvlttl);
+		
+		temp = realypos + (lvlttl->height >> 1);
+		if (temp > 0 && temp < 200 && actdraw) 
+			V_DrawScaledPatch (SCX(ttlnumxpos + (ttlnumxpos >> 3)),SCY(temp), V_NOSCALESTART,ttlnum);
+	} else {
+	#endif
+			realypos = lvlttlypos - lvlttlscroll;
+			if (realypos > 0 && realypos < 190) {
+				if (!strcmp("", mapheaderinfo[gamemap - 1].lvlttl)) {
+					V_DrawScaledPatch (SCX(lvlttlxpos),SCY(realypos), V_NOSCALESTART,lvlttl);
+				} else {
+					V_DrawLevelTitle(lvlttlxpos, realypos, 0, mapheaderinfo[gamemap - 1].lvlttl);
+				}
+			}
+			realypos = zoneypos - zonescroll;
+			if (realypos > 0 && realypos < 200) 	
+				V_DrawScaledPatch (SCX(zonexpos),SCY(realypos), V_NOSCALESTART,ttlzone);
+
+			if (realypos > 0 && realypos < 200 && actdraw) 
+				V_DrawScaledPatch (SCX(ttlnumxpos),SCY(realypos), V_NOSCALESTART,ttlnum);
+		realypos = lvlttlypos - lvlttlscroll;
+		if (realypos > 0 && realypos < 190) {
+			if (!strcmp("", mapheaderinfo[gamemap - 1].lvlttl)) {
+				V_DrawScaledPatch (SCX(lvlttlxpos),SCY(realypos), V_NOSCALESTART,lvlttl);
+			} else {
+				V_DrawLevelTitle(lvlttlxpos, realypos, 0, mapheaderinfo[gamemap - 1].lvlttl);
+			}
+		}
+		realypos = zoneypos - zonescroll;
+		if (realypos > 0 && realypos < 200) 	
+			V_DrawScaledPatch (SCX(zonexpos),SCY(realypos), V_NOSCALESTART,ttlzone);
+
+		if (realypos > 0 && realypos < 200 && actdraw) 
+			V_DrawScaledPatch (SCX(ttlnumxpos),SCY(realypos), V_NOSCALESTART,ttlnum);
+	#ifdef NEWTITLECARDS
+	}
+	#endif
 }
 
 static void ST_drawFirstPersonHUD(void)

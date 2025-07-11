@@ -119,19 +119,24 @@
 	Controls "tiny" version number (0.0.x)
 	Increment this every day
 	*/
-    #define TINYVER 25
+    #define TINYVER 26
 
 	/**
-	\brief 
-	Controls whether the title screen uses "TITLESKY" or "RSKY1" as its BG
+	\brief Controls whether the title screen uses "TITLESKY" or "RSKY1" as its BG
 	*/
     #define COMPAT_TITLESKY
 
 	/**
-	\brief 
-	Controls whether we're using the LTFNT lumps from Final Demo
+	\brief Controls whether we're using the LTFNT lumps from Final Demo
 	*/
     #define LTFNT
+
+	/**
+	\brief 
+	Controls whether the title cards use a pre-2.2 design or our new version with zone specific designs
+	*/
+	#define NEWTITLECARDS
+
 
     ///\section san_chk Sanity checks
 	
