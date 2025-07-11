@@ -4430,6 +4430,12 @@ void P_SpawnSpecials(void)
 			case 318: // Double light effect
 				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_CUTSPRITES|FF_DOUBLESHADOW);
 				break;
+			case 319: // Bustable block
+				if (lines[i].flags & ML_NOCLIMB)
+					P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_BUSTUP|FF_ONLYKNUX);
+				else
+					P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_BUSTUP);
+				break;
 		}
 	}
 /*	sector_t *sector;
