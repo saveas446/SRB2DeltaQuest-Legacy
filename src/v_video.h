@@ -78,6 +78,9 @@ void V_DrawMappedPatch(int x, int y, int scrn, patch_t *patch, const byte *color
 // default params: scale patch and scale start
 void V_DrawScaledPatch(int x, int y, int scrn, patch_t *patch);
 
+// DrawScaledPatch, but careful not to go off the edges of the screen and SIGSEGV
+void V_DrawClippedScaledPatch(int x, int y, int scrn, patch_t *patch);
+
 // default params: scale patch and scale start
 void V_DrawSmallScaledPatch(int x, int y, int scrn, patch_t *patch);
 void V_DrawSmallMappedPatch(int x, int y, int scrn, patch_t *patch, const byte *colormap);

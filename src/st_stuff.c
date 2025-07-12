@@ -135,6 +135,7 @@ static patch_t *act1;
 static patch_t *act2;
 static patch_t *act3;
 
+
 static boolean facefreed[MAXPLAYERS];
 static boolean prefixfreed[MAXPLAYERS];
 
@@ -480,8 +481,14 @@ void ST_InitTitleCard(void)
 	zonexpos = ttlnumxpos - ttlzone->width;
 
 	#ifdef NEWTITLECARDS
-	// NOW THAT'S WHAT I CALL [A MEMORY LEAK]!
 	if (gamemap == 1) {
+		// I think this is how you deallocate things here?
+		if (ttlnum != NULL)
+			Z_ChangeTag(ttlnum, PU_CACHE);
+		if (lvlttl != NULL)
+			Z_ChangeTag(lvlttl, PU_CACHE);
+
+		lvlttl = W_CachePatchName("TCGFZ", PU_LEVEL);
 		ttlnum = W_CachePatchName("TCGFZ1", PU_LEVEL);
 	} else {
 	#endif
@@ -505,13 +512,28 @@ void ST_InitTitleCard(void)
 	#ifdef NEWTITLECARDS
 	}
 	#endif
-	lvlttlypos = 40;
-	zoneypos = 104;
-	ttlnumypos = 104;
 
-	lvlttlscroll = 120;
-	zonescroll = 96;
-	ttlnumscroll = 96;
+	#ifdef NEWTITLECARDS
+	if (gamemap == 1) {
+		lvlttlypos = 40;
+		zoneypos = 104;
+		ttlnumypos = 104;
+	
+		lvlttlscroll = 120;
+		zonescroll = 96;
+		ttlnumscroll = 96;
+	} else {
+		#endif
+		lvlttlypos = 80;
+		zoneypos = 104;
+		ttlnumypos = 104;
+
+		lvlttlscroll = 80;
+		zonescroll = 96;
+		ttlnumscroll = 96;
+	#ifdef NEWTITLECARDS
+	}
+	#endif
 }
 
 void ST_Start(void)
@@ -609,6 +631,8 @@ void ST_Init(void) {
 	lvlttl17 = W_CachePatchName ("LVLTTL17", PU_STATIC);
 	lvlttl18 = W_CachePatchName ("LVLTTL18", PU_STATIC);
 	lvlttl19 = W_CachePatchName ("LVLTTL19", PU_STATIC);
+
+
 
 	ttlzone = W_CachePatchName ("TTLZONE", PU_STATIC);
 
@@ -863,11 +887,11 @@ static void ST_drawDebugInfo(void)
 	sprintf(sbuildtype, "Build type: Full release");
 	#endif
 
-	#ifdef SDLIO
+	/*#ifdef SDLIO
 		sprintf(swindowsys, "Window system: SDL1");
 	#else
 		sprintf(swindowsys, "Window system: Win32");
-	#endif
+	#endif*/
 
 	sprintf(sangle, "Angle: %d", stplyr->mo->angle >> FRACBITS);
 	//sprintf(sunderwater, "%d", stplyr->powers[pw_underwater]);
@@ -954,7 +978,7 @@ static void ST_drawDebugInfo(void)
 		if (emeralds & EMERALD7)
 			V_DrawSmallScaledPatch(320-144, currentrow+56, 0, emmypatch);	
 			
-		currentrow += 144;
+		currentrow += 32;
 	}
 
 	if (devmodedraw[dm_version]) {
@@ -965,8 +989,8 @@ static void ST_drawDebugInfo(void)
 		currentrow += 8;
 		V_DrawString(0, 320 - (strlen(sbuildtype) << 3), currentrow, 0, sbuildtype);
 		currentrow += 8;
-		V_DrawString(0, 320 - (strlen(swindowsys) << 3), currentrow, 0, swindowsys);
-		currentrow += 8;
+		/*V_DrawString(0, 320 - (strlen(swindowsys) << 3), currentrow, 0, swindowsys);
+		currentrow += 8;*/
 	}
 
 	if (devmodedraw[dm_map]) {
@@ -1013,7 +1037,7 @@ static void ST_drawEggsNeeded(void)
 static void ST_drawLevelTitle(void)
 {
 	int realypos;
-	int temp;
+	int temp, temp2;
 	if (timeinmap == 0) {
 		ST_InitTitleCard();
 	}
@@ -1073,44 +1097,47 @@ static void ST_drawLevelTitle(void)
 	// fucking ass oml
 	#ifdef NEWTITLECARDS
 	if (gamemap == 1) {
+		// Draw GFZROCK background
+		/*for (temp = 0; temp < (vid.width >> 5); temp++) {
+			for (temp2 = 0; temp2 < (vid.height >> 5); temp++) {
+				V_DrawClippedScaledPatch (SCX(temp << 5),SCY(temp2 << 5), V_NOSCALESTART, W_CachePatchName("GFZROCKS", PU_CACHE));
+			}
+		}*/
+
 		realypos = lvlttlypos - lvlttlscroll;
-		lvlttl = W_CachePatchName("TCGFZ", PU_CACHE);
-		if (realypos > 0 && realypos < 190)
-			V_DrawScaledPatch (SCX(lvlttlxpos),SCY(realypos), V_NOSCALESTART, lvlttl);
+		V_DrawClippedScaledPatch (SCX(lvlttlxpos),SCY(realypos), V_NOSCALESTART, lvlttl);
 		
 		temp = realypos + (lvlttl->height >> 1);
-		if (temp > 0 && temp < 200 && actdraw) 
-			V_DrawScaledPatch (SCX(ttlnumxpos + (ttlnumxpos >> 3)),SCY(temp), V_NOSCALESTART,ttlnum);
+		if (actdraw) 
+			V_DrawClippedScaledPatch (SCX(ttlnumxpos + (ttlnumxpos >> 3)),SCY(temp), V_NOSCALESTART,ttlnum);
 	} else {
 	#endif
-			realypos = lvlttlypos - lvlttlscroll;
-			if (realypos > 0 && realypos < 190) {
-				if (!strcmp("", mapheaderinfo[gamemap - 1].lvlttl)) {
-					V_DrawScaledPatch (SCX(lvlttlxpos),SCY(realypos), V_NOSCALESTART,lvlttl);
-				} else {
-					V_DrawLevelTitle(lvlttlxpos, realypos, 0, mapheaderinfo[gamemap - 1].lvlttl);
-				}
-			}
-			realypos = zoneypos - zonescroll;
-			if (realypos > 0 && realypos < 200) 	
-				V_DrawScaledPatch (SCX(zonexpos),SCY(realypos), V_NOSCALESTART,ttlzone);
-
-			if (realypos > 0 && realypos < 200 && actdraw) 
-				V_DrawScaledPatch (SCX(ttlnumxpos),SCY(realypos), V_NOSCALESTART,ttlnum);
 		realypos = lvlttlypos - lvlttlscroll;
-		if (realypos > 0 && realypos < 190) {
-			if (!strcmp("", mapheaderinfo[gamemap - 1].lvlttl)) {
-				V_DrawScaledPatch (SCX(lvlttlxpos),SCY(realypos), V_NOSCALESTART,lvlttl);
-			} else {
-				V_DrawLevelTitle(lvlttlxpos, realypos, 0, mapheaderinfo[gamemap - 1].lvlttl);
-			}
+		if (!strcmp("", mapheaderinfo[gamemap - 1].lvlttl)) {
+			V_DrawClippedScaledPatch (SCX(lvlttlxpos),SCY(realypos), V_NOSCALESTART,lvlttl);
+		} else {
+			V_DrawLevelTitle(lvlttlxpos, realypos, 0, mapheaderinfo[gamemap - 1].lvlttl);
 		}
-		realypos = zoneypos - zonescroll;
-		if (realypos > 0 && realypos < 200) 	
-			V_DrawScaledPatch (SCX(zonexpos),SCY(realypos), V_NOSCALESTART,ttlzone);
 
-		if (realypos > 0 && realypos < 200 && actdraw) 
-			V_DrawScaledPatch (SCX(ttlnumxpos),SCY(realypos), V_NOSCALESTART,ttlnum);
+
+		realypos = zoneypos - zonescroll;
+		V_DrawClippedScaledPatch (SCX(zonexpos),SCY(realypos), V_NOSCALESTART,ttlzone);
+		if (actdraw) 
+			V_DrawClippedScaledPatch (SCX(ttlnumxpos),SCY(realypos), V_NOSCALESTART,ttlnum);
+		realypos = lvlttlypos - lvlttlscroll;
+		if (!strcmp("", mapheaderinfo[gamemap - 1].lvlttl)) {
+			V_DrawClippedScaledPatch (SCX(lvlttlxpos),SCY(realypos), V_NOSCALESTART,lvlttl);
+		} else {
+			V_DrawLevelTitle(lvlttlxpos, realypos, 0, mapheaderinfo[gamemap - 1].lvlttl);
+		}
+
+
+		realypos = zoneypos - zonescroll;	
+		V_DrawClippedScaledPatch (SCX(zonexpos),SCY(realypos), V_NOSCALESTART,ttlzone);
+
+		if (actdraw) 
+			V_DrawClippedScaledPatch (SCX(ttlnumxpos),SCY(realypos), V_NOSCALESTART,ttlnum);
+
 	#ifdef NEWTITLECARDS
 	}
 	#endif

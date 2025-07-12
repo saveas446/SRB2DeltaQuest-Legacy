@@ -501,10 +501,10 @@ donedrawing:
   * \sa V_DrawScaledPatch
   * \author Graue <graue@oceanbase.org>
   */
-static void V_DrawClippedScaledPatch(int x, int y, int scrn, patch_t *patch)
+void V_DrawClippedScaledPatch(int x, int y, int scrn, patch_t *patch)
 {
 	size_t count;
-	int col, dupx, dupy, ofs, colfrac, rowfrac;
+	int col, dupx, dupy, ofs, colfrac, rowfrac, offy;
 	const column_t *column;
 	byte *desttop, *dest, *destend;
 	const byte *source, *deststop;
@@ -553,7 +553,7 @@ static void V_DrawClippedScaledPatch(int x, int y, int scrn, patch_t *patch)
 		register int heightmask;
 
 		column = (const column_t *)((const byte *)patch + LONG(patch->columnofs[col>>FRACBITS]));
-
+		
 		while (column->topdelta != 0xff)
 		{
 			source = (const byte *)column + 3;
