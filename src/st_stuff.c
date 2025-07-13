@@ -1075,10 +1075,10 @@ static void ST_drawLevelTitle(void)
 			if (lvlttlscroll > 0)
 				lvlttlscroll -= (lvlttlscroll >> 3);
 		} else {
-			if (lvlttlypos < 200)
+			if (lvlttlypos < 250)
 				lvlttlypos += 12;
-			else if (lvlttlypos > 200)
-				lvlttlypos = 200;
+			else if (lvlttlypos > 250)
+				lvlttlypos = 250;
 
 			if (zoneypos > 0) 
 				zoneypos -= 24;
@@ -1118,6 +1118,8 @@ static void ST_drawLevelTitle(void)
 		} else {
 			V_DrawLevelTitle(lvlttlxpos, realypos, 0, mapheaderinfo[gamemap - 1].lvlttl);
 		}
+
+		CONS_Printf("realypos: %d\n", realypos);
 
 
 		realypos = zoneypos - zonescroll;
