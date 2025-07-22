@@ -138,3 +138,9 @@ dev/launcher.exe.manifest
 dev/launcher.pdb
 
 dev/app.publish/*
+
+# My ReShade stuff
+dev/reshade
+dev/reshade-shaders
+dev/reshade.ini
+dev/reshadepreset.ini
