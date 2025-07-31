@@ -119,7 +119,7 @@
 	Controls "tiny" version number (0.0.x)
 	Increment this every day
 	*/
-    #define TINYVER 26
+    #define TINYVER 27
 
 	/**
 	\brief Controls whether the title screen uses "TITLESKY" or "RSKY1" as its BG
@@ -135,7 +135,7 @@
 	\brief 
 	Controls whether the title cards use a pre-2.2 design or our new version with zone specific designs
 	*/
-	#define NEWTITLECARDS
+	//#define NEWTITLECARDS
 
 
     ///\section san_chk Sanity checks

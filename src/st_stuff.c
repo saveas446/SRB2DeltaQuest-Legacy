@@ -1119,8 +1119,6 @@ static void ST_drawLevelTitle(void)
 			V_DrawLevelTitle(lvlttlxpos, realypos, 0, mapheaderinfo[gamemap - 1].lvlttl);
 		}
 
-		CONS_Printf("realypos: %d\n", realypos);
-
 
 		realypos = zoneypos - zonescroll;
 		V_DrawClippedScaledPatch (SCX(zonexpos),SCY(realypos), V_NOSCALESTART,ttlzone);
