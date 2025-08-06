@@ -4404,6 +4404,10 @@ void P_SpawnSpecials(void)
 				EV_DoElevator(&lines[i], elevateContinuous, false);
 				break;
 
+			case 311: // Continuously Falling sector
+				EV_DoContinuousFall(lines[i].frontsector, lines[i].backsector, P_AproxDistance(lines[i].dx, lines[i].dy), (lines[i].flags & ML_NOCLIMB));
+				break;
+
 			case 313: // FOF (intangible, invisible) - for combining specials in a sector
 				P_AddFakeFloorsByLine(i, FF_EXISTS | FF_NOSHADE);
 				break;
