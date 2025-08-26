@@ -1,0 +1,57 @@
+Before going into the SRB1 Xmas and SRB2 'Ween styled MIDIs, I'll talk about the
+ones not in any of those folders. The Doomship Act 2 one was a highly
+experimental one that I really just used as an excuse to get back to my old ways
+for percussion. Evilflower Act 2 was just there because the act 1 version was a
+thing. The "Space Countdown" one is there because I thought it would be
+interesting to do a more atmospheric and ominous approach for the drowning theme.
+The real stars of the show here are Dark City Act 2 and Midnight Freeze Act 2.
+Dark City was a final demo-esque reimagining of the original Dark City Act 2. As
+much as I would've liked to remain completely faithful to Arrow's style (SSNTails
+made the original song, but Arrow had redone it for final demo), I can't help but
+say that I adore what I did. It still fits regardless and it also made me want to
+make my own version of DCZ2. Heh, maybe I'll do it with UDMF supported now. 
+Midnight Freeze Zone Act 2 was a Match reimagining of the 2.0 Icy Tundra/Midnight
+Freeze theme for the SRB2 MIDI pack. When making it I was envisioning Sonic
+snowboarding/skiing down the mountain, making it his one and only mission to get
+to Dark City and be there before Eggman, just outright making it a mad dash to
+the city while going in and out of various caves. Needless to say, but I think I
+captured that feeling well.
+
+The stylized arrangements were a pain to figure out on the Halloween end. I
+probably should've asked SSNTails how he would've done it in hindsight, but oh
+well. SRB1 Xmas styled stuff was a lot easier though, especially since it's
+easier to come up with Christmas style instrumentation as opposed to Halloween.
+The sleigh bells are the only percussion in all the songs I stylized these after,
+so I captured that. They were constant throughout every song, but I decided to
+just barely spice things up for Robotnirock and the boss themes. Now the bells
+start only slightly later! Yay!
+
+It's June 12th of 2023 right now, and the last time I modified this file was on
+May 29th of 2023. I edited the mixing on Dark City 2 and tried fixing Midnight
+Freze 2, the latter to no avail. There are simply too many notes being played
+at once in it and I can't fix it like how I did with Dark City 2 (some stuff cut
+off but swapping said stuff to a channel with a higher priority fixed it.) On the
+other hand, say hello to my own take on Black Core Zone Act 1 if it wasn't the
+Metal Sonic race. It even uses GS instruments, so listen to it outside of the
+current version of SRB2 because they REMOVED GS INSTRUMENT SUPPORT! Why? It's the
+entire reason 2.1 Egg Rock Zone uses square waves instead of sine waves in-game.
+
+It's the day before the release. (June 18th) That's fun. Did a semi-2.1 style
+Black Core Zone Act 2 yesterday because why not.
+
+Castle Eggman Zone Act 2 is a remix that seeks to reimplement some bits of Arrow's
+version of the song while keeping most of what makes the 2.2 version of the song good.
+I will say that I got lazy and basically reused 2.2's chord progression verbatim.
+Otherwise, it's mostly an almagamation. Bass rhythm is identical to that of 2.2's,
+I did do this from scratch though, so yeah. Most notable changes are the percussion.
+
+Azure Temple Zone Act 1 is actually a remix of the old DSZ1 from SRB1 Xmas. Not proud of it.
+It drags on for way too long due to the unneccessarily artificial extension alongside the
+key change bit. It was supposed to be inspired by Bobby Prince's work on Doom and Doom II (even
+taking elements from some of Suspense and They're Going to Get You).
+
+Sunken Plant Zone Act 2 is very experimental for me. It serves to mitigate my issues with the
+tone of RedXVI's composition for the song, though I don't think this does a perfect job either.
+This is actually unfinished, but since it's in MRCE at the time of writing this (10:55 PM CST
+of Feburary 22, 2024), I may as well include it here. I'm... not good at this type of stuff.
+Please listen to Vertz's stuff, it's far better.

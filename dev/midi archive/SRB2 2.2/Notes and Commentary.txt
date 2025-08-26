@@ -1,0 +1,24 @@
+/////////
+//Notes//
+/////////
+
+The soundtrack got a complete digital overhaul for 2.2, and these
+midis were put in the game in an early patch, because 2.2 originally
+borrowed the midis primarily from 2.1.
+
+//////////////
+//Commentary//
+//////////////
+
+Vertz Commentary: Very good soundtrack! My only complaint with it
+is that some songs can sound slightly repetitive if you listen to 
+them for as long as I have, but that isn't really a big issue for me
+because some of these are genuinely amazing, I'm a big fan of how
+older scrapped songs were rearranged and included here. 
+
+Sonix's Commentary: 2.2's soundtrack from a critical standpoint is fantastic! There's not a single song in here that disappoints me besides the fact that some are reused from older versions (Lime
+Forest Zone and Azure Temple Zone), don't have any (Red Volcano Zone Alternate) or the special case of Techno Legacy, which uses the 2.2 Techno Hill Act 2 theme when it can literally just be
+grabbed from 2.1. The digital version uses the correct song, but not the MIDI version which is utterly baffling. I suppose it doesn't help that Techno Hill had its redone MIDIs day one. I'll list
+off my favorites here. Egg Rock Zone Act 2, VS Black Eggman, Deep Sea Zone Act 1, Castle Eggman Zone Act 2, Mine Maze Zone, Orbital Hangar Zone, Midnight Freeze Zone, Mystic Realm Zone, and Tempest
+Valley Zone. Yeah, 2.2's MIDI soundtrack without a doubt is excellent. Slight tangent, but I've been contemplating putting the Mystic Realm Community Edition MIDIs here since... it's Mystic Realm.
+I think I'll just wait until it's more complete though.

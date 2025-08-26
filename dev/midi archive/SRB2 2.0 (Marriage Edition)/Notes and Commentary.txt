@@ -1,0 +1,53 @@
+/////////
+//Notes//
+/////////
+
+2.0 was initially released to coincide with SSNTails's marriage. 
+That's surface level information though, so let's talk MIDIs. 2.0 
+is the oddball hybrid between Final Demo and 2.1 with it's MIDIs. 
+When I say oddball, the intro theme is impossible to find despite 
+clearly being in the game. It also just doesn't have MIDIs that 
+sound close to some of the new songs added. Most notably, Egg Rock 
+Zone. Egg Rock Zone instead reuses its former act 2 theme for BOTH 
+acts. It's... I'll let Vertz describe the song. (All you need to
+remember is the fact that somebody keeps smashing their head on the
+piano) 2.0 also introduced more music while getting rid of the 
+Christmas stuff. For some odd reason the unused theme commonly 
+associated with Wood Zone now has a different lead instrument. 
+Like I said, 2.0 is certainly an oddball.
+
+//////////////
+//Commentary//
+//////////////
+
+Vertz Commentary: When someone mentions the SRB2 OST, the first 
+thing that comes to my mind is this soundtrack. It practically
+embodies the complete legacy of the SRB2 sound experience, 
+making it the closest representation we have. Don't get me wrong,
+the new songs in 2.2 are fantastic and can definitely represent 
+SRB2, but for those of us who have been familiar with SRB2 before
+2.2, these tracks hold a special place in our hearts as iconic 
+pieces that define the game as a whole.
+
+Sonix's Commentary: Ah, 2.0. The first "full" version of SRB2 
+released. I talked about Arrow's redone songs, so now I get to 
+talk about the Mystic Realm's soundtrack. It's fantastic. One 
+thing I noticed with all of the songs done by RedXVI is that they
+ tend to have key changes. Jade Coast is a fun beach theme. Not 
+too much to say on it. Tempest Valley. This one is fantastic. 
+Sure, a lot of RedXVI's MIDIs have poor audio mixing, but I can 
+excuse that if the song is fantastic. Tempest Valley is wonderful. 
+I typically don't like songs that are too upbeat, but this one 
+slaps hard. Verdant Forest reminds me of caveman music. Sort of a 
+panicky feel to it as well. Flame Rift is just... insane. I suggest 
+listening to it yourself. Midnight Freeze. This one wasn't done by 
+RedXVI, but rather Arrow. It's a redux of his Ice Forest theme from 
+Sonic: Emerald Quest. This actually wasn't in Final Demo. I made a 
+remix of it too, check it out in the bonus MIDIs. I like it a lot 
+though. Sunken Plant... not too much of a fan of it, probably the 
+weakest link. Aerial Garden's themes are incredible. They have a 
+feeling of adventure to them that fits AGZ perfectly well. Prismatic 
+Angel's theme is orchestral and it's awesome. Nice foreshadowing to 
+the titular Mystic Realm Zone, which has a wonderful theme, but it 
+is... loud. Oh yeah the boss theme. It's a jam. That's all I really 
+have to say.
