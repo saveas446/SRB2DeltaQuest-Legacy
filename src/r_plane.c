@@ -140,6 +140,93 @@ void R_InitPlanes(void)
 //
 // BASIC PRIMITIVE
 //
+static INT32 bgofs;
+static INT32 wtofs = 0;
+static INT32 waterofs;
+static boolean itswater;
+
+#ifdef __mips__
+//#define NOWATER
+#endif
+
+#ifndef NOWATER
+static void R_DrawTranslucentWaterSpan_8(void)
+{
+	UINT32 xposition;
+	UINT32 yposition;
+	UINT32 xstep, ystep;
+
+	UINT8* source;
+	UINT8* colormap;
+	UINT8* dest;
+	UINT8* dsrc;
+
+	size_t count;
+
+	// SoM: we only need 6 bits for the integer part (0 thru 63) so the rest
+	// can be used for the fraction part. This allows calculation of the memory address in the
+	// texture with two shifts, an OR and one AND. (see below)
+	// for texture sizes > 64 the amount of precision we can allow will decrease, but only by one
+	// bit per power of two (obviously)
+	// Ok, because I was able to eliminate the variable spot below, this function is now FASTER
+	// than the original span renderer. Whodathunkit?
+	xposition = ds_xfrac << nflatshiftup; yposition = (ds_yfrac + waterofs) << nflatshiftup;
+	xstep = ds_xstep << nflatshiftup; ystep = ds_ystep << nflatshiftup;
+
+	source = ds_source;
+	colormap = ds_colormap;
+	dest = ylookup[ds_y] + columnofs[ds_x1];
+	dsrc = screens[1] + (ds_y + bgofs) * vid.width + ds_x1;
+	count = ds_x2 - ds_x1 + 1;
+
+	while (count >= 8)
+	{
+		// SoM: Why didn't I see this earlier? the spot variable is a waste now because we don't
+		// have the uber complicated math to calculate it now, so that was a memory write we didn't
+		// need!
+		dest[0] = colormap[*(ds_transmap + (source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)] << 8) + *dsrc++)];
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[1] = colormap[*(ds_transmap + (source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)] << 8) + *dsrc++)];
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[2] = colormap[*(ds_transmap + (source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)] << 8) + *dsrc++)];
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[3] = colormap[*(ds_transmap + (source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)] << 8) + *dsrc++)];
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[4] = colormap[*(ds_transmap + (source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)] << 8) + *dsrc++)];
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[5] = colormap[*(ds_transmap + (source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)] << 8) + *dsrc++)];
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[6] = colormap[*(ds_transmap + (source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)] << 8) + *dsrc++)];
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[7] = colormap[*(ds_transmap + (source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)] << 8) + *dsrc++)];
+		xposition += xstep;
+		yposition += ystep;
+
+		dest += 8;
+		count -= 8;
+	}
+	while (count--)
+	{
+		*dest++ = colormap[*(ds_transmap + (source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)] << 8) + *dsrc++)];
+		xposition += xstep;
+		yposition += ystep;
+	}
+}
+#endif
 
 void R_MapPlane(int y, int x1, int x2)
 {
@@ -176,6 +263,22 @@ void R_MapPlane(int y, int x1, int x2)
 
 	ds_xfrac = FixedMul(finecosine[angle], length) + xoffs;
 	ds_yfrac = yoffs - FixedMul(finesine[angle], length);
+
+	if (itswater)
+	{
+		const INT32 yay = (wtofs + (distance >> 10)) & 8191;
+		// ripples da water texture
+		bgofs = FixedDiv(finesine[yay], distance >> 9) >> FRACBITS;
+
+		angle = (angle + 2048) & 8191;  //90?
+		ds_xfrac += FixedMul(finecosine[angle], (bgofs << FRACBITS));
+		ds_yfrac += FixedMul(finesine[angle], (bgofs << FRACBITS));
+
+		if (y + bgofs >= viewheight)
+			bgofs = viewheight - y - 1;
+		if (y + bgofs < 0)
+			bgofs = -y;
+	}
 
 	pindex = distance >> LIGHTZSHIFT;
 
@@ -571,6 +674,27 @@ void R_DrawSinglePlane(visplane_t *pl, boolean handlesource)
 			light = (pl->lightlevel >> LIGHTSEGSHIFT);
 		}
 		else light = (pl->lightlevel >> LIGHTSEGSHIFT);
+#ifndef NOWATER
+		if (pl->ffloor->flags & FF_RIPPLE)
+		{
+			INT32 top, bottom;
+
+			itswater = true;
+			if (spanfunc == R_DrawTranslucentSpan_8)
+			{
+				spanfunc = R_DrawTranslucentWaterSpan_8;
+
+				// Copy the current scene, ugh
+				top = pl->high - 8;
+				bottom = pl->low + 8;
+
+				if (top < 0)
+					top = 0;
+				if (bottom > vid.height)
+					bottom = vid.height;
+			}
+		}
+#endif
 	}
 	else light = (pl->lightlevel >> LIGHTSEGSHIFT);
 

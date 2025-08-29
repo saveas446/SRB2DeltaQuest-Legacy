@@ -5973,7 +5973,7 @@ void P_PlayerThink(player_t *player)
 
 			// change the gametype using front x offset if passuse flag is given
 			// ...but not in single player!
-			if (multiplayer && lines[lineindex].flags & ML_PASSUSE)
+			if (multiplayer && lines[lineindex].flags & ML_EFFECT4)
 			{
 				int xofs = sides[lines[lineindex].sidenum[0]].textureoffset;
 				if (xofs >= 0 && xofs < NUMGAMETYPES)

@@ -480,8 +480,6 @@ static void signal_handler(int num)
 	const char *sigmsg;
 	char sigdef[64];
 
-	D_QuitNetGame(); // Fix server freezes
-	I_ShutdownSystem();
 
 	switch (num)
 	{

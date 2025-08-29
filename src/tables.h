@@ -79,5 +79,9 @@ fixed_t AngleFixed(angle_t af);
 angle_t FixedAngle(fixed_t fa);
 // and with a factor, with +factor for (fa/factor) and -factor for (fa*factor)
 angle_t FixedAngleC(fixed_t fa, fixed_t factor);
+// These macros should be used in case FRACBITS < FINE_FRACBITS.
+#define FINESINE(n) (finesine[n]>>(FINE_FRACBITS-FRACBITS))
+#define FINECOSINE(n) (finecosine[n]>>(FINE_FRACBITS-FRACBITS))
+#define FINETANGENT(n) (finetangent[n]>>(FINE_FRACBITS-FRACBITS))
 
 #endif

@@ -1038,7 +1038,7 @@ void P_LinedefExecute(int tag, mobj_t *actor, sector_t *caller)
 				
 				// With the passuse flag, count all player's
 				// rings.
-				if (lines[masterline].flags & ML_PASSUSE)
+				if (lines[masterline].flags & ML_EFFECT4)
 				{
 					for (i = 0; i < MAXPLAYERS; i++)
 					{
@@ -1140,7 +1140,7 @@ void P_LinedefExecute(int tag, mobj_t *actor, sector_t *caller)
 		ctlsector = lines[masterline].frontsector;
 		linecnt = ctlsector->linecount;
 
-		if (lines[masterline].flags & ML_ALLTRIGGER) // disregard order for efficiency
+		if (lines[masterline].flags & ML_EFFECT5) // disregard order for efficiency
 		{
 			for (i = 0; i < linecnt; i++)
 				if (ctlsector->lines[i]->special > 99)
@@ -3437,7 +3437,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
     int         forceuse; //SoM: 4/26/2000: ALLTRIGGER should allow monsters to use generalized types too!
 	
 	line = &lines[linenum];
-    forceuse = line->flags & ML_ALLTRIGGER;
+    forceuse = line->flags & ML_EFFECT5;
 	
     switch (line->special)
     {
@@ -4293,7 +4293,11 @@ void P_SpawnSpecials(void)
 			break;
 			//l271 New Water (Opaque) Save 14-06-2025
 			case 271:
-				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_RENDERALL|FF_SWIMMABLE|FF_BOTHPLANES|FF_ALLSIDES|FF_CUTEXTRA|FF_EXTRA|FF_CUTSPRITES);
+				ffloorflags = FF_EXISTS|FF_RENDERALL|FF_SWIMMABLE|FF_BOTHPLANES|FF_ALLSIDES|FF_CUTEXTRA|FF_EXTRA|FF_CUTSPRITES;
+				if (lines[i].flags & ML_EFFECT5)
+					ffloorflags |= FF_RIPPLE;
+
+				P_AddFakeFloorsByLine(i, ffloorflags);
 				break;
 
 			//l272 Copy Colormaps 
@@ -4306,7 +4310,11 @@ void P_SpawnSpecials(void)
 				break;
 			//l273 New Water (Translucent) Save 14-06-2025
 			case 273:
-				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_RENDERALL|FF_TRANSLUCENT|FF_SWIMMABLE|FF_BOTHPLANES|FF_ALLSIDES|FF_CUTEXTRA|FF_EXTRA|FF_CUTSPRITES);
+				ffloorflags = FF_EXISTS|FF_RENDERALL|FF_TRANSLUCENT|FF_SWIMMABLE|FF_BOTHPLANES|FF_ALLSIDES|FF_CUTEXTRA|FF_EXTRA|FF_CUTSPRITES;
+				if (lines[i].flags & ML_EFFECT5)
+					ffloorflags |= FF_RIPPLE;
+
+				P_AddFakeFloorsByLine(i, ffloorflags);
 				break;
 			//l274 Continuous Floor And Ceiling Mover
 			case 274:
@@ -4391,6 +4399,9 @@ void P_SpawnSpecials(void)
 						P_AproxDistance(lines[i].dx, lines[i].dy) >> FRACBITS);
 				break;
 
+			//case 307 handled below
+			//case 308 handled below
+
 			case 309: // Float/bob platform
 				sec = (int)(sides[*lines[i].sidenum].sector - sectors);
 				for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
@@ -4440,8 +4451,54 @@ void P_SpawnSpecials(void)
 				else
 					P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_BUSTUP);
 				break;
+
+			case 307: // Adjustable flickering light
+				sec = (int)(sides[*lines[i].sidenum].sector - sectors);
+				for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
+					P_SpawnAdjustableFireFlicker(&sectors[sec], &sectors[s],
+						P_AproxDistance(lines[i].dx, lines[i].dy) >> FRACBITS);
+				break;
+
+			case 320: // Flat alignment
+				if (lines[i].flags & ML_EFFECT4) // Align angle
+				{
+					if (!(lines[i].flags & ML_EFFECT5)) // Align floor unless ALLTRIGGER flag is set
+					{
+						for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
+							sectors[s].floorpic_angle = R_PointToAngle2(lines[i].v1->x, lines[i].v1->y, lines[i].v2->x, lines[i].v2->y);
+					}
+
+					if (!(lines[i].flags & ML_BOUNCY)) // Align ceiling unless BOUNCY flag is set
+					{
+						for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
+							sectors[s].ceilingpic_angle = R_PointToAngle2(lines[i].v1->x, lines[i].v1->y, lines[i].v2->x, lines[i].v2->y);
+					}
+				}
+				else // Do offsets
+				{
+					if (!(lines[i].flags & ML_BLOCKMONSTERS)) // Align floor unless BLOCKMONSTERS flag is set
+					{
+						for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
+						{
+							sectors[s].floor_xoffs += lines[i].dx;
+							sectors[s].floor_yoffs += lines[i].dy;
+						}
+					}
+
+					if (!(lines[i].flags & ML_NOCLIMB)) // Align ceiling unless NOCLIMB flag is set
+					{
+						for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
+						{
+							sectors[s].ceiling_xoffs += lines[i].dx;
+							sectors[s].ceiling_yoffs += lines[i].dy;
+						}
+					}
+				}
+				break;
+
 		}
 	}
+
 /*	sector_t *sector;
 	int i, j;
 
@@ -4454,7 +4511,7 @@ void P_SpawnSpecials(void)
 
 	CheckForBustableBlocks = CheckForBouncySector = CheckForQuicksand = CheckForMarioBlocks = CheckForFloatBob = false;
 
-	// Init special SECTORs.
+	*/// Init special SECTORs.
 	sector = sectors;
 	for (i = 0; i < numsectors; i++, sector++)
 	{
@@ -4499,27 +4556,17 @@ void P_SpawnSpecials(void)
 				break;
 
 			case 17:
+				//Light Flickers Randomly (???)
 				P_SpawnFireFlicker(sector);
-				break;
-
-			case 990: // Time for special stage
-				sstimer = (sector->floorheight >> FRACBITS) * TICRATE + 6; // Time to finish
-				totalrings = sector->ceilingheight >> FRACBITS; // Ring count for special stage
 				break;
 
 			case 991: // Custom gravity!
 				gravity = sector->floorheight/1000;
 				break;
-
-			case 994: // Circuit finish line
-				circuitmap = true;
-				break;
 		}
 	}
-
-	if (xmasmode || mapheaderinfo[gamemap-1].weather == 2) // snow
-		curWeather = PRECIP_SNOW;
-	else if (mapheaderinfo[gamemap-1].weather == 3) // rain
+	
+	if (mapheaderinfo[gamemap-1].weather == 3) // rain
 		curWeather = PRECIP_RAIN;
 	else if (mapheaderinfo[gamemap-1].weather == 1) // storm
 		curWeather = PRECIP_STORM;
@@ -4527,7 +4574,7 @@ void P_SpawnSpecials(void)
 		curWeather = PRECIP_STORM_NORAIN;
 	else
 		curWeather = PRECIP_NONE;
-
+	/*
 	P_InitTagLists();   // Create xref tables for tags
 	P_SpawnScrollers(); // Add generalized scrollers
 	P_SpawnFriction();  // Friction model using linedefs

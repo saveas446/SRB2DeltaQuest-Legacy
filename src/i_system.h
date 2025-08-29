@@ -246,9 +246,6 @@ void I_AddExitFunc(void (*func)());
 */
 void I_RemoveExitFunc(void (*func)());
 
-/**	\brief Setup signal handler, plus stuff for trapping errors and cleanly exit.
-*/
-int I_StartupSystem(void);
 
 /**	\brief Shutdown systems
 */

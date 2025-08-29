@@ -818,7 +818,7 @@ static boolean PIT_CheckLine(line_t *ld)
 	// missiles can cross uncrossable lines
 	if (!(tmthing->flags & MF_MISSILE))
 	{
-		if (ld->flags & ML_BLOCKING)
+		if (ld->flags & ML_IMPASSIBLE)
 			return false; // explicitly blocking everything
 
 		if (!(tmthing->player) && ld->flags & ML_BLOCKMONSTERS)

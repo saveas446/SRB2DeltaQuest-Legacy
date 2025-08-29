@@ -101,7 +101,7 @@ typedef struct
 //
 
 // Solid, is an obstacle.
-#define ML_BLOCKING             1
+#define ML_IMPASSIBLE            1
 
 // Blocks monsters only.
 #define ML_BLOCKMONSTERS        2
@@ -137,8 +137,8 @@ typedef struct
 #define ML_NOHARD             256
 
 // Unused except for effects.
-#define ML_PASSUSE            512
-#define ML_ALLTRIGGER        1024
+#define ML_EFFECT4            512
+#define ML_EFFECT5            1024
 
 // New ones to disable lines for characters
 #define ML_NOSONIC           2048

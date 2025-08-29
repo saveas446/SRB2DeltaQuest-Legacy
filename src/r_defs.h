@@ -1,4 +1,5 @@
 // Emacs style mode select   -*- C++ -*-
+
 //-----------------------------------------------------------------------------
 //
 // Copyright (C) 1993-1996 by id Software, Inc.
@@ -132,6 +133,7 @@ typedef enum
 	FF_SHATTER           = 0x2000000, ///< Used with ::FF_BUSTUP. Thinks everyone's Knuckles.
 	FF_SPINBUST          = 0x4000000, ///< Used with ::FF_BUSTUP. Jump or fall onto it while curled in a ball.
 	FF_ONLYKNUX          = 0x8000000, ///< Used with ::FF_BUSTUP. Only Knuckles can break this rock.
+	FF_RIPPLE            = 0x40000000, ///< Ripple the flats
 } ffloortype_e;
 
 typedef struct ffloor_s
@@ -226,79 +228,83 @@ typedef struct sector_s
 	short lightlevel;
 	short special;
 	short tag;
-	int nexttag, firsttag; // for fast tag searches
+	int nexttag, firsttag; // for fast tag searches  
 
-	// origin for any sounds played by the sector
-	// also considered the center for e.g. Mario blocks
+	// origin for any sounds played by the sector  
+	// also considered the center for e.g. Mario blocks  
 	degenmobj_t soundorg;
 
-	// if == validcount, already checked
+	// if == validcount, already checked  
 	int validcount;
 
-	// list of mobjs in sector
-	mobj_t *thinglist;
+	// list of mobjs in sector  
+	mobj_t* thinglist;
 
-	// thinker_ts for reversable actions
-	void *floordata; // floor move thinker
-	void *ceilingdata; // ceiling move thinker
-	void *lightingdata; // lighting change thinker
+	// thinker_ts for reversable actions  
+	void* floordata; // floor move thinker  
+	void* ceilingdata; // ceiling move thinker  
+	void* lightingdata; // lighting change thinker  
 
-	// floor and ceiling texture offsets
+	// floor and ceiling texture offsets  
 	fixed_t floor_xoffs, floor_yoffs;
 	fixed_t ceiling_xoffs, ceiling_yoffs;
 
-	int heightsec; // other sector, or -1 if no other sector
-	int altheightsec; // Use old boom model? 1 for no 0 for yes.
+	int heightsec; // other sector, or -1 if no other sector  
+	int altheightsec; // Use old boom model? 1 for no 0 for yes.  
 
 	int floorlightsec, ceilinglightsec;
-	int crumblestate; // used for crumbling and bobbing
+	int crumblestate; // used for crumbling and bobbing  
 
-	int bottommap, midmap, topmap; // dynamic colormaps
+	int bottommap, midmap, topmap; // dynamic colormaps  
 
-	// list of mobjs that are at least partially in the sector
-	// thinglist is a subset of touching_thinglist
-	struct msecnode_s *touching_thinglist;
+	// list of mobjs that are at least partially in the sector  
+	// thinglist is a subset of touching_thinglist  
+	struct msecnode_s* touching_thinglist;
 
 	int linecount;
-	struct line_s **lines; // [linecount] size
+	struct line_s** lines; // [linecount] size  
 
-	// Improved fake floor hack
-	ffloor_t *ffloors;
-	size_t *attached;
+	// Improved fake floor hack  
+	ffloor_t* ffloors;
+	size_t* attached;
 	int numattached;
-	lightlist_t *lightlist;
+	lightlist_t* lightlist;
 	int numlights;
 	boolean moved;
 
-	// per-sector colormaps!
-	extracolormap_t *extra_colormap;
+	// per-sector colormaps!  
+	extracolormap_t* extra_colormap;
 
-	// ----- for special tricks with HW renderer -----
+	// ----- for special tricks with HW renderer -----  
 	boolean pseudoSector;
 	boolean virtualFloor;
 	fixed_t virtualFloorheight;
 	boolean virtualCeiling;
 	fixed_t virtualCeilingheight;
-	linechain_t *sectorLines;
-	struct sector_s **stackList;
+	linechain_t* sectorLines;
+	struct sector_s** stackList;
 	double lineoutLength;
-	// ----- end special tricks -----
+	// ----- end special tricks -----  
 
-	// ZDoom C++ to Legacy C conversion (for slopes)
-	// store floor and ceiling planes instead of heights
+	// ZDoom C++ to Legacy C conversion (for slopes)  
+	// store floor and ceiling planes instead of heights  
 	secplane_t floorplane, ceilingplane;
-	fixed_t	floortexz, ceilingtexz;	// [RH] used for wall texture mapping
+	fixed_t floortexz, ceilingtexz; // [RH] used for wall texture mapping  
 	fixed_t floorangle;
 
-	// This points to the master's floorheight, so it can be changed in realtime!
-	fixed_t *gravity; // per-sector gravity
+	// This points to the master's floorheight, so it can be changed in realtime!  
+	fixed_t* gravity; // per-sector gravity  
 
-	// Current speed of ceiling/floor. For Knuckles to hold onto stuff.
+	// Current speed of ceiling/floor. For Knuckles to hold onto stuff.  
 	fixed_t floorspeed, ceilspeed;
 
-	// list of precipitation mobjs in sector
-	precipmobj_t *preciplist;
-	struct mprecipsecnode_s *touching_preciplist;
+	// list of precipitation mobjs in sector  
+	precipmobj_t* preciplist;
+	struct mprecipsecnode_s* touching_preciplist;
+
+	// New field added to fix the error  
+	angle_t floorpic_angle;
+	angle_t ceilingpic_angle;
 } sector_t;
 
 //
