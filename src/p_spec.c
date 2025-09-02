@@ -4293,11 +4293,7 @@ void P_SpawnSpecials(void)
 			break;
 			//l271 New Water (Opaque) Save 14-06-2025
 			case 271:
-				ffloorflags = FF_EXISTS|FF_RENDERALL|FF_SWIMMABLE|FF_BOTHPLANES|FF_ALLSIDES|FF_CUTEXTRA|FF_EXTRA|FF_CUTSPRITES;
-				if (lines[i].flags & ML_EFFECT5)
-					ffloorflags |= FF_RIPPLE;
-
-				P_AddFakeFloorsByLine(i, ffloorflags);
+				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_RENDERALL|FF_SWIMMABLE|FF_BOTHPLANES|FF_ALLSIDES|FF_CUTEXTRA|FF_EXTRA|FF_CUTSPRITES);
 				break;
 
 			//l272 Copy Colormaps 
@@ -4310,11 +4306,7 @@ void P_SpawnSpecials(void)
 				break;
 			//l273 New Water (Translucent) Save 14-06-2025
 			case 273:
-				ffloorflags = FF_EXISTS|FF_RENDERALL|FF_TRANSLUCENT|FF_SWIMMABLE|FF_BOTHPLANES|FF_ALLSIDES|FF_CUTEXTRA|FF_EXTRA|FF_CUTSPRITES;
-				if (lines[i].flags & ML_EFFECT5)
-					ffloorflags |= FF_RIPPLE;
-
-				P_AddFakeFloorsByLine(i, ffloorflags);
+				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_RENDERALL|FF_TRANSLUCENT|FF_SWIMMABLE|FF_BOTHPLANES|FF_ALLSIDES|FF_CUTEXTRA|FF_EXTRA|FF_CUTSPRITES);
 				break;
 			//l274 Continuous Floor And Ceiling Mover
 			case 274:
@@ -4459,7 +4451,8 @@ void P_SpawnSpecials(void)
 						P_AproxDistance(lines[i].dx, lines[i].dy) >> FRACBITS);
 				break;
 
-			case 320: // Flat alignment
+			// Cool idea sam but this isn't working
+			/*case 320: // Flat alignment
 				if (lines[i].flags & ML_EFFECT4) // Align angle
 				{
 					if (!(lines[i].flags & ML_EFFECT5)) // Align floor unless ALLTRIGGER flag is set
@@ -4495,7 +4488,7 @@ void P_SpawnSpecials(void)
 					}
 				}
 				break;
-
+			*/
 		}
 	}
 

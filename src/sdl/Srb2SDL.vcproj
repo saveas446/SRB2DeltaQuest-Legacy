@@ -172,7 +172,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MD"
-				AdditionalDependencies="SDL.lib SDL_mixer.lib giflib.lib opengl32.lib glu32.lib wsock32.lib"
+				AdditionalDependencies="SDL.lib SDL_mixer.lib opengl32.lib glu32.lib wsock32.lib"
 				OutputFile="..\..\dev\srb2sdl.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"

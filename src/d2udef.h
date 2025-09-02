@@ -112,14 +112,14 @@
 	
 	\note Don't forget to update in Doxyfile!
 	*/	
-    #define MINORVER 1
+    #define MINORVER 2
 
 	/**
 	\brief 
 	Controls "tiny" version number (0.0.x)
 	Increment this every day
 	*/
-    #define TINYVER 27
+    #define TINYVER 0
 
 	/**
 	\brief Controls whether the title screen uses "TITLESKY" or "RSKY1" as its BG
