@@ -11,7 +11,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "r_opengl", "..\hardware\r_o
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\projects\visualc6\zlib.vcxproj", "{8F23577C-FF01-4A47-920A-6C2219EC01FA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Srb2SDL", "..\sdl\Srb2SDL.vcxproj", "{DA9D69A4-FA5B-49F7-A36D-B1DD707250C6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Srb2SDL2", "..\sdl2\Srb2SDL2.vcxproj", "{DA9D69A4-FA5B-49F7-A36D-B1DD707250C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
