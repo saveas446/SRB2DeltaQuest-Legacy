@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "r_opengl", "..\hardware\r_o
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "..\..\tools\zlib\projects\visualc6\zlib.vcproj", "{8F23577C-FF01-4A47-920A-6C2219EC01FA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Srb2SDL", "..\sdl\Srb2SDL.vcproj", "{DA9D69A4-FA5B-49F7-A36D-B1DD707250C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -41,6 +43,10 @@ Global
 		{8F23577C-FF01-4A47-920A-6C2219EC01FA}.Debug|Win32.Build.0 = Debug|Win32
 		{8F23577C-FF01-4A47-920A-6C2219EC01FA}.Release|Win32.ActiveCfg = Release|Win32
 		{8F23577C-FF01-4A47-920A-6C2219EC01FA}.Release|Win32.Build.0 = Release|Win32
+		{DA9D69A4-FA5B-49F7-A36D-B1DD707250C6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DA9D69A4-FA5B-49F7-A36D-B1DD707250C6}.Debug|Win32.Build.0 = Debug|Win32
+		{DA9D69A4-FA5B-49F7-A36D-B1DD707250C6}.Release|Win32.ActiveCfg = Release|Win32
+		{DA9D69A4-FA5B-49F7-A36D-B1DD707250C6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -70,12 +70,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDL_mixer.lib giflib.lib opengl32.lib glu32.lib wsock32.lib"
+				AdditionalDependencies="SDL.lib SDL_mixer.lib libpng.lib opengl32.lib glu32.lib wsock32.lib"
 				OutputFile="..\..\dev\srb2sdldebug.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\..\lib;.\..\tools\giflib"
-				IgnoreDefaultLibraryNames=""
+				IgnoreDefaultLibraryNames="LIBC.lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="D:\Games\SRB2\demo_2\dev\srb2sdldebug.pdb"
 				SubSystem="1"
