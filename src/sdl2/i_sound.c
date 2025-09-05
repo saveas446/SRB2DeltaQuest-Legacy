@@ -17,8 +17,8 @@ Mix_Music* music;
 
 #ifdef HAVE_SDL_MIXER
 CV_PossibleValue_t midibackend_cons_t[] = { {0,"Native"},{1,"FluidSynth"},{0,NULL} };
-consvar_t cv_midibackend = {"midibackend", "Native", "Controls whether SDL2 plays audio using native playback or FluidSynth.", CAT_SOUND, CV_SAVE, midibackend_cons_t, NULL, 0, NULL, NULL};
-consvar_t cv_soundfontpath = {"soundfontpath", "NOT CONFIGURED! Replace this with a path to a .sf2 file.", "Configures FluidSynth's soundfont path.", CAT_SOUND, CV_SAVE, NULL, NULL, 0, NULL, NULL};
+consvar_t cv_midibackend = {"midibackend", "Native", CV_SAVE, midibackend_cons_t, NULL, 0, NULL, NULL};
+consvar_t cv_soundfontpath = {"soundfontpath", "NOT CONFIGURED! Replace this with a path to a .sf2 file.", CV_SAVE, NULL, NULL, 0, NULL, NULL};
 #endif
 
 byte sound_started = 0;
@@ -246,7 +246,7 @@ void I_SetSfxVolume(int volume){}
 //
 byte music_started = 0;
 
-void I_InitMusic(void){
+void I_InitMIDIMusic(void){
 #ifdef HAVE_SDL_MIXER
 	if (!nomusic) {
 		SDL_setenv("SDL_MIXER_DEBUG_MIDI", "1", 1);
@@ -283,7 +283,7 @@ void I_ResumeSong(int handle)
 	handle = 0;
 }
 
-void I_SetMusicVolume(int volume)
+void I_SetMIDIMusicVolume(int volume)
 {
 #ifdef HAVE_SDL_MIXER
 	Mix_VolumeMusic(volume << 2);
@@ -304,15 +304,19 @@ int I_RegisterSong(void *data, int len)
 #endif
 }
 
-void I_PlaySong(int handle, int looping)
+boolean I_PlaySong(int handle, int looping)
 {
 #ifdef HAVE_SDL_MIXER
 	if (!nomusic) {
 		Mix_PlayMusic(music, -1);
 	}
+
+	return true;
 #else
 	handle = 0;
 	looping = 0;
+
+	return false;
 #endif
 }
 
@@ -324,4 +328,26 @@ void I_StopSong(int handle)
 void I_UnRegisterSong(int handle)
 {
 	handle = 0;
+}
+
+// DIGITAL MUSIC
+
+byte digmusic_started = 0;
+
+void I_InitDigMusic(void) {}
+
+void I_ShutdownDigMusic(void) {}
+
+boolean I_StartDigSong(const char* musicname, int looping)
+{
+	musicname = NULL;
+	looping = 0;
+	return false;
+}
+
+void I_StopDigSong(void) {}
+
+void I_SetDigMusicVolume(int volume)
+{
+	volume = 0;
 }

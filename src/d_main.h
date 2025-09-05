@@ -38,7 +38,8 @@ typedef enum {
     WND_DUMMY,
     WND_DOS,
     WND_WIN32,
-    WND_SDL
+    WND_SDL,
+    WND_SDL2
 } window_system;
 
 extern window_system wnd_system;

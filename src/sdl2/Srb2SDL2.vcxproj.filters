@@ -1,12 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="SDLapp">
-      <UniqueIdentifier>{cbfad79f-714f-4a0f-b9df-47df132db401}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SDLapp\filter">
-      <UniqueIdentifier>{65c2083d-d79f-4676-b43f-77f19d849f89}</UniqueIdentifier>
-    </Filter>
     <Filter Include="A_Asm">
       <UniqueIdentifier>{8d9101ff-4e16-4eff-bec3-cc0878aa8756}</UniqueIdentifier>
     </Filter>
@@ -46,62 +40,11 @@
     <Filter Include="Docs">
       <UniqueIdentifier>{6ab671ce-099a-4bc8-80f7-8b71a883a8cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SDL2app">
+      <UniqueIdentifier>{cbfad79f-714f-4a0f-b9df-47df132db401}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dosstr.c">
-      <Filter>SDLapp</Filter>
-    </ClCompile>
-    <ClCompile Include="endtxt.c">
-      <Filter>SDLapp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\filesrch.c">
-      <Filter>SDLapp</Filter>
-    </ClCompile>
-    <ClCompile Include="hwsym_sdl.c">
-      <Filter>SDLapp</Filter>
-    </ClCompile>
-    <ClCompile Include="i_cdmus.c">
-      <Filter>SDLapp</Filter>
-    </ClCompile>
-    <ClCompile Include="i_main.c">
-      <Filter>SDLapp</Filter>
-    </ClCompile>
-    <ClCompile Include="i_net.c">
-      <Filter>SDLapp</Filter>
-    </ClCompile>
-    <ClCompile Include="i_sound.c">
-      <Filter>SDLapp</Filter>
-    </ClCompile>
-    <ClCompile Include="i_system.c">
-      <Filter>SDLapp</Filter>
-    </ClCompile>
-    <ClCompile Include="i_video.c">
-      <Filter>SDLapp</Filter>
-    </ClCompile>
-    <ClCompile Include="IMG_xpm.c">
-      <Filter>SDLapp</Filter>
-    </ClCompile>
-    <ClCompile Include="ogl_sdl.c">
-      <Filter>SDLapp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\hardware\r_opengl\r_opengl.c">
-      <Filter>SDLapp</Filter>
-    </ClCompile>
-    <ClCompile Include="SDL_main\SDL_win32_main.c">
-      <Filter>SDLapp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\win32\win_dbg.c">
-      <Filter>SDLapp</Filter>
-    </ClCompile>
-    <ClCompile Include="filter\filters.c">
-      <Filter>SDLapp\filter</Filter>
-    </ClCompile>
-    <ClCompile Include="filter\hq2x.c">
-      <Filter>SDLapp\filter</Filter>
-    </ClCompile>
-    <ClCompile Include="filter\lq2x.c">
-      <Filter>SDLapp\filter</Filter>
-    </ClCompile>
     <ClCompile Include="..\comptime.c">
       <Filter>D_Doom</Filter>
     </ClCompile>
@@ -321,44 +264,32 @@
     <ClCompile Include="..\w_wad.c">
       <Filter>W_Wad</Filter>
     </ClCompile>
+    <ClCompile Include="dosstr.c">
+      <Filter>SDL2app</Filter>
+    </ClCompile>
+    <ClCompile Include="i_cdmus.c">
+      <Filter>SDL2app</Filter>
+    </ClCompile>
+    <ClCompile Include="i_main.c">
+      <Filter>SDL2app</Filter>
+    </ClCompile>
+    <ClCompile Include="i_net.c">
+      <Filter>SDL2app</Filter>
+    </ClCompile>
+    <ClCompile Include="i_sound.c">
+      <Filter>SDL2app</Filter>
+    </ClCompile>
+    <ClCompile Include="i_system.c">
+      <Filter>SDL2app</Filter>
+    </ClCompile>
+    <ClCompile Include="i_video.c">
+      <Filter>SDL2app</Filter>
+    </ClCompile>
+    <ClCompile Include="Srb2win.c">
+      <Filter>SDL2app</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="endtxt.h">
-      <Filter>SDLapp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\filesrch.h">
-      <Filter>SDLapp</Filter>
-    </ClInclude>
-    <ClInclude Include="hwsym_sdl.h">
-      <Filter>SDLapp</Filter>
-    </ClInclude>
-    <ClInclude Include="ogl_sdl.h">
-      <Filter>SDLapp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\hardware\r_opengl\r_opengl.h">
-      <Filter>SDLapp</Filter>
-    </ClInclude>
-    <ClInclude Include="sdlmain.h">
-      <Filter>SDLapp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\win32\win_dbg.h">
-      <Filter>SDLapp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\win32\win_main.h">
-      <Filter>SDLapp</Filter>
-    </ClInclude>
-    <ClInclude Include="filter\filters.h">
-      <Filter>SDLapp\filter</Filter>
-    </ClInclude>
-    <ClInclude Include="filter\hq2x.h">
-      <Filter>SDLapp\filter</Filter>
-    </ClInclude>
-    <ClInclude Include="filter\interp.h">
-      <Filter>SDLapp\filter</Filter>
-    </ClInclude>
-    <ClInclude Include="filter\lq2x.h">
-      <Filter>SDLapp\filter</Filter>
-    </ClInclude>
     <ClInclude Include="..\p5prof.h">
       <Filter>A_Asm</Filter>
     </ClInclude>
@@ -629,19 +560,17 @@
     <ClInclude Include="..\w_wad.h">
       <Filter>W_Wad</Filter>
     </ClInclude>
+    <ClInclude Include="i_main.h">
+      <Filter>SDL2app</Filter>
+    </ClInclude>
+    <ClInclude Include="i_video.h">
+      <Filter>SDL2app</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SDL_icon.xpm">
-      <Filter>SDLapp</Filter>
-    </None>
     <None Include="..\..\doc\copying">
       <Filter>Docs</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="..\win32\Srb2win.rc">
-      <Filter>SDLapp</Filter>
-    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\doc\faq.txt">

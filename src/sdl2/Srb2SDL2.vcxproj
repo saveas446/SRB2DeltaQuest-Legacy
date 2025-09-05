@@ -60,7 +60,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\..\tools\libpng-src;..\..\tools\zlib;..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;USE_WGL_SWAP;DIRECTFULLSCREEN;SDL;HWRENDER;HW3SOUND;HAVE_FILTER;HAVE_MIXER;USEASM;HAVE_PNG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;USE_WGL_SWAP;DIRECTFULLSCREEN;SDL;HWRENDER;HW3SOUND;HAVE_FILTER;HAVE_SDL;HAVE_SDL_MIXER;USEASM;HAVE_PNG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -109,7 +109,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <AdditionalIncludeDirectories>..\..\tools\libpng-src;..\..\tools\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;SDLMAIN;NO_STDIO_REDIRECT;USE_WGL_SWAP;DIRECTFULLSCREEN;SDL;HWRENDER;HW3SOUND;HAVE_FILTER;HAVE_MIXER;USEASM;HAVE_PNG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;SDLMAIN;SDLIO;NO_STDIO_REDIRECT;USE_WGL_SWAP;DIRECTFULLSCREEN;SDL;HWRENDER;HW3SOUND;HAVE_FILTER;HAVE_SDL;HAVE_SDL_MIXER;USEASM;HAVE_PNG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\..\..\objs\VC\Release\SDL/Srb2SDL.pch</PrecompiledHeaderOutputFile>
@@ -126,13 +126,14 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>SDL.lib;SDL_mixer.lib;opengl32.lib;glu32.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2_mixer.lib;opengl32.lib;glu32.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>c:\srb2demo2\srb2sdl.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>c:\srb2demo2\srb2sdl.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -151,7 +152,6 @@
     <ClCompile Include="..\d_net.c" />
     <ClCompile Include="..\d_netcmd.c" />
     <ClCompile Include="..\d_netfil.c" />
-    <ClCompile Include="..\filesrch.c" />
     <ClCompile Include="..\f_finale.c" />
     <ClCompile Include="..\f_wipe.c" />
     <ClCompile Include="..\g_game.c" />
@@ -164,7 +164,6 @@
     <ClCompile Include="..\hardware\hw_main.c" />
     <ClCompile Include="..\hardware\hw_md2.c" />
     <ClCompile Include="..\hardware\hw_trick.c" />
-    <ClCompile Include="..\hardware\r_opengl\r_opengl.c" />
     <ClCompile Include="..\hu_stuff.c" />
     <ClCompile Include="..\info.c" />
     <ClCompile Include="..\i_tcp.c" />
@@ -198,10 +197,10 @@
     <ClCompile Include="..\r_data.c" />
     <ClCompile Include="..\r_draw.c" />
     <ClCompile Include="..\r_draw16.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\r_draw8.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\r_main.c" />
     <ClCompile Include="..\r_plane.c" />
@@ -216,32 +215,17 @@
     <ClCompile Include="..\s_sound.c" />
     <ClCompile Include="..\tables.c" />
     <ClCompile Include="..\v_video.c" />
-    <ClCompile Include="..\win32\win_dbg.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\w_wad.c" />
     <ClCompile Include="..\y_inter.c" />
     <ClCompile Include="..\z_zone.c" />
     <ClCompile Include="dosstr.c" />
-    <ClCompile Include="endtxt.c" />
-    <ClCompile Include="filter\filters.c" />
-    <ClCompile Include="filter\hq2x.c" />
-    <ClCompile Include="filter\lq2x.c" />
-    <ClCompile Include="hwsym_sdl.c" />
-    <ClCompile Include="IMG_xpm.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="i_cdmus.c" />
     <ClCompile Include="i_main.c" />
     <ClCompile Include="i_net.c" />
     <ClCompile Include="i_sound.c" />
     <ClCompile Include="i_system.c" />
     <ClCompile Include="i_video.c" />
-    <ClCompile Include="ogl_sdl.c" />
-    <ClCompile Include="SDL_main\SDL_win32_main.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="Srb2win.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\am_map.h" />
@@ -266,7 +250,6 @@
     <ClInclude Include="..\d_player.h" />
     <ClInclude Include="..\d_think.h" />
     <ClInclude Include="..\d_ticcmd.h" />
-    <ClInclude Include="..\filesrch.h" />
     <ClInclude Include="..\f_finale.h" />
     <ClInclude Include="..\g_game.h" />
     <ClInclude Include="..\g_input.h" />
@@ -283,7 +266,6 @@
     <ClInclude Include="..\hardware\hw_light.h" />
     <ClInclude Include="..\hardware\hw_main.h" />
     <ClInclude Include="..\hardware\hw_md2.h" />
-    <ClInclude Include="..\hardware\r_opengl\r_opengl.h" />
     <ClInclude Include="..\hu_stuff.h" />
     <ClInclude Include="..\info.h" />
     <ClInclude Include="..\i_joy.h" />
@@ -333,19 +315,11 @@
     <ClInclude Include="..\s_sound.h" />
     <ClInclude Include="..\tables.h" />
     <ClInclude Include="..\v_video.h" />
-    <ClInclude Include="..\win32\win_dbg.h" />
-    <ClInclude Include="..\win32\win_main.h" />
     <ClInclude Include="..\w_wad.h" />
     <ClInclude Include="..\y_inter.h" />
     <ClInclude Include="..\z_zone.h" />
-    <ClInclude Include="endtxt.h" />
-    <ClInclude Include="filter\filters.h" />
-    <ClInclude Include="filter\hq2x.h" />
-    <ClInclude Include="filter\interp.h" />
-    <ClInclude Include="filter\lq2x.h" />
-    <ClInclude Include="hwsym_sdl.h" />
-    <ClInclude Include="ogl_sdl.h" />
-    <ClInclude Include="sdlmain.h" />
+    <ClInclude Include="i_main.h" />
+    <ClInclude Include="i_video.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\doc\copying" />
@@ -379,13 +353,6 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
     </CustomBuild>
-    <None Include="SDL_icon.xpm" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="..\win32\Srb2win.rc">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">\Games\SRB2\demo_2\src\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">\Games\SRB2\demo_2\src\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\doc\faq.txt" />

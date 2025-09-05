@@ -2685,6 +2685,8 @@ static void Command_Version_f(void)
 		CONS_Printf("Windowing system: Win32/Wine\n");
 	else if (wnd_system == WND_SDL)
 		CONS_Printf("Windowing system: SDL1\n");
+	else if (wnd_system == WND_SDL2)
+		CONS_Printf("Windowing system: SDL2\n");
 
 	CONS_Printf("\n\n===GAME SETTINGS===\n");
 	CONS_Printf(BUILDTYPE_STR);

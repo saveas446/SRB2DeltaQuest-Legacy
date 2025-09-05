@@ -8,8 +8,8 @@
 
 byte cdaudio_started = 0;
 
-consvar_t cd_volume = {"cd_volume","31", NULL, CAT_SOUND, CV_SAVE,soundvolume_cons_t, NULL, 0, NULL, NULL};
-consvar_t cdUpdate  = {"cd_update","1", NULL, CAT_SOUND, CV_SAVE, NULL, NULL, 0, NULL, NULL};
+consvar_t cd_volume = {"cd_volume","31", CV_SAVE,soundvolume_cons_t, NULL, 0, NULL, NULL};
+consvar_t cdUpdate  = {"cd_update","1", CV_SAVE, NULL, NULL, 0, NULL, NULL};
 
 
 void I_InitCD(void){}

@@ -14,7 +14,7 @@ byte keyboard_started = 0;
 
 JoyType_t   Joystick;
 
-void I_GetFreeMem(void){}
+ULONG I_GetFreeMem(ULONG* total){}
 
 #ifdef _WIN32
 static long    hacktics = 0;       //faB: used locally for keyboard repeat keys

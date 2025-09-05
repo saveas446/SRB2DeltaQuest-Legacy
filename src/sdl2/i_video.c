@@ -24,8 +24,6 @@ boolean VID_InitConsole(void);
 void VID_Command_Vidmode(void);
 void VID_Command_Listmodes(void);
 
-consvar_t cv_fullscreen = {"fullscreen", "Off", "Toggles whether the game runs in windowed mode or fullscreen.", CAT_VIDEO, CV_SAVE | CV_CALL, CV_OnOff, I_ToggleFullscreen};
-
 SDL_Window* SDL_window = NULL;
 
 SDL_Renderer* SDL_renderer;
@@ -357,8 +355,7 @@ void I_ReadScreen(byte *scr)
 }
 
 // For some reason, I get a message about this not existing when building on Linux
-#if _WIN32
-void VID_BlitLinearScreen(byte* srcptr, byte* destptr, int width, int height, int srcrowbytes, int destrowbytes){
+/*void VID_BlitLinearScreen(byte* srcptr, byte* destptr, int width, int height, int srcrowbytes, int destrowbytes) {
 	if (srcrowbytes == destrowbytes)
 	{
 		SDL_memcpy(destptr, srcptr, srcrowbytes * height);
@@ -372,8 +369,7 @@ void VID_BlitLinearScreen(byte* srcptr, byte* destptr, int width, int height, in
 			srcptr += srcrowbytes;
 		}
 	}
-}
-#endif
+}*/
 
 void I_BeginRead(void){}
 
@@ -387,8 +383,8 @@ boolean VID_InitConsole(void) {
 	CV_RegisterVar(&cv_fullscreen);
 
 	// Register commands
-	COM_AddCommand("videomode", "Changes the video mode to the specified one.", CAT_VIDEO, VID_Command_Vidmode);
-	COM_AddCommand("listmodes", "Lists all available video modes.", CAT_VIDEO, VID_Command_Listmodes);
+	COM_AddCommand("videomode", "Changes the video mode to the specified one.");
+	COM_AddCommand("listmodes", "Lists all available video modes.");
 
 	return 0;
 }
@@ -419,3 +415,5 @@ void VID_Command_Listmodes(void) {
 		CONS_Printf("Video mode %d: %s.\n", i, VID_GetModeName(i));
 	}
 }
+
+void VID_PrepareModeList(void) {}

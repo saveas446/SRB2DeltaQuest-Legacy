@@ -19,12 +19,12 @@ int SDL_main(int argc, char** argv)
 
 	// init logstream
 	logstream = SDL_RWFromFile("sdllog.txt", "a");
-	if (!logstream)
-		I_Error("Unable to get write access for log file. \n Are you running multiple instances of NewMillenium?");
+	if (logstream == NULL)
+		I_Error("Unable to get write access for log file. \n Are you running multiple instances of N?");
 
 	// startup SRB2
 	CONS_Printf ("Setting up SRB2...\n");
-	D_SRB2Main();
+	D_SRB2Main(WND_SDL2);
 	CONS_Printf ("Entering main game loop...\n");
 	// never return
 	D_SRB2Loop();
