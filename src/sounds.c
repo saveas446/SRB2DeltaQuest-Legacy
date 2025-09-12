@@ -107,9 +107,9 @@ musicinfo_t S_music[NUMMUSIC] =
     { "fsz2\0\0\0", 0 },
     { "fszbos"    , 0 },
     // End of level tracks
-    { "dm2ttl"  , 0 }, // Moved it up Tails 01-06-2001
-    { "read_m"  , 0 },
-    { "dm2int"  , 0 },
+    { "ttlscr"  , 0 }, // Moved it up Tails 01-06-2001
+    { "inter"  , 0 },
+    { "lvclr"  , 0 },
     { "invinc"  , 0 }, // invincibility Tails
     { "drown\0" , 0 }, // drowning Tails 03-06-2000
     { "gmover"  , 0 }, // Tails 03-14-2000

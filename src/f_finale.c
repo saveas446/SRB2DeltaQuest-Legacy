@@ -673,7 +673,7 @@ void F_StartTitleScreen(void)
 
 	// IWAD dependent stuff.
 
-	S_ChangeMusic(mus_dm2ttl, looptitle);
+	S_ChangeMusic(mus_ttlscr, looptitle);
 
 	finalecount = 0;
 	finalestage = 0;
@@ -2514,7 +2514,7 @@ void F_IntroDrawer(void)
 	{
 		if (finaletext == E0TEXT)
 		{
-			S_ChangeMusic(mus_read_m, false);
+			S_ChangeMusic(mus_inter, false);
 			finaletext = E1TEXT;
 		}
 		else if (finaletext == E1TEXT)

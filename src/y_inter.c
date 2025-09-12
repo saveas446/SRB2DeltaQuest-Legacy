@@ -426,7 +426,7 @@ void Y_Ticker(void)
 	if (inttype == int_coop) // coop or single player, normal level
 	{
 		if (!intertic) // first time only
-			S_ChangeMusic(mus_dm2int, false); // don't loop it
+			S_ChangeMusic(mus_lvclr, false); // don't loop it
 
 		if (intertic < TICRATE) // one second pause before tally begins
 			return;
@@ -501,7 +501,7 @@ void Y_Ticker(void)
 	else if (inttype == int_spec) // coop or single player, special stage
 	{
 		if (!intertic) // first time only
-			S_ChangeMusic(mus_dm2int, false); // don't loop it
+			S_ChangeMusic(mus_lvclr, false); // don't loop it
 
 		if (intertic < TICRATE) // one second pause before tally begins
 			return;
