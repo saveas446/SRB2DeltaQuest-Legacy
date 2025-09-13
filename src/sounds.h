@@ -355,6 +355,13 @@ typedef enum
     sfx_crumbl,
     sfx_now,
     sfx_strpst,
+    sfx_wdjump, // Wind shield jump - Sam 13/09/25 10:41 AM
+    sfx_fizzle,
+    sfx_turpop,
+    sfx_trfire,
+    sfx_turhit,
+	sfx_trpowr,// Turret Sounds - Sam 13/11/25 10:56 AM
+	sfx_alarm,// Alarm sound - Sam 13/09/25 12:09 PM
 
 	// free slots for S_AddSoundFx() at run-time --------------------
 	sfx_freeslot0,

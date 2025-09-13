@@ -3346,7 +3346,7 @@ static void P_MovePlayer(player_t *player)
 #else
 				P_SetPlayerMobjState(player->mo, S_PLAY_ATK1);
 #endif
-				//S_StartSound(player->mo, sfx_wdjump);  26-05-2025
+				S_StartSound(player->mo, sfx_wdjump);// Whirlwind Shield - Sam 13/09/25 10:44 AM
 			}
 		}
 	}

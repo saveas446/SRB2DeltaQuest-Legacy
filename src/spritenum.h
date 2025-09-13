@@ -145,6 +145,7 @@ typedef enum
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	SPR_BPLD, // Boss Explosions
 	#endif
+	SPR_ALRM, // THZ2 Alarm
 
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	SPR_RDTV, // Fire shield
@@ -1509,6 +1510,9 @@ typedef enum
 	S_BPLD7,
 	#endif
 
+    // THZ Alarm
+	S_ALARM1,
+
 	// Emblem
 	S_EMBLEM1,
 
@@ -2011,6 +2015,7 @@ typedef enum
 	MT_EGGMANBOX,
 	MT_EGGMANICO,
 	#endif
+	MT_ALARM,
 	MT_SPINFIRE,
 	MT_BOSSTANK1,
 	MT_BOSSTANK2,
