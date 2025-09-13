@@ -187,7 +187,6 @@
     <ClInclude Include="..\hardware\hw_glob.h" />
     <ClInclude Include="..\hardware\hw_light.h" />
     <ClInclude Include="..\hardware\hw_main.h" />
-    <ClInclude Include="..\hardware\hw_md2.h" />
     <ClInclude Include="..\Hu_stuff.h" />
     <ClInclude Include="..\Info.h" />
     <ClInclude Include="..\i_joy.h" />
@@ -274,7 +273,6 @@
     <ClCompile Include="..\hardware\hw_draw.c" />
     <ClCompile Include="..\hardware\hw_light.c" />
     <ClCompile Include="..\hardware\hw_main.c" />
-    <ClCompile Include="..\hardware\hw_md2.c" />
     <ClCompile Include="..\hardware\hw_trick.c" />
     <ClCompile Include="..\Hu_stuff.c" />
     <ClCompile Include="..\Info.c" />

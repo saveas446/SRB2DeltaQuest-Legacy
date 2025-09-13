@@ -202,7 +202,11 @@ typedef enum
     mus_slmvly,
     mus_fsz1,
     mus_fsz2,
-    mus_fszbos, // FSZ2 has 2 songs, so make the credits level use a different song later
+    mus_fszbos,// FSZ2 has 2 songs, so make the credits level use a different song later
+    mus_bmz,// BMZ music - Sam 13/11/25 10:04 AM
+	mus_bmzalt,// Alternate BMZ music - Sam 13/11/25 10:05 AM
+	mus_bmz2,// BMZ2 music - Sam 13/11/25 10:05 AM
+	mus_bmz2al,// Alternate BMZ2 music - Sam 13/11/25 10:06 AM
     mus_ttlscr, // Moved it up Tails 01-06-2001
     mus_inter, // Intermission - Sam 12/09/25 1:45 PM
 	mus_lvclr, // Level Clear - Sam 12/09/25 1:46 PM

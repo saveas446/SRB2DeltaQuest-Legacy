@@ -723,12 +723,4 @@ boolean HWR_Screenshot(const char *lbmname)
 		*(dest++) = (byte)(((rgb565 >> 11) & 31) <<3);
 	}
 	free(bufr);
-
-#ifdef USE_PNG
-	ret = M_SavePNG(lbmname, bufw, vid.width, vid.height, NULL);
-#else
-	ret = saveTGA(lbmname, bufw, vid.width, vid.height);
-#endif
-	free(bufw);
-	return ret;
 }

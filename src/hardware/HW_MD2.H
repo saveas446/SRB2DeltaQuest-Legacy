@@ -115,8 +115,6 @@ typedef struct
 	void        *grpatch;
 } md2_t;
 
-extern md2_t md2_models[NUMSPRITES];
-
 void HWR_InitMD2(void);
 void HWR_DrawMD2(gr_vissprite_t *spr);
 

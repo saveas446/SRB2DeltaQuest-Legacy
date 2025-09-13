@@ -106,6 +106,10 @@ musicinfo_t S_music[NUMMUSIC] =
     { "fsz1\0\0\0", 0 },
     { "fsz2\0\0\0", 0 },
     { "fszbos"    , 0 },
+    { "bmz\0\0\0\0", 0 },
+    { "bmzalt"   , 0 },
+    { "bmz2\0\0\0", 0 },
+    { "bmz2al", 0 },
     // End of level tracks
     { "ttlscr"  , 0 }, // Moved it up Tails 01-06-2001
     { "inter"  , 0 },

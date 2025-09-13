@@ -52,15 +52,6 @@ void FIL_DefaultExtension (char *path, const char *extension);
 void FIL_ForceExtension(char *path, const char *extension);
 boolean FIL_CheckExtension(const char *in);
 
-#ifdef HAVE_PNG
-boolean M_SavePNG(const char *filename, void *data, int width, int height, byte *palette);
-#endif
-#ifdef HAVE_MNG
-boolean M_OpenMNG(void);
-void M_SaveMNG(void);
-boolean M_CloseMNG(void);
-#endif
-
 void M_ScreenShot(void);
 
 extern char configfile[MAX_WADPATH];

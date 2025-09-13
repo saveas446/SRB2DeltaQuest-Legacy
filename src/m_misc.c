@@ -34,13 +34,6 @@
 #endif
 #endif
 
-#ifdef HAVE_PNG
- #include <png.h>
- #ifdef PNG_WRITE_SUPPORTED
-  #define USE_PNG // Only actually use PNG if write is supported.
-  // See hardware/hw_draw.c for a similar check to this one.
- #endif
-#endif
 
 #ifdef HAVE_MNG
 #define MNG_NO_INCLUDE_JNG	
@@ -864,164 +857,6 @@ M_CloseGIF(void) {
 // ==========================================================================
 //                            SCREEN SHOTS
 // ==========================================================================
-#ifdef USE_PNG
-static void PNG_error(png_structp PNG, png_const_charp text)
-{
-	CONS_Printf("libpng error at %p: %s", PNG,text);
-	//I_Error("libpng error at %p: %s", PNG,text);
-}
-
-static void PNG_warn(png_structp PNG, png_const_charp text)
-{
-	CONS_Printf("libpng warning at %p: %s", PNG, text);
-}
-
-/** Writes a PNG file to disk.
-  *
-  * \param filename Filename to write to.
-  * \param data     The image data.
-  * \param width    Width of the picture.
-  * \param height   Height of the picture.
-  * \param palette  Palette of image data
-  *  \note if palette is NULL, BGR888 format
-  */
-boolean M_SavePNG(const char *filename, void *data, int width, int height, byte *palette)
-{
-	png_structp png_ptr;
-	png_infop png_info_ptr;
-	const int png_interlace = PNG_INTERLACE_NONE; //PNG_INTERLACE_ADAM7
-#ifdef PNG_SETJMP_SUPPORTED
-#ifdef USE_FAR_KEYWORD
-	jmp_buf jmpbuf;
-#endif
-#endif
-	FILE *png_FILE;
-
-	png_FILE = fopen(filename,"wb");
-	if (!png_FILE)
-	{
-		CONS_Printf("M_SavePNG: Error on opening %s for write\n", filename);
-		return false;
-	}
-
-	png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL,
-	 PNG_error, PNG_warn);
-	if (!png_ptr)
-	{
-		CONS_Printf("M_SavePNG: Error on initialize libpng\n");
-		fclose(png_FILE);
-		remove(filename);
-		return false;
-	}
-
-	png_info_ptr = png_create_info_struct(png_ptr);
-	if (!png_info_ptr)
-	{
-		CONS_Printf("M_SavePNG: Error on allocate for libpng\n");
-		png_destroy_write_struct(&png_ptr,  NULL);
-		fclose(png_FILE);
-		remove(filename);
-		return false;
-	}
-
-#ifdef USE_FAR_KEYWORD
-	if (setjmp(jmpbuf))
-#else
-	if (setjmp(png_jmpbuf(png_ptr)))
-#endif
-	{
-		//CONS_Printf("libpng write error on %s\n", filename);
-		png_destroy_write_struct(&png_ptr, &png_info_ptr);
-		fclose(png_FILE);
-		remove(filename);
-		return false;
-	}
-#ifdef USE_FAR_KEYWORD
-	png_memcpy(png_jmpbuf(png_ptr),jmpbuf, sizeof (jmp_buf));
-#endif
-	png_init_io(png_ptr, png_FILE);
-
-#ifdef PNG_SET_USER_LIMITS_SUPPORTED
-	png_set_user_limits(png_ptr, MAXVIDWIDTH, MAXVIDHEIGHT);
-#endif
-
-	png_set_filter(png_ptr, 0, PNG_ALL_FILTERS);
-
-	png_set_compression_level(png_ptr, Z_BEST_COMPRESSION);
-	png_set_compression_window_bits(png_ptr, 15);
-	png_set_compression_mem_level(png_ptr, 9);
-#ifdef Z_RLE
-	png_set_compression_strategy(png_ptr, Z_RLE);
-#endif
-
-	if (palette)
-	{
-		png_set_IHDR(png_ptr, png_info_ptr, width, height, 8, PNG_COLOR_TYPE_PALETTE,
-		 png_interlace, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
-		png_set_PLTE(png_ptr, png_info_ptr, (png_colorp)palette, 256);
-	}
-	else
-	{
-		png_set_IHDR(png_ptr, png_info_ptr, width, height, 8, PNG_COLOR_TYPE_RGB,
-		 png_interlace, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
-		png_set_bgr(png_ptr); //PNG_WRITE_BGR_SUPPORTED
-	}
-
-	{
-#ifdef PNG_TEXT_SUPPORTED
-		int i;
-#define SRB2PNGTXT 5
-		png_text png_infotext[SRB2PNGTXT];
-		char keytxt[SRB2PNGTXT][12] = {"Title", "Author", "Description", "Playername", "Interface"}; //PNG_KEYWORD_MAX_LENGTH(79) is the max
-		char titletxt[] = "Sonic Robo Blast 2"VERSIONSTRING;
-		char *authortxt = I_GetUserName();
-		char *playertxt =  cv_playername.zstring;
-		char desctxt[] = "SRB2 Screenshot";
-		char interfacetxt[] =
-#ifdef SDL
-		"SDL";
-#elif defined (_WINDOWS)
-		"DirectX";
-#elif defined (PC_DOS)
-		"Allegro";
-#else
-		"Unknown";
-#endif
-		memset(png_infotext,0x00,sizeof (png_infotext));
-
-		for (i = 0; i < SRB2PNGTXT; i++)
-			png_infotext[i].key  = keytxt[i];
-
-		png_infotext[0].text = titletxt;
-		png_infotext[1].text = authortxt;
-		png_infotext[2].text = desctxt;
-		png_infotext[3].text = playertxt;
-		png_infotext[4].text = interfacetxt;
-
-		png_set_text(png_ptr, png_info_ptr, png_infotext, SRB2PNGTXT);
-#undef SRB2PNGTXT
-#endif
-		png_write_info(png_ptr, png_info_ptr);
-	}
-
-	{
-		png_uint_32 pitch = png_get_rowbytes(png_ptr, png_info_ptr);
-		png_bytep png_buf = (png_bytep)data;
-		png_bytep *row_pointers = png_malloc(png_ptr, height* sizeof (png_bytep));
-		int y;
-		for (y = 0; y < height; y++)
-			row_pointers[y] = png_buf + y*pitch;
-		png_write_image(png_ptr, row_pointers);
-		png_free(png_ptr, (png_voidp)row_pointers);
-	}
-
-	png_write_end(png_ptr, png_info_ptr);
-	png_destroy_write_struct(&png_ptr, &png_info_ptr);
-
-	fclose(png_FILE);
-	return true;
-}
-#else
 /** PCX file structure.
   */
 typedef struct
@@ -1104,7 +939,6 @@ static boolean WritePCXfile(const char *filename, const byte *data, int width, i
 	Z_Free(pcx);
 	return i;
 }
-#endif
 #endif
 
 /** Takes a screenshot.
