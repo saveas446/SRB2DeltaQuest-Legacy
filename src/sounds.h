@@ -361,7 +361,7 @@ typedef enum
     sfx_trfire,
     sfx_turhit,
 	sfx_trpowr,// Turret Sounds - Sam 13/11/25 10:56 AM
-	sfx_alarm,// Alarm sound - Sam 13/09/25 12:09 PM
+    sfx_alarm,// Alarm sound - Sam 13/09/25 12:09 PM
 
 	// free slots for S_AddSoundFx() at run-time --------------------
 	sfx_freeslot0,

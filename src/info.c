@@ -1414,8 +1414,6 @@ state_t states[NUMSTATES] =
 	{SPR_BPLD, 32774, 5, {NULL}, 0, 0, S_DISS},  // S_BPLD7
 	#endif
 
-	{ SPR_ALRM, 32768, 35, {A_Scream}, 0, 0, S_ALARM1 }, // S_ALARM1
-
 	// Emblem
 	{SPR_NWNG, 0, -1, {NULL}, 0, 0, S_NULL}, // S_EMBLEM1
 
@@ -5530,32 +5528,6 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL          // raisestate
 	},
 
-		{           // MT_ALARM
-		2006,           // doomednum
-		S_ALARM1,       // spawnstate
-		1000,           // spawnhealth
-		S_NULL,         // seestate
-		sfx_None,       // seesound
-		8,              // reactiontime
-		sfx_None,       // attacksound
-		S_NULL,         // painstate
-		0,              // painchance
-		sfx_None,       // painsound
-		S_NULL,         // meleestate
-		S_NULL,         // missilestate
-		S_NULL,         // deathstate
-		S_NULL,         // xdeathstate
-		sfx_alarm,      // deathsound
-		1,              // speed
-		8 * FRACUNIT,     // radius
-		16 * FRACUNIT,    // height
-		4,              // mass
-		0,              // damage
-		sfx_None,       // activesound
-		MF_NOBLOCKMAP | MF_NOCLIP | MF_SPAWNCEILING | MF_NOGRAVITY, // flags
-		S_NULL          // raisestate
-		},//Alarm - Sam 13/09/25 12:10 PM
-
 	{           // MT_EMBLEM
 		-1,             // doomednum
 		S_EMBLEM1,      // spawnstate
@@ -6379,6 +6351,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		0,              // activesound
 		MF_SLIDEME|MF_FLOAT|MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
+
 	}
 };
 
