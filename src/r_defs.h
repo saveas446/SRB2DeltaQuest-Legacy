@@ -247,6 +247,10 @@ typedef struct sector_s
 	fixed_t floor_xoffs, floor_yoffs;
 	fixed_t ceiling_xoffs, ceiling_yoffs;
 
+	// flat angle
+	angle_t floorpic_angle;
+	angle_t ceilingpic_angle;
+
 	int heightsec; // other sector, or -1 if no other sector
 	int altheightsec; // Use old boom model? 1 for no 0 for yes.
 

@@ -2666,6 +2666,24 @@ void P_SpawnHoopsAndRings(mapthing_t *mthing)
 			mobj->flags |= MF_AMBUSH;
 			mthing->mobj = mobj;
 		}
+	else if (mthing->type == 600) // Vertical Rings - Stack of 5 (suitable for Yellow Spring)
+	{
+		for (r = 1; r <= 5; r++)
+		{
+			if (mthing->options >> 4)
+				z = (R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS)->sector->floorheight + ((mthing->options >> 4) << FRACBITS)) + 64 * FRACUNIT * r;
+			else
+				z = R_PointInSubsector(mthing->x << FRACBITS, mthing->y << FRACBITS)->sector->floorheight + 64 * FRACUNIT * r;
+				mobj = P_SpawnMobj(x, y, z, MT_RING);
+
+			if (mobj->tics > 0)
+				mobj->tics = 1 + (P_Random() % mobj->tics);
+
+			mobj->angle = FixedAngle(mthing->angle * FRACUNIT);
+			if (mthing->options & MTF_AMBUSH)
+				mobj->flags |= MF_AMBUSH;
+		}
+	}
 		else if (mthing->type == 44) // Vertical Rings - Stack of 5 (suitable for Red Spring)
 		{
 			for (r = 1; r <= 5; r++)
