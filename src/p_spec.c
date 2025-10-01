@@ -4452,6 +4452,7 @@ void P_SpawnSpecials(void)
 				break;
 
 			// Cool idea sam but this isn't working
+			// Shut up jacob im trying
 			/*case 320: // Flat alignment
 				if (lines[i].flags & ML_EFFECT4) // Align angle
 				{
@@ -4487,8 +4488,8 @@ void P_SpawnSpecials(void)
 						}
 					}
 				}
-				break;
-			*/
+				break;*/
+			
 		}
 	}
 
