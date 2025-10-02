@@ -132,6 +132,13 @@ void I_Tactile(int on, int off, int total)
 	return;
 }
 
+void I_Tactile2(int on, int off, int total)
+{
+	on = 0;
+	off = 0;
+	total = 0;
+	return;
+}
 
 void I_JoyScale(void){}
 
@@ -289,6 +296,18 @@ void I_ShutdownSystem(void){
 	SDL_RWclose(logstream);
 	SDL_Quit();
 }
+
+// Dummy functions, I don't care
+void I_GetDiskFreeSpace(INT64* freespace)
+{
+	* freespace = 1024 * 1024 * 1024; // 1G
+}
+
+UINT64 I_FileSize(const char* filename) {
+	return 0; // this is going to break something...
+}
+
+
 
 char *I_GetUserName(void)
 {

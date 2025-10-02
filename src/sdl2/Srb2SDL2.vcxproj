@@ -79,7 +79,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>SDL.lib;SDL_mixer.lib;opengl32.lib;glu32.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>..\..\dev\srb2sdldebug.exe</OutputFile>
+      <OutputFile>..\..\dev\srb2sdl2debug.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -109,7 +109,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <AdditionalIncludeDirectories>..\..\tools\libpng-src;..\..\tools\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;SDLMAIN;SDLIO;NO_STDIO_REDIRECT;USE_WGL_SWAP;DIRECTFULLSCREEN;SDL;HWRENDER;HW3SOUND;HAVE_FILTER;HAVE_SDL;HAVE_SDL_MIXER;USEASM;HAVE_PNG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;FORCESDLMAIN;SDLIO;SRB2_SDL2;NO_STDIO_REDIRECT;USE_WGL_SWAP;DIRECTFULLSCREEN;SDL;HWRENDER;HW3SOUND;HAVE_FILTER;HAVE_SDL;HAVE_SDL_MIXER;USEASM;HAVE_PNG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\..\..\objs\VC\Release\SDL/Srb2SDL.pch</PrecompiledHeaderOutputFile>
@@ -126,8 +126,8 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>SDL2.lib;SDL2_mixer.lib;opengl32.lib;glu32.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>c:\srb2demo2\srb2sdl.exe</OutputFile>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;opengl32.lib;glu32.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\..\..\dev\srb2sdl2.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>c:\srb2demo2\srb2sdl.pdb</ProgramDatabaseFile>
@@ -152,6 +152,7 @@
     <ClCompile Include="..\d_net.c" />
     <ClCompile Include="..\d_netcmd.c" />
     <ClCompile Include="..\d_netfil.c" />
+    <ClCompile Include="..\filesrch.c" />
     <ClCompile Include="..\f_finale.c" />
     <ClCompile Include="..\f_wipe.c" />
     <ClCompile Include="..\g_game.c" />
@@ -250,6 +251,7 @@
     <ClInclude Include="..\d_player.h" />
     <ClInclude Include="..\d_think.h" />
     <ClInclude Include="..\d_ticcmd.h" />
+    <ClInclude Include="..\filesrch.h" />
     <ClInclude Include="..\f_finale.h" />
     <ClInclude Include="..\g_game.h" />
     <ClInclude Include="..\g_input.h" />

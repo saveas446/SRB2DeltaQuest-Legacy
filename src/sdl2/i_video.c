@@ -9,6 +9,8 @@
 
 #include "i_video.h"
 
+consvar_t cv_vidwait = { "vid_wait", "On", CV_SAVE, CV_OnOff, NULL, 0, NULL, NULL, 0, 0, NULL };
+
 rendermode_t rendermode = render_soft;
 
 boolean highcolor = false;

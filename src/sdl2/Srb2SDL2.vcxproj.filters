@@ -288,6 +288,9 @@
     <ClCompile Include="Srb2win.c">
       <Filter>SDL2app</Filter>
     </ClCompile>
+    <ClCompile Include="..\filesrch.c">
+      <Filter>W_Wad</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\p5prof.h">
@@ -565,6 +568,9 @@
     </ClInclude>
     <ClInclude Include="i_video.h">
       <Filter>SDL2app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\filesrch.h">
+      <Filter>W_Wad</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -111,13 +111,13 @@ typedef unsigned short USHORT;
 	#endif
 #endif //macintosh
 
-#if defined (PC_DOS) || defined (_WIN32) || defined (_WIN64) || defined (_PSP_) || defined (_arch_dreamcast)
+#if (defined (PC_DOS) || defined (_WIN32) || defined (_WIN64) || defined (_PSP_) || defined (_arch_dreamcast)) && !defined(SRB2_SDL2)
 #define HAVE_DOSSTR_FUNCS
 #endif
 
 #ifndef HAVE_DOSSTR_FUNCS
-int strupr(char *n); // from dosstr.c
-int strlwr(char *n); // from dosstr.c
+char* strupr(char *n); // from dosstr.c
+char* strlwr(char *n); // from dosstr.c
 #endif
 
 #include <stddef.h> // for size_t

@@ -246,6 +246,9 @@ void I_SetSfxVolume(int volume){}
 //
 byte music_started = 0;
 
+// pls pls pls pls
+void I_InitMusic() {}
+
 void I_InitMIDIMusic(void){
 #ifdef HAVE_SDL_MIXER
 	if (!nomusic) {

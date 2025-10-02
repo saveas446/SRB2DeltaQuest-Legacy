@@ -1922,7 +1922,7 @@ static void P_MovePlayer(player_t *player)
 
 		// Move minecart in current direction
 		P_InstaThrust(player->linkedminecart, player->linkedminecart->angle, player->minecartspeed);
-		return;
+		goto updatetimer;
 	}
 
 	// Even if not NiGHTS, pull in nearby objects when walking around as John Q. Elliot.
@@ -3161,6 +3161,8 @@ static void P_MovePlayer(player_t *player)
 	if (!player->mfspinning)
 		player->mfstartdash = 0;
 
+// Hacky timer fix... surely this can be a function or something instead?
+updatetimer:
 	// Synchronizes the "real" amount of time spent in the level.
 	if (!player->exiting)
 	{
@@ -3173,6 +3175,10 @@ static void P_MovePlayer(player_t *player)
 		}
 		else
 			player->realtime = leveltime;
+	}
+	// Don't do the rest of this stuff if we're in a minecart
+	if (player->linkedminecart) {
+		return;
 	}
 
 //////////////////

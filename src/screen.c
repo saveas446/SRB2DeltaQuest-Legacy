@@ -215,7 +215,7 @@ void SCR_Startup(void)
 
 	vid.baseratio = FRACUNIT;
 
-#ifdef RUSEASM
+#if defined(RUSEASM) && !defined(SRB2_SDL2)
 	if (R_ASM)
 		ASM_PatchRowBytes(vid.rowbytes);
 	if (R_486 || R_586 || R_MMX)
