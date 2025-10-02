@@ -12,8 +12,8 @@ The source code can be found in `/tools/launcher/` and the binary in `/dev/`.
 > When a new build of the launcher is made, you will most likely have to delete your autosave.xml file or else saving will not work.
 
 ## Editing
+Legacy Builder is currently the best option for editing Demo 2 Ultimate levels due to its ability to preview FOFs and other special linedefs.
 Ultimate Doom Builder has been historically used due to its high stability with older SRB2 versions. A configuration for it is present in the `/tools/` folder.
-Zone Builder has also been tested, however the maps it creates usually crash. If this is encountered, simply open the map with Ultimate Doom Builder and save it again. If it says "Building nodes...", the map has been rebuilt and will now work.
 ## Building
 
 ### Visual Studio 2005
