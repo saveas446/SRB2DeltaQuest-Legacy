@@ -27,7 +27,7 @@
 ## Mine Maze Zone
 **MMZ1** - 100%
 
-**MMZ2** - 40%
+**MMZ2** - 65%
 
 **MMZ3** - 100% 
 
@@ -61,7 +61,7 @@
 
 **GEZ2** - 5%
 
-**GEZ3** - 0%
+**GEZ3** - 35%
 
 ## Robotnirock Zone
 
