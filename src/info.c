@@ -110,7 +110,8 @@ char sprnames[NUMSPRITES + 1][5] =
 	"CORL","DSWE","BCRY", // DSZ Deco
 	"JJAW", // Jet Jaw
 	"POL5", // Streetlight
-	"MRTS" // Minecart stopper
+	"MRTS", // Minecart stopper
+	"STLG"  // Stalagmite decoration
 };
 
 /// \var 
@@ -1325,6 +1326,7 @@ state_t states[NUMSTATES] =
 
 
 	// Flame (has corona)
+	// that's really sad!!! hope he gets better :(
 	{SPR_FLAM, 32768, 3, {NULL}, 0, 0, S_FLAME2}, // S_FLAME1
 	{SPR_FLAM, 32769, 3, {NULL}, 0, 0, S_FLAME3}, // S_FLAME2
 	{SPR_FLAM, 32770, 3, {NULL}, 0, 0, S_FLAME4}, // S_FLAME3
@@ -1722,6 +1724,8 @@ state_t states[NUMSTATES] =
 	{SPR_JJAW, 3, 1, {A_JetJawChomp}, 0, 0, S_JETJAW_CHOMP16}, // S_JETJAW_CHOMP15
 	{SPR_JJAW, 3, 1, {A_JetJawChomp}, 0, 0, S_JETJAW_CHOMP1},  // S_JETJAW_CHOMP16
 
+	{SPR_STLG, 0, -1, {NULL}, 0, 0, S_NULL},       // S_STALAGMITETALL
+	{SPR_STLG, 1, -1, {NULL}, 0, 0, S_NULL},       // S_STALAGMITE
 };
 
 /// \var 
@@ -6352,6 +6356,56 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		MF_SLIDEME|MF_FLOAT|MF_ENEMY|MF_SPECIAL|MF_SHOOTABLE|MF_NOGRAVITY, // flags
 		S_NULL          // raisestate
 
+	},
+	{           // MT_STALAGMITETALL
+		1906,             // doomednum
+		S_STALAGMITETALL,     // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,         // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		0,              // speed
+		8*FRACUNIT,     // radius
+		32*FRACUNIT,    // height
+		100,            // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_SCENERY | MF_SOLID, // flags
+		S_NULL          // raisestate
+	},
+	{           // MT_STALAGMITE
+		1907,             // doomednum
+		S_STALAGMITE,     // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,         // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		0,              // speed
+		8*FRACUNIT,     // radius
+		32*FRACUNIT,    // height
+		100,            // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_SCENERY | MF_SOLID, // flags
+		S_NULL          // raisestate
 	}
 };
 
