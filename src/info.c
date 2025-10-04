@@ -5764,7 +5764,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		100,            // mass
 		0,              // damage
 		sfx_None,       // activesound
-		MF_SCENERY, // flags
+		MF_SCENERY | MF_SOLID, // flags
 		S_NULL          // raisestate
 	},
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
