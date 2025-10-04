@@ -2107,12 +2107,13 @@ void G_DoCompleted(void)
 
 	if (secretexit != 0) {
 		// DSZ2 speed highway exit
-		if (nextmap == NEXTMAP(9)) {
-			nextmap = NEXTMAP(31);
+		if (gamemap == NEXTMAP(9)) {
+			nextmapoverride = 31;
 		}
 
-		if (nextmap == NEXTMAP(15)) {
-			nextmap = NEXTMAP(32);
+		// RMZ2 hidden palace exit
+		if (gamemap == NEXTMAP(15)) {
+			nextmapoverride = 32;
 		}
 	}
 

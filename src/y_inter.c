@@ -242,7 +242,8 @@ void Y_IntermissionDrawer(void)
 		if(!act)	
 			I_Error("Y_IntermissionDrawer(): Act number patch drawing error!");
 
-		V_DrawScaledPatch (244, 56, 0, act); // Draw the act numeral Tails 11-21-2000
+		if (mapheaderinfo[gamemap - 1].actnum != 0)
+			V_DrawScaledPatch (244, 56, 0, act); // Draw the act numeral Tails 11-21-2000
 
 		V_DrawScaledPatch(68, 84 + 3*tallnum[0]->height/2, 0, data.coop.ptimebonus);
 		Y_DrawNum(BASEVIDWIDTH - 68, 85 + 3*tallnum[0]->height/2, data.coop.timebonus);
@@ -1310,6 +1311,7 @@ static void Y_FollowIntermission(void)
 	}
 
 	// Go back to title screen after MAP12 if this is a demo version of d2u
+	// Demo will end at MMZ3
 	#if BUILD_TYPE == DEMO
 	if (nextmap < 12)
 	{

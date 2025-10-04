@@ -111,7 +111,8 @@ char sprnames[NUMSPRITES + 1][5] =
 	"JJAW", // Jet Jaw
 	"POL5", // Streetlight
 	"MRTS", // Minecart stopper
-	"STLG"  // Stalagmite decoration
+	"STLG", // Stalagmite decoration
+	"GOR2" // Speed Highway bell
 };
 
 /// \var 
@@ -1726,6 +1727,8 @@ state_t states[NUMSTATES] =
 
 	{SPR_STLG, 0, -1, {NULL}, 0, 0, S_NULL},       // S_STALAGMITETALL
 	{SPR_STLG, 1, -1, {NULL}, 0, 0, S_NULL},       // S_STALAGMITE
+
+	{SPR_GOR2, 0, -1, {NULL}, 0, 0, S_NULL},       // S_BELL
 };
 
 /// \var 
@@ -6406,7 +6409,32 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,       // activesound
 		MF_SCENERY | MF_SOLID, // flags
 		S_NULL          // raisestate
-	}
+	},
+    {           // MT_BELL
+        50,             // doomednum
+        S_BELL,                // spawnstate
+        1000,           // spawnhealth
+        S_NULL,         // seestate
+        sfx_None,               // seesound
+        8,              // reactiontime
+        sfx_None,               // attacksound
+        S_NULL,         // painstate
+        0,              // painchance
+        sfx_None,               // painsound
+        S_NULL,         // meleestate
+        S_NULL,         // missilestate
+        S_NULL,         // deathstate
+        S_NULL,         // xdeathstate
+        sfx_None,               // deathsound
+        0,              // speed
+        16*FRACUNIT,            // radius
+        84*FRACUNIT,            // height
+        100,            // mass
+        0,              // damage
+        sfx_None,               // activesound
+        MF_SOLID|MF_SPAWNCEILING|MF_NOGRAVITY,          // flags
+        S_NULL          // raisestate
+    }
 };
 
 

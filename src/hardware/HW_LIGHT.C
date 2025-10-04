@@ -335,6 +335,8 @@ light_t *t_lspr[NUMSPRITES] =
 
 	&lspr[NOLIGHT],		// SPR_STLG
 
+	&lspr[NOLIGHT],		// SPR_GOR2
+
 	// Free slots
 	&lspr[NOLIGHT],
 	&lspr[NOLIGHT],
