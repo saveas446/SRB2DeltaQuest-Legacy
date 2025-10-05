@@ -264,6 +264,7 @@ int VID_GetModeForSize(int w, int h)
 int VID_SetMode(int modenum)
 {
 	int flags;
+	char title[30];
 
 	if (SDL_window != NULL)
 		SDL_DestroyWindow(SDL_window);
@@ -289,8 +290,10 @@ int VID_SetMode(int modenum)
 	else
 		flags = NULL;
 
-	// Init window (hardcoded to 640x400 for now) in the center of the screen
-	SDL_window = SDL_CreateWindow(sprintf("Demo 2 Ultimate v%d.%d.%d", MAJORVER, MINORVER, TINYVER), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vid.width, vid.height, flags);
+	sprintf(title, "Demo 2 Ultimate v%d.%d.%d", MAJORVER, MINORVER, TINYVER);
+
+		// Init window (hardcoded to 640x400 for now) in the center of the screen
+		SDL_window = SDL_CreateWindow(title , SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vid.width, vid.height, flags);
 	SetSDLIcon(SDL_window);
 
 	if (!SDL_window)
