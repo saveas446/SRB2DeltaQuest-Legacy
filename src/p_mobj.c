@@ -2725,7 +2725,7 @@ void P_SpawnHoopsAndRings(mapthing_t *mthing)
 					mobj->flags |= MF_AMBUSH;
 			}
 		}
-		else if (mthing->type == 77) // Diagonal rings (10)
+		else if (mthing->type == 78) // Diagonal rings (10)
 		{
 			angle_t angle = ANG45 * (mthing->angle/45);
 			angle >>= ANGLETOFINESHIFT;
