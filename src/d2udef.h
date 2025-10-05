@@ -15,6 +15,9 @@
 
     // More and more defines will be added to this over time, allowing us to tweak more and more things 
 
+	// Note that some of this stuff is left over from when we were making the 1.09.4 codebase compatible with
+	// the Demo 2 files so some of these options have not been used in many months
+
 	/**
 	\brief 
 	Disables stuff that's only there for the sake of D2 IWAD compatibility
@@ -41,7 +44,7 @@
 	/**
 	\brief Darkens menu
 	*/	
-    #define DARKENEDMENU
+    //#define DARKENEDMENU
 	/**
 	\brief Enables the character select menu
 	*/	
