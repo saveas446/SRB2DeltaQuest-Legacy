@@ -72,7 +72,7 @@
     <Lib>
       <OutputFile>.\..\..\..\..\..\lib\libpng.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalDependencies>zlib.lib</AdditionalDependencies>
+      <AdditionalDependencies>zlib.lib;legacy_stdio_definitions.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\..\..\..\..\..\lib\</AdditionalLibraryDirectories>
     </Lib>
     <Bscmake>

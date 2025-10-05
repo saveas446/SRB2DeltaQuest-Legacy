@@ -156,6 +156,7 @@ static void SetSDLIcon(SDL_Window* window)
 
 	// Somebody please find a better way to do this later, I hate #including .c files
 #include "Srb2win.c"
+#include "../d2udef.h"
 
 	Uint32 rmask, gmask, bmask, amask;
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
@@ -289,7 +290,7 @@ int VID_SetMode(int modenum)
 		flags = NULL;
 
 	// Init window (hardcoded to 640x400 for now) in the center of the screen
-	SDL_window = SDL_CreateWindow("NewMillennium (SDL2 backend)", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vid.width, vid.height, flags);
+	SDL_window = SDL_CreateWindow(sprintf("Demo 2 Ultimate v%d.%d.%d", MAJORVER, MINORVER, TINYVER), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vid.width, vid.height, flags);
 	SetSDLIcon(SDL_window);
 
 	if (!SDL_window)

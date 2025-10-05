@@ -107,6 +107,8 @@ extern int logstream;
 #define SPLITSCREEN
 #define NEWLIGHT // compute lighting with bsp (in construction)
 
+#define ZDEBUG
+
 //#define SLOPENESS // Fun experimental slope stuff!
 
 // =========================================================================
