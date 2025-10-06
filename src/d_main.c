@@ -990,17 +990,17 @@ char* wad_filenames[50] = {
 	"FREAK_SHOW_1.wad",
 	"FREAK_SHOW_2.wad",
 	"CREDITS.wad",
-	"GREENFLOWER_DM.wad",
-	"TECHNO_HILL_DM.wad",
-	"DEEP_SEA_DM.wad",
-	"MINE_MAZE_DM.wad",
-	"ROCKY_MOUNTAIN_DM.wad",
-	"RED_VOLCANO_DM.wad",
-	"DARK_CITY_DM.wad",
-	"GRAND_EGGSHIP_DM.wad",
-	"ROBOTNIROCK_DM.wad",
-	"WOOD_DM.wad",
-	"EGGFACTORY_DM.wad"
+	"dm/GREENFLOWER_DM.wad",
+	"dm/TECHNO_HILL_DM.wad",
+	"dm/DEEP_SEA_DM.wad",
+	"dm/MINE_MAZE_DM.wad",
+	"dm/ROCKY_MOUNTAIN_DM.wad",
+	"dm/RED_VOLCANO_DM.wad",
+	"dm/DARK_CITY_DM.wad",
+	"dm/GRAND_EGGSHIP_DM.wad",
+	"dm/ROBOTNIROCK_DM.wad",
+	"dm/WOOD_DM.wad",
+	"dm/EGGFACTORY_DM.wad"
 };
 
 //
