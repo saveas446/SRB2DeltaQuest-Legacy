@@ -1284,7 +1284,16 @@ static void HWR_StoreWallRange(int startfrac, int endfrac)
 			}
 			if (gr_linedef->flags & ML_EFFECT4)
 			{
-				polybottom = gr_frontsector->floorheight, gr_backsector->floorheight + gr_sidedef->rowoffset;
+				polytop = polybottom + textureheight[gr_midtexture];
+				polybottom = max(gr_frontsector->floorheight, gr_backsector->floorheight) + gr_sidedef->rowoffset;
+			}
+			if (gr_linedef->flags & ML_EFFECT4)
+			{
+				texturevpeg = textureheight[gr_midtexture] - h + polybottom;
+			}
+			if (gr_linedef->flags & ML_EFFECT4)
+			{
+				polybottom = popenbottom + gr_sidedef->rowoffset;
 				polytop = polybottom + textureheight[gr_midtexture];
 			}
 			else
