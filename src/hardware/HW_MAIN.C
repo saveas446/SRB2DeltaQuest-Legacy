@@ -1282,6 +1282,11 @@ static void HWR_StoreWallRange(int startfrac, int endfrac)
 				polybottom = popenbottom + gr_sidedef->rowoffset;
 				polytop = polybottom + textureheight[gr_midtexture];
 			}
+			if (gr_linedef->flags & ML_EFFECT4)
+			{
+				polybottom = gr_frontsector->floorheight, gr_backsector->floorheight + gr_sidedef->rowoffset;
+				polytop = polybottom + textureheight[gr_midtexture];
+			}
 			else
 			{
 				polytop = popentop + gr_sidedef->rowoffset;
