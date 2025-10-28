@@ -317,41 +317,12 @@ void T_MoveFloor(floormove_t *movefloor)
 // The function moves the planes differently based on direction, so if it's
 // traveling really fast, the floor and ceiling won't hit each other and
 // stop the lift.
-void T_MoveElevator(elevator_t *elevator)
+void T_MoveElevator(elevator_t* elevator)
 {
-	result_e res = ok;
-	boolean dontupdate = false;
+	result_e      res = 0;
 
-	if (elevator->direction < 0) // moving down
+	if (elevator->direction < 0)      // moving down
 	{
-		if (elevator->type == elevateContinuous)
-		{
-			const fixed_t origspeed = FixedDiv(elevator->origspeed,(ELEVATORSPEED/2));
-			const fixed_t wh = abs(elevator->sector->floorheight - elevator->floorwasheight);
-			const fixed_t dh = abs(elevator->sector->floorheight - elevator->floordestheight);
-			// Slow down when reaching destination Tails 12-06-2000
-			if (wh < dh)
-				elevator->speed = FixedDiv(wh,25*FRACUNIT) + FRACUNIT/4;
-			else
-				elevator->speed = FixedDiv(dh,25*FRACUNIT) + FRACUNIT/4;
-
-			if (elevator->origspeed)
-			{
-				elevator->speed = FixedMul(elevator->speed,origspeed);
-				if (elevator->speed > elevator->origspeed)
-					elevator->speed = (elevator->origspeed);
-				if (elevator->speed < 1)
-					elevator->speed = 1/NEWTICRATERATIO;
-			}
-			else
-			{
-				if (elevator->speed > ((3*FRACUNIT)/NEWTICRATERATIO))
-					elevator->speed = ((3*FRACUNIT)/NEWTICRATERATIO);
-				if (elevator->speed < 1)
-					elevator->speed = 1/NEWTICRATERATIO;
-			}
-		}
-
 		res = T_MovePlane             //jff 4/7/98 reverse order of ceiling/floor
 		(
 			elevator->sector,
@@ -361,7 +332,6 @@ void T_MoveElevator(elevator_t *elevator)
 			1,                          // move floor
 			elevator->direction
 		);
-
 		if (res == ok || res == pastdest) // jff 4/7/98 don't move ceil if blocked
 			T_MovePlane
 			(
@@ -373,36 +343,8 @@ void T_MoveElevator(elevator_t *elevator)
 				elevator->direction
 			);
 	}
-	else // moving up
+	else // up
 	{
-		if (elevator->type == elevateContinuous)
-		{
-			const fixed_t origspeed = FixedDiv(elevator->origspeed,(ELEVATORSPEED/2));
-			const fixed_t wc = abs(elevator->sector->ceilingheight - elevator->ceilingwasheight);
-			const fixed_t dc = abs(elevator->sector->ceilingheight - elevator->ceilingdestheight);
-			// Slow down when reaching destination Tails 12-06-2000
-			if (wc < dc)
-				elevator->speed = FixedDiv(wc,25*FRACUNIT) + FRACUNIT/4;
-			else
-				elevator->speed = FixedDiv(dc,25*FRACUNIT) + FRACUNIT/4;
-
-			if (elevator->origspeed)
-			{
-				elevator->speed = FixedMul(elevator->speed,origspeed);
-				if (elevator->speed > elevator->origspeed)
-					elevator->speed = (elevator->origspeed);
-				if (elevator->speed < 1)
-					elevator->speed = 1/NEWTICRATERATIO;
-			}
-			else
-			{
-				if (elevator->speed > ((3*FRACUNIT)/NEWTICRATERATIO))
-					elevator->speed = ((3*FRACUNIT)/NEWTICRATERATIO);
-				if (elevator->speed < 1)
-					elevator->speed = 1/NEWTICRATERATIO;
-			}
-		}
-
 		res = T_MovePlane             //jff 4/7/98 reverse order of ceiling/floor
 		(
 			elevator->sector,
@@ -423,97 +365,19 @@ void T_MoveElevator(elevator_t *elevator)
 				elevator->direction
 			);
 	}
-/*
-  // make floor move sound
-  if (!(leveltime&7))
-    S_StartSound((mobj_t *)&elevator->sector->soundorg, sfx_stnmov);
-*/
+
+	// make floor move sound
+	if (!(leveltime % (8 * NEWTICRATERATIO)))
+		S_StartSound((mobj_t*)&elevator->sector->soundorg, sfx_stnmov);
+
 	if (res == pastdest)            // if destination height acheived
 	{
 		elevator->sector->floordata = NULL;     //jff 2/22/98
 		elevator->sector->ceilingdata = NULL;   //jff 2/22/98
-		if (elevator->type == elevateContinuous)
-		{
-			if (elevator->direction > 0)
-			{
-				elevator->high = 1;
-				elevator->low = 0;
-				elevator->direction = -1;
+		P_RemoveThinker(&elevator->thinker);    // remove elevator from actives
 
-				if (elevator->origspeed)
-					elevator->speed = elevator->origspeed;
-				else
-					elevator->speed = ((3*FRACUNIT)/NEWTICRATERATIO);
-
-				if (elevator->low)
-				{
-					elevator->floordestheight =
-						P_FindNextHighestFloor(elevator->sector, elevator->sector->floorheight);
-					elevator->ceilingdestheight =
-						elevator->floordestheight + elevator->sector->ceilingheight - elevator->sector->floorheight;
-				}
-				else
-				{
-					elevator->floordestheight =
-						P_FindNextLowestFloor(elevator->sector,elevator->sector->floorheight);
-					elevator->ceilingdestheight =
-						elevator->floordestheight + elevator->sector->ceilingheight - elevator->sector->floorheight;
-				}
-				elevator->floorwasheight = elevator->sector->floorheight;
-				elevator->ceilingwasheight = elevator->sector->ceilingheight;
-				T_MoveElevator(elevator);
-			}
-			else
-			{
-				elevator->high = 0;
-				elevator->low = 1;
-				elevator->direction = 1;
-
-				if (elevator->origspeed)
-					elevator->speed = elevator->origspeed;
-				else
-					elevator->speed = ((3*FRACUNIT)/NEWTICRATERATIO);
-
-				if (elevator->low)
-				{
-					elevator->floordestheight =
-						P_FindNextHighestFloor(elevator->sector, elevator->sector->floorheight);
-					elevator->ceilingdestheight =
-						elevator->floordestheight + elevator->sector->ceilingheight - elevator->sector->floorheight;
-				}
-				else
-				{
-					elevator->floordestheight =
-						P_FindNextLowestFloor(elevator->sector,elevator->sector->floorheight);
-					elevator->ceilingdestheight =
-						elevator->floordestheight + elevator->sector->ceilingheight - elevator->sector->floorheight;
-				}
-				elevator->floorwasheight = elevator->sector->floorheight;
-				elevator->ceilingwasheight = elevator->sector->ceilingheight;
-				T_MoveElevator(elevator);
-			}
-		}
-		else
-		{
-			elevator->sector->ceilspeed = 0;
-			elevator->sector->floorspeed = 0;
-			P_RemoveThinker(&elevator->thinker);    // remove elevator from actives
-			dontupdate = true;
-		}
 		// make floor stop sound
-		// S_StartSound((mobj_t *)&elevator->sector->soundorg, sfx_pstop);
-	}
-	if (!dontupdate)
-	{
-		elevator->sector->floorspeed = elevator->speed*elevator->direction;
-		elevator->sector->ceilspeed = 42;
-	}
-	else
-	{
-		elevator->sector->floorspeed = 0;
-		elevator->sector->ceilspeed = 0;
-		elevator->sector->floordata = NULL;
-		elevator->sector->ceilingdata = NULL;
+		S_StartSound((mobj_t*)&elevator->sector->soundorg, sfx_pstop);
 	}
 }
 
