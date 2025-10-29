@@ -122,7 +122,7 @@
 	Controls "tiny" version number (0.0.x)
 	Increment this every day
 	*/
-    #define TINYVER 5
+    #define TINYVER 6
 
 	/**
 	\brief Controls whether the title screen uses "TITLESKY" or "RSKY1" as its BG
