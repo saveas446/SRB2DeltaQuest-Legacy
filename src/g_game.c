@@ -437,7 +437,10 @@ const char *G_BuildMapName(int map)
 {
 	static char mapname[9] = "MAPXX"; // internal map name (wad resource name)
 
-	I_Assert(map > 0);
+	// Bug found when trying to test with ZB or old versions of Legacy Builder
+	if (!(map > 0))
+		I_Error("Invalid map number! Are you using an old version of Legacy Builder or using Zone Builder to test?\n");
+
 	I_Assert(map <= NUMMAPS);
 
 	if (map < 100)
