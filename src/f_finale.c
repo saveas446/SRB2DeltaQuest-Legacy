@@ -1911,7 +1911,7 @@ static void F_SkyScroll
 
 	
 	#ifdef COMPAT_TITLESKY
-	pat = W_CachePatchName("RSKY1", PU_CACHE);
+	pat = W_CachePatchName("SKY1", PU_CACHE);
 	#else
 	pat = W_CachePatchName("TITLESKY", PU_CACHE);	
 	#endif

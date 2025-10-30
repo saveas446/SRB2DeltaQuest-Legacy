@@ -125,7 +125,7 @@
     #define TINYVER 6
 
 	/**
-	\brief Controls whether the title screen uses "TITLESKY" or "RSKY1" as its BG
+	\brief Controls whether the title screen uses "TITLESKY" or "SKY1" as its BG
 	*/
     #define COMPAT_TITLESKY
 
