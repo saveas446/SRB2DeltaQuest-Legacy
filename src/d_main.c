@@ -890,6 +890,8 @@ static void IdentifyVersion(void)
 
 	// 1984 NO NIGHTS GAMEMODE 1984 NO MATCH WEAPONS 1984 NO SEPARATE FILES FOR CHARACTER SPRITES 1984 NO TAG 1984 NO CTF GAMEMODE 1984 NO SPECIAL MATCH WEAPONS 1984 NO FUN
 	D_AddFile(va(pandf,srb2waddir,"supp.wad")); //supp.wad
+
+	D_AddFile(va(pandf, srb2waddir, "music.wad")); //music.wad
 }
 
 /* ======================================================================== */
