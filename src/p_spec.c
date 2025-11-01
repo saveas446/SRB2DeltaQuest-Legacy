@@ -1983,8 +1983,8 @@ static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean r
 	line_t junk;
 	int i = 0;
 
-	if (sector->special < 32)
-	{
+	//if (sector->special < 32)
+	//{
 		// Has hitten ground.
 		switch (sector->special)
 		{
@@ -2006,24 +2006,28 @@ static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean r
 					P_DamageMobj(player->mo, NULL, NULL, 1, false);
 				}
 				break;
-			case 974: // Linedef executor that doesn't require touching floor
+			// ew
+			/*case 974: // Linedef executor that doesn't require touching floor
 			case 975: // Linedef executor
 				P_LinedefExecute(sector->tag, player->mo, sector);
-				return;
+				return;*/
 			default:
 				// Just ignore.
 				break;
 			case 978: // Ring drainer: lose one ring per 15 tics
 			case 980: // Another ring drainer, not requiring floor touch
-				if (leveltime % 15 == 0 && player->mo->health > 1)
+				if (leveltime % 30 == 0 && player->mo->health > 1)
 				{
 					player->mo->health--;
 					player->health--;
 					S_StartSound(player->mo, sfx_itemup);
+				} else if ((M_Random() > 249 && leveltime % 2 == 0) && player->mo->health <= 1) {
+					// Kill the player if we have no rings, but give them some forgiveness
+					P_DamageMobj(player->mo, NULL, NULL, 10000, false);
 				}
 				break;
 		};
-	}
+	//}
 /*	else // Extended sector types for secrets and damage
 	{
 		switch ((sector->special & DAMAGE_MASK) >> DAMAGE_SHIFT)
