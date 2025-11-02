@@ -171,18 +171,19 @@ void I_ShutdownGraphics(void){
 SDL_Color palettebuf[256];
 
 // Translate Doom palette into SDL palette
-void I_SetPalette(byte *palette)
+void I_SetPalette(RGBA_t *palette)
 {
-	RGB_t* rgbpalette;
-	rgbpalette = palette;
-
+	ULONG color;
 	// 256 colors * 3 color channels
 	for (i = 0; i < 256; i++) {
+		color = palette[i].rgba;
+		palettebuf[i].r = color & 0xFF;
+		palettebuf[i].g = (color >> 8) & 0xFF;
+		palettebuf[i].b = (color >> 16) & 0xFF;
+		palettebuf[i].a = (color >> 24) & 0xFF;
 
-		palettebuf[i].r = rgbpalette[i].r;
-		palettebuf[i].g = rgbpalette[i].g;
-		palettebuf[i].b = rgbpalette[i].b;
-		palettebuf[i].a = 255;
+		//if (i == 9)
+			//I_Error("byte 1: %d, byte 2: %d, byte 3: %d, byte 4: %d\n",, , , );
 
 		SDL_SetPaletteColors(surface->format->palette, palettebuf, 0, 256);
 	}

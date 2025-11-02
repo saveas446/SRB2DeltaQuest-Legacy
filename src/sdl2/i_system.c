@@ -70,77 +70,81 @@ void I_GetEvent(void){
 	// This exists so we can reuse most of the keydown event code for the keyup event
 	boolean up = false;
 	boolean ignoremodifiers = false;
+		memset(&e_w,0x00,sizeof(e_w));
+		while (SDL_PollEvent(&e_s)) {
+			switch (e_s.type) {
+				case SDL_QUIT:
+					I_Quit();
+					break;
+				case SDL_KEYUP:
+					e_w.type = ev_keyup;
+					up = true;
+				case SDL_KEYDOWN:
+					if (!up)
+						e_w.type = ev_keydown;
 
-	while (SDL_PollEvent(&e_s) != 0) {
-		switch (e_s.type) {
-			case SDL_QUIT:
-				I_Quit();
-				break;
-			case SDL_KEYUP:
-				e_w.type = ev_keyup;
-				up = true;
-			case SDL_KEYDOWN:
-				if (!up)
-					e_w.type = ev_keydown;
-
-				switch (e_s.key.keysym.sym) {
-					case SDLK_UP:
-						e_w.data1 = KEY_UPARROW;
-						break;
-					case SDLK_DOWN:
-						e_w.data1 = KEY_DOWNARROW;
-						break;
-					case SDLK_RIGHT:
-						e_w.data1 = KEY_RIGHTARROW;
-						break;
-					case SDLK_LEFT:
-						e_w.data1 = KEY_LEFTARROW;
-						break;
-					default:
-						e_w.data1 = e_s.key.keysym.sym;
-						break;
-				}
-
-				if (!ignoremodifiers) {
-					// Intercept modifier keys
-					if (SDL_GetModState() & KMOD_SHIFT) {
-						e_w.data1 = KEY_SHIFT;
-						D_PostEvent(&e_w);
-						return;
+					switch (e_s.key.keysym.sym) {
+						case SDLK_UP:
+							e_w.data1 = KEY_UPARROW;
+							break;
+						case SDLK_DOWN:
+							e_w.data1 = KEY_DOWNARROW;
+							break;
+						case SDLK_RIGHT:
+							e_w.data1 = KEY_RIGHTARROW;
+							break;
+						case SDLK_LEFT:
+							e_w.data1 = KEY_LEFTARROW;
+							break;
+						default:
+							e_w.data1 = e_s.key.keysym.sym;
+							break;
 					}
-					if (SDL_GetModState() & KMOD_CTRL) {
-						e_w.data1 = KEY_CTRL;
-						D_PostEvent(&e_w);
-						return;
-					}
-					if (SDL_GetModState() & KMOD_ALT) {
-						e_w.data1 = KEY_ALT;
-						D_PostEvent(&e_w);
-						return;
-					}
-				}
-					
-				// For when I inevitably come back to this
-				//CONS_Printf("Virtual key code: 0x%02X (%c)\n", e_s.key.keysym.sym, e_s.key.keysym.sym);
-				//CONS_Printf("Physical key code: 0x%02X (%c)\n", e_s.key.keysym.scancode, e_s.key.keysym.scancode);
-				D_PostEvent(&e_w);
-				break;
-			case SDL_MOUSEMOTION:
-				e_w.type = ev_mouse;
-				e_w.data1 = 0;
-				SDL_GetMouseState(&e_w.data2, &e_w.data3);
 
-				// Adjust mouse X
-				e_w.data2 -= 250;
-				e_w.data2 >>= 2;
+					if (!ignoremodifiers) {
+						// Intercept modifier keys
+						if (SDL_GetModState() & KMOD_SHIFT) {
+							e_w.data1 = KEY_SHIFT;
+							D_PostEvent(&e_w);
+							return;
+						}
+						if (SDL_GetModState() & KMOD_CTRL) {
+							e_w.data1 = KEY_CTRL;
+							D_PostEvent(&e_w);
+							return;
+						}
+						if (SDL_GetModState() & KMOD_ALT) {
+							e_w.data1 = KEY_ALT;
+							D_PostEvent(&e_w);
+							return;
+						}
+					}
+						
+					// For when I inevitably come back to this
+					//CONS_Printf("Virtual key code: 0x%02X (%c)\n", e_s.key.keysym.sym, e_s.key.keysym.sym);
+					//CONS_Printf("Physical key code: 0x%02X (%c)\n", e_s.key.keysym.scancode, e_s.key.keysym.scancode);
+					D_PostEvent(&e_w);
+					break;
+				case SDL_MOUSEMOTION:
+					e_w.type = ev_mouse;
+					e_w.data1 = 0;
+					SDL_GetMouseState(&e_w.data2, &e_w.data3);
 
-				D_PostEvent(&e_w);
-				break;
+					// Adjust mouse X
+					e_w.data2 -= 250;
+					e_w.data2 >>= 2;
+
+					D_PostEvent(&e_w);
+					break;
+				default:
+					break;
+			}
 		}
-	}
 }
 
-void I_OsPolling(void){}
+void I_OsPolling(void){
+	I_GetEvent();
+}
 
 static ticcmd_t emptycmd;
 ticcmd_t *I_BaseTiccmd(void)
