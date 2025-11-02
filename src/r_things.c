@@ -28,6 +28,7 @@
 #include "i_video.h" // rendermode
 #include "r_things.h"
 #include "p_tick.h"
+#include "d_main.h" // my_sprintf
 
 #include "r_draw8.h"
 
@@ -2242,12 +2243,12 @@ static void SetSkinValues(consvar_t *var, char *valstr, size_t valstrspace)
 			if (v < var->PossibleValue[0].value)
 			{
 				v = var->PossibleValue[0].value;
-				snprintf(valstr, valstrspace, "%d", v);
+				my_snprintf(valstr, valstrspace, "%d", v);
 			}
 			if (v > var->PossibleValue[i].value)
 			{
 				v = var->PossibleValue[i].value;
-				snprintf(valstr, valstrspace, "%d", v);
+				my_snprintf(valstr, valstrspace, "%d", v);
 			}
 		}
 		else
@@ -2299,7 +2300,7 @@ void SetSavedSkin(int playernum, int skinnum, int skincolor)
 	char val[32];
 
 	players[playernum].skincolor = skincolor % MAXSKINCOLORS;
-	snprintf(val, sizeof val, "%d", players[playernum].skincolor);
+	my_snprintf(val, sizeof val, "%d", players[playernum].skincolor);
 
 	SetSkinValues(&cv_skin, skins[skinnum].name,
 		sizeof skins[skinnum].name);
@@ -2397,7 +2398,7 @@ void R_AddSkins(int wadnum)
 		// set defaults
 		Sk_SetDefaultValue(&skins[numskins]);
 
-		snprintf(skins[numskins].name, sizeof skins[numskins].name, "skin %d", numskins);
+		my_snprintf(skins[numskins].name, sizeof skins[numskins].name, "skin %d", numskins);
 
 		boxindexset = false;
 
@@ -2432,7 +2433,7 @@ void R_AddSkins(int wadnum)
 					const int stringspace =
 						strlen(value) + sizeof (numskins) + 1;
 					char *value2 = Z_Malloc(stringspace, PU_STATIC, NULL);
-					snprintf(value2, stringspace,
+					my_snprintf(value2, stringspace,
 						"%s%d", value, numskins);
 					if (!R_SkinAvailable(value2))
 					{
@@ -2556,7 +2557,7 @@ void R_AddSkins(int wadnum)
 				colorval = (byte)atoi(skins[numskins].starttranscolor);
 				colorval += 16;
 
-				snprintf(skins[numskins].endtranscolor,
+				my_snprintf(skins[numskins].endtranscolor,
 					sizeof skins[numskins].endtranscolor,
 					"%d", colorval);
 			}

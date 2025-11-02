@@ -152,7 +152,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="..\..\tools\libpng-src;..\..\tools\zlib;..\..\tools\giflib"
+				AdditionalIncludeDirectories="..\..\tools\libpng-src;..\..\tools\zlib;..\..\include"
 				PreprocessorDefinitions="NDEBUG;_WINDOWS;USEASM;HAVE_PNG"
 				StringPooling="true"
 				RuntimeLibrary="0"
