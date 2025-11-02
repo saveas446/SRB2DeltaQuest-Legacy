@@ -76,6 +76,7 @@ dev/*.xml
 /tools/launcher/SRB2Launcher/bin/*
 /tools/launcher/SRB2Launcher/obj/*
 /tools/launcher/SRB2Launcher/publish/*
+UpgradeLog.XML
 
 # Ninja
 *.ninja_deps
