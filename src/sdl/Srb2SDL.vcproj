@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="Srb2SDL"
+	Name="Srb2SDL (DEPRECATED)"
 	ProjectGUID="{DA9D69A4-FA5B-49F7-A36D-B1DD707250C6}"
 	RootNamespace="Srb2SDL"
 	TargetFrameworkVersion="131072"
@@ -1168,6 +1168,26 @@
 				RelativePath="..\g_state.h"
 				>
 			</File>
+			<Filter
+				Name="Docs"
+				>
+				<File
+					RelativePath="..\..\doc\copying"
+					>
+				</File>
+				<File
+					RelativePath="..\..\doc\faq.txt"
+					>
+				</File>
+				<File
+					RelativePath="..\..\readme.txt"
+					>
+				</File>
+				<File
+					RelativePath="..\..\doc\source.txt"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="H_Hud"
@@ -2760,26 +2780,6 @@
 			</File>
 			<File
 				RelativePath="..\w_wad.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Docs"
-			>
-			<File
-				RelativePath="..\..\doc\copying"
-				>
-			</File>
-			<File
-				RelativePath="..\..\doc\faq.txt"
-				>
-			</File>
-			<File
-				RelativePath="..\..\readme.txt"
-				>
-			</File>
-			<File
-				RelativePath="..\..\doc\source.txt"
 				>
 			</File>
 		</Filter>
