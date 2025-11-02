@@ -1,6 +1,8 @@
 #include <SDL.h>
+#include <SDL_keycode.h>
 
 #include "../doomdef.h"
+#include "../keys.h"
 #include "../i_system.h"
 
 byte graphics_started = 0;
@@ -13,26 +15,145 @@ ULONG I_GetFreeMem(ULONG *total)
 	return 0;
 }
 
-tic_t I_GetTime(void)
+#ifdef _WIN32
+static long    hacktics = 0;       //faB: used locally for keyboard repeat keys
+static DWORD starttickcount = 0; // hack for win2k time bug
+ULONG I_GetTime(void)
 {
-	return 0;
+	int newtics = 0;
+
+	if (!starttickcount) // high precision timer
+	{
+		LARGE_INTEGER currtime; // use only LowPart if high resolution counter is not available
+		static LARGE_INTEGER basetime = { {0, 0} };
+
+		// use this if High Resolution timer is found
+		static LARGE_INTEGER frequency;
+
+		if (!basetime.LowPart)
+		{
+			if (!QueryPerformanceFrequency(&frequency))
+				frequency.QuadPart = 0;
+			else
+				QueryPerformanceCounter(&basetime);
+		}
+
+		if (frequency.LowPart && QueryPerformanceCounter(&currtime))
+		{
+			newtics = (INT32)((currtime.QuadPart - basetime.QuadPart) * TICRATE
+				/ frequency.QuadPart);
+		}
+	}
+	else
+		newtics = (GetTickCount() - starttickcount) / (1000 / TICRATE);
+
+	return newtics;
 }
+#else
+ULONG I_GetTime (void)
+{
+	ULONG ticks = SDL_GetTicks();
+
+	ticks = (ticks*TICRATE);
+
+	ticks = (ticks/1000);
+
+	return ticks;
+}
+#endif
 
 void I_Sleep(void){}
 
-void I_GetEvent(void){}
+void I_GetEvent(void){
+	event_t e_w;
+	SDL_Event e_s;
+	// This exists so we can reuse most of the keydown event code for the keyup event
+	boolean up = false;
+	boolean ignoremodifiers = false;
+
+	while (SDL_PollEvent(&e_s) != 0) {
+		switch (e_s.type) {
+			case SDL_QUIT:
+				I_Quit();
+				break;
+			case SDL_KEYUP:
+				e_w.type = ev_keyup;
+				up = true;
+			case SDL_KEYDOWN:
+				if (!up)
+					e_w.type = ev_keydown;
+
+				switch (e_s.key.keysym.sym) {
+					case SDLK_UP:
+						e_w.data1 = KEY_UPARROW;
+						break;
+					case SDLK_DOWN:
+						e_w.data1 = KEY_DOWNARROW;
+						break;
+					case SDLK_RIGHT:
+						e_w.data1 = KEY_RIGHTARROW;
+						break;
+					case SDLK_LEFT:
+						e_w.data1 = KEY_LEFTARROW;
+						break;
+					default:
+						e_w.data1 = e_s.key.keysym.sym;
+						break;
+				}
+
+				if (!ignoremodifiers) {
+					// Intercept modifier keys
+					if (SDL_GetModState() & KMOD_SHIFT) {
+						e_w.data1 = KEY_SHIFT;
+						D_PostEvent(&e_w);
+						return;
+					}
+					if (SDL_GetModState() & KMOD_CTRL) {
+						e_w.data1 = KEY_CTRL;
+						D_PostEvent(&e_w);
+						return;
+					}
+					if (SDL_GetModState() & KMOD_ALT) {
+						e_w.data1 = KEY_ALT;
+						D_PostEvent(&e_w);
+						return;
+					}
+				}
+					
+				// For when I inevitably come back to this
+				//CONS_Printf("Virtual key code: 0x%02X (%c)\n", e_s.key.keysym.sym, e_s.key.keysym.sym);
+				//CONS_Printf("Physical key code: 0x%02X (%c)\n", e_s.key.keysym.scancode, e_s.key.keysym.scancode);
+				D_PostEvent(&e_w);
+				break;
+			case SDL_MOUSEMOTION:
+				e_w.type = ev_mouse;
+				e_w.data1 = 0;
+				SDL_GetMouseState(&e_w.data2, &e_w.data3);
+
+				// Adjust mouse X
+				e_w.data2 -= 250;
+				e_w.data2 >>= 2;
+
+				D_PostEvent(&e_w);
+				break;
+		}
+	}
+}
 
 void I_OsPolling(void){}
 
+static ticcmd_t emptycmd;
 ticcmd_t *I_BaseTiccmd(void)
 {
-	return NULL;
+	return &emptycmd;
 }
 
+static ticcmd_t emptycmd2;
 ticcmd_t *I_BaseTiccmd2(void)
 {
-	return NULL;
+	return &emptycmd2;
 }
+
 
 void I_Quit(void)
 {

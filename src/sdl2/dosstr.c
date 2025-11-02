@@ -1,17 +1,17 @@
 #include <stdlib.h>
 
-int strupr(char *n) {
+char* strupr(char *n) {
       int i;
       for (i=0;n[i];i++) {
 	       n[i] = toupper(n[i]);
       }
-      return 1;
+      return n;
 }
 
-int strlwr(char *n) {
+char* strlwr(char *n) {
       int i;
       for (i=0;n[i];i++) {
 	       n[i] = tolower(n[i]);
       }
-      return 1;
+      return n;
 }

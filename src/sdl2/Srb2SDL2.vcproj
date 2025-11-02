@@ -146,7 +146,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="..\..\tools\libpng-src;..\..\tools\zlib;"
-				PreprocessorDefinitions="NDEBUG;NOMSERV;SRB2_SDL2;NO_STDIO_REDIRECT;USE_WGL_SWAP;DIRECTFULLSCREEN;SDL;HWRENDER;HW3SOUND;USEASM"
+				PreprocessorDefinitions="NDEBUG;NOMSERV;SRB2_SDL2;NO_STDIO_REDIRECT;USE_WGL_SWAP;DIRECTFULLSCREEN;SDL;HWRENDER"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				PrecompiledHeaderFile=".\..\..\objs\VC\Release\SDL/Srb2SDL.pch"
@@ -252,6 +252,10 @@
 				RelativePath=".\i_video.c"
 				>
 			</File>
+			<File
+				RelativePath=".\i_video.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="A_Asm"
@@ -259,78 +263,6 @@
 			<File
 				RelativePath="..\p5prof.h"
 				>
-			</File>
-			<File
-				RelativePath="..\tmap.nas"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Compiling $(InputName).nas with NASM..."
-						CommandLine="nasmw -o $(IntDir)/$(InputName).obj -f win32 $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)/$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Compiling $(InputName).nas with NASM..."
-						CommandLine="nasmw -o $(IntDir)/$(InputName).obj -f win32 $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)/$(InputName).obj"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\tmap_mmx.nas"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Compiling $(InputName).nas with NASM..."
-						CommandLine="nasmw -o $(IntDir)/$(InputName).obj -f win32 $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)/$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Compiling $(InputName).nas with NASM..."
-						CommandLine="nasmw -o $(IntDir)/$(InputName).obj -f win32 $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)/$(InputName).obj"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\tmap_vc.nas"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Compiling $(InputName).nas with NASM..."
-						CommandLine="nasmw -o $(IntDir)/$(InputName).obj -f win32 $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)/$(InputName).obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Compiling $(InputName).nas with NASM..."
-						CommandLine="nasmw -o $(IntDir)/$(InputName).obj -f win32 $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)/$(InputName).obj"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
