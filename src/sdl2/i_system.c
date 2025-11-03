@@ -69,8 +69,8 @@ void I_GetEvent(void){
 	SDL_Event e_s;
 	// This exists so we can reuse most of the keydown event code for the keyup event
 	boolean up = false;
-	boolean ignoremodifiers = false;
 		while (SDL_PollEvent(&e_s)) {
+			up = false;
 			memset(&e_w,0x00,sizeof(e_w));
 			switch (e_s.type) {
 				case SDL_QUIT:
@@ -84,6 +84,7 @@ void I_GetEvent(void){
 						e_w.type = ev_keydown;
 
 					switch (e_s.key.keysym.sym) {
+						// arrows
 						case SDLK_UP:
 							e_w.data1 = KEY_UPARROW;
 							break;
@@ -96,30 +97,141 @@ void I_GetEvent(void){
 						case SDLK_LEFT:
 							e_w.data1 = KEY_LEFTARROW;
 							break;
+						// modifer keys
+						case SDLK_LSHIFT:
+						case SDLK_RSHIFT:
+							e_w.data1 = KEY_SHIFT;
+							break;
+						case SDLK_LCTRL:
+						case SDLK_RCTRL:
+							e_w.data1 = KEY_CTRL;
+							break;
+						case SDLK_LALT:
+						case SDLK_RALT:
+							e_w.data1 = KEY_ALT;
+							break;
+						// function keys
+						case SDLK_F1:
+							e_w.data1 = KEY_F1;
+							break;
+						case SDLK_F2:
+							e_w.data1 = KEY_F2;
+							break;
+						case SDLK_F3:
+							e_w.data1 = KEY_F3;
+							break;
+						case SDLK_F4:
+							e_w.data1 = KEY_F4;
+							break;
+						case SDLK_F5:
+							e_w.data1 = KEY_F5;
+							break;
+						case SDLK_F6:
+							e_w.data1 = KEY_F6;
+							break;
+						case SDLK_F7:
+							e_w.data1 = KEY_F7;
+							break;
+						case SDLK_F8:
+							e_w.data1 = KEY_F8;
+							break;
+						case SDLK_F9:
+							e_w.data1 = KEY_F9;
+							break;
+						case SDLK_F10:
+							e_w.data1 = KEY_F10;
+							break;
+						case SDLK_F11:
+							e_w.data1 = KEY_F11;
+							break;
+						case SDLK_F12:
+							e_w.data1 = KEY_F12;
+							break;
+						// Let Snipping Tool/Snip 'n Sketch/Greenshot do whatever! 
+						case SDLK_PRINTSCREEN:
+							return;
+						// those keys to the right of the regular QWERTY layout but to the left of the numpad idk what to call them
+						case SDLK_SCROLLLOCK:
+							e_w.data1 = KEY_SCROLLLOCK;
+							break;
+						case SDLK_PAUSE:
+							e_w.data1 = KEY_PAUSE;
+							break;
+						case SDLK_INSERT:
+							e_w.data1 = KEY_INS;
+							break;
+						case SDLK_HOME:
+							e_w.data1 = KEY_HOME;
+							break;
+						case SDLK_PAGEUP:
+							e_w.data1 = KEY_PGUP;
+							break;
+						case SDLK_DELETE:
+							e_w.data1 = KEY_DEL;
+							break;
+						case SDLK_END:
+							e_w.data1 = KEY_END;
+							break;
+						case SDLK_PAGEDOWN:
+							e_w.data1 = KEY_PGDN;
+							break;
+						// numpad keys
+						case SDLK_KP_0:
+							e_w.data1 = KEY_KEYPAD0;
+							break;
+						case SDLK_KP_1:
+							e_w.data1 = KEY_KEYPAD1;
+							break;
+						case SDLK_KP_2:
+							e_w.data1 = KEY_KEYPAD2;
+							break;
+						case SDLK_KP_3:
+							e_w.data1 = KEY_KEYPAD3;
+							break;
+						case SDLK_KP_4:
+							e_w.data1 = KEY_KEYPAD4;
+							break;
+						case SDLK_KP_5:
+							e_w.data1 = KEY_KEYPAD5;
+							break;
+						case SDLK_KP_6:
+							e_w.data1 = KEY_KEYPAD6;
+							break;
+						case SDLK_KP_7:
+							e_w.data1 = KEY_KEYPAD7;
+							break;
+						case SDLK_KP_8:
+							e_w.data1 = KEY_KEYPAD8;
+							break;
+						case SDLK_KP_9:
+							e_w.data1 = KEY_KEYPAD9;
+							break;
+						case SDLK_KP_PLUS:
+							e_w.data1 = KEY_PLUSPAD;
+							break;
+						case SDLK_KP_MINUS:
+							e_w.data1 = KEY_MINUSPAD;
+							break;
+						case SDLK_KP_PERIOD:
+							e_w.data1 = KEY_KPADDEL;
+							break;
+						// misc keys
+						case SDLK_LGUI:
+							e_w.data1 = KEY_LEFTWIN;
+						case SDLK_RGUI:
+							e_w.data1 = KEY_RIGHTWIN;
+						case SDLK_MENU:
+							e_w.data1 = KEY_MENU;
+						// doom legacy does not have key values for these keys
+						case SDLK_VOLUMEUP:
+						case SDLK_VOLUMEDOWN:
+						case SDLK_MUTE:
+							return;
 						default:
 							e_w.data1 = e_s.key.keysym.sym;
 							break;
 					}
 
-					if (!ignoremodifiers) {
-						// Intercept modifier keys
-						if (SDL_GetModState() & KMOD_SHIFT) {
-							e_w.data1 = KEY_SHIFT;
-							D_PostEvent(&e_w);
-							return;
-						}
-						if (SDL_GetModState() & KMOD_CTRL) {
-							e_w.data1 = KEY_CTRL;
-							D_PostEvent(&e_w);
-							return;
-						}
-						if (SDL_GetModState() & KMOD_ALT) {
-							e_w.data1 = KEY_ALT;
-							D_PostEvent(&e_w);
-							return;
-						}
-					}
-						
 					// For when I inevitably come back to this
 					//CONS_Printf("Virtual key code: 0x%02X (%c)\n", e_s.key.keysym.sym, e_s.key.keysym.sym);
 					//CONS_Printf("Physical key code: 0x%02X (%c)\n", e_s.key.keysym.scancode, e_s.key.keysym.scancode);

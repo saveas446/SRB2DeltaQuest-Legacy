@@ -86,7 +86,7 @@ void G_MapEventsToControls(event_t *ev)
 				gamekeydown[ev->data1] = 1;
 #ifdef PARANOIA
 			else
-				CONS_Printf("Bad downkey input %d\n",ev->data1);
+				CONS_Printf("Bad downkey input 0x%X\n",ev->data1);
 #endif
 			break;
 
@@ -95,7 +95,7 @@ void G_MapEventsToControls(event_t *ev)
 				gamekeydown[ev->data1] = 0;
 #ifdef PARANOIA
 			else
-				CONS_Printf("Bad upkey input %d\n",ev->data1);
+				CONS_Printf("Bad upkey input 0x%X\n",ev->data1);
 #endif
 			break;
 

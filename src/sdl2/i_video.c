@@ -293,6 +293,9 @@ int VID_SetMode(int modenum)
 }
 
 void I_StartupGraphics(void) {
+	if (M_CheckParm("-win")) 
+		cv_fullscreen.value = false;
+		
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		I_Error("I_StartupGraphics(): Could not initialize SDL2: %s\n", SDL_GetError());
 	
