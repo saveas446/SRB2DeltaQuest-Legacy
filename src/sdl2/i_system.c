@@ -237,17 +237,6 @@ void I_GetEvent(void){
 					//CONS_Printf("Physical key code: 0x%02X (%c)\n", e_s.key.keysym.scancode, e_s.key.keysym.scancode);
 					D_PostEvent(&e_w);
 					break;
-				case SDL_MOUSEMOTION:
-					e_w.type = ev_mouse;
-					e_w.data1 = 0;
-					SDL_GetMouseState(&e_w.data2, &e_w.data3);
-
-					// Adjust mouse X
-					e_w.data2 -= 250;
-					e_w.data2 >>= 2;
-
-					D_PostEvent(&e_w);
-					break;
 				default:
 					break;
 			}
