@@ -3610,7 +3610,7 @@ static menuitem_t VideoOptionsMenu[] =
 {
 	// Tails
 	{IT_STRING | IT_SUBMENU, NULL, "Video Modes...",      &VidModeDef,      0},
-#if defined (UNIXLIKE) || defined (SDL)
+#if defined (UNIXLIKE) || defined (SDL) || defined(SRB2_SDL2)
 	{IT_STRING|IT_CVAR,      NULL, "Fullscreen",          &cv_fullscreen,  10},
 #endif
 #ifdef HWRENDER
@@ -3619,8 +3619,10 @@ static menuitem_t VideoOptionsMenu[] =
 #endif
 	{IT_STRING | IT_CVAR | IT_CV_SLIDER,
 	                         NULL, "Brightness",          &cv_usegamma,    40},
-
+							
+#if !defined(SRB2_SDL2)
 	{IT_STRING | IT_CVAR,    NULL, "V-SYNC",              &cv_vidwait,     50},
+#endif
 
 	{IT_STRING | IT_CVAR,    NULL, "Snow Density",        &cv_numsnow,     70}, // Changed all to normal string Tails 11-30-2000
 	{IT_STRING | IT_CVAR,    NULL, "Rain Density",        &cv_raindensity, 80}, // Changed all to normal string Tails 11-30-2000

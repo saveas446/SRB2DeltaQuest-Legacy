@@ -70,8 +70,8 @@ void I_GetEvent(void){
 	// This exists so we can reuse most of the keydown event code for the keyup event
 	boolean up = false;
 	boolean ignoremodifiers = false;
-		memset(&e_w,0x00,sizeof(e_w));
 		while (SDL_PollEvent(&e_s)) {
+			memset(&e_w,0x00,sizeof(e_w));
 			switch (e_s.type) {
 				case SDL_QUIT:
 					I_Quit();

@@ -43,7 +43,7 @@ vmode_t window_modes[NUM_SDLMODES] = {
 		// Fallback mode, 320x200 is gross
 		{
 			NULL,
-			"320x200W", //faB: W to make sure it's the windowed mode
+			"320x200", //faB: W to make sure it's the windowed mode
 			320, 200,   //(200.0/320.0)*(320.0/240.0),
 			320, 1,     // rowbytes, bytes per pixel
 			1, 2,       // windowed (TRUE), numpages
@@ -54,7 +54,7 @@ vmode_t window_modes[NUM_SDLMODES] = {
 		// Non-fallback copy of 320x200W, if you WANT to use 320x200W for some reason
 		{
 			NULL,
-			"320x200W", //faB: W to make sure it's the windowed mode
+			"320x200", //faB: W to make sure it's the windowed mode
 			320, 200,   //(200.0/320.0)*(320.0/240.0),
 			320, 1,     // rowbytes, bytes per pixel
 			1, 2,       // windowed (TRUE), numpages
@@ -64,7 +64,7 @@ vmode_t window_modes[NUM_SDLMODES] = {
 		},
 		{
 			NULL,
-			"320x240W", //faB: W to make sure it's the windowed mode
+			"320x240", //faB: W to make sure it's the windowed mode
 			320, 240,   //(200.0/320.0)*(320.0/240.0),
 			320, 1,     // rowbytes, bytes per pixel
 			1, 2,       // windowed (TRUE), numpages
@@ -74,7 +74,7 @@ vmode_t window_modes[NUM_SDLMODES] = {
 		},
 		{
 			NULL,
-			"640x400W", //faB: W to make sure it's the windowed mode
+			"640x400", //faB: W to make sure it's the windowed mode
 			640, 400,   //(200.0/320.0)*(320.0/240.0),
 			640, 1,     // rowbytes, bytes per pixel
 			1, 2,       // windowed (TRUE), numpages
@@ -84,7 +84,7 @@ vmode_t window_modes[NUM_SDLMODES] = {
 		},
 		{
 			NULL,
-			"640x480W", //faB: W to make sure it's the windowed mode
+			"640x480", //faB: W to make sure it's the windowed mode
 			640, 480,   //(200.0/320.0)*(320.0/240.0),
 			640, 1,     // rowbytes, bytes per pixel
 			1, 2,       // windowed (TRUE), numpages
@@ -94,7 +94,7 @@ vmode_t window_modes[NUM_SDLMODES] = {
 		},
 		{
 			NULL,
-			"800x600W", //faB: W to make sure it's the windowed mode
+			"800x600", //faB: W to make sure it's the windowed mode
 			800, 600,   //(200.0/320.0)*(320.0/240.0),
 			800, 1,     // rowbytes, bytes per pixel
 			1, 2,       // windowed (TRUE), numpages
@@ -104,7 +104,7 @@ vmode_t window_modes[NUM_SDLMODES] = {
 		},
 		{
 			NULL,
-			"1024x768W", //faB: W to make sure it's the windowed mode
+			"1024x768", //faB: W to make sure it's the windowed mode
 			1024, 768,   //(200.0/320.0)*(320.0/240.0),
 			1024, 1,     // rowbytes, bytes per pixel
 			1, 2,       // windowed (TRUE), numpages
@@ -114,7 +114,7 @@ vmode_t window_modes[NUM_SDLMODES] = {
 		},
 		{
 			NULL,
-			"1280x720W", //faB: W to make sure it's the windowed mode
+			"1280x720", //faB: W to make sure it's the windowed mode
 			1280, 720,   //(200.0/320.0)*(320.0/240.0),
 			1280, 1,     // rowbytes, bytes per pixel
 			1, 2,       // windowed (TRUE), numpages
@@ -124,7 +124,7 @@ vmode_t window_modes[NUM_SDLMODES] = {
 		},
 		{
 			NULL,
-			"1280x800W", //faB: W to make sure it's the windowed mode
+			"1280x800", //faB: W to make sure it's the windowed mode
 			1280, 800,   //(200.0/320.0)*(320.0/240.0),
 			1280, 1,     // rowbytes, bytes per pixel
 			1, 2,       // windowed (TRUE), numpages
@@ -134,7 +134,7 @@ vmode_t window_modes[NUM_SDLMODES] = {
 		},
 		{
 			NULL,
-			"1920x1080W", //faB: W to make sure it's the windowed mode
+			"1920x1080", //faB: W to make sure it's the windowed mode
 			1920, 1080,   //(200.0/320.0)*(320.0/240.0),
 			1920, 1,     // rowbytes, bytes per pixel
 			1, 2,       // windowed (TRUE), numpages
@@ -144,7 +144,7 @@ vmode_t window_modes[NUM_SDLMODES] = {
 		},
 		{
 			NULL,
-			"1920x1200W", //faB: W to make sure it's the windowed mode
+			"1920x1200", //faB: W to make sure it's the windowed mode
 			1920, 1200,   //(200.0/320.0)*(320.0/240.0),
 			1920, 1,     // rowbytes, bytes per pixel
 			1, 2,       // windowed (TRUE), numpages
@@ -233,7 +233,9 @@ int VID_GetModeForSize(int w, int h)
 	return bestmode;
 }
 
-void VID_PrepareModeList(void){}
+void VID_PrepareModeList(void){
+	allow_fullscreen = true;
+}
 
 // TODO: Some of the stuff done when we change modes might not be needed. See how much we can keep between mode switches (For example, we might just be able to change the window's dimensions instead of destroying and remaking it)
 int VID_SetMode(int modenum)
@@ -339,8 +341,6 @@ void I_EndRead(void){}
 // COMMAND STUFF
 
 boolean VID_InitConsole(void) {
-	// Register cvars
-	CV_RegisterVar(&cv_fullscreen);
 
 	// Register commands
 	COM_AddCommand("videomode", VID_Command_Vidmode);
