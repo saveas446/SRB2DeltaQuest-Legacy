@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Win32_LIB_ASM_Release"
+			OutputDirectory="D:\Games\SRB2\demo_2\lib"
 			IntermediateDirectory=".\Win32_LIB_ASM_Release"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
@@ -44,7 +44,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..,..\..\..\zlib"
-				PreprocessorDefinitions="WIN32;NDEBUG;PNG_USE_PNGVCRD;PNG_LIBPNG_SPECIALBUILD"
+				PreprocessorDefinitions="WIN32;NDEBUG;PNG_USE_PNGVCRD;PNG_LIBPNG_SPECIALBUILD;NO_LEGACY_STDIO_WIDE_SPECIFIERS"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -69,8 +69,9 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\..\..\lib\libpng.lib"
+				OutputFile=".\..\..\..\..\lib\libpng.lib"
 				SuppressStartupBanner="true"
+				IgnoreDefaultLibraryNames="legacy_stdio_wide_specifiers.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"

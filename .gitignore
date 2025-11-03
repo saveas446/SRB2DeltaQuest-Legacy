@@ -150,3 +150,7 @@ dev/reshadepreset.ini
 /2.2 (for reference)/
 lib/libpng.lib
 dev/sdllog.txt
+lib/zlib.lib
+lib/libpng.lib
+dev/srb2sdl2debug.exe
+lib/libpng.lib

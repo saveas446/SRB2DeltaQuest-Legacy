@@ -26,6 +26,7 @@
 ///	Does the face/direction indicator animatin.
 ///	Does palette indicators as well (red pain/berserk, bright pickup)
 
+#include "d2udef.h"
 #include "doomdef.h"
 #include "g_game.h"
 #include "r_local.h"
@@ -806,6 +807,7 @@ char letters[] = {
 static void ST_drawDebugInfo(void)
 {
 	char d2uver[33];
+	char sdl2[4];
 	char smomx[33];
 	char smomy[33];
 	char smomz[33];
@@ -874,6 +876,7 @@ static void ST_drawDebugInfo(void)
 	sprintf(sz, "Z: %d", stplyr->mo->z >> FRACBITS);
 
 	sprintf(d2uver, "DEMO 2 ULTIMATE v%d.%d.%d", MAJORVER, MINORVER, TINYVER);
+	sprintf(sdl2, "SDL2");
 	sprintf(scompdate, "Compiled on %s", __DATE__);
 	sprintf(scomptime, "Compiled at %s", __TIME__);
 
@@ -918,7 +921,13 @@ static void ST_drawDebugInfo(void)
 	currentrow = 0;
 
 	// ALWAYS draw version number. No matter what.
-	V_DrawString(0, 320 - (strlen(d2uver) << 3), currentrow, 0, d2uver);
+	if (wnd_system == WND_SDL2) {
+		// Hardcoding... yikes!
+		V_DrawString(0, 320 - ((strlen(d2uver) << 3) + 24), currentrow, 0, d2uver);
+		V_DrawString(V_REDMAP, 320 - (strlen(sdl2) << 3), currentrow, 0, sdl2);
+	} else {
+		V_DrawString(0, 320 - (strlen(d2uver) << 3), currentrow, 0, d2uver);
+	}
 	currentrow += 8;
 
 	if (devmodedraw[dm_playermovebasic]) {

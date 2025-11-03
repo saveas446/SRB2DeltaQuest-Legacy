@@ -122,7 +122,7 @@
 	Controls "tiny" version number (0.0.x)
 	Increment this every day that work on D2U is done
 	*/
-    #define TINYVER 7
+    #define TINYVER 8
 
 	/**
 	\brief Controls whether the title screen uses "TITLESKY" or "SKY1" as its BG
@@ -139,6 +139,18 @@
 	Controls whether the title cards use a pre-2.2 design or our new version with zone specific designs
 	*/
 	//#define NEWTITLECARDS
+
+	///\section enum Enums
+
+	typedef enum {
+		WND_DUMMY,
+		WND_DOS,
+		WND_WIN32,
+		WND_SDL,
+		WND_SDL2
+	} window_system;
+	
+	extern window_system wnd_system;
 
 
     ///\section san_chk Sanity checks

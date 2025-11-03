@@ -355,7 +355,7 @@ void VID_Command_Vidmode(void) {
 
 	if (COM_Argc() != 2) {
 		CONS_Printf("videomode <mode number>: Changes the video mode to the specified one. Number must be between 1 and %d.\n", NUM_SDLMODES - 1);
-		return 0;
+		return;
 	}
 
 	modenum = atoi(COM_Argv(1));

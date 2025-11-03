@@ -40,16 +40,6 @@ extern boolean usehome; //Alam: which path?
 extern const char *pandf; //Alam: how to path?
 extern char srb2path[256]; //Alam: SRB2's Home
 
-typedef enum {
-    WND_DUMMY,
-    WND_DOS,
-    WND_WIN32,
-    WND_SDL,
-    WND_SDL2
-} window_system;
-
-extern window_system wnd_system;
-
 // the infinite loop of D_SRB2Loop() called from win_main for windows version
 void D_SRB2Loop(void) FUNCNORETURN;
 

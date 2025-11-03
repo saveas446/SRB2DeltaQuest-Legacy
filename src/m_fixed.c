@@ -34,7 +34,7 @@
 */
 fixed_t FixedMul(fixed_t a, fixed_t b)
 {
-#if (defined (_WIN32) || defined (_WIN64)) && !defined (_XBOX) && !defined (_WIN32_WCE)
+#if (defined (_WIN32) || defined (_WIN64)) && !defined (_XBOX) && !defined (_WIN32_WCE) && !defined (SRB2_SDL2)
 	return MulDiv(a,b,FRACUNIT);
 #else
 	return (fixed_t)(((INT64) a * (INT64) b) >> FRACBITS);
@@ -52,7 +52,7 @@ fixed_t FixedMul(fixed_t a, fixed_t b)
 */
 fixed_t FixedDiv2(fixed_t a, fixed_t b)
 {
-#if (defined (_WIN32) || defined (_WIN64)) && !defined (_XBOX) && !defined (_WIN32_WCE)
+#if (defined (_WIN32) || defined (_WIN64)) && !defined (_XBOX) && !defined (_WIN32_WCE) && !defined (SRB2_SDL2)
 	int c = MulDiv(a,FRACUNIT,b);
 	if (c == -1)
 		I_Error("FixedDiv: divide by zero");

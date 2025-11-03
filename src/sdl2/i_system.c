@@ -1,9 +1,9 @@
-#include <SDL.h>
-#include <SDL_keycode.h>
-
 #include "../doomdef.h"
 #include "../keys.h"
 #include "../i_system.h"
+
+#include <SDL.h>
+#include <SDL_keycode.h>
 
 byte graphics_started = 0;
 

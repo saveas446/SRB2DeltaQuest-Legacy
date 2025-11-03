@@ -1,3 +1,4 @@
+#include "../d2udef.h"
 #include "../doomdef.h"
 #include "../d_main.h"
 #include "../m_argv.h"
