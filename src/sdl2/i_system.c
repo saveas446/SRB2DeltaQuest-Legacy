@@ -1,6 +1,8 @@
+#include "../g_input.h"
 #include "../g_state.h"
 #include "../d_netcmd.h"
 #include "../doomdef.h"
+#include "../screen.h"
 #include "../keys.h"
 #include "../i_system.h"
 
@@ -241,12 +243,18 @@ void I_GetEvent(void){
 					break;
 				case SDL_MOUSEBUTTONDOWN:
 					e_w.type = ev_keydown;
-					e_w.data1 = KEY_MOUSE1 + e_s.button;
+					e_w.data1 = KEY_MOUSE1 + e_s.button.button;
 					D_PostEvent(&e_w);
 					break;
 				case SDL_MOUSEBUTTONUP:
 					e_w.type = ev_keyup;
-					e_w.data1 = KEY_MOUSE1 + e_s.button;
+					e_w.data1 = KEY_MOUSE1 + e_s.button.button;
+					D_PostEvent(&e_w);
+					break;
+				case SDL_MOUSEMOTION:
+					e_w.type = ev_mouse;
+					e_w.data2 = e_s.motion.xrel;
+					e_w.data3 = e_s.motion.yrel;
 					D_PostEvent(&e_w);
 					break;
 				default:
@@ -257,18 +265,6 @@ void I_GetEvent(void){
 
 void I_OsPolling(void){
 	event_t e_w;
-
-	if (cv_usemouse.value) {
-		SDL_GetMouseState(&e_w.data2, &e_w.data3);
-		e_w.type = ev_mouse;
-		e_w.data1 = 0;
-
-		// Adjust mouse X
-		e_w.data2 -= 250;
-		e_w.data2 >>= 2;
-
-		D_PostEvent(&e_w);
-	}
 
 	I_GetEvent();
 }
@@ -375,7 +371,13 @@ void I_OutputMsg(char *error, ...)
 
 	SDL_Log(buffer);
 }
-void I_StartupMouse(void){}
+void I_StartupMouse(void){
+	if (cv_usemouse.value != 0) {
+		SDL_SetRelativeMouseMode(SDL_TRUE);
+	} else {
+		SDL_SetRelativeMouseMode(SDL_FALSE);
+	}
+}
 
 void I_StartupMouse2(void){}
 

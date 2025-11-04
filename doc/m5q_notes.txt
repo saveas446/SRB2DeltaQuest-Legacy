@@ -1,0 +1,142 @@
+NOTES:
+==============
+
+MIDI NOTES
+
+MThd chunk length seems to be ignored by decoder, meaning it might be unnessecary due to it often being the same
+
+PPQ is the amount of units per beat if positive, if negative is "SMPTE compatible units" (wtf???)
+
+Presumably a unit is the smallest unit of time in MIDI?
+
+MIDI Header and track chunk lengths do not count their magic numbers and length specifiers
+
+The track event bytes types are:
+
+0xF0/0xF7: SysEx event
+0xFF:      Meta event
+
+
+
+
+M5Q NOTES
+
+M5Q PPQ is divided by 12 and in U8 format compared to MIDI's U16 (High precision of MIDI PPQ is often unnessecary?)
+
+M5Q's tempo appears to be based on the first tempo event in the original MIDI, albeit with some math done (Math.round(60000000 / original value * 20) / 20))
+
+
+The M5Q Type byte is used for multiple attributes about the M5Q, stored like this:
+
+. = Unused
+V = Version
+M = Has Metadata (TODO: What is this?)
+C = Is Compressed
+
+..CMVVVV
+
+
+The M5Q ID byte determines what type of compression is used on the M5Q file
+
+0x00: Raw
+0x12: LZMA
+0xDE: DEFLATE
+
+All other values are most likely invalid.
+
+
+The channel options byte encodes which possible attributes a channel can have are stored in the file.
+
+. = Unused
+N = Channel Name
+R = "Rest" (?)
+B = "PB" (?)
+P = Channel Panning
+V = Channel Volume 
+G = Channel "Program" (?)
+
+..NRBPVG
+
+For example, a channel options byte of 00100000 means that only the channel name is stored.
+
+
+
+VARIABLE LENGTH NUMBERS
+
+Instead of encoding numbers plainly in S32 or U64, MIDI uses a system called "variable-length numbers"
+
+Basically each byte only has bits 1-7 in use for storing the numbers
+
+This here stores 14 bits of number data.
+
+L = Length specifier (we'll get into it)
+N = Actual number 
+LNNNNNNN LNNNNNNN
+10010100 00000000 
+
+This translates to "00101000000000" or 0x0A00.
+
+How the first bit of every byte works is that if it's 1, there is another byte before the number ends.
+If it's 0, then it is the last byte.
+
+Some more examples:
+
+LNNNNNNN
+00110011 is "0110011" or 0x33.
+
+LNNNNNNN LNNNNNNN LNNNNNNN
+11101100 10010011 00110101 is "110110000100110110101" or 0x1B09B5.
+
+And some common ones:
+
+LNNNNNNN LNNNNNNN
+10000001 01111111 is "11111111" or 0xFF, actually stored as 0x817F with the length specifiers.
+
+LNNNNNNN
+00000000 is "0000000" or 0x00.
+
+Variable-length numbers can also only go up to 4 bytes.
+
+M5Q FORMAT:
+==============
+
+HEADER CHUNK
+
+0x00-0x02: "M5Q" magic number (ASCII-3)
+0x03: 	   PPQ (U8)
+0x04-0x05: Tempo (U16?, little endian???)
+0x06:	   M5Q Type (U8)
+0x07:	   M5Q ID (enum, U8)
+
+TRACK CHUNK
+
+0x00-0x02: "Trk" magic number (ASCII-3)
+
+CHANNEL DATA
+0x03:      Channel options byte
+
+
+MIDI FORMAT:
+==============
+
+
+HEADER CHUNK
+
+0x00-0x03: "MThd" magic number (ASCII-4)
+0x04-0x07: Length of header chunk (U32, big endian)
+0x08-0x09: MIDI format (enum, U16, big endian)
+0x0A-0x0B: Number of track chunks (U16, big endian)
+0x0C-0x0D: MIDI's PPQ (S16, big endian?)
+
+TRACK HEADER
+
+0x00-0x03: "MTrk" magic number (ASCII-4)
+0x04-0x07: Length of track data (U32, big endian)
+
+TRACK EVENT
+
+Delta time of event (VL)
+Event byte (U8)
+Meta event type (U8)
+Metadata length (VL)
+...DATA...
