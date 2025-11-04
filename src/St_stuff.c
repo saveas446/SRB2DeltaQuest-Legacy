@@ -806,8 +806,6 @@ char letters[] = {
 
 static void ST_drawDebugInfo(void)
 {
-	char d2uver[33];
-	char sdl2[4];
 	char smomx[33];
 	char smomy[33];
 	char smomz[33];
@@ -875,8 +873,6 @@ static void ST_drawDebugInfo(void)
 	sprintf(sy, "Y: %d", stplyr->mo->y >> FRACBITS);
 	sprintf(sz, "Z: %d", stplyr->mo->z >> FRACBITS);
 
-	sprintf(d2uver, "DEMO 2 ULTIMATE v%d.%d.%d", MAJORVER, MINORVER, TINYVER);
-	sprintf(sdl2, "SDL2");
 	sprintf(scompdate, "Compiled on %s", __DATE__);
 	sprintf(scomptime, "Compiled at %s", __TIME__);
 
@@ -918,47 +914,37 @@ static void ST_drawDebugInfo(void)
 	/*V_DrawString(0, 240, 24, 0, "SPEED =");
 	V_DrawString(0, 296, 24, 0, sspeed);*/
 
-	currentrow = 0;
-
-	// ALWAYS draw version number. No matter what.
-	if (wnd_system == WND_SDL2) {
-		// Hardcoding... yikes!
-		V_DrawString(0, 320 - ((strlen(d2uver) << 3) + 24), currentrow, 0, d2uver);
-		V_DrawString(V_REDMAP, 320 - (strlen(sdl2) << 3), currentrow, 0, sdl2);
-	} else {
-		V_DrawString(0, 320 - (strlen(d2uver) << 3), currentrow, 0, d2uver);
-	}
-	currentrow += 8;
+	currentrow = 8;
 
 	if (devmodedraw[dm_playermovebasic]) {
 		// Player movement values (basic)
-		V_DrawString(V_REDMAP, 320 - (strlen(sx) << 3), currentrow, 0, sx);
+		V_DrawString(V_REDMAP, 320 - V_StringWidth(sx), currentrow, 0, sx);
 		currentrow += 8;
-		V_DrawString(V_GREENMAP, 320 - (strlen(sy) << 3), currentrow, 0, sy);
+		V_DrawString(V_GREENMAP, 320 - V_StringWidth(sy), currentrow, 0, sy);
 		currentrow += 8;
-		V_DrawString(V_BLUEMAP, 320 - (strlen(sz) << 3), currentrow, 0, sz);
+		V_DrawString(V_BLUEMAP, 320 - V_StringWidth(sz), currentrow, 0, sz);
 		currentrow += 8;
-		V_DrawString(0, 320 - (strlen(sangle) << 3), currentrow, V_YELLOWMAP, sangle);
+		V_DrawString(0, 320 - V_StringWidth(sangle), currentrow, V_YELLOWMAP, sangle);
 		currentrow += 8;
 	}
 
 	if (devmodedraw[dm_playermoveadv]) {
 		// Player movement values (advanced)
-		V_DrawString(0, 320 - (strlen(smomx) << 3), currentrow, 0, smomx);
+		V_DrawString(0, 320 - V_StringWidth(smomx), currentrow, 0, smomx);
 		currentrow += 8;
-		V_DrawString(0, 320 - (strlen(smomy) << 3), currentrow, 0, smomy);
+		V_DrawString(0, 320 - V_StringWidth(smomy), currentrow, 0, smomy);
 		currentrow += 8;
-		V_DrawString(0, 320 - (strlen(smomz) << 3), currentrow, 0, smomz);
+		V_DrawString(0, 320 - V_StringWidth(smomz), currentrow, 0, smomz);
 		currentrow += 8;
-		V_DrawString(0, 320 - (strlen(smfjumped) << 3), currentrow, 0, smfjumped);
+		V_DrawString(0, 320 - V_StringWidth(smfjumped), currentrow, 0, smfjumped);
 		currentrow += 8;
-		V_DrawString(0, 320 - (strlen(smfspinning) << 3), currentrow, 0, smfspinning);
+		V_DrawString(0, 320 - V_StringWidth(smfspinning), currentrow, 0, smfspinning);
 		currentrow += 8;
-		V_DrawString(0, 320 - (strlen(smfstartdash) << 3), currentrow, 0, smfstartdash);
+		V_DrawString(0, 320 - V_StringWidth(smfstartdash), currentrow, 0, smfstartdash);
 		currentrow += 8;
-		V_DrawString(0, 320 - (strlen(sjumping) << 3), currentrow, 0, sjumping);
+		V_DrawString(0, 320 - V_StringWidth(sjumping), currentrow, 0, sjumping);
 		currentrow += 8;
-		V_DrawString(0, 320 - (strlen(sscoreadd) << 3), currentrow, 0, sscoreadd);
+		V_DrawString(0, 320 - V_StringWidth(sscoreadd), currentrow, 0, sscoreadd);
 		currentrow += 8;
 	}
 
@@ -992,11 +978,11 @@ static void ST_drawDebugInfo(void)
 
 	if (devmodedraw[dm_version]) {
 		// Detailed version info, like the version command
-		V_DrawString(0, 320 - (strlen(scomptime) << 3), currentrow, 0, scomptime);
+		V_DrawString(0, 320 - V_StringWidth(scomptime), currentrow, 0, scomptime);
 		currentrow += 8;
-		V_DrawString(0, 320 - (strlen(scompdate) << 3), currentrow, 0, scompdate);
+		V_DrawString(0, 320 - V_StringWidth(scompdate), currentrow, 0, scompdate);
 		currentrow += 8;
-		V_DrawString(0, 320 - (strlen(sbuildtype) << 3), currentrow, 0, sbuildtype);
+		V_DrawString(0, 320 - V_StringWidth(sbuildtype), currentrow, 0, sbuildtype);
 		currentrow += 8;
 		/*V_DrawString(0, 320 - (strlen(swindowsys) << 3), currentrow, 0, swindowsys);
 		currentrow += 8;*/
@@ -1004,17 +990,17 @@ static void ST_drawDebugInfo(void)
 
 	if (devmodedraw[dm_map]) {
 		// Info about the map we're on
-		V_DrawString(0, 320 - (strlen(sgamemap) << 3), currentrow, 0, sgamemap);
+		V_DrawString(0, 320 - V_StringWidth(sgamemap), currentrow, 0, sgamemap);
 		currentrow += 8;
-		V_DrawString(0, 320 - (strlen(szonename) << 3), currentrow, 0, szonename);
+		V_DrawString(0, 320 - V_StringWidth(szonename), currentrow, 0, szonename);
 		currentrow += 8;
-		V_DrawString(0, 320 - (strlen(sactnum) << 3), currentrow, 0, sactnum);
+		V_DrawString(0, 320 - V_StringWidth(sactnum), currentrow, 0, sactnum);
 		currentrow += 8;
-		V_DrawString(0, 320 - (strlen(ssingleplayer) << 3), currentrow, 0, ssingleplayer);
+		V_DrawString(0, 320 - V_StringWidth(ssingleplayer), currentrow, 0, ssingleplayer);
 		currentrow += 8;
-		V_DrawString(0, 320 - (strlen(smatch) << 3), currentrow, 0, smatch);
+		V_DrawString(0, 320 - V_StringWidth(smatch), currentrow, 0, smatch);
 		currentrow += 8;
-		V_DrawString(0, 320 - (strlen(sskynum) << 3), currentrow, 0, sskynum);
+		V_DrawString(0, 320 - V_StringWidth(sskynum), currentrow, 0, sskynum);
 		currentrow += 8;
 	}
 
@@ -1699,11 +1685,25 @@ static void ST_overlayDrawer(void)
 	int splity;
 	double temp, temp2;
 	char* creditstxt;
+	char d2uver[33];
+	char sdl2[4];
 
 	if (cv_splitscreen.value)
 		splity = 24;
 	else
 		splity = 0;
+
+	sprintf(d2uver, "DEMO 2 ULTIMATE v%d.%d.%d", MAJORVER, MINORVER, TINYVER);
+	sprintf(sdl2, "SDL2");
+
+	// Version watermark
+	if (wnd_system == WND_SDL2) {
+		// Hardcoding... yikes!
+		V_DrawString(0, 320 - (V_StringWidth(d2uver) + V_StringWidth(sdl2) + 4), 0, 0, d2uver);
+		V_DrawString(V_REDMAP, 320 - V_StringWidth(sdl2), 0, 0, sdl2);
+	} else {
+		V_DrawString(0, 320 - V_StringWidth(d2uver), 0, 0, d2uver);
+	}
 
 	if (stplyr->linkcount > 1)
 	{
