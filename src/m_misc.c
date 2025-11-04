@@ -76,7 +76,7 @@
 
 static CV_PossibleValue_t screenshot_cons_t[] = {{0, "Default"}, {1, "HOME"}, {2, "SRB2"}, {3, "CUSTOM"}, {0, NULL}};
 consvar_t cv_screenshot_option = {"screenshot_option", "Default", CV_SAVE, screenshot_cons_t, NULL, 0, NULL, NULL, 0, 0, NULL};
-consvar_t cv_screenshot_folder = {"screenshot_folder", "", CV_SAVE, NULL, NULL, 0, NULL, NULL, 0, 0, NULL};
+consvar_t cv_screenshot_folder = {"screenshot_folder", "screenshots/", CV_SAVE, NULL, NULL, 0, NULL, NULL, 0, 0, NULL};
 boolean moviemode = false; // In snapshots files or in 1 MNG file
 
 /** Returns the map number for a map identified by the last two characters in
@@ -1126,6 +1126,17 @@ void M_ScreenShot(void)
 		pathname = srb2path;
 	else if (cv_screenshot_option.value == 3 && *cv_screenshot_folder.string != '\0')
 		pathname = cv_screenshot_folder.string;
+
+	if (cv_screenshot_option.value != 3)
+	{
+		// Check that we're not creating a screenshots folder inside a screenshots folder
+		// This has the added downside that if any of the folders D2U is stored in has "screenshots" in it, that it won't add "\screenshots\" to the end of the path
+		// But whatever
+		if (strstr(pathname, "screenshots") == NULL) {
+			strcat(pathname, PATHSEP"screenshots"PATHSEP);
+		}
+		I_mkdir(pathname, 0755);
+	}
 
 #ifdef USE_PNG
 	if (rendermode != render_none)

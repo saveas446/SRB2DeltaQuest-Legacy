@@ -423,11 +423,20 @@ char *I_GetUserName(void)
 	return NULL;
 }
 
+// stolen from sdl1
 int I_mkdir(const char *dirname, int unixright)
 {
+//[segabor]
+#if defined (UNIXLIKE) || defined (__CYGWIN__) || defined (__OS2__) || (defined (_XBOX) && defined (__GNUC__))
+	return mkdir(dirname, unixright);
+#elif (defined (_WIN32) || (defined (_WIN32_WCE) && !defined (__GNUC__)) || defined (_WIN64)) && !defined (_XBOX)
+	unixright = 0; /// \todo should implement ntright under nt...
+	return CreateDirectoryA(dirname, NULL);
+#else
 	dirname = NULL;
 	unixright = 0;
-	return -1;
+	return false;
+#endif
 }
 
 UINT64 I_FileSize(const char *filename)
