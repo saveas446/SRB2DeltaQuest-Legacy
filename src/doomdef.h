@@ -81,7 +81,7 @@
 // Uncheck this to compile debugging code
 //#define RANGECHECK
 //#ifndef PARANOIA
-#define PARANOIA // do some tests that never fail but maybe
+//#define PARANOIA // do some tests that never fail but maybe
 // turn this on by make etc.. DEBUGMODE = 1 or use the Debug profile in the VC++ projects
 //#endif
 #if defined (_WIN32) || defined (SDLIO) || defined (UNIXLIKE) || defined (macintosh) || defined (_WIN64)
