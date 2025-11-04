@@ -1,3 +1,5 @@
+#include "../g_state.h"
+#include "../d_netcmd.h"
 #include "../doomdef.h"
 #include "../keys.h"
 #include "../i_system.h"
@@ -237,6 +239,16 @@ void I_GetEvent(void){
 					//CONS_Printf("Physical key code: 0x%02X (%c)\n", e_s.key.keysym.scancode, e_s.key.keysym.scancode);
 					D_PostEvent(&e_w);
 					break;
+				case SDL_MOUSEBUTTONDOWN:
+					e_w.type = ev_keydown;
+					e_w.data1 = KEY_MOUSE1 + e_s.button;
+					D_PostEvent(&e_w);
+					break;
+				case SDL_MOUSEBUTTONUP:
+					e_w.type = ev_keyup;
+					e_w.data1 = KEY_MOUSE1 + e_s.button;
+					D_PostEvent(&e_w);
+					break;
 				default:
 					break;
 			}
@@ -244,6 +256,20 @@ void I_GetEvent(void){
 }
 
 void I_OsPolling(void){
+	event_t e_w;
+
+	if (cv_usemouse.value) {
+		SDL_GetMouseState(&e_w.data2, &e_w.data3);
+		e_w.type = ev_mouse;
+		e_w.data1 = 0;
+
+		// Adjust mouse X
+		e_w.data2 -= 250;
+		e_w.data2 >>= 2;
+
+		D_PostEvent(&e_w);
+	}
+
 	I_GetEvent();
 }
 
