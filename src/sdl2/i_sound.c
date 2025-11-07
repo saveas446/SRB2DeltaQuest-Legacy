@@ -119,66 +119,6 @@ void I_UnRegisterSong(int handle)
 //  DIGMUSIC I/O
 //
 
-
-#ifdef HAVE_MIXER
-
-void I_InitDigMusic(void){
-	if (!nomusic) {
-		SDL_Init(SDL_INIT_AUDIO);
-		if (Mix_Init(MIX_INIT_OGG) & MIX_INIT_OGG) {
-			CONS_Printf("OGG support enabled\n");
-		} else {
-			I_Error("I_InitDigMusic(): OGG support NOT enabled: %s\n", Mix_GetError());
-		}
-		Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
-	}
-}
-
-void I_ShutdownDigMusic(void){}
-
-
-Mix_Music* currentsong;
-void* data = NULL;
-SDL_RWops* rw;
-
-boolean I_StartDigSong(const char *musicname, int looping)
-{
-	char* songname;
-
-	songname = strupr(va("o_%s", musicname));
-
-	// Song does not exist
-	if (W_CheckNumForName(songname) == -1) 
-		return false;
-
-	data = W_CacheLumpNum(W_GetNumForName(songname), PU_MUSIC);
-
-	rw = SDL_RWFromConstMem(data, W_LumpLength(W_GetNumForName(songname)));
-
-	if (rw == NULL) 
-		I_Error("I_StartDigSong(): rw is NULL!\n Error: %s", Mix_GetError());
-
-	currentsong = Mix_LoadMUSType_RW(rw, MUS_OGG, 1);
-
-	if (currentsong == NULL) 
-		I_Error("I_StartDigSong(): currentsong is NULL!\n Error: %s", Mix_GetError());
-
-	if (looping)
-		Mix_PlayMusic(currentsong, -1);
-	else
-		Mix_PlayMusic(currentsong, 1);
-
-	return true;
-}
-
-void I_StopDigSong(void){}
-
-void I_SetDigMusicVolume(int volume)
-{
-	volume = 0;
-}
-#else
-
 void I_InitDigMusic(void){}
 
 void I_ShutdownDigMusic(void){}
@@ -196,6 +136,5 @@ void I_SetDigMusicVolume(int volume)
 {
 	volume = 0;
 }
-#endif
 
 
