@@ -1586,16 +1586,19 @@ static void P_SceneryZMovement(mobj_t *mo)
 //
 // Check for water, set stuff in mobj_t struct for movement code later.
 // This is called either by P_MobjThinker() or P_PlayerThink()
-void P_MobjCheckWater(mobj_t *mobj)
+void P_MobjCheckWater(mobj_t* mobj)
 {
-	sector_t *sector;
+	sector_t* sector;
 	fixed_t z;
 	int oldeflags, wasinwater;
 
 	wasinwater = mobj->eflags & MF_UNDERWATER; // important: not boolean!
+	boolean wasingoo = (mobj->eflags & MF_GOOWATER) == MF_GOOWATER;
+
+
 
 	// Default if no water exists.
-	mobj->watertop = mobj->waterbottom = mobj->subsector->sector->floorheight - 1000*FRACUNIT;
+	mobj->watertop = mobj->waterbottom = mobj->subsector->sector->floorheight - 1000 * FRACUNIT;
 
 	// see if we are in water, and set some flags for later
 	sector = mobj->subsector->sector;
@@ -1604,20 +1607,22 @@ void P_MobjCheckWater(mobj_t *mobj)
 
 	if (sector->ffloors) // 3D water
 	{
-		ffloor_t *rover;
+		ffloor_t* rover;
 
-		mobj->eflags &= ~(MF_UNDERWATER|MF_TOUCHWATER);
+		mobj->eflags &= ~(MF_UNDERWATER | MF_TOUCHWATER);
 
 		for (rover = sector->ffloors; rover; rover = rover->next)
 		{
 			if (!(rover->flags && FF_EXISTS) || !(rover->flags & FF_SWIMMABLE)
 				|| rover->flags & FF_SOLID)
 				continue;
-			if (*rover->topheight < mobj->z || *rover->bottomheight > (mobj->z + (mobj->info->height/2)))
+			if (*rover->topheight < mobj->z || *rover->bottomheight >(mobj->z + (mobj->info->height / 2)))
 				continue;
 
 			if (mobj->z + mobj->info->height > *rover->topheight)
 				mobj->eflags |= MF_TOUCHWATER;
+			if (rover->flags & FF_GOOWATER && !(mobj->flags & MF_NOGRAVITY))
+				mobj->eflags |= MF_GOOWATER;
 			else
 				mobj->eflags &= ~MF_TOUCHWATER;
 
@@ -1625,7 +1630,7 @@ void P_MobjCheckWater(mobj_t *mobj)
 			mobj->watertop = *rover->topheight;
 			mobj->waterbottom = *rover->bottomheight;
 
-			if (mobj->z + (mobj->info->height/2) < *rover->topheight)
+			if (mobj->z + (mobj->info->height / 2) < *rover->topheight)
 			{
 				mobj->eflags |= MF_UNDERWATER;
 
@@ -1659,7 +1664,7 @@ void P_MobjCheckWater(mobj_t *mobj)
 		}
 	}
 	else
-		mobj->eflags &= ~(MF_UNDERWATER|MF_TOUCHWATER);
+		mobj->eflags &= ~(MF_UNDERWATER | MF_TOUCHWATER);
 
 	if (leveltime < 1)
 		wasinwater = mobj->eflags & MF_UNDERWATER;
@@ -1673,72 +1678,83 @@ void P_MobjCheckWater(mobj_t *mobj)
 
 		// Check to make sure you didn't just cross into a sector to jump out of
 		// that has shallower water than the block you were originally in.
-		if (mobj->watertop-mobj->floorz <= mobj->info->height>>1)
+		if (mobj->watertop - mobj->floorz <= mobj->info->height >> 1)
 			return;
 
-		if (wasinwater && mobj->momz > 0)
+		
 		{
-			mobj->momz = FixedMul(mobj->momz,(780*FRACUNIT)/457); // Give the mobj a little out-of-water boost.
-			if (mobj->player)
-			{
-				mobj->momz = FixedDiv(mobj->momz,(100*FRACUNIT)/mobj->player->jumpfactor);
+			if ((mobj->eflags & MF_GOOWATER || wasingoo)) // Decide what happens to your momentum when you enter/leave goopy water.
+			{ 
+				if (wasinwater && mobj->momz > 0)
+					mobj->momz = FixedMul(mobj->momz, FixedDiv(9 * FRACUNIT, 8 * FRACUNIT)); // Give the mobj a little out-of-goo boost.
+				else if (mobj->momz < 0)
+					mobj->momz = FixedMul(mobj->momz, FixedDiv(2 * FRACUNIT, 5 * FRACUNIT)); // KILL its momentum.
 			}
-		}
+			if (wasinwater && mobj->momz > 0)
+			mobj->momz = FixedMul(mobj->momz, (780 * FRACUNIT) / 457); // Give the mobj a little out-of-water boost.
 
-		if (mobj->momz < 0)
-		{
-			if (mobj->z+(mobj->info->height>>1)-mobj->momz >= mobj->watertop)
+
+			if (mobj->momz < 0)
 			{
-				P_SpawnMobj(mobj->x, mobj->y, mobj->watertop, MT_SPLISH); // Spawn a splash
+				if (mobj->z + (mobj->info->height >> 1) - mobj->momz >= mobj->watertop)
+				{
+					P_SpawnMobj(mobj->x, mobj->y, mobj->watertop, MT_SPLISH); // Spawn a splash
+				}
+
+				// skipping stone!
+				if (mobj->player && mobj->player->waterskip && !mobj->player->mfjumped && mobj->player->speed / 2 > abs(mobj->momz >> FRACBITS)
+					&& mobj->player->mfspinning)
+				{
+					mobj->momz = -mobj->momz / 2;
+
+					if (mobj->momz > 6 * FRACUNIT)
+						mobj->momz = 6 * FRACUNIT;
+				}
+
+			}
+			else if (mobj->momz > 0)
+			{
+				if (mobj->z + (mobj->info->height >> 1) - mobj->momz < mobj->watertop)
+				{
+					P_SpawnMobj(mobj->x, mobj->y, mobj->watertop, MT_SPLISH); // Spawn a splash
+				}
 			}
 
-			// skipping stone!
-			if (mobj->player && mobj->player->waterskip && !mobj->player->mfjumped && mobj->player->speed/2 > abs(mobj->momz>>FRACBITS)
-				&& mobj->player->mfspinning)
+
+
+			S_StartSound(mobj, sfx_splish); // And make a sound!
+			if (mobj->eflags & MF_GOOWATER || wasingoo)
+				S_StartSound(mobj, sfx_ghit);
+			
+
+
+			bubblecount = abs(mobj->momz) >> FRACBITS;
+			// Create tons of bubbles
+			for (i = 0; i < bubblecount; i++)
 			{
-				mobj->momz = -mobj->momz/2;
+				// P_Random()s are called individually
+				// to allow consistency across various
+				// compilers, since the order of function
+				// calls in C is not part of the ANSI
+				// specification.
+				prandom[0] = P_Random();
+				prandom[1] = P_Random();
+				prandom[2] = P_Random();
+				prandom[3] = P_Random();
+				prandom[4] = P_Random();
+				prandom[5] = P_Random();
 
-				if (mobj->momz > 6*FRACUNIT)
-					mobj->momz = 6*FRACUNIT;
+				if (prandom[0] < 32)
+					P_SpawnMobj(mobj->x + (prandom[1] << (FRACBITS - 3)) * (prandom[2] & 1 ? 1 : -1),
+						mobj->y + (prandom[3] << (FRACBITS - 3)) * (prandom[4] & 1 ? 1 : -1),
+						mobj->z + (prandom[5] << (FRACBITS - 2)), MT_MEDIUMBUBBLE)
+					->momz = mobj->momz < 0 ? mobj->momz >> 4 : 0;
+				else
+					P_SpawnMobj(mobj->x + (prandom[1] << (FRACBITS - 3)) * (prandom[2] & 1 ? 1 : -1),
+						mobj->y + (prandom[3] << (FRACBITS - 3)) * (prandom[4] & 1 ? 1 : -1),
+						mobj->z + (prandom[5] << (FRACBITS - 2)), MT_SMALLBUBBLE)
+					->momz = mobj->momz < 0 ? mobj->momz >> 4 : 0;
 			}
-
-		}
-		else if (mobj->momz > 0)
-		{
-			if (mobj->z+(mobj->info->height>>1)-mobj->momz < mobj->watertop)
-			{
-				P_SpawnMobj(mobj->x, mobj->y, mobj->watertop, MT_SPLISH); // Spawn a splash
-			}
-		}
-
-		S_StartSound(mobj, sfx_splish); // And make a sound!
-	
-		bubblecount = abs(mobj->momz)>>FRACBITS;
-		// Create tons of bubbles
-		for (i = 0; i < bubblecount; i++)
-		{
-			// P_Random()s are called individually
-			// to allow consistency across various
-			// compilers, since the order of function
-			// calls in C is not part of the ANSI
-			// specification.
-			prandom[0] = P_Random();
-			prandom[1] = P_Random();
-			prandom[2] = P_Random();
-			prandom[3] = P_Random();
-			prandom[4] = P_Random();
-			prandom[5] = P_Random();
-
-			if (prandom[0] < 32)
-				P_SpawnMobj(mobj->x + (prandom[1]<<(FRACBITS-3)) * (prandom[2]&1 ? 1 : -1),
-					mobj->y + (prandom[3]<<(FRACBITS-3)) * (prandom[4]&1 ? 1 : -1),
-					mobj->z + (prandom[5]<<(FRACBITS-2)), MT_MEDIUMBUBBLE)
-					->momz = mobj->momz < 0 ? mobj->momz>>4 : 0;
-			else
-				P_SpawnMobj(mobj->x + (prandom[1]<<(FRACBITS-3)) * (prandom[2]&1 ? 1 : -1),
-					mobj->y + (prandom[3]<<(FRACBITS-3)) * (prandom[4]&1 ? 1 : -1),
-					mobj->z + (prandom[5]<<(FRACBITS-2)), MT_SMALLBUBBLE)
-					->momz = mobj->momz < 0 ? mobj->momz>>4 : 0;
 		}
 	}
 }
@@ -2920,6 +2936,147 @@ void P_SpawnParaloop(fixed_t x, fixed_t y, fixed_t z, fixed_t radius, int number
 			mobj->tics = 1;
 	}
 }
+
+
+//
+// P_CheckGravity
+//
+// Checks the current gravity state
+// of the object. If affect is true,
+// a gravity force will be applied.
+//
+void P_CheckGravity(mobj_t* mo, boolean affect)
+{
+	fixed_t gravityadd = 0;
+	boolean no3dfloorgrav = true; // Custom gravity
+	boolean goopgravity = false;
+
+	I_Assert(mo != NULL);
+	I_Assert(!P_MobjWasRemoved(mo));
+
+	if (mo->type != MT_SPINFIRE)
+		mo->eflags &= ~MF_VERTICALFLIP;
+
+	if (mo->subsector->sector->ffloors) // Check for 3D floor gravity too.
+	{
+		ffloor_t* rover;
+
+		for (rover = mo->subsector->sector->ffloors; rover; rover = rover->next)
+		{
+			if (!(rover->flags & FF_EXISTS))
+				continue;
+
+			if (P_InsideANonSolidFFloor(mo, rover))
+			{
+				if ((rover->flags & (FF_SWIMMABLE | FF_GOOWATER)) == (FF_SWIMMABLE | FF_GOOWATER))
+					goopgravity = true;
+				if (rover->master->frontsector->gravity)
+				{
+					gravityadd = -FixedMul(gravity,
+						(FixedDiv(*rover->master->frontsector->gravity >> FRACBITS, 1000)));
+
+					if (rover->master->frontsector->verticalflip && gravityadd > 0)
+						mo->eflags |= MF_VERTICALFLIP;
+
+					no3dfloorgrav = false;
+					break;
+				}
+			}
+		}
+	}
+
+	if (no3dfloorgrav)
+	{
+		if (mo->subsector->sector->gravity)
+			gravityadd = -FixedMul(gravity,
+				(FixedDiv(*mo->subsector->sector->gravity >> FRACBITS, 1000)));
+		else
+			gravityadd = -gravity;
+
+		if (mo->subsector->sector->verticalflip && gravityadd > 0)
+			mo->eflags |= MF_VERTICALFLIP;
+	}
+
+	// Less gravity underwater.
+	if (mo->eflags & MF_UNDERWATER && !goopgravity)
+		gravityadd = gravityadd / 3;
+
+	if (!mo->momz) // mobj at stop, no floor, so feel the push of gravity!
+		gravityadd <<= 1;
+
+	if (mo->player)
+	{
+		if (mo->player->charability == 1 && (mo->player->powers[pw_tailsfly]
+			|| (mo->state >= &states[S_PLAY_SPC1] && mo->state <= &states[S_PLAY_SPC4])))
+			gravityadd = gravityadd / 3; // less gravity while flying
+		if (mo->player->charflags & 3)
+			gravityadd = gravityadd / 3; // less gravity while gliding
+		if (mo->player->climbing)
+			gravityadd = 0;
+
+		{
+			UINT8 bits = 0;
+			if (bits & 1)
+			{
+				gravityadd = -gravityadd;
+				if (mo->eflags & MF_VERTICALFLIP)
+					mo->eflags &= ~MF_VERTICALFLIP;
+				else
+					mo->eflags |= MF_VERTICALFLIP;
+			}
+		}
+	}
+	else
+	{
+		// Objects with permanent reverse gravity (MF2_OBJECTFLIP)
+		if (mo->flags2 & MF_SPAWNCEILING)
+		{
+			mo->eflags |= MF_VERTICALFLIP;
+			if (gravityadd < 0) // Don't sink, only rise up
+				gravityadd *= -1;
+			if (mo->z + mo->height >= mo->ceilingz)
+				gravityadd = 0;
+		}
+		else //Otherwise, sort through the other exceptions.
+		{
+			switch (mo->type)
+			{
+			case MT_FLINGRING:
+			case MT_RAILRING:
+			case MT_INFINITYRING:
+			case MT_AUTOMATICRING:
+				if (mo->target)
+				{
+					// Flung items copy the gravity of their tosser.
+					if ((mo->target->eflags & MF_VERTICALFLIP) && !(mo->eflags & MF_VERTICALFLIP))
+					{
+						gravityadd = -gravityadd;
+						mo->eflags |= MF_VERTICALFLIP;
+					}
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	// Goop has slower, reversed gravity
+	if (goopgravity)
+		gravityadd = -gravityadd / 5;
+
+	if (affect)
+		mo->momz += FixedMul(gravityadd, mo->scale);
+
+	if (mo->type == MT_SKIM && mo->z + mo->momz <= mo->watertop && mo->z >= mo->watertop)
+	{
+		mo->momz = 0;
+		mo->flags |= MF_NOGRAVITY;
+	}
+}
+
+#define STOPSPEED (FRACUNIT)
+#define FRICTION (ORIG_FRICTION) // 0.90625
 
 // Returns true if no boss with health is in the level.
 // Used for Chaos mode

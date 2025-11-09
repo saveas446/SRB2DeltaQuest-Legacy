@@ -218,7 +218,11 @@ typedef enum
 	// (for player, allows swimming up/down)
 	MF_UNDERWATER        = 8,
 	// used for ramp sectors
-	MF_JUSTSTEPPEDDOWN   = 16
+	MF_JUSTSTEPPEDDOWN   = 16,
+	MF_VERTICALFLIP      = 32,
+	// Goo water
+	MF_GOOWATER          = 64,
+	// free: to and including 1<<7
 } mobjeflag_t;
 
 #if MAXSKINCOLORS > 16
@@ -309,6 +313,8 @@ typedef struct mobj_s
 	int waterbottom; // bottom of the water FOF the mobj is in
 
 	int mobjnum; // A unique number for this mobj. Used for restoring pointers on save games.
+
+	int scale; //idfk uhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh yeah idk - Sam 11/9/25 2:28 AM
 
 	// WARNING: New fields must be added separately to savegame.
 } mobj_t;

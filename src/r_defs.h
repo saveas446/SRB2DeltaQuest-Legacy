@@ -132,6 +132,7 @@ typedef enum
 	FF_SHATTER           = 0x2000000, ///< Used with ::FF_BUSTUP. Thinks everyone's Knuckles.
 	FF_SPINBUST          = 0x4000000, ///< Used with ::FF_BUSTUP. Jump or fall onto it while curled in a ball.
 	FF_ONLYKNUX          = 0x8000000, ///< Used with ::FF_BUSTUP. Only Knuckles can break this rock.
+	FF_GOOWATER          = FF_SHATTERBOTTOM, ///< Used with ::FF_SWIMMABLE. Makes thick bouncey goop.
 } ffloortype_e;
 
 typedef struct ffloor_s
@@ -296,6 +297,8 @@ typedef struct sector_s
 
 	// This points to the master's floorheight, so it can be changed in realtime!
 	fixed_t *gravity; // per-sector gravity
+	
+	boolean verticalflip; // If gravity < 0, then allow flipped physics
 
 	// Current speed of ceiling/floor. For Knuckles to hold onto stuff.
 	fixed_t floorspeed, ceilspeed;

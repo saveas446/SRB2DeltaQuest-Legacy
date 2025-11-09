@@ -261,18 +261,19 @@ sfxinfo_t S_sfx[NUMSFX] =
   { "amwtr8"   , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL},
   { "splish"   , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL}, // Splish Tails 12-08-2000
   { "wslap\0"  , false,  64, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL}, // Water Slap Tails 12-13-2000
-  { "steam1", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL }, // Sam 02/07/2025
-  { "steam2", false,  64,  0, -1, NULL, 0, -1,         -1, -1, NULL }, // Sam 02/07/2025
-  { "crumbl", true,  127,  0, -1, NULL, 0, -1,         -1, -1, NULL }, // Platform Crumble - Sam 13/09/25 10:29 AM
-  { "now\0\0\0"  , false,  128, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL}, // NOW!!!!
-  { "strpst", false,  127, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL}, // starpost sound
-  { "wdjump", false,  60,  0, -1, NULL, 0,  -1,        -1, -1, NULL }, // Whirlwind jump - Sam 13/09/25 10:46 AM
-  { "fizzle", false, 127,  8, -1, NULL, 0,  -1,        -1, -1, NULL },
-  { "turpop"  , false, 127,  8, -1, NULL, 0,  -1,        -1, -1, NULL },
-  { "trfire", true,  127,  8, -1, NULL, 0,  -1,        -1, -1, NULL },
-  { "turhit", false, 127,  8, -1, NULL, 0,  -1,        -1, -1, NULL },
-  { "trpowr", true,  127,  8, -1, NULL, 0,  -1,        -1, -1, NULL },// Turret Sound Effects - Sam 13/09/25 10:58 AM
-  { "alarm", false, 127,  0, -1, NULL, 0,  -1,        -1, -1, NULL },// Alarm Sound - Sam 13/09/25 12:08 PM
+  { "steam1"   , false,  64,  0, -1, NULL, 0, -1,     -1, -1, NULL }, // Sam 02/07/2025
+  { "steam2"   , false,  64,  0, -1, NULL, 0, -1,     -1, -1, NULL }, // Sam 02/07/2025
+  { "crumbl"   , true,  127,  0, -1, NULL, 0, -1,     -1, -1, NULL }, // Platform Crumble - Sam 13/09/25 10:29 AM
+  { "now\0\0\0", false,  128, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL}, // NOW!!!!
+  { "strpst"   , false,  127, 0, -1, DATA_NONE, 0, -1, -1, -1, NULL}, // starpost sound
+  { "wdjump"   , false,  60,  0, -1, NULL, 0,  -1,     -1, -1, NULL }, // Whirlwind jump - Sam 13/09/25 10:46 AM
+  { "fizzle"   , false, 127,  8, -1, NULL, 0,  -1,     -1, -1, NULL },
+  { "turpop"   , false, 127,  8, -1, NULL, 0,  -1,     -1, -1, NULL },
+  { "trfire"   , true,  127,  8, -1, NULL, 0,  -1,     -1, -1, NULL },
+  { "turhit"   , false, 127,  8, -1, NULL, 0,  -1,     -1, -1, NULL },
+  { "trpowr"   , true,  127,  8, -1, NULL, 0,  -1,     -1, -1, NULL },// Turret Sound Effects - Sam 13/09/25 10:58 AM
+  { "alarm"    , false, 127,  0, -1, NULL, 0,  -1,     -1, -1, NULL },// Alarm Sound - Sam 13/09/25 12:08 PM
+  { "ghit"     ,  false,  64,  0, -1, NULL, 0,         -1, -1, NULL },//mmmm i love me some goop - Sam 11/10/25 4:52 PM
   // skin sounds free slots to add sounds at run time (Boris HACK!!!)
   // initialized to NULL
 };

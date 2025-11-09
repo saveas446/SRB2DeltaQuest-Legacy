@@ -12,7 +12,7 @@
 
 /// \var 
 /// \brief Allows you to address each sprite name in sprnames in a readable way using an enum.
-/// \note If you're going to edit this, consider also editing sprnames in info.c and t_lspr in hw_light.c to match.
+// Hey, moron! If you change this table, don't forget about sprnames in info.c and the sprite lights in hw_light.c!
 typedef enum
 {
 	SPR_MISL,

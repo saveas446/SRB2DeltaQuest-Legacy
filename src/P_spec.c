@@ -4455,6 +4455,10 @@ void P_SpawnSpecials(void)
 						P_AproxDistance(lines[i].dx, lines[i].dy) >> FRACBITS);
 				break;
 
+			case 308: // goo water
+				ffloorflags = FF_EXISTS | FF_RENDERALL | FF_TRANSLUCENT | FF_SWIMMABLE | FF_GOOWATER | FF_BOTHPLANES | FF_ALLSIDES | FF_CUTEXTRA | FF_EXTRA | FF_CUTSPRITES;
+				P_AddFakeFloorsByLine(i, ffloorflags);
+				break;
 			// Cool idea sam but this isn't working
 			// Shut up jacob im trying
 			/*case 320: // Flat alignment

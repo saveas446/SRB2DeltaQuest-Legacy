@@ -922,6 +922,37 @@ boolean P_CheckPosition(mobj_t *thing, fixed_t x, fixed_t y)
 			if (!(rover->flags & FF_EXISTS))
 				continue;
 
+			if (rover->flags & FF_GOOWATER && !(thing->flags & MF_NOGRAVITY))
+			{
+				// If you're inside goowater and slowing down
+				fixed_t sinklevel = FixedMul(thing->info->height / 6, thing->scale);
+				fixed_t minspeed = FixedMul(thing->info->height / 12, thing->scale);
+				if (thing->z < *rover->topheight && *rover->bottomheight < thingtop
+					&& abs(thing->momz) < minspeed)
+				{
+					// Oh no! The object is stick in between the surface of the goo and sinklevel! help them out!
+					if (!(thing->eflags & MF_VERTICALFLIP) && thing->z > *rover->topheight - sinklevel
+						&& thing->momz >= 0 && thing->momz < (minspeed >> 2))
+						thing->momz += minspeed >> 2;
+					else if (thing->eflags & MF_VERTICALFLIP && thingtop < *rover->bottomheight + sinklevel
+						&& thing->momz <= 0 && thing->momz > -(minspeed >> 2))
+						thing->momz -= minspeed >> 2;
+
+					// Land on the top or the bottom, depending on gravity flip.
+					if (!(thing->eflags & MF_VERTICALFLIP) && thing->z >= *rover->topheight - sinklevel && thing->momz <= 0)
+					{
+						if (tmfloorz < *rover->topheight - sinklevel)
+							tmfloorz = *rover->topheight - sinklevel;
+					}
+					else if (thing->eflags & MF_VERTICALFLIP && thingtop <= *rover->bottomheight + sinklevel && thing->momz >= 0)
+					{
+						if (tmceilingz > *rover->bottomheight + sinklevel)
+							tmceilingz = *rover->bottomheight + sinklevel;
+					}
+				}
+				continue;
+			}
+
 			if (!(rover->flags & FF_SOLID))
 			{
 				if (!(thing->player && !thing->player->nightsmode && (((thing->player->charflags & SF_RUNONWATER) || thing->player->powers[pw_super]) && thing->ceilingz-*rover->topheight >= thing->height)

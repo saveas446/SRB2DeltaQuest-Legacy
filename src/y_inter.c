@@ -337,7 +337,7 @@ void Y_IntermissionDrawer(void)
 						V_DrawRightAlignedString(x+152, y, 0, va("%d", data.match.scores[i]));
 					else if (inttype == int_timerace)
 					{
-						my_snprintf(time, sizeof time,
+						snprintf(time, sizeof time,
 							"%d:%02d.%02d",
 							data.match.scores[i]/(60*TICRATE),
 							data.match.scores[i]/TICRATE % 60, data.match.scores[i]%TICRATE);
@@ -353,19 +353,19 @@ void Y_IntermissionDrawer(void)
 						if (players[data.match.num[i]].timeover)
 						{
 							if (data.match.numplayers > 9)
-								my_snprintf(time, sizeof time, "TIME O.");
+								snprintf(time, sizeof time, "TIME O.");
 							else
-								my_snprintf(time, sizeof time, "TIME OVER");
+								snprintf(time, sizeof time, "TIME OVER");
 						}
 						else if (players[data.match.num[i]].lives <= 0)
 						{
 							if (data.match.numplayers > 9)
-								my_snprintf(time, sizeof time, "GAME O.");
+								snprintf(time, sizeof time, "GAME O.");
 							else
-							my_snprintf(time, sizeof time, "GAME OVER");
+							snprintf(time, sizeof time, "GAME OVER");
 						}
 						else
-							my_snprintf(time, sizeof time, "%d:%02d.%02d", data.match.scores[i]/(60*TICRATE),
+							snprintf(time, sizeof time, "%d:%02d.%02d", data.match.scores[i]/(60*TICRATE),
 									data.match.scores[i]/TICRATE % 60, data.match.scores[i]%TICRATE);
 
 						V_DrawRightAlignedString(x+152+BASEVIDWIDTH/2, y, 0, time);
@@ -732,12 +732,12 @@ void Y_StartIntermission(void)
 
 			// set up the levelstring
 			if (mapheaderinfo[prevmap].actnum)
-				my_snprintf(data.match.levelstring,
+				snprintf(data.match.levelstring,
 					sizeof data.match.levelstring,
 					"%.32s * %d *",
 					mapheaderinfo[prevmap].lvlttl, mapheaderinfo[prevmap].actnum);
 			else
-				my_snprintf(data.match.levelstring,
+				snprintf(data.match.levelstring,
 					sizeof data.match.levelstring,
 					"* %.32s *",
 					mapheaderinfo[prevmap].lvlttl);
@@ -1279,7 +1279,7 @@ static void Y_FollowIntermission(void)
 	if (timeattacking)
 	{
 		char nameofdemo[256];
-		my_snprintf(nameofdemo, sizeof nameofdemo,
+		snprintf(nameofdemo, sizeof nameofdemo,
 			"%s"PATHSEP"replay"PATHSEP"%s"PATHSEP"%s-%02d.lmp",
 			srb2home, timeattackfolder, G_BuildMapName(gamemap),
 			cv_chooseskin.value-1);

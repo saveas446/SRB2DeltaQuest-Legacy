@@ -165,7 +165,7 @@ window_system wnd_system = WND_DUMMY;
 
 // Shut VS2008 up
 #if _MSC_VER == 1500
-int my_snprintf(char* buffer, size_t count, const char* format, ...)
+int snprintf(char* buffer, size_t count, const char* format, ...)
 {
 	int ret;
     va_list args;
@@ -504,13 +504,13 @@ static void D_Display(void)
 		{
 			char s[50];
 			Net_GetNetStat();
-			my_snprintf(s, sizeof s, "get %d b/s", getbps);
+			snprintf(s, sizeof s, "get %d b/s", getbps);
 			V_DrawString(0, BASEVIDWIDTH - V_StringWidth(s), BASEVIDHEIGHT-ST_HEIGHT-40, V_YELLOWMAP, s);
-			my_snprintf(s, sizeof s, "send %d b/s", sendbps);
+			snprintf(s, sizeof s, "send %d b/s", sendbps);
 			V_DrawString(0, BASEVIDWIDTH - V_StringWidth(s), BASEVIDHEIGHT-ST_HEIGHT-30, V_YELLOWMAP, s);
-			my_snprintf(s, sizeof s, "GameMiss %.2f%%", gamelostpercent);
+			snprintf(s, sizeof s, "GameMiss %.2f%%", gamelostpercent);
 			V_DrawString(0, BASEVIDWIDTH - V_StringWidth(s), BASEVIDHEIGHT-ST_HEIGHT-20, V_YELLOWMAP, s);
-			my_snprintf(s, sizeof s, "SysMiss %.2f%%", lostpercent);
+			snprintf(s, sizeof s, "SysMiss %.2f%%", lostpercent);
 			V_DrawString(0, BASEVIDWIDTH-V_StringWidth(s), BASEVIDHEIGHT-ST_HEIGHT-10, V_YELLOWMAP, s);
 		}
 
@@ -863,7 +863,7 @@ static void IdentifyVersion(void)
 		sprintf(srb2wad2, pandf, srb2waddir, "srb2.wad");
 
 	// will be overwritten in case of -cdrom or unix/win home
-	my_snprintf(configfile, sizeof configfile, "%s" PATHSEP CONFIGFILENAME, srb2waddir);
+	snprintf(configfile, sizeof configfile, "%s" PATHSEP CONFIGFILENAME, srb2waddir);
 
 	// specify the name of the IWAD file to use, so we can have several IWAD's
 	// in the same directory, and/or have srb2's executable only once in a different location
@@ -873,9 +873,9 @@ static void IdentifyVersion(void)
 		// big hack for fullpath wad, we should use wadpath instead in D_AddFile
 		char *s = M_GetNextParm();
 		if (s[0] == '/' || s[0] == '\\' || s[1] == ':')
-			my_snprintf(pathiwad, sizeof pathiwad, "%s", s);
+			snprintf(pathiwad, sizeof pathiwad, "%s", s);
 		else
-			my_snprintf(pathiwad, sizeof pathiwad, pandf, srb2waddir, s);
+			snprintf(pathiwad, sizeof pathiwad, pandf, srb2waddir, s);
 
 		if (!FIL_ReadFileOK(pathiwad))
 			I_Error("%s not found\n", pathiwad);
@@ -1080,7 +1080,7 @@ void D_SRB2Main(int sys)
 
 #if defined (__OS2__) && !defined (SDL)
 	// set PM window title
-	my_snprintf(pmData->title, sizeof (pmData->title),
+	snprintf(pmData->title, sizeof (pmData->title),
 		"Sonic Robo Blast 2" VERSIONSTRING ": %s",
 		title);
 #endif
@@ -1103,38 +1103,38 @@ void D_SRB2Main(int sys)
 			I_Error("Please set $HOME to your home directory\n");
 #elif defined (_WIN32_WCE)
 			if (dedicated)
-				my_snprintf(configfile, sizeof configfile, "/Storage Card/SRB2DEMO/d"CONFIGFILENAME);
+				snprintf(configfile, sizeof configfile, "/Storage Card/SRB2DEMO/d"CONFIGFILENAME);
 			else
-				my_snprintf(configfile, sizeof configfile, "/Storage Card/SRB2DEMO/"CONFIGFILENAME);
+				snprintf(configfile, sizeof configfile, "/Storage Card/SRB2DEMO/"CONFIGFILENAME);
 #else
 			if (dedicated)
-				my_snprintf(configfile, sizeof configfile, "d"CONFIGFILENAME);
+				snprintf(configfile, sizeof configfile, "d"CONFIGFILENAME);
 			else
-				my_snprintf(configfile, sizeof configfile, CONFIGFILENAME);
+				snprintf(configfile, sizeof configfile, CONFIGFILENAME);
 #endif
 		}
 		else
 		{
 			// use user specific config file
 #ifdef DEFAULTDIR
-			my_snprintf(srb2home, sizeof srb2home, "%s" PATHSEP DEFAULTDIR, userhome);
-			my_snprintf(downloaddir, sizeof downloaddir, "%s" PATHSEP "DOWNLOAD", srb2home);
+			snprintf(srb2home, sizeof srb2home, "%s" PATHSEP DEFAULTDIR, userhome);
+			snprintf(downloaddir, sizeof downloaddir, "%s" PATHSEP "DOWNLOAD", srb2home);
 			if (dedicated)
-				my_snprintf(configfile, sizeof configfile, "%s" PATHSEP "d"CONFIGFILENAME, srb2home);
+				snprintf(configfile, sizeof configfile, "%s" PATHSEP "d"CONFIGFILENAME, srb2home);
 			else
-				my_snprintf(configfile, sizeof configfile, "%s" PATHSEP CONFIGFILENAME, srb2home);
+				snprintf(configfile, sizeof configfile, "%s" PATHSEP CONFIGFILENAME, srb2home);
 
 			// can't use sprintf since there is %u in savegamename
 			strcatbf(savegamename, srb2home, PATHSEP);
 
 			I_mkdir(srb2home, 0700);
 #else
-			my_snprintf(srb2home, sizeof srb2home, "%s", userhome);
-			my_snprintf(downloaddir, sizeof downloaddir, "%s", userhome);
+			snprintf(srb2home, sizeof srb2home, "%s", userhome);
+			snprintf(downloaddir, sizeof downloaddir, "%s", userhome);
 			if (dedicated)
-				my_snprintf(configfile, sizeof configfile, "%s" PATHSEP "d"CONFIGFILENAME, userhome);
+				snprintf(configfile, sizeof configfile, "%s" PATHSEP "d"CONFIGFILENAME, userhome);
 			else
-				my_snprintf(configfile, sizeof configfile, "%s" PATHSEP CONFIGFILENAME, userhome);
+				snprintf(configfile, sizeof configfile, "%s" PATHSEP CONFIGFILENAME, userhome);
 
 			// can't use sprintf since there is %u in savegamename
 			strcatbf(savegamename, userhome, PATHSEP);
