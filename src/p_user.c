@@ -4543,7 +4543,7 @@ dontteeter:
 	{
 		fixed_t oldx;
 		fixed_t oldy;
-		//boolean spinonfloor = (player->mo->z == player->mo->floorz);
+		boolean spinonfloor = (player->mo->z == player->mo->floorz);
 
 		oldx = player->mo->x;
 		oldy = player->mo->y;
@@ -4574,7 +4574,7 @@ dontteeter:
 						// if it's not an FF_SHATTER, you must be spinning
 						// or have Knuckles's abilities (or Super Sonic)
 						if (!(rover->flags & FF_SHATTER) && !(rover->flags & FF_SPINBUST)
-							&& !(player->mfspinning/* && spinonfloor*/)
+							&& !(player->mfspinning && spinonfloor)
 							&& (player->charability != 2 && !player->powers[pw_super]))
 							continue;
 
