@@ -362,7 +362,6 @@ typedef enum
     sfx_turhit,
 	sfx_trpowr,// Turret Sounds - Sam 13/11/25 10:56 AM
     sfx_alarm,// Alarm sound - Sam 13/09/25 12:09 PM
-    sfx_ghit, // GOOOOOOOOP - Sam 11/9/25 4:45 PM (yes i switched to MM/DD/YY)
 
 	// free slots for S_AddSoundFx() at run-time --------------------
 	sfx_freeslot0,

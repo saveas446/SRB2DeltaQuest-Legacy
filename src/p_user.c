@@ -2339,15 +2339,9 @@ static void P_MovePlayer(player_t *player)
 	}
 
 	// If you're running fast enough, you can create splashes as you run in shallow water.
-	if (!player->climbing && player->mo->z + player->mo->height >= player->mo->watertop && player->mo->z <= player->mo->watertop && (player->speed > player->runspeed || player->mfstartdash) && leveltime % (TICRATE / 7) == 0 && player->mo->momz == 0)
-	{
-		mobj_t* water = P_SpawnMobj(player->mo->x, player->mo->y,
-			((player->mo->eflags & MF_VERTICALFLIP) ? player->mo->waterbottom - FixedMul(mobjinfo[MT_SPLISH].height, player->mo->scale) : player->mo->watertop), MT_SPLISH);
-		if (player->mo->eflags & MF_GOOWATER)
-			S_StartSound(water, sfx_ghit);
-		else
-			S_StartSound(water, sfx_wslap);
-	}
+	if (!player->climbing && player->mo->z + player->mo->height >= player->mo->watertop && player->mo->z <= player->mo->watertop && (player->speed > player->runspeed || player->mfstartdash) && leveltime % (TICRATE/7) == 0 && player->mo->momz == 0)
+		S_StartSound(P_SpawnMobj(player->mo->x, player->mo->y, player->mo->watertop, MT_SPLISH), sfx_wslap);
+
 	// Little water sound while touching water - just a nicety.
 	if ((player->mo->eflags & MF_TOUCHWATER) && !(player->mo->eflags & MF_UNDERWATER))
 	{
@@ -4543,7 +4537,7 @@ dontteeter:
 	{
 		fixed_t oldx;
 		fixed_t oldy;
-		boolean spinonfloor = (player->mo->z == player->mo->floorz);
+		//boolean spinonfloor = (player->mo->z == player->mo->floorz);
 
 		oldx = player->mo->x;
 		oldy = player->mo->y;
@@ -4574,7 +4568,7 @@ dontteeter:
 						// if it's not an FF_SHATTER, you must be spinning
 						// or have Knuckles's abilities (or Super Sonic)
 						if (!(rover->flags & FF_SHATTER) && !(rover->flags & FF_SPINBUST)
-							&& !(player->mfspinning && spinonfloor)
+							&& !(player->mfspinning/* && spinonfloor*/)
 							&& (player->charability != 2 && !player->powers[pw_super]))
 							continue;
 
