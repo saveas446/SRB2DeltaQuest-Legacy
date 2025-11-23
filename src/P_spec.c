@@ -4272,6 +4272,7 @@ void P_SpawnSpecials(void)
 			case 232:
 			EV_DoElevator(&lines[i], elevateContinuous, false);
 			break;
+			//l242 Fake Floors 
           	case 242:
             sec = sides[*lines[i].sidenum].sector-sectors;
             for (s = -1; (s = P_FindSectorFromLineTag(lines+i,s)) >= 0;)
@@ -4447,7 +4448,25 @@ void P_SpawnSpecials(void)
 				else
 					P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_BUSTUP);
 				break;
+			//l320 Bobbing platform, for THZ2 deco
+			case 320:
+				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL|FF_FLOATBOB);
+			//l321 RMZ Crumbling Bridge, No Respawn
+			case 321:
+				ffloorflags = FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL|FF_PLATFORM|FF_CRUMBLE|FF_BOTHPLANES|FF_ALLSIDES;
+				if (lines[i].flags & ML_NOCLIMB) // shade it unless no-climb
+					ffloorflags |= FF_NOSHADE;
 
+				P_AddFakeFloorsByLine(i, ffloorflags);
+				break;
+			//l322 RMZ Crumbling Bridge, Respawn
+			case 322:
+				ffloorflags = FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL|FF_PLATFORM|FF_CRUMBLE|FF_NORETURN|FF_BOTHPLANES|FF_ALLSIDES;
+				if (lines[i].flags & ML_NOCLIMB) // shade it unless no-climb
+					ffloorflags |= FF_NOSHADE;
+
+				P_AddFakeFloorsByLine(i, ffloorflags);
+				break;
 			case 307: // Adjustable flickering light
 				sec = (int)(sides[*lines[i].sidenum].sector - sectors);
 				for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
@@ -4456,7 +4475,7 @@ void P_SpawnSpecials(void)
 				break;
 
 			// Cool idea sam but this isn't working
-			// Shut up jacob im trying
+			// Shut up april im trying
 			/*case 320: // Flat alignment
 				if (lines[i].flags & ML_EFFECT4) // Align angle
 				{
