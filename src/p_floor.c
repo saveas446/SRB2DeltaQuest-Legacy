@@ -2208,6 +2208,20 @@ EV_DoPlat
             S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
             break;
 
+		// linedef 120 but faster
+		  case THZdoor:
+            plat->speed = PLATSPEED * 16;
+            plat->low = P_FindLowestFloorSurrounding(sec);
+
+            if (plat->low > sec->floorheight)
+                plat->low = sec->floorheight;
+
+            plat->high = sec->floorheight;
+            plat->wait = 35*PLATWAIT;
+            plat->status = down;
+            S_StartSound((mobj_t *)&sec->soundorg,sfx_pstart);
+            break;
+
           case perpetualRaise:
             plat->speed = PLATSPEED;
             plat->low = P_FindLowestFloorSurrounding(sec);

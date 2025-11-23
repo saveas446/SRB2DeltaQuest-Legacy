@@ -374,6 +374,7 @@ typedef enum
     genLift,      //General stuff
     genPerpetual, 
     toggleUpDn,   //Instant toggle of stuff.
+    THZdoor,
 
 } plattype_e;
 
