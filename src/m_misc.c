@@ -52,6 +52,7 @@
 #include "doomdef.h"
 #include "g_game.h"
 #include "m_misc.h"
+#include "p_local.h"
 #include "hu_stuff.h"
 #include "v_video.h"
 #include "z_zone.h"
@@ -397,6 +398,56 @@ void Command_ChangeConfig_f(void)
 	COM_BufAddText(va("saveconfig \"%s\"\n", configfile));
 	COM_BufAddText(va("loadconfig \"%s\"\n", COM_Argv(1)));
 }
+
+/// DEBUG CAMERA/SCREENSHOT COMMANDS
+// These are all glorified macros
+
+void Command_ModifyCamRotate_f(void) {
+	int modify;
+
+	if (COM_Argc() != 2)
+	{
+		CONS_Printf("Invalid arguments!");
+		return;
+	} 
+
+	modify = atoi(COM_Argv(1)); // Modify by first command arg
+
+	CV_SetValue(&cv_cam_rotate, cv_cam_rotate.value + modify);
+}
+
+void Command_ModifyCamDist_f(void) {
+	int modify;
+
+	if (COM_Argc() != 2)
+	{
+		CONS_Printf("Invalid arguments!");
+		return;
+	} 
+
+	modify = atoi(COM_Argv(1)); // Modify by first command arg
+
+	CV_SetValue(&cv_cam_dist, (cv_cam_dist.value >> FRACBITS) + modify);
+}
+
+void Command_ModifyCamHeight_f(void) {
+	int modify;
+
+	if (COM_Argc() != 2)
+	{
+		CONS_Printf("Invalid arguments!");
+		return;
+	} 
+
+	modify = atoi(COM_Argv(1)); // Modify by first command arg
+
+	CV_SetValue(&cv_cam_height, (cv_cam_height.value >> FRACBITS) + modify);
+}
+
+void Command_StopCamera_f(void) {
+	CV_SetValue(&cv_cam_speed, 0);
+}
+
 
 /** Loads the default config file.
   *

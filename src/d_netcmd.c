@@ -434,6 +434,11 @@ void D_RegisterServerCommands(void)
 	COM_AddCommand("loadconfig", Command_LoadConfig_f);
 	COM_AddCommand("changeconfig", Command_ChangeConfig_f);
 
+	COM_AddCommand("modifycamrotate", Command_ModifyCamRotate_f);
+	COM_AddCommand("modifycamdist", Command_ModifyCamDist_f);
+	COM_AddCommand("modifycamheight", Command_ModifyCamHeight_f);
+	COM_AddCommand("stopcam", Command_StopCamera_f);
+
 	COM_AddCommand("nodes", Command_Nodes_f);
 	COM_AddCommand("isgamemodified", Command_Isgamemodified_f); // test
 #ifdef _DEBUG

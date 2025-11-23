@@ -60,6 +60,12 @@ void Command_SaveConfig_f(void);
 void Command_LoadConfig_f(void);
 void Command_ChangeConfig_f(void);
 
+void Command_ModifyCamRotate_f(void);
+void Command_ModifyCamDist_f(void);
+void Command_ModifyCamHeight_f(void);
+void Command_StopCamera_f(void);
+void Command_ResumeCamera_f(void);
+
 void M_FirstLoadConfig(void);
 // save game config: cvars, aliases..
 void M_SaveConfig(char *filename);
