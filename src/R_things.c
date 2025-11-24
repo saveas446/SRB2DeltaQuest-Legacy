@@ -2504,6 +2504,7 @@ void R_AddSkins(int wadnum)
 						STRBUFCPY(skins[numskins].nameprefix, "STTAILS\0");
 						STRBUFCPY(skins[numskins].ability, "1");
 						STRBUFCPY(skins[numskins].normalspeed, "26");
+						STRBUFCPY(skins[numskins].runspeed, "22");
 						STRBUFCPY(skins[numskins].thrustfactor, "3");
 						STRBUFCPY(skins[numskins].accelstart, "192");
 						STRBUFCPY(skins[numskins].acceleration, "50");

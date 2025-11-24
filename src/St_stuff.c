@@ -859,7 +859,7 @@ static void ST_drawDebugInfo(void)
 	sprintf(smomx, "MOMX: %d", stplyr->rmomx >> FRACBITS);
 	sprintf(smomy, "MOMY: %d", stplyr->rmomy >> FRACBITS);
 	sprintf(smomz, "MOMZ: %d", stplyr->mo->momz >> FRACBITS);
-	/*sprintf(sspeed, "%d", stplyr->speed);
+	/*
 	sprintf(sfloorz, "%d", stplyr->mo->floorz >> FRACBITS);
 	sprintf(spmomz, "%d", stplyr->mo->ceilingz >> FRACBITS);
 	sprintf(scability, "%d", stplyr->charability);
@@ -899,6 +899,7 @@ static void ST_drawDebugInfo(void)
 	sprintf(smfstartdash, "MF_STARDASH: %d", stplyr->mfstartdash);
 	sprintf(sjumping, "Jumping: %d", stplyr->jumping);
 	sprintf(sscoreadd, "Scoreadd: %d", stplyr->scoreadd);
+	sprintf(sspeed, "Speed: %d", stplyr->speed); // please speed i need this
 	
 	// Remnant of old string-based emerald drawing code
 	/*sprintf(emmys, "%d", emeralds);
@@ -945,6 +946,8 @@ static void ST_drawDebugInfo(void)
 		V_DrawString(0, 320 - V_StringWidth(sjumping), currentrow, 0, sjumping);
 		currentrow += 8;
 		V_DrawString(0, 320 - V_StringWidth(sscoreadd), currentrow, 0, sscoreadd);
+		currentrow += 8;
+		V_DrawString(0, 320 - V_StringWidth(sspeed), currentrow, 0, sspeed);
 		currentrow += 8;
 	}
 
