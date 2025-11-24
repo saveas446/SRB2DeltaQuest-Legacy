@@ -142,10 +142,11 @@ boolean gamedataloaded = 0;
 /// \brief Emblem locations for the main campaign.
 emblem_t emblemlocations[MAXEMBLEMS] =
 {
-	{  9449,  6088, 1475, 0, 1, 0}, // GFZ1 Sonic
-	{  0, 0, 0, 1, 1, 0}, // GFZ1 Tails
+	//{  9449,  6088, 1475, 0, 1, 0}, // GFZ1 Sonic old
+	{  0,  0, 0, 0, 1, 0}, // GFZ1 Sonic
+	{  1536, 11936, 1120, 1, 1, 0}, // GFZ1 Tails
 	{  0, 0, 0, 2, 1, 0}, // GFZ1 Knuckles
-	{  0, 0, 0, 0, 2, 0}, // GFZ2 Sonic
+	{  7060, 2966, 2089, 0, 2, 0}, // GFZ2 Sonic
 	{  0, 0, 0, 1, 2, 0}, // GFZ2 Tails
 	{  0, 0, 0, 2, 2, 0}, // GFZ2 Knuckles
 	{  0, 0, 0, 0, 4, 0}, // THZ1 Sonic
