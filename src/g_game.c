@@ -134,7 +134,7 @@ char lvltable[LEVELARRAYSIZE+3][64];
 
 tic_t totalplaytime;
 int foundeggs = 0;
-int numemblems = 20;
+int numemblems = 24;
 boolean gamedataloaded = 0;
 
 // Mystic's funky SA ripoff emblem idea
@@ -143,10 +143,10 @@ boolean gamedataloaded = 0;
 emblem_t emblemlocations[MAXEMBLEMS] =
 {
 	//{  9449,  6088, 1475, 0, 1, 0}, // GFZ1 Sonic old
-	{  9399, 6206, 1666, 0, 1, 0}, // GFZ1 Sonic
-	{  1536, 11936, 1120, 1, 1, 0}, // GFZ1 Tails
+	{  0, 0, 0, 0, 1, 0}, // GFZ1 Sonic
+	{  0, 0, 0, 1, 1, 0}, // GFZ1 Tails
 	{  0, 0, 0, 2, 1, 0}, // GFZ1 Knuckles
-	{  7060, 2966, 2089, 0, 2, 0}, // GFZ2 Sonic
+	{  0, 0, 0, 0, 2, 0}, // GFZ2 Sonic
 	{  0, 0, 0, 1, 2, 0}, // GFZ2 Tails
 	{  0, 0, 0, 2, 2, 0}, // GFZ2 Knuckles
 	{  0, 0, 0, 0, 4, 0}, // THZ1 Sonic

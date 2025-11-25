@@ -1419,6 +1419,9 @@ state_t states[NUMSTATES] =
 
 	// Emblem
 	{SPR_NWNG, 0, -1, {NULL}, 0, 0, S_NULL}, // S_EMBLEM1
+	{SPR_NWNG, 1, -1, {NULL}, 0, 0, S_NULL}, // S_SONICEMBLEM
+	{SPR_NWNG, 2, -1, {NULL}, 0, 0, S_NULL}, // S_TAILSEMBLEM
+	{SPR_NWNG, 3, -1, {NULL}, 0, 0, S_NULL}, // S_KNUCKLESEMBLEM
 
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	{SPR_EGGB, 0, 1, {NULL}, 0, 0,       S_EGGTV1},          // S_EGGTV
@@ -5535,9 +5538,61 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL          // raisestate
 	},
 
-	{           // MT_EMBLEM
-		-1,             // doomednum
-		S_EMBLEM1,      // spawnstate
+	{           // MT_SONICEMBLEM
+		2050,             // doomednum
+		S_SONICEMBLEM,      // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,         // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		1,              // speed
+		8*FRACUNIT,     // radius
+		16*FRACUNIT,    // height
+		4,              // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_SPECIAL|MF_NOGRAVITY, // flags
+		S_NULL          // raisestate
+	},
+
+	{           // MT_TAILSEMBLEM
+		2051,             // doomednum
+		S_TAILSEMBLEM,      // spawnstate
+		1000,           // spawnhealth
+		S_NULL,         // seestate
+		sfx_None,       // seesound
+		8,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		0,              // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,         // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		1,              // speed
+		8*FRACUNIT,     // radius
+		16*FRACUNIT,    // height
+		4,              // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_SPECIAL|MF_NOGRAVITY, // flags
+		S_NULL          // raisestate
+	},
+
+	{           // MT_KNUCKLESEMBLEM
+		2052,             // doomednum
+		S_KNUCKLESEMBLEM,      // spawnstate
 		1000,           // spawnhealth
 		S_NULL,         // seestate
 		sfx_None,       // seesound

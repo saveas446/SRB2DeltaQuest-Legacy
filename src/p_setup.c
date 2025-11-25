@@ -733,6 +733,7 @@ static void P_LoadThings(int lump)
 	mapthing_t *mt;
 	char *data;
 	char *datastart;
+	boolean spawnemblem;
 
 	nummapthings = W_LumpLength(lump) / (5 * sizeof (short));
 	mapthings = Z_Malloc(nummapthings * sizeof (mapthing_t), PU_LEVEL, NULL);
@@ -812,6 +813,52 @@ static void P_LoadThings(int lump)
 					->sector->floorheight >> FRACBITS);
 					P_SpawnHoopsAndRings (mt);
 				break;
+			// emblems
+			case 2050:
+			// do not spawn collected (or wrong character) emblems
+			spawnemblem = false;
+			for (i = 0; i < numemblems - 2; i++)
+			{
+				// We found a compatible emblem, spawn it
+				if(emblemlocations[i].level == gamemap && emblemlocations[i].player == 0 && emblemlocations[i].player == players[0].skin && !emblemlocations[i].collected)
+					spawnemblem = true;
+			}
+
+			// If we didn't find a compatible emblem, do not spawn
+			if (!spawnemblem)
+				P_RemoveMobj(mt->mobj);
+
+			break;
+			case 2051:
+			// do not spawn collected (or wrong character) emblems
+			spawnemblem = false;
+			for (i = 0; i < numemblems - 2; i++)
+			{
+				// We found a compatible emblem, spawn it
+				if(emblemlocations[i].level == gamemap && emblemlocations[i].player == 1 && emblemlocations[i].player == players[0].skin && !emblemlocations[i].collected)
+					spawnemblem = true;
+			}
+
+			// If we didn't find a compatible emblem, do not spawn
+			if (!spawnemblem)
+				P_RemoveMobj(mt->mobj);
+
+			break;
+			case 2052:
+			// do not spawn collected (or wrong character) emblems
+			spawnemblem = false;
+			for (i = 0; i < numemblems - 2; i++)
+			{
+				// We found a compatible emblem, spawn it
+				if(emblemlocations[i].level == gamemap && emblemlocations[i].player == 2 && emblemlocations[i].player == players[0].skin && !emblemlocations[i].collected)
+					spawnemblem = true;
+			}
+
+			// If we didn't find a compatible emblem, do not spawn
+			if (!spawnemblem)
+				P_RemoveMobj(mt->mobj);
+
+			break;
 			default:
 				break;
 		}
@@ -820,6 +867,9 @@ static void P_LoadThings(int lump)
 
 static void P_SpawnEmblems(void)
 {
+	// Who even cares if you can find emblems via level editing?!
+	// Save 25-11-25
+	/*
 	int i;
 	mobj_t *emblemmobj;
 
@@ -853,6 +903,7 @@ static void P_SpawnEmblems(void)
 		else
 			emblemmobj->frame &= ~FF_TRANSMASK;
 	}
+	*/
 }
 
 void P_SpawnSecretItems(boolean loademblems)
@@ -867,7 +918,8 @@ void P_SpawnSecretItems(boolean loademblems)
 
 	if (loademblems)
 	#endif
-		P_SpawnEmblems();
+		
+		// P_SpawnEmblems(); Who cares?
 	
 
 	if (modifiedgame)

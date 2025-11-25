@@ -281,7 +281,9 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 	// We now identify by object type, not sprite! Tails 04-11-2001
 	switch (special->type)
 	{
-		case MT_EMBLEM: // Secret emblem thingy
+		case MT_SONICEMBLEM: // Secret emblem thingy
+		case MT_TAILSEMBLEM:
+		case MT_KNUCKLESEMBLEM:
 			{
 				int emblemcount = 0;
 
