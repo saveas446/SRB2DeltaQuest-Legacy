@@ -2368,7 +2368,7 @@ void R_AddSkins(int wadnum)
 	char *stoken;
 	char *value;
 	int i, size;
-	boolean boxindexset, tails, knuckles;
+	boolean boxindexset;
 
 	//
 	// search for all skin markers in pwad
@@ -2376,8 +2376,6 @@ void R_AddSkins(int wadnum)
 
 	while ((lumpnum = W_CheckForSkinMarkerInPwad(wadnum, lastlump)) != -1)
 	{
-		tails = false;
-		knuckles = false;
 		if (numskins > MAXSKINS)
 		{
 			CONS_Printf("ignored skin (%d skins maximum)\n", MAXSKINS);
@@ -2443,18 +2441,7 @@ void R_AddSkins(int wadnum)
 					}
 					Z_Free(value2);
 				}
-
-				// If we're loading the Tails and Knuckles skins from the IWAD, fill in some info for those characters that's not present in the Demo 2 IWAD
-				if (wadnum == 0) {
-					if (!stricmp(skins[numskins].name, "tails"))
-						tails = true;
-					if (!stricmp(skins[numskins].name, "knuckles"))
-						knuckles = true;
-				} 
-
 			}
-
-				if (!tails && !knuckles) {
 					// Macro to use for a lot of repeated code:
 					// str is the string used in the skin config file,
 					// field is the field in skin_t.
@@ -2497,52 +2484,6 @@ void R_AddSkins(int wadnum)
 					GETSKINATTRIB_(actionspd)
 					GETSKINATTRIB_(mindash)
 					GETSKINATTRIB_(maxdash)
-				} else {
-					if (tails) {
-						// Hardcoded tails data :))))))
-						STRBUFCPY(skins[numskins].faceprefix, "SBOTLIFE");
-						STRBUFCPY(skins[numskins].nameprefix, "STTAILS\0");
-						STRBUFCPY(skins[numskins].ability, "1");
-						STRBUFCPY(skins[numskins].normalspeed, "26");
-						STRBUFCPY(skins[numskins].runspeed, "22");
-						STRBUFCPY(skins[numskins].thrustfactor, "3");
-						STRBUFCPY(skins[numskins].accelstart, "192");
-						STRBUFCPY(skins[numskins].acceleration, "50");
-						STRBUFCPY(skins[numskins].spin, "1");
-						STRBUFCPY(skins[numskins].starttranscolor, "112");
-						STRBUFCPY(skins[numskins].endtranscolor, "127");
-						STRBUFCPY(skins[numskins].prefcolor, "5");
-						STRBUFCPY(skins[numskins].jumpfactor, "100");
-						STRBUFCPY(skins[numskins].boxindex, "2");
-						STRBUFCPY(skins[numskins].runonwater, "1");
-						STRBUFCPY(skins[numskins].super, "0");
-						STRBUFCPY(skins[numskins].actionspd, "1");
-						STRBUFCPY(skins[numskins].mindash, "15");
-						STRBUFCPY(skins[numskins].maxdash, "60");
-						STRBUFCPY(skins[numskins].waterskip, "1");
-					}
-					if (knuckles) {
-						// Hardcoded knux data :))))))
-						STRBUFCPY(skins[numskins].faceprefix, "SBOULIFE");
-						STRBUFCPY(skins[numskins].nameprefix, "STKNUX\0\0");
-						STRBUFCPY(skins[numskins].ability, "2");
-						STRBUFCPY(skins[numskins].normalspeed, "32");
-						STRBUFCPY(skins[numskins].thrustfactor, "4");
-						STRBUFCPY(skins[numskins].accelstart, "128");
-						STRBUFCPY(skins[numskins].acceleration, "45");
-						STRBUFCPY(skins[numskins].spin, "1");
-						STRBUFCPY(skins[numskins].starttranscolor, "112");
-						STRBUFCPY(skins[numskins].endtranscolor, "127");
-						STRBUFCPY(skins[numskins].prefcolor, "6");
-						STRBUFCPY(skins[numskins].jumpfactor, "100");
-						STRBUFCPY(skins[numskins].boxindex, "3");
-						STRBUFCPY(skins[numskins].super, "0");
-						STRBUFCPY(skins[numskins].actionspd, "20");
-						STRBUFCPY(skins[numskins].mindash, "15");
-						STRBUFCPY(skins[numskins].maxdash, "60");
-						STRBUFCPY(skins[numskins].waterskip, "1");
-					}
-				}
 
 			// custom translation table
 			if (!stricmp(stoken, "startcolor"))

@@ -122,7 +122,7 @@
 	Controls "tiny" version number (0.0.x)
 	Increment this every day that work on D2U is done
 	*/
-    #define TINYVER 11
+    #define TINYVER 12
 
 	/**
 	\brief Controls whether the title screen uses "TITLESKY" or "SKY1" as its BG
