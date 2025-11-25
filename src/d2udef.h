@@ -83,7 +83,7 @@
 	Originally used when converting this code to be compatible with the Demo 2 IWAD
 	Nowadays... don't touch.
 	*/	
-    #define TH_TOLERANCE 0
+    #define TH_TOLERANCE 1
 
 	/**
 	\brief 
