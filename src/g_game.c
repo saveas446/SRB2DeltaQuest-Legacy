@@ -143,7 +143,7 @@ boolean gamedataloaded = 0;
 emblem_t emblemlocations[MAXEMBLEMS] =
 {
 	//{  9449,  6088, 1475, 0, 1, 0}, // GFZ1 Sonic old
-	{  0,  0, 0, 0, 1, 0}, // GFZ1 Sonic
+	{  9399, 6206, 1666, 0, 1, 0}, // GFZ1 Sonic
 	{  1536, 11936, 1120, 1, 1, 0}, // GFZ1 Tails
 	{  0, 0, 0, 2, 1, 0}, // GFZ1 Knuckles
 	{  7060, 2966, 2089, 0, 2, 0}, // GFZ2 Sonic
