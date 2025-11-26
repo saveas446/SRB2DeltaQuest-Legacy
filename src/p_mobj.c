@@ -4734,13 +4734,12 @@ void P_SpawnMapThing(mapthing_t *mthing)
 	}
 
 	else if (mthing->type == 57 || mthing->type == 84
-		|| mthing->type == 44
-		|| mthing->type == 77
-		|| mthing->type == 2014
+		|| mthing->type == 44 || mthing->type == 77
+		|| mthing->type == 2014 || mthing->type == 10005
 		|| mthing->type == 2007 || mthing->type == 2048
 		|| mthing->type == 2010 || mthing->type == 2046
 		|| mthing->type == 2047 || mthing->type == 37
-		|| mthing->type == 10005)
+		|| mthing->type == 600)
 	{
 		// Don't spawn hoops, wings, or rings yet!
 		return;
