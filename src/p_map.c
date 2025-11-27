@@ -270,7 +270,7 @@ static boolean PIT_CheckThing(mobj_t *thing)
 	// check for skulls slamming into things
 	if (tmthing->flags2 & MF2_SKULLFLY)
 	{
-		if (tmthing->type == MT_EGGMOBILE) // Don't make Eggman stop!
+		if (tmthing->type == MT_EGGMOBILE || tmthing->type == MT_EGGMOBILE3) // Don't make Eggman stop!
 		{
 			tmthing->momx = -tmthing->momx;
 			tmthing->momy = -tmthing->momy;
@@ -3188,7 +3188,7 @@ static void P_FakeZMovement(mobj_t *mo)
 
 	// adjust height
 	mo->z += mo->momz;
-	if (mo->flags & MF_FLOAT && mo->target && mo->type != MT_JETJAW && mo->type != MT_EGGMOBILE
+	if (mo->flags & MF_FLOAT && mo->target && mo->type != MT_JETJAW && mo->type != MT_EGGMOBILE && mo->type != MT_EGGMOBILE3
 		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 		&& mo->type != MT_EGGMOBILE2
 		#endif

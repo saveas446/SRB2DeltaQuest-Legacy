@@ -749,6 +749,10 @@ static void P_DeathMessages(mobj_t *target, mobj_t *inflictor, mobj_t *source)
 						str = "%s%s%s was killed by the Egg Slimer!\n";
 					break;
 				#endif
+				case MT_EGGMOBILE3:
+					if (netgame)
+						str = "%s%s%s was killed by the Unnamed Boss! (PLACEHOLDER)\n";
+					break;					
 				default:
 					break;
 			}

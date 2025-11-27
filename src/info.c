@@ -1400,6 +1400,32 @@ state_t states[NUMSTATES] =
 	{SPR_EGGN, 6, 5, {NULL}, 0, 0, S_EGGMOBILE2_FLEE1},              // S_EGGMOBILE2_FLEE2
 	#endif
 
+	// Boss 3
+	{SPR_EGGM, 0, 1, {NULL}, 0, 0, S_EGGMOBILE3_STND},           // S_EGGMOBILE3_STND
+	{SPR_EGGM, 1, 35, {NULL}, 0, 0, S_EGGMOBILE3_ATK2},          // S_EGGMOBILE3_ATK1
+	{SPR_EGGM, 2, 35, {A_FireShot}, MT_ROCKET, 0, S_EGGMOBILE3_STND}, // S_EGGMOBILE3_ATK2
+	{SPR_EGGM, 3, 35, {NULL}, 0, 0, S_EGGMOBILE3_ATK4},          // S_EGGMOBILE3_ATK3
+	{SPR_EGGM, 4, 35, {A_FireShot}, MT_ROCKET, 0, S_EGGMOBILE3_STND}, // S_EGGMOBILE3_ATK4
+	{SPR_EGGM, 1, 35, {NULL}, 0, 0, S_EGGMOBILE3_PANIC2},        // S_EGGMOBILE3_PANIC1
+	{SPR_EGGM, 2, 35, {A_SkullAttack}, 0, 0, S_EGGMOBILE3_STND}, // S_EGGMOBILE3_PANIC2
+	{SPR_EGGM, 5, 24, {A_Pain}, 0, 0, S_EGGMOBILE3_STND},        // S_EGGMOBILE3_PAIN
+	{SPR_EGGM, 6, 8, {A_Fall}, 0, 0, S_EGGMOBILE3_DIE2},         // S_EGGMOBILE3_DIE1
+	{SPR_EGGM, 6, 8, {A_BossScream}, 0, 0, S_EGGMOBILE3_DIE3},   // S_EGGMOBILE3_DIE2
+	{SPR_EGGM, 6, 8, {A_BossScream}, 0, 0, S_EGGMOBILE3_DIE4},   // S_EGGMOBILE3_DIE3
+	{SPR_EGGM, 6, 8, {A_BossScream}, 0, 0, S_EGGMOBILE3_DIE5},   // S_EGGMOBILE3_DIE4
+	{SPR_EGGM, 6, 8, {A_BossScream}, 0, 0, S_EGGMOBILE3_DIE6},   // S_EGGMOBILE3_DIE5
+	{SPR_EGGM, 6, 8, {A_BossScream}, 0, 0, S_EGGMOBILE3_DIE7},   // S_EGGMOBILE3_DIE6
+	{SPR_EGGM, 6, 8, {A_BossScream}, 0, 0, S_EGGMOBILE3_DIE8},   // S_EGGMOBILE3_DIE7
+	{SPR_EGGM, 6, 8, {A_BossScream}, 0, 0, S_EGGMOBILE3_DIE9},   // S_EGGMOBILE3_DIE8
+	{SPR_EGGM, 6, 8, {A_BossScream}, 0, 0, S_EGGMOBILE3_DIE10},  // S_EGGMOBILE3_DIE9
+	{SPR_EGGM, 6, 8, {A_BossScream}, 0, 0, S_EGGMOBILE3_DIE11},  // S_EGGMOBILE3_DIE10
+	{SPR_EGGM, 6, 8, {A_BossScream}, 0, 0, S_EGGMOBILE3_DIE12},  // S_EGGMOBILE3_DIE11
+	{SPR_EGGM, 6, 8, {A_BossScream}, 0, 0, S_EGGMOBILE3_DIE13},  // S_EGGMOBILE3_DIE12
+	{SPR_EGGM, 6, 8, {A_BossScream}, 0, 0, S_EGGMOBILE3_DIE14},  // S_EGGMOBILE3_DIE13
+	{SPR_EGGM, 6, -1, {A_BossDeath}, 0, 0, S_NULL},             // S_EGGMOBILE3_DIE14
+	{SPR_EGGM, 7, 5, {NULL}, 0, 0, S_EGGMOBILE3_FLEE2},          // S_EGGMOBILE3_FLEE1
+	{SPR_EGGM, 8, 5, {NULL}, 0, 0, S_EGGMOBILE3_FLEE1},          // S_EGGMOBILE3_FLEE2
+
 	// Boss 2 Goop
 	{SPR_GOOP, 32768, 2, {NULL}, 0, 0, S_GOOP2}, // S_GOOP1
 	{SPR_GOOP, 32769, 2, {NULL}, 0, 0, S_GOOP1}, // S_GOOP2
@@ -1894,6 +1920,32 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_telept,        // activesound
 		MF_SPECIAL|MF_SHOOTABLE|MF_FLOAT|MF_NOGRAVITY|MF_BOSS, // flags
 		S_EGGMOBILE_PANIC1 // raisestate
+	},
+
+	{           // MT_EGGMOBILE3
+		2009,                // doomednum
+		S_EGGMOBILE3_STND,  // spawnstate
+		8,                 // spawnhealth
+		S_EGGMOBILE3_STND,  // seestate
+		sfx_None,                 // seesound
+		8,                 // reactiontime
+		sfx_None,                 // attacksound
+		S_EGGMOBILE3_PAIN,  // painstate
+		MT_THOK,           // painchance
+		sfx_dmpain,        // painsound
+		S_EGGMOBILE3_ATK3,  // meleestate
+		S_EGGMOBILE3_ATK1,  // missilestate
+		S_EGGMOBILE3_DIE1,  // deathstate
+		S_EGGMOBILE3_FLEE1, // xdeathstate
+		sfx_cybdth,        // deathsound
+		4,                 // speed
+		24*FRACUNIT,       // radius
+		52*FRACUNIT,       // height
+		0,                 // mass
+		2,                 // damage
+		sfx_telept,        // activesound
+		MF_SPECIAL|MF_SHOOTABLE|MF_FLOAT|MF_NOGRAVITY|MF_BOSS, // flags
+		S_EGGMOBILE3_PANIC1 // raisestate
 	},
 
 	{           // MT_ROCKET

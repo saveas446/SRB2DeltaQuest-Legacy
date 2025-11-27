@@ -236,13 +236,13 @@ static boolean P_CheckMissileRange(mobj_t *actor)
 
 	dist >>= 16;
 
-	if (actor->type == MT_EGGMOBILE)
+	if (actor->type == MT_EGGMOBILE || actor->type == MT_EGGMOBILE3)
 		dist >>= 1;
 
 	if (dist > 200)
 		dist = 200;
 
-	if (actor->type == MT_EGGMOBILE && dist > 160)
+	if ((actor->type == MT_EGGMOBILE || actor->type == MT_EGGMOBILE3) && dist > 160)
 		dist = 160;
 
 	if (P_Random() < dist)
@@ -1412,7 +1412,7 @@ void A_BossDeath(mobj_t *mo)
 	int i;
 
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
-	if (mo->type == MT_EGGMOBILE || mo->type == MT_EGGMOBILE2)
+	if (mo->type == MT_EGGMOBILE || mo->type == MT_EGGMOBILE2 || mo->type == MT_EGGMOBILE3)
 	{
 		if (mo->flags2 & MF2_CHAOSBOSS)
 		{
@@ -1457,7 +1457,7 @@ void A_BossDeath(mobj_t *mo)
 	}
 
 	// victory!
-		if (mo->flags2 & MF2_BOSSNOTRAP || mo->type == MT_EGGMOBILE)
+		if (mo->flags2 & MF2_BOSSNOTRAP || mo->type == MT_EGGMOBILE || mo->type == MT_EGGMOBILE3)
 		{
 			for (i = 0; i < MAXPLAYERS; i++)
 				P_DoPlayerExit(&players[i]);

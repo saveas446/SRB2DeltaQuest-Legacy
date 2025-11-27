@@ -476,7 +476,7 @@ void P_XYMovement(mobj_t *mo)
 			mo->momx = mo->momy = mo->momz = 0;
 
 			// set in 'search new direction' state?
-			if (mo->type != MT_EGGMOBILE)
+			if (mo->type != MT_EGGMOBILE && mo->type != MT_EGGMOBILE3)
 				P_SetMobjState(mo, mo->info->spawnstate);
 
 			return;
@@ -638,7 +638,7 @@ void P_XYMovement(mobj_t *mo)
 		}
 	}
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
-	if (mo->z > mo->floorz && mo->type != MT_CRAWLACOMMANDER && mo->type != MT_EGGMOBILE && mo->type != MT_EGGMOBILE2)
+	if (mo->z > mo->floorz && mo->type != MT_CRAWLACOMMANDER && mo->type != MT_EGGMOBILE && mo->type != MT_EGGMOBILE2 && mo->type != MT_EGGMOBILE3)
 		return; // no friction when airborne
 	#endif
 	P_XYFriction(mo, oldx, oldy);
@@ -931,12 +931,12 @@ static void P_ZMovement(mobj_t *mo)
 			delta = (mo->target->z + (mo->height>>1)) - mo->z;
 
 			if (delta < 0 && dist < -(delta*3)
-				&& (mo->type != MT_EGGMOBILE || mo->z - FLOATSPEED >= mo->floorz+33*FRACUNIT))
+				&& (mo->type != MT_EGGMOBILE || mo->type != MT_EGGMOBILE3 || mo->z - FLOATSPEED >= mo->floorz+33*FRACUNIT))
 				mo->z -= FLOATSPEED;
 			else if (delta > 0 && dist < (delta*3))
 				mo->z += FLOATSPEED;
 
-			if (mo->type == MT_EGGMOBILE && mo->z < mo->floorz+33*FRACUNIT)
+			if ((mo->type == MT_EGGMOBILE || mo->type == MT_EGGMOBILE3) && mo->z < mo->floorz+33*FRACUNIT)
 				mo->z = mo->floorz+33*FRACUNIT;
 			else if (mo->type == MT_JETJAW && mo->z + mo->height > mo->watertop)
 				mo->z = mo->watertop - mo->height;
@@ -2506,6 +2506,114 @@ static void P_Boss2Thinker(mobj_t *mobj)
 	}
 }
 
+int watercooldown = (35 * 6); // Randomly decided cooldown for when the water level is changed
+int goalheight; // Height to raise the water level to in FRACUNITS (not fixed point)
+boolean boss3_waiting = true;
+
+// The thinker for the first D2U-original boss!
+// Welcome to the zone of Save's awful coding! :3
+static void P_Boss3Thinker(mobj_t *mobj)
+{
+	int waterlevel, i;
+	int minvalue, maxvalue;
+	byte random = 255;
+	ffloor_t* rover;
+
+	if (mobj->state->nextstate == mobj->info->spawnstate && mobj->tics == 1)
+	{
+		mobj->flags2 &= ~MF2_FRET;
+		mobj->flags &= ~MF_TRANSLATION;
+	}
+
+	if (!mobj->tracer)
+	{
+		var1 = 0;
+		A_BossJetFume(mobj);
+	}
+
+	if (!mobj->target || !(mobj->target->flags & MF_SHOOTABLE))
+	{
+		if (mobj->health <= 0)
+		{
+			// look for a new target
+			if (P_Look4Players(mobj, true) && mobj->info->mass) // Bid farewell!
+				S_StartSound(mobj, mobj->info->mass);
+			return;
+		}
+
+		// look for a new target
+		if (P_Look4Players(mobj, true) && mobj->info->seesound)
+			S_StartSound(mobj, mobj->info->seesound);
+
+		return;
+	}
+
+	// If we have a target, begin water level modifying!
+	if (mobj->target && mobj->target->flags & MF_SHOOTABLE) {
+		if (boss3_waiting && watercooldown != 0) {
+			// Decrement every tic if cooldown
+			watercooldown -= 1;
+			goto done;
+		} 
+
+		if (boss3_waiting && watercooldown == 0) {
+			// Cooldown has run out, determine new water level
+			boss3_waiting = false;
+			random = P_Random() % 3;
+			if (random == 0) 
+				goalheight = 18; // low height
+			else if (random == 1)
+				goalheight = 88; // medium height
+			else
+				goalheight = 400; // full height
+		} else if (!boss3_waiting) {
+			// Raise/lower water
+			for (i = 0; i < numsectors; i++)
+			{
+				if (!sectors[i].ffloors)
+					continue;
+
+				for (rover = sectors[i].ffloors; rover; rover = rover->next)
+				{
+					if (!(rover->flags & FF_EXISTS))
+						continue;
+
+					if (!(rover->flags & FF_SWIMMABLE))
+						continue;
+
+					waterlevel = (*rover->topheight) >> FRACBITS;
+
+					if (waterlevel < goalheight) {
+						(*rover->topheight) += FRACUNIT; // Raise by a fracunit
+					} else if (waterlevel == goalheight) {
+						boss3_waiting = true;
+						minvalue = 5 * 35;
+						maxvalue = 8 * 35;
+						watercooldown = P_Random() % ((maxvalue) - (maxvalue - minvalue)) + (maxvalue - minvalue); // Random value between 5 and 8 seconds
+					} else if (waterlevel > goalheight) {
+						(*rover->topheight) -= FRACUNIT; // Reduce by a fracunit
+					}
+
+					break;
+				}
+			}			
+		}
+	}
+
+done:
+
+	if (mobj->state == &states[mobj->info->spawnstate])
+		A_Boss1Chase(mobj);
+
+	if (mobj->state == &states[mobj->info->meleestate]
+		|| (mobj->state == &states[mobj->info->missilestate]
+		&& mobj->health > mobj->info->damage))
+	{
+		mobj->angle = R_PointToAngle2(mobj->x, mobj->y, mobj->target->x, mobj->target->y);
+	}
+}
+
+
 // Fun function stuff to make NiGHTS hoops!
 // Thanks a TON, Hurdler!
 typedef fixed_t TVector[4];
@@ -3209,6 +3317,19 @@ void P_MobjThinker(mobj_t *mobj)
 					P_InstaThrust(mobj, mobj->angle, 12*FRACUNIT);
 				break;
 			#endif
+			case MT_EGGMOBILE3:
+				if (mobj->health < mobj->info->damage+1 && leveltime & 1 && mobj->health > 0)
+					P_SpawnMobj(mobj->x, mobj->y, mobj->z, MT_SMOK);
+				if (mobj->flags2 & MF2_SKULLFLY)
+				{
+					mobj_t *spawnmobj;
+					spawnmobj = P_SpawnMobj(mobj->x, mobj->y, mobj->z, mobj->info->painchance);
+					spawnmobj->flags = (spawnmobj->flags & ~MF_TRANSLATION) | (1<<MF_TRANSSHIFT);
+				}
+				P_Boss3Thinker(mobj);
+				if (mobj->flags2 & MF2_BOSSFLEE)
+					P_InstaThrust(mobj, mobj->angle, 12*FRACUNIT);
+				break;
 			default: // Generic SOC-made boss
 				if (mobj->flags2 & MF2_SKULLFLY)
 				{

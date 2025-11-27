@@ -1689,7 +1689,6 @@ static void ST_overlayDrawer(void)
 	double temp, temp2;
 	char* creditstxt;
 	char d2uver[33];
-	char sdl2[4];
 
 	if (cv_splitscreen.value)
 		splity = 24;
@@ -1697,16 +1696,8 @@ static void ST_overlayDrawer(void)
 		splity = 0;
 
 	sprintf(d2uver, "DEMO 2 ULTIMATE v%d.%d.%d", MAJORVER, MINORVER, TINYVER);
-	sprintf(sdl2, "SDL2");
 
-	// Version watermark
-	if (wnd_system == WND_SDL2) {
-		// Hardcoding... yikes!
-		V_DrawString(0, 320 - (V_StringWidth(d2uver) + V_StringWidth(sdl2) + 4), 0, 0, d2uver);
-		V_DrawString(V_REDMAP, 320 - V_StringWidth(sdl2), 0, 0, sdl2);
-	} else {
-		V_DrawString(0, 320 - V_StringWidth(d2uver), 0, 0, d2uver);
-	}
+	V_DrawString(0, 320 - V_StringWidth(d2uver), 0, 0, d2uver);
 
 	if (stplyr->linkcount > 1)
 	{

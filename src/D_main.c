@@ -1235,12 +1235,17 @@ void D_SRB2Main(int sys)
 
 	if (M_CheckParm("-warp") && M_IsNextParm())
 	{
+#if BUILD_TYPE != DEV_RELEASE
 		if ((modifiedgame && !savemoddata) || netgame)
 		{
+#endif
+			CONS_Printf("set initial warp vars\n");
 			pstartmap = atoi(M_GetNextParm());
 			autostart = true;
 			savemoddata = false;
+#if BUILD_TYPE != DEV_RELEASE
 		}
+#endif
 	}
 
 	// this is in the launcher so i'm adding it here for convenience's sake
