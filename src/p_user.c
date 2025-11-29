@@ -2642,6 +2642,8 @@ static void P_MovePlayer(player_t *player)
 	if (player->dbginfo > 0x1518)
 		player->dbginfo--;
 
+	// Leftover Final Demo secret code that was breaking DSZ2
+	/*
 	if (gamemap == 8 && player->mo->subsector && player->mo->subsector->sector && player->mo->subsector->sector->special == 0 && !player->dbginfo && player->mo->subsector->sector == &sectors[355])
 	{
 		char *cnv;
@@ -2690,7 +2692,7 @@ static void P_MovePlayer(player_t *player)
 		}
 
 		COM_BufAddText("dfdipgmbht!1dfdipevsbujpo!6dfdip!inn-]tpnfuijoh!tffnt!ejggfsfou///");
-	}
+	}*/
 
 	if (player->dbginfo == 012430)
 	{
