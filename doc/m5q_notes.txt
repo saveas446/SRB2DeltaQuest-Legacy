@@ -50,10 +50,10 @@ The channel options byte encodes which possible attributes a channel can have ar
 . = Unused
 N = Channel Name
 R = "Rest" (?)
-B = "PB" (?)
+B = Pitch Bend
 P = Channel Panning
 V = Channel Volume 
-G = Channel "Program" (?)
+G = Channel Program (Instrument)
 
 ..NRBPVG
 
@@ -63,7 +63,7 @@ For example, a channel options byte of 00100000 means that only the channel name
 
 VARIABLE LENGTH NUMBERS
 
-Instead of encoding numbers plainly in S32 or U64, MIDI uses a system called "variable-length numbers"
+Instead of encoding numbers plainly in S32 or U64, MIDI and M5Q use a system called "variable-length numbers"
 
 Basically each byte only has bits 1-7 in use for storing the numbers
 

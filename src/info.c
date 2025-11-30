@@ -112,7 +112,8 @@ char sprnames[NUMSPRITES + 1][5] =
 	"POL5", // Streetlight
 	"MRTS", // Minecart stopper
 	"STLG", // Stalagmite decoration
-	"GOR2" // Speed Highway bell
+	"GOR2", // Speed Highway bell
+	"BUSH" // Speed Highway plant
 };
 
 /// \var 
@@ -1758,6 +1759,8 @@ state_t states[NUMSTATES] =
 	{SPR_STLG, 1, -1, {NULL}, 0, 0, S_NULL},       // S_STALAGMITE
 
 	{SPR_GOR2, 0, -1, {NULL}, 0, 0, S_NULL},       // S_BELL
+
+	{SPR_BUSH, 0, -1, {NULL}, 0, 0, S_NULL},       // S_HIGHWAYBUSH
 };
 
 /// \var 
@@ -6540,6 +6543,31 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
         0,              // damage
         sfx_None,               // activesound
         MF_SOLID|MF_SPAWNCEILING|MF_NOGRAVITY,          // flags
+        S_NULL          // raisestate
+    },
+    {           // MT_HIGHWAYBUSH
+        51,             // doomednum
+        S_HIGHWAYBUSH,                // spawnstate
+        1000,           // spawnhealth
+        S_NULL,         // seestate
+        sfx_None,               // seesound
+        8,              // reactiontime
+        sfx_None,               // attacksound
+        S_NULL,         // painstate
+        0,              // painchance
+        sfx_None,               // painsound
+        S_NULL,         // meleestate
+        S_NULL,         // missilestate
+        S_NULL,         // deathstate
+        S_NULL,         // xdeathstate
+        sfx_None,               // deathsound
+        0,              // speed
+        16*FRACUNIT,            // radius
+        84*FRACUNIT,            // height
+        100,            // mass
+        0,              // damage
+        sfx_None,               // activesound
+        MF_SCENERY|MF_NOGRAVITY,          // flags
         S_NULL          // raisestate
     }
 };
