@@ -24,6 +24,8 @@ gamedata.dat
 ogllog.txt
 srb2log.txt
 dev/*.xml
+# No demos in the repo!
+*.lmp
 
 # Visual Studio + source code stuff
 *.lib
