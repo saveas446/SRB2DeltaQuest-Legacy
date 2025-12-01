@@ -1229,12 +1229,12 @@ void M_ScreenShot(void)
 	}
 
 failure:
-	if (ret)
-	{
-		if (!moviemode)
-			CONS_Printf("screen shot %s saved in %s\n", freename, pathname);
-	}
-	else
+	//if (ret)
+	//{
+		//if (!moviemode)
+			//CONS_Printf("screen shot %s saved in %s\n", freename, pathname); Removed because it was annoying for taking screenshots
+	//}
+	if (!ret)
 	{
 		if (freename)
 			CONS_Printf("Couldn't create screen shot %s in %s\n", freename, pathname);
