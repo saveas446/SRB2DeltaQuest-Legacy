@@ -515,7 +515,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling..."
-						CommandLine="D:\Games\SRB2\demo_2\tools\masm_6.15\masm\bin\ml.exe /nologo /c /coff /Cx /Zi /Fo&quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+						CommandLine="c:\users\samwise\desktop\d2u\tools\masm_6.15\masm\bin\ml.exe /nologo /c /coff /Cx /Zi /Fo&quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -561,7 +561,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling..."
-						CommandLine="D:\Games\SRB2\demo_2\tools\masm_6.15\masm\bin\ml.exe /nologo /c /coff /Cx /Zi /Fo&quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+						CommandLine="c:\users\samwise\desktop\d2u\tools\masm_6.15\masm\bin\ml.exe /nologo /c /coff /Cx /Zi /Fo&quot;$(IntDir)\$(InputName).obj&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>

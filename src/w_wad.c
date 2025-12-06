@@ -723,7 +723,7 @@ void *W_CachePatchName(const char *name, int tag)
 	"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x"
 static void PrintMD5String(const unsigned char *md5, char *buf)
 {
-	my_snprintf(buf, 2*MD5_LEN+1, MD5_FORMAT,
+	snprintf(buf, 2*MD5_LEN+1, MD5_FORMAT,
 		md5[0], md5[1], md5[2], md5[3],
 		md5[4], md5[5], md5[6], md5[7],
 		md5[8], md5[9], md5[10], md5[11],

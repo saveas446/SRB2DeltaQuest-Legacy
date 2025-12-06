@@ -24,7 +24,7 @@
 #include "w_wad.h"   // for MAX_WADFILES
 
 #if _MSC_VER == 1500
-extern int my_snprintf(char* buffer, size_t count, const char* format, ...);
+extern int snprintf(char* buffer, size_t count, const char* format, ...);
 #else
 #define my_sprintf _sprintf
 #endif

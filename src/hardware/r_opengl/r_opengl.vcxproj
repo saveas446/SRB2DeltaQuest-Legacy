@@ -82,7 +82,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>c:\srb2demo2\r_opengl.dll</OutputFile>
+      <OutputFile>c:\users\samwise\desktop\d2u\dev\r_opengl.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>..\..\..\bin\VC\Debug\r_opengl.pdb</ProgramDatabaseFile>

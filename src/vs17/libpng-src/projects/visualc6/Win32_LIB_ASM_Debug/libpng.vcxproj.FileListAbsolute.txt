@@ -1,1 +1,2 @@
 D:\Games\SRB2\demo_2\src\vs17\libpng-src\projects\visualc6\Win32_LIB_ASM_Debug\libpng.lib
+C:\Users\Samwise\Desktop\D2U\src\vs17\libpng-src\projects\visualc6\Win32_LIB_ASM_Debug\libpng.lib
