@@ -137,7 +137,7 @@
       <OutputFile>.\..\..\dev\srb2win.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>C:\users\pc\desktop\d2u\dev\srb2.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>c:\users\samwise\desktop\d2u\dev\srb2.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>

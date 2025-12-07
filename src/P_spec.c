@@ -4408,8 +4408,51 @@ void P_SpawnSpecials(void)
 						P_AproxDistance(lines[i].dx, lines[i].dy) >> FRACBITS);
 				break;
 
-			//case 307 handled below
-			//case 308 handled below
+			case 307: // Adjustable flickering light
+				sec = (int)(sides[*lines[i].sidenum].sector - sectors);
+				for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
+					P_SpawnAdjustableFireFlicker(&sectors[sec], &sectors[s],
+						P_AproxDistance(lines[i].dx, lines[i].dy) >> FRACBITS);
+				break;
+
+				// Cool idea sam but this isn't working
+				// Shut up jacob im trying
+			case 308: // Flat alignment
+				if (lines[i].flags & ML_EFFECT4) // Align angle
+				{
+					if (!(lines[i].flags & ML_EFFECT5)) // Align floor unless ALLTRIGGER flag is set
+					{
+						for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
+							sectors[s].floorpic_angle = sectors[s].floorpic_angle = R_PointToAngle2(lines[i].v1->x, lines[i].v1->y, lines[i].v2->x, lines[i].v2->y);
+					}
+
+					if (!(lines[i].flags & ML_BOUNCY)) // Align ceiling unless BOUNCY flag is set
+					{
+						for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
+							sectors[s].ceilingpic_angle = sectors[s].ceilingpic_angle = R_PointToAngle2(lines[i].v1->x, lines[i].v1->y, lines[i].v2->x, lines[i].v2->y);
+					}
+				}
+				else // Do offsets
+				{
+					if (!(lines[i].flags & ML_BLOCKMONSTERS)) // Align floor unless BLOCKMONSTERS flag is set
+					{
+						for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
+						{
+							sectors[s].floor_xoffs += lines[i].dx;
+							sectors[s].floor_yoffs += lines[i].dy;
+						}
+					}
+
+					if (!(lines[i].flags & ML_NOCLIMB)) // Align ceiling unless NOCLIMB flag is set
+					{
+						for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
+						{
+							sectors[s].ceiling_xoffs += lines[i].dx;
+							sectors[s].ceiling_yoffs += lines[i].dy;
+						}
+					}
+				}
+				break;
 
 			case 309: // Float/bob platform
 				sec = (int)(sides[*lines[i].sidenum].sector - sectors);
@@ -4478,58 +4521,9 @@ void P_SpawnSpecials(void)
 					ffloorflags |= FF_NOSHADE;
 
 				P_AddFakeFloorsByLine(i, ffloorflags);
-				break;
-			case 307: // Adjustable flickering light
-				sec = (int)(sides[*lines[i].sidenum].sector - sectors);
-				for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
-					P_SpawnAdjustableFireFlicker(&sectors[sec], &sectors[s],
-						P_AproxDistance(lines[i].dx, lines[i].dy) >> FRACBITS);
-				break;
-
-			// Cool idea sam but this isn't working
-			// Shut up april im trying
-			/*case 320: // Flat alignment
-				if (lines[i].flags & ML_EFFECT4) // Align angle
-				{
-					if (!(lines[i].flags & ML_EFFECT5)) // Align floor unless ALLTRIGGER flag is set
-					{
-						for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
-							sectors[s].floorpic_angle = R_PointToAngle2(lines[i].v1->x, lines[i].v1->y, lines[i].v2->x, lines[i].v2->y);
-					}
-
-					if (!(lines[i].flags & ML_BOUNCY)) // Align ceiling unless BOUNCY flag is set
-					{
-						for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
-							sectors[s].ceilingpic_angle = R_PointToAngle2(lines[i].v1->x, lines[i].v1->y, lines[i].v2->x, lines[i].v2->y);
-					}
-				}
-				else // Do offsets
-				{
-					if (!(lines[i].flags & ML_BLOCKMONSTERS)) // Align floor unless BLOCKMONSTERS flag is set
-					{
-						for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
-						{
-							sectors[s].floor_xoffs += lines[i].dx;
-							sectors[s].floor_yoffs += lines[i].dy;
-						}
-					}
-
-					if (!(lines[i].flags & ML_NOCLIMB)) // Align ceiling unless NOCLIMB flag is set
-					{
-						for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
-						{
-							sectors[s].ceiling_xoffs += lines[i].dx;
-							sectors[s].ceiling_yoffs += lines[i].dy;
-						}
-					}
-				}
-				break;*/
-			
+				break;			
 		}
 	}
-
-/*	sector_t *sector;
-	int i, j;
 
 	// Set the default gravity. Custom gravity overrides this setting.
 	gravity = FRACUNIT/2;
@@ -4540,7 +4534,7 @@ void P_SpawnSpecials(void)
 
 	CheckForBustableBlocks = CheckForBouncySector = CheckForQuicksand = CheckForMarioBlocks = CheckForFloatBob = false;
 
-	*/// Init special SECTORs.
+	// Init special SECTORs.
 	sector = sectors;
 	for (i = 0; i < numsectors; i++, sector++)
 	{

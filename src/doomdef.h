@@ -21,6 +21,11 @@
 #ifndef __DOOMDEF__
 #define __DOOMDEF__
 
+//Shut VS2008 Up
+#if _MSC_VER != 1500
+#define my_snprintf snprintf
+#endif
+
 #ifdef _WINDOWS
 #if !defined (HWRENDER) && !defined (NOHW)
 #define HWRENDER
