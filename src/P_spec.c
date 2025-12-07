@@ -4532,8 +4532,6 @@ void P_SpawnSpecials(void)
 	sstimer = 90*TICRATE + 6;
 	totalrings = 1;
 
-	CheckForBustableBlocks = CheckForBouncySector = CheckForQuicksand = CheckForMarioBlocks = CheckForFloatBob = false;
-
 	// Init special SECTORs.
 	sector = sectors;
 	for (i = 0; i < numsectors; i++, sector++)
