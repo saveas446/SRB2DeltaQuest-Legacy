@@ -4487,8 +4487,8 @@ void P_SpawnSpecials(void)
 				break;
 
 			// Cool idea sam but this isn't working
-			// Shut up jacob im trying
-			case 308: // Flat alignment
+			// Shut up april im trying
+			/*case 320: // Flat alignment
 				if (lines[i].flags & ML_EFFECT4) // Align angle
 				{
 					if (!(lines[i].flags & ML_EFFECT5)) // Align floor unless ALLTRIGGER flag is set
@@ -4523,10 +4523,13 @@ void P_SpawnSpecials(void)
 						}
 					}
 				}
-				break;
+				break;*/
 			
 		}
 	}
+
+/*	sector_t *sector;
+	int i, j;
 
 	// Set the default gravity. Custom gravity overrides this setting.
 	gravity = FRACUNIT/2;
@@ -4537,7 +4540,7 @@ void P_SpawnSpecials(void)
 
 	CheckForBustableBlocks = CheckForBouncySector = CheckForQuicksand = CheckForMarioBlocks = CheckForFloatBob = false;
 
-	// Init special SECTORs.
+	*/// Init special SECTORs.
 	sector = sectors;
 	for (i = 0; i < numsectors; i++, sector++)
 	{

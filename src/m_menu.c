@@ -5296,7 +5296,7 @@ static void M_ReadSaveStrings(void)
 
 	for (i = 0; i < load_end; i++)
 	{
-		snprintf(name, sizeof name, savegamename, i);
+		my_snprintf(name, sizeof name, savegamename, i);
 
 #ifdef SDLIO
 		handle = SDL_RWFromFile(name, "rb");
