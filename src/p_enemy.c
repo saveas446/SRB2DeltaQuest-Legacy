@@ -1456,84 +1456,82 @@ void A_BossDeath(mobj_t *mo)
 			return; // other boss not dead
 	}
 
-	// victory!
-		if (mo->flags2 & MF2_BOSSNOTRAP || mo->type == MT_EGGMOBILE || mo->type == MT_EGGMOBILE3)
+// victory!
+	if (mo->flags2 & MF2_BOSSNOTRAP)
+	{
+		for (i = 0; i < MAXPLAYERS; i++)
+			P_DoPlayerExit(&players[i]);
+	}
+	else
+	{
+		// Bring the egg trap up to the surface
+		junk.tag = 680;
+		EV_DoElevator(&junk, elevateHighest, false);
+		junk.tag = 681;
+		EV_DoElevator(&junk, elevateUp, false);
+		junk.tag = 682;
+		EV_DoElevator(&junk, elevateHighest, false);
+	}
+
+	// Stop exploding and prepare to run.
+	P_SetMobjState(mo, mo->info->xdeathstate);
+
+	mo->target = NULL;
+
+	// Flee! Flee! Find a point to escape to! If none, just shoot upward!
+	// scan the thinkers to find the runaway point
+	for (th = thinkercap.next; th != &thinkercap; th = th->next)
+	{
+		if (th->function.acp1 != (actionf_p1)P_MobjThinker)
+			continue;
+
+		mo2 = (mobj_t*)th;
+
+		if (mo2->type == MT_BOSSFLYPOINT)
 		{
-			for (i = 0; i < MAXPLAYERS; i++)
-				P_DoPlayerExit(&players[i]);
+			// If this one's closer then the last one, go for it.
+			if (!mo->target ||
+				P_AproxDistance(P_AproxDistance(mo->x - mo2->x, mo->y - mo2->y), mo->z - mo2->z) <
+				P_AproxDistance(P_AproxDistance(mo->x - mo->target->x, mo->y - mo->target->y), mo->z - mo->target->z))
+				mo->target = mo2;
+			// Otherwise... Don't!
 		}
-		else
-		{
-			// Bring the egg trap up to the surface
-			junk.tag = 680;
-			EV_DoElevator(&junk, elevateHighest, false);
-			junk.tag = 681;
-			EV_DoElevator(&junk, elevateUp, false);
-			junk.tag = 682;
-			EV_DoElevator(&junk, elevateHighest, false);
-		}
+	}
 
-		// Stop exploding and prepare to run.
-		P_SetMobjState(mo, mo->info->xdeathstate);
+	mo->flags |= MF_NOGRAVITY | MF_NOCLIP;
 
-		mo->target = NULL;
+	if (mo->target)
+	{
+		if (mo->z < mo->floorz + 64 * FRACUNIT)
+			mo->momz = 2 * FRACUNIT;
+		mo->angle = R_PointToAngle2(mo->x, mo->y, mo->target->x, mo->target->y);
+		mo->flags2 |= MF2_BOSSFLEE;
+		mo->momz = FixedMul(FixedDiv(mo->target->z - mo->z, P_AproxDistance(mo->x - mo->target->x, mo->y - mo->target->y)), 2 * FRACUNIT);
+	}
+	else
+		mo->momz = 2 * FRACUNIT;
 
-		
-		// Flee! Flee! Find a point to escape to! If none, just shoot upward!
-		// scan the thinkers to find the runaway point
-		for (th = thinkercap.next; th != &thinkercap; th = th->next)
-		{
-			if (th->function.acp1 != (actionf_p1)P_MobjThinker)
-				continue;
+	if (mo->type == MT_EGGMOBILE2)
+	{
+		mo2 = P_SpawnMobj(mo->x + P_ReturnThrustX(mo, mo->angle - ANG90, 32 * FRACUNIT),
+			mo->y + P_ReturnThrustY(mo, mo->angle - ANG90, 24 * FRACUNIT),
+			mo->z + mo->height / 2 - 8 * FRACUNIT, MT_BOSSTANK1); // Right tank
+		mo2->angle = mo->angle;
+		P_InstaThrust(mo2, mo2->angle - ANG90, 4 * FRACUNIT);
+		mo2->momz = 4 * FRACUNIT;
 
-			mo2 = (mobj_t *)th;
+		mo2 = P_SpawnMobj(mo->x + P_ReturnThrustX(mo, mo->angle + ANG90, 32 * FRACUNIT),
+			mo->y + P_ReturnThrustY(mo, mo->angle - ANG90, 24 * FRACUNIT),
+			mo->z + mo->height / 2 - 8 * FRACUNIT, MT_BOSSTANK2); // Left tank
+		mo2->angle = mo->angle;
+		P_InstaThrust(mo2, mo2->angle + ANG90, 4 * FRACUNIT);
+		mo2->momz = 4 * FRACUNIT;
 
-			if (mo2->type == MT_BOSSFLYPOINT)
-			{
-				// If this one's closer then the last one, go for it.
-				if (!mo->target ||
-					P_AproxDistance(P_AproxDistance(mo->x - mo2->x, mo->y - mo2->y), mo->z - mo2->z) <
-					P_AproxDistance(P_AproxDistance(mo->x - mo->target->x, mo->y - mo->target->y), mo->z - mo->target->z))
-						mo->target = mo2;
-				// Otherwise... Don't!
-			}
-		}
-
-		mo->flags |= MF_NOGRAVITY|MF_NOCLIP;
-
-		if (mo->target)
-		{
-			if (mo->z < mo->floorz + 64*FRACUNIT)
-				mo->momz = 2*FRACUNIT;
-			mo->angle = R_PointToAngle2(mo->x, mo->y, mo->target->x, mo->target->y);
-			mo->flags2 |= MF2_BOSSFLEE;
-			mo->momz = FixedMul(FixedDiv(mo->target->z - mo->z, P_AproxDistance(mo->x-mo->target->x,mo->y-mo->target->y)), 2*FRACUNIT);
-		}
-		else
-			mo->momz = 2*FRACUNIT;
-
-		#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
-		if (mo->type == MT_EGGMOBILE2)
-		{
-			mo2 = P_SpawnMobj(mo->x + P_ReturnThrustX(mo, mo->angle - ANG90, 32*FRACUNIT),
-				mo->y + P_ReturnThrustY(mo, mo->angle-ANG90, 24*FRACUNIT),
-				mo->z + mo->height/2 - 8*FRACUNIT, MT_BOSSTANK1); // Right tank
-			mo2->angle = mo->angle;
-			P_InstaThrust(mo2, mo2->angle - ANG90, 4*FRACUNIT);
-			mo2->momz = 4*FRACUNIT;
-
-			mo2 = P_SpawnMobj(mo->x + P_ReturnThrustX(mo, mo->angle + ANG90, 32*FRACUNIT),
-				mo->y + P_ReturnThrustY(mo, mo->angle-ANG90, 24*FRACUNIT),
-				mo->z + mo->height/2 - 8*FRACUNIT, MT_BOSSTANK2); // Left tank
-			mo2->angle = mo->angle;
-			P_InstaThrust(mo2, mo2->angle + ANG90, 4*FRACUNIT);
-			mo2->momz = 4*FRACUNIT;
-
-			P_SpawnMobj(mo->x, mo->y, mo->z + mo->height + 32*FRACUNIT, MT_BOSSSPIGOT)->momz = 4*FRACUNIT;
-			return;
-		}
-		#endif
+		P_SpawnMobj(mo->x, mo->y, mo->z + mo->height + 32 * FRACUNIT, MT_BOSSSPIGOT)->momz = 4 * FRACUNIT;
+		return;
+	}
 }
+
 
 // Function: A_CustomPower
 //

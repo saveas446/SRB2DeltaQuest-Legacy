@@ -2006,11 +2006,29 @@ static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean r
 					P_DamageMobj(player->mo, NULL, NULL, 1, false);
 				}
 				break;
+
+			case 666: // Egg trap capsule
+			{
+				thinker_t* th;
+				mobj_t* mo2;
+
+				if (sector->ceilingdata || sector->floordata)
+					return;
+				junk.tag = 680;
+				EV_DoElevator(&junk, elevateDown, false);
+				junk.tag = 681;
+				EV_DoFloor(&junk, raiseFloorToNearestFast);
+				junk.tag = 682;
+				EV_DoCeiling(&junk, lowerToLowestFast);
+				sector->special = 0;
+
+				return;
+			}
 			// ew
-			/*case 974: // Linedef executor that doesn't require touching floor
+			case 974: // Linedef executor that doesn't require touching floor
 			case 975: // Linedef executor
 				P_LinedefExecute(sector->tag, player->mo, sector);
-				return;*/
+				return;
 			default:
 				// Just ignore.
 				break;
