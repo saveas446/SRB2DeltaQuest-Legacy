@@ -4539,7 +4539,15 @@ void P_SpawnSpecials(void)
 					ffloorflags |= FF_NOSHADE;
 
 				P_AddFakeFloorsByLine(i, ffloorflags);
-				break;			
+				break;
+			//l323 Laser Block
+			case 323:
+				sec = (int)(sides[*lines[i].sidenum].sector - sectors);
+
+				for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0 ;)
+					EV_AddLaserThinker(P_AddFakeFloor(&sectors[s], &sectors[sec], lines + i,
+						FF_EXISTS|FF_RENDERALL|FF_NOSHADE|FF_EXTRA|FF_CUTEXTRA), &sectors[s]);
+				break;		
 		}
 	}
 
