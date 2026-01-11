@@ -177,6 +177,7 @@ typedef enum
 typedef enum
 {
 	raiseToHighest,
+	raiseToHighestCustom,
 	lowerToLowest,
 	raiseToLowest,
 	lowerToLowestFast,

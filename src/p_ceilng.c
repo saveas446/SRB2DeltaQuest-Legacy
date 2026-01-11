@@ -382,6 +382,12 @@ int EV_DoCeiling(line_t *line, ceiling_e type)
 				ceiling->speed = CEILSPEED;
 				break;
 
+			case raiseToHighestCustom:
+				ceiling->topheight = P_FindHighestCeilingSurrounding(sec);
+				ceiling->direction = 1;
+				ceiling->speed = sides[line->sidenum[0]].textureoffset;
+				break;
+
 			//SoM: 3/6/2000: Added Boom types
 			case lowerToLowest:
 				ceiling->bottomheight = P_FindLowestCeilingSurrounding(sec);

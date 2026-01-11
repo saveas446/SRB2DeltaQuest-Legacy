@@ -3598,6 +3598,13 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
           line->special = 0;
         break;
 
+		case 42:
+        // L42 Raise Ceiling to Highest Ceiling (adjustable speed) 
+		// Save 11-01-2026
+        if(EV_DoCeiling( line, raiseToHighestCustom))
+          line->special = 0;
+        break;
+
       case 44:
         // Ceiling Crush
         if(EV_DoCeiling( line, lowerAndCrush ))

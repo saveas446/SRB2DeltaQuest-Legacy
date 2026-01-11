@@ -6594,6 +6594,31 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		sfx_None,       // activesound
 		MF_ENEMY|MF_SPECIAL, // flags
 		(statenum_t)MT_ROCKET   // raisestate
+	},
+	{           // MT_RANDOMAMBIENT2
+		43,             // doomednum
+		S_NULL,         // spawnstate
+		220,           // spawnhealth: repeat speed
+		S_NULL,         // seestate
+		sfx_ambin2,     // seesound
+		0,              // reactiontime
+		sfx_None,       // attacksound
+		S_NULL,         // painstate
+		255,            // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_NULL,         // deathstate
+		S_NULL,         // xdeathstate
+		sfx_None,       // deathsound
+		0,              // speed
+		8*FRACUNIT,     // radius
+		16*FRACUNIT,    // height
+		1000,           // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_NOSECTOR|MF_NOBLOCKMAP|MF_NOGRAVITY|MF_AMBIENT, // flags
+		S_NULL          // raisestate
 	}
 };
 

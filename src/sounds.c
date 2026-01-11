@@ -273,6 +273,7 @@ sfxinfo_t S_sfx[NUMSFX] =
   { "turhit", false, 127,  8, -1, NULL, 0,  -1,        -1, -1, NULL },
   { "trpowr", true,  127,  8, -1, NULL, 0,  -1,        -1, -1, NULL },// Turret Sound Effects - Sam 13/09/25 10:58 AM
   { "alarm", false, 127,  0, -1, NULL, 0,  -1,        -1, -1, NULL },// Alarm Sound - Sam 13/09/25 12:08 PM
+  {"ambin2", false,  64,  8, -1, NULL, 0,  -1,        -1, -1, NULL}
   // skin sounds free slots to add sounds at run time (Boris HACK!!!)
   // initialized to NULL
 };
