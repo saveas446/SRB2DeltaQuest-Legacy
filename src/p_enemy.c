@@ -64,6 +64,8 @@ static dirtype_t diags[] =
 
 //Real Prototypes to A_*
 void A_Fall(mobj_t *actor);
+void A_HeavyTurretsGuyFind(mobj_t *actor);
+void A_HeavyTurretsGuyKeep(mobj_t *actor);
 void A_Look(mobj_t *actor);
 void A_Chase(mobj_t *actor);
 void A_SargAttack(mobj_t *actor);
@@ -558,6 +560,164 @@ static boolean P_LookForPlayers(mobj_t *actor, boolean allaround, boolean tracer
 	//return false;
 }
 
+/** Looks for players over a certain speed and under a certain distance.
+  * Used for HTG's AI.
+  *
+  * \param actor     The object looking for flesh.
+  * \param allaround Look all around? If false, only players in a 180-degree
+  *                  range in front will be spotted.
+  * \return True if a player is found, otherwise false.
+  * \sa P_SupermanLook4Players
+  */
+ static boolean P_LookForPlayersHTG(mobj_t *actor, boolean allaround, boolean tracer)
+ {
+	 int c = 0, stop;
+	 player_t *player;
+	 sector_t *sector;
+	 angle_t an;
+	 fixed_t dist;
+ 
+	 if (cv_objectplace.value)
+		 return false;
+ 
+	 sector = actor->subsector->sector;
+ 
+	 // BP: first time init, this allow minimum lastlook changes
+	 if (actor->lastlook < 0)
+		 actor->lastlook = P_Random() % MAXPLAYERS;
+ 
+	 stop = (actor->lastlook - 1) & PLAYERSMASK;
+ 
+	 for (; ; actor->lastlook = (actor->lastlook + 1) & PLAYERSMASK)
+	 {
+		 // done looking
+		 if (actor->lastlook == stop)
+			 return false;
+ 
+		 if (!playeringame[actor->lastlook])
+			 continue;
+ 
+		 if (c++ == 2)
+			 return false;
+ 
+		 player = &players[actor->lastlook];
+ 
+		 if (player->health <= 0)
+			 continue; // dead
+ 
+		 if (!player->mo)
+			 continue;
+ 
+		 if (!P_CheckSight(actor, player->mo))
+			 continue; // out of sight
+			
+		// If distance less than 500 units and speed greater than 10, activate
+		 if (P_AproxDistance(player->mo->x - actor->x, player->mo->y - actor->y) >> FRACBITS > 500 || player->speed < 10)
+		 	continue; 
+
+		//CONS_Printf("distance: %d, speed: %d\n", P_AproxDistance(player->mo->x - actor->x, player->mo->y - actor->y) >> FRACBITS, player->speed);
+ 
+		 if (!allaround)
+		 {
+			 an = R_PointToAngle2(actor->x, actor->y, player->mo->x, player->mo->y) - actor->angle;
+			 if (an > ANG90 && an < ANG270)
+			 {
+				 dist = P_AproxDistance(player->mo->x - actor->x, player->mo->y - actor->y);
+				 // if real close, react anyway
+				 if (dist > MELEERANGE)
+					 continue; // behind back
+			 }
+		 }
+ 
+		 if (tracer)
+			 actor->tracer = player->mo;
+		 else
+			 actor->target = player->mo;
+		 return true;
+	 }
+ 
+	 //return false;
+ }
+
+/** Looks for players over a certain speed and under a certain distance.
+  * Used for HTG's AI.
+  *
+  * \param actor     The object looking for flesh.
+  * \param allaround Look all around? If false, only players in a 180-degree
+  *                  range in front will be spotted.
+  * \return True if a player is found, otherwise false.
+  * \sa P_SupermanLook4Players
+  */
+ static boolean P_LookForPlayersHTG2(mobj_t *actor, boolean allaround, boolean tracer)
+ {
+	 int c = 0, stop;
+	 player_t *player;
+	 sector_t *sector;
+	 angle_t an;
+	 fixed_t dist;
+ 
+	 if (cv_objectplace.value)
+		 return false;
+ 
+	 sector = actor->subsector->sector;
+ 
+	 // BP: first time init, this allow minimum lastlook changes
+	 if (actor->lastlook < 0)
+		 actor->lastlook = P_Random() % MAXPLAYERS;
+ 
+	 stop = (actor->lastlook - 1) & PLAYERSMASK;
+ 
+	 for (; ; actor->lastlook = (actor->lastlook + 1) & PLAYERSMASK)
+	 {
+		 // done looking
+		 if (actor->lastlook == stop)
+			 return false;
+ 
+		 if (!playeringame[actor->lastlook])
+			 continue;
+ 
+		 if (c++ == 2)
+			 return false;
+ 
+		 player = &players[actor->lastlook];
+ 
+		 if (player->health <= 0)
+			 continue; // dead
+ 
+		 if (!player->mo)
+			 continue;
+ 
+		 if (!P_CheckSight(actor, player->mo))
+			 continue; // out of sight
+			
+		// If distance less than 1000 units, stay awake
+		 if (P_AproxDistance(player->mo->x - actor->x, player->mo->y - actor->y) >> FRACBITS > 1000)
+		 	continue; 
+
+		//CONS_Printf("distance: %d, speed: %d\n", P_AproxDistance(player->mo->x - actor->x, player->mo->y - actor->y) >> FRACBITS, player->speed);
+ 
+		 if (!allaround)
+		 {
+			 an = R_PointToAngle2(actor->x, actor->y, player->mo->x, player->mo->y) - actor->angle;
+			 if (an > ANG90 && an < ANG270)
+			 {
+				 dist = P_AproxDistance(player->mo->x - actor->x, player->mo->y - actor->y);
+				 // if real close, react anyway
+				 if (dist > MELEERANGE)
+					 continue; // behind back
+			 }
+		 }
+ 
+		 if (tracer)
+			 actor->tracer = player->mo;
+		 else
+			 actor->target = player->mo;
+		 return true;
+	 }
+ 
+	 //return false;
+ }
+
 /** Looks for a player with a ring shield.
   * Used by rings.
   *
@@ -639,6 +799,45 @@ void A_Look(mobj_t *actor)
 		P_SetMobjState(actor, actor->info->seestate);
 	else if (locvar2 == 2) // Only play seesound
 		A_PlaySeeSound(actor);
+}
+
+// Function: A_HeavyTurretsGuyFind
+//
+// Description: Special function that wakes up HTG if player is going too fast and is too close
+//
+// var1 = look all around?
+// var2 = unused
+//
+void A_HeavyTurretsGuyFind(mobj_t *actor)
+{
+	int locvar1 = var1;
+	int locvar2 = var2;
+
+	if (!P_LookForPlayersHTG(actor, locvar1, false))
+		return;
+
+	P_SetMobjState(actor, actor->info->seestate);
+	A_PlaySeeSound(actor);
+}
+
+// Function: A_HeavyTurretsGuyKeep
+//
+// Description: Separate HTG function that allows it to go back to sleep if the player is gone
+//
+// var1 = look all around?
+// var2 = unused
+//
+void A_HeavyTurretsGuyKeep(mobj_t *actor)
+{
+	int locvar1 = var1;
+	int locvar2 = var2;
+
+	if (!P_LookForPlayersHTG2(actor, locvar1, false)) {
+		P_SetMobjState(actor, actor->info->spawnstate);
+	} else {
+		P_SetMobjState(actor, actor->info->seestate);
+		A_PlaySeeSound(actor);
+	}
 }
 
 // Function: A_Chase

@@ -331,11 +331,13 @@ light_t *t_lspr[NUMSPRITES] =
 	
 	&lspr[NOLIGHT],		// SPR_JJAW
 
+	&lspr[NOLIGHT],		// SPR_POL5
 	&lspr[NOLIGHT],		// SPR_MRTS
-
 	&lspr[NOLIGHT],		// SPR_STLG
-
 	&lspr[NOLIGHT],		// SPR_GOR2
+	&lspr[NOLIGHT],		// SPR_BUSH
+	&lspr[NOLIGHT],		// SPR_BTUR
+
 
 	// Free slots
 	&lspr[NOLIGHT],

@@ -5075,15 +5075,14 @@ void P_SpawnMapThing(mapthing_t *mthing)
 		else
 			mobj->threshold = 44;
 	}
-#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
-	else if (mobj->type == MT_POPUPTURRET)
+	// GEZ turrets
+	else if (mobj->type == MT_HEAVYTURRETSGUY || mobj->type == MT_BLUETURRET)
 	{
 		if (mthing->angle)
 			mobj->threshold = mthing->angle*NEWTICRATERATIO;
 		else
 			mobj->threshold = (TICRATE*2)-1;
 	}
-#endif
 
 	if (mobj->flags & MF_BOSS)
 	{

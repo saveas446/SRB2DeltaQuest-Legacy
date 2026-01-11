@@ -4140,7 +4140,7 @@ void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
                 EV_SilentTeleport(line, side, thing);
               break;
 
-			case 323:
+			case 324:
 			  // THZ2 door
 			  EV_DoPlat(line,THZdoor,0);
 			  break;

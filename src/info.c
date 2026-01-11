@@ -100,7 +100,7 @@ char sprnames[NUMSPRITES + 1][5] =
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	"WHTV","WORB",
 	#endif
-	"BSPI",
+	"TURR", // Originally the regular GEZ turrets, now occupied by Heavy Turrets Guy
 	// Demo 2 Ultimate custom things
 	"GRTV","GORB", // Green shield
 	"POL3", // DSZ Coral
@@ -113,7 +113,8 @@ char sprnames[NUMSPRITES + 1][5] =
 	"MRTS", // Minecart stopper
 	"STLG", // Stalagmite decoration
 	"GOR2", // Speed Highway bell
-	"BUSH" // Speed Highway plant
+	"BUSH", // Speed Highway plant
+	"BTUR" // GEZ blue turret
 };
 
 /// \var 
@@ -1712,17 +1713,16 @@ state_t states[NUMSTATES] =
 	{SPR_PRUP, 25, 18, {NULL}, 0, 0, S_PRUPAUX36},	// S_PRUPAUX35
 	{SPR_PRUP, 25, 18, {A_ExtraLife}, 0, 0, S_DISS},  // S_PRUPAUX36
 
-	{SPR_TURR, 0, 1, {A_Look}, 1, 0, S_TURRETLOOK},          // S_TURRETLOOK
-	{SPR_TURR, 1, 3, {A_FaceTarget}, 0, 0, S_TURRETPOPUP2},  // S_TURRETPOPUP1
-	{SPR_TURR, 2, 3, {NULL}, 0, 0, S_TURRETPOPUP3},  // S_TURRETPOPUP2
-	{SPR_TURR, 3, 3, {NULL}, 0, 0, S_TURRETPOPUP4},  // S_TURRETPOPUP3
-	{SPR_TURR, 4, 14,{NULL}, 0, 0, S_TURRETSHOOT},   // S_TURRETPOPUP4
-	{SPR_TURR, 4, 14,{A_JetgShoot}, 0, 0, S_TURRETPOPDOWN1}, // S_TURRETSHOOT
-	{SPR_TURR, 3, 3, {NULL}, 0, 0, S_TURRETPOPDOWN2},        // S_TURRETPOPDOWN1
-	{SPR_TURR, 2, 3, {NULL}, 0, 0, S_TURRETPOPDOWN3},        // S_TURRETPOPDOWN2
-	{SPR_TURR, 1, 3, {NULL}, 0, 0, S_TURRETPOPDOWN4},        // S_TURRETPOPDOWN3
-	{SPR_TURR, 0, 69,{A_SetTics}, 0, 1, S_TURRETLOOK},            // S_TURRETPOPDOWN4
+	// Heavy Turrets Guy
+	{SPR_TURR, 0, 1, {A_HeavyTurretsGuyFind}, 1, 0, S_TURRETLOOK},          // S_TURRETLOOK
+	{SPR_TURR, 0, 1, {A_HeavyTurretsGuyKeep}, 1, 0, S_TURRETWAKEUP},          // S_TURRETWAKEUP
+	{SPR_TURR, 1, 10,{A_JetgShoot}, 0, 0, S_TURRETWAKEUP}, // S_TURRETSHOOT
 
+	// Blue Turret (placeholder name)
+	{SPR_BTUR, 0, 1, {A_Look}, 1, 0, S_BLUETURRETLOOK},          // S_BLUETURRETLOOK
+	{SPR_BTUR, 0, 30,{A_JetgShoot}, 0, 0, S_BLUETURRETLOOK}, // S_BLUETURRETSHOOT
+
+	// MMZ Minecart
 	{SPR_MCRT, 0, -1, {NULL}, 0, 0, S_NULL},       // S_MINECART
 	{SPR_DISS, 0, -1, {NULL}, 0, 0, S_NULL},       // S_MINECARTCHANGEDIR
 	{SPR_DISS, 0, -1, {NULL}, 0, 0, S_NULL},       // S_MINECARTSPEEDUP
@@ -6294,11 +6294,11 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
 		S_NULL          // raisestate
 	},
 	#endif
-	{           // MT_POPUPTURRET
+	{           // MT_HEAVYTURRETSGUY
 		68,             // doomednum
 		S_TURRETLOOK,   // spawnstate
 		1,              // spawnhealth
-		S_TURRETPOPUP1, // seestate
+		S_TURRETSHOOT, // seestate
 		sfx_None,       // seesound
 		0,              // reactiontime
 		sfx_rlaunc,     // attacksound
@@ -6569,7 +6569,32 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] =
         sfx_None,               // activesound
         MF_SCENERY|MF_NOGRAVITY,          // flags
         S_NULL          // raisestate
-    }
+    },
+	{           // MT_BLUETURRET
+		52,             // doomednum
+		S_BLUETURRETLOOK,   // spawnstate
+		9999,              // spawnhealth
+		S_BLUETURRETSHOOT, // seestate
+		sfx_None,       // seesound
+		0,              // reactiontime
+		sfx_rlaunc,     // attacksound
+		S_NULL,         // painstate
+		1024,           // painchance
+		sfx_None,       // painsound
+		S_NULL,         // meleestate
+		S_NULL,         // missilestate
+		S_POSS_DIE1,        // deathstate
+		S_NULL,         // xdeathstate
+		sfx_slop,        // deathsound
+		0,              // speed
+		32*FRACUNIT,    // radius
+		160*FRACUNIT,    // height
+		100,            // mass
+		0,              // damage
+		sfx_None,       // activesound
+		MF_ENEMY|MF_SPECIAL, // flags
+		(statenum_t)MT_ROCKET   // raisestate
+	}
 };
 
 
