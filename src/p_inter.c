@@ -27,6 +27,7 @@
 #include "s_sound.h"
 #include "r_main.h"
 #include "st_stuff.h"
+#include "tables.h"
 
 // Touch debug dump.
 static char debuginfo[] = {

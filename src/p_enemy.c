@@ -27,6 +27,7 @@
 #include "s_sound.h"
 #include "m_random.h"
 #include "r_things.h"
+#include "tables.h"
 
 #include "hardware/hw3sound.h"
 

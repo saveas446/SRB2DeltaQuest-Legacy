@@ -55,6 +55,7 @@ typedef int fixed_t;
   \brief convert fixed_t into floating number
 */
 #define FIXED_TO_FLOAT(x) (((float)(x)) / 65536.0f)
+#define FLOAT_TO_FIXED(f) (fixed_t)((f) * ((float)FRACUNIT))
 
 
 /**	\brief	The TMulScale16 function
@@ -195,5 +196,7 @@ FUNCINLINE static ATTRINLINE fixed_t FixedMod(fixed_t a, fixed_t b)
 	}
 	return (a & (b-1));
 }
+
+extern fixed_t FixedHypot(fixed_t x, fixed_t y);
 
 #endif //m_fixed.h

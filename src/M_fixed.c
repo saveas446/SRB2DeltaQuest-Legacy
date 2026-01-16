@@ -66,3 +66,33 @@ fixed_t FixedDiv2(fixed_t a, fixed_t b)
 }
 
 #endif // useasm
+
+fixed_t FixedSqrt(fixed_t x)
+{
+	const float fx = FIXED_TO_FLOAT(x);
+	float fr;
+#ifdef HAVE_SQRTF
+	fr = sqrtf(fx);
+#else
+	fr = (float)sqrt(fx);
+#endif
+	return FLOAT_TO_FIXED(fr);
+}
+
+fixed_t FixedHypot(fixed_t x, fixed_t y)
+{
+	fixed_t ax, yx, yx2, yx1;
+	if (abs(y) > abs(x)) // |y|>|x|
+	{
+		ax = abs(y); // |y| => ax
+		yx = FixedDiv(x, y); // (x/y)
+	}
+	else // |x|>|y|
+	{
+		ax = abs(x); // |x| => ax
+		yx = FixedDiv(y, x); // (x/y)
+	}
+	yx2 = FixedMul(yx, yx); // (x/y)^2
+	yx1 = FixedSqrt(1+FRACUNIT + yx2); // (1 + (x/y)^2)^1/2
+	return FixedMul(ax, yx1); // |x|*((1 + (x/y)^2)^1/2)
+}

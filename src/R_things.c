@@ -24,6 +24,7 @@
 #include "sounds.h" // skin sounds
 #include "st_stuff.h"
 #include "w_wad.h"
+#include "tables.h"
 #include "z_zone.h"
 #include "i_video.h" // rendermode
 #include "r_things.h"

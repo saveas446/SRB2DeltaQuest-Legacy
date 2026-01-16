@@ -25,6 +25,7 @@
 #include "d_player.h"
 #include "d2udef.h"
 #include "info.h"
+#include "tables.h"
 #ifdef HWRENDER
 #include "hardware/hw_light.h"
 #endif

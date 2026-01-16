@@ -29,6 +29,7 @@
 #include "r_sky.h"
 #include "s_sound.h"
 #include "w_wad.h"
+#include "tables.h"
 
 #include "r_splats.h"
 

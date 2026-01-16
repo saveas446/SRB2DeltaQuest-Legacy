@@ -35,6 +35,7 @@
 #include "../r_splats.h"
 #include "../g_game.h"
 #include "../st_stuff.h"
+#include "../tables.h"
 
 #define R_FAKEFLOORS
 
