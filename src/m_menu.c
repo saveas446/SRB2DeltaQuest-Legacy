@@ -4427,7 +4427,11 @@ static menuitem_t ControlMenu2[] =
 	{IT_CALL | IT_STRING2, NULL, "Rotate Camera L",  M_ChangeControl, gc_camleft   },
 	{IT_CALL | IT_STRING2, NULL, "Rotate Camera R",  M_ChangeControl, gc_camright  },
 	{IT_CALL | IT_STRING2, NULL, "Reset Camera",     M_ChangeControl, gc_camreset  },
-
+// DEV CONTROLS
+#if BUILD_TYPE == PLAYTEST_BUILD || BUILD_TYPE == DEV_RELEASE
+	{IT_CALL | IT_STRING2, NULL, "Noclip",     M_ChangeControl, gc_noclip},
+	{IT_CALL | IT_STRING2, NULL, "God Mode",     M_ChangeControl, gc_god},
+#endif
 	{IT_SUBMENU | IT_WHITESTRING,
 	                       NULL, "next",             &ControlDef,     140          },
 };

@@ -108,6 +108,11 @@ typedef enum
 	gc_scores,
 	gc_jump,
 	gc_console,
+// DEV CONTROLS
+#if BUILD_TYPE == PLAYTEST_BUILD || BUILD_TYPE == DEV_RELEASE
+	gc_noclip,
+	gc_god,
+#endif
 	num_gamecontrols
 } gamecontrols_e;
 

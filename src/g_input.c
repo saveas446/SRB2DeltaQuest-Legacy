@@ -82,6 +82,18 @@ void G_MapEventsToControls(event_t *ev)
 	switch (ev->type)
 	{
 		case ev_keydown:
+
+// DEV CONTROLS
+#if BUILD_TYPE == PLAYTEST_BUILD || BUILD_TYPE == DEV_RELEASE
+			// Uh oh, sticking my dev control code in the middle of the keydown event code isn't a good idea!!!
+			// Whatevs :P
+			if (ev->data1 == gamecontrol[gc_noclip][0] || ev->data1 == gamecontrol[gc_noclip][1])
+				Command_CheatNoClip_f();
+
+			if (ev->data1 == gamecontrol[gc_god][0] || ev->data1 == gamecontrol[gc_god][1])
+				Command_CheatGod_f();
+#endif
+
 			if (ev->data1 < NUMINPUTS)
 				gamekeydown[ev->data1] = 1;
 #ifdef PARANOIA
@@ -720,7 +732,12 @@ static const char *gamecontrolname[num_gamecontrols] =
 	"talkkey",
 	"scores",
 	"jump",
-	"console"
+	"console",
+// DEV CONTROLS
+#if BUILD_TYPE == PLAYTEST_BUILD || BUILD_TYPE == DEV_RELEASE
+	"noclip",
+	"god"
+#endif
 };
 
 #define NUMKEYNAMES (sizeof (keynames)/sizeof (keyname_t))
@@ -885,6 +902,11 @@ void G_Controldefault(void)
 	gamecontrol[gc_scores     ][0] = KEY_TAB;
 	gamecontrol[gc_jump       ][0] = '/';
 	gamecontrol[gc_console    ][0] = KEY_CONSOLE;
+// DEV CONTROLS
+#if BUILD_TYPE == PLAYTEST_BUILD || BUILD_TYPE == DEV_RELEASE
+	gamecontrol[gc_noclip     ][0] = 'v';
+	gamecontrol[gc_god        ][0] = 'b';
+#endif
 }
 #endif
 
