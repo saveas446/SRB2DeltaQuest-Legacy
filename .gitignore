@@ -15,6 +15,7 @@
 # User-specific and unessecary SRB2 files
 errorlog.txt
 CONFIG.CFG
+AUTOEXEC.CFG
 autosave.xml
 SRB2*.pcx
 SRB2*.png

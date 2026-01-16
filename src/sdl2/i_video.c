@@ -267,7 +267,7 @@ int VID_SetMode(int modenum)
 		flags = NULL;
 
 	// Init window (hardcoded to 640x400 for now) in the center of the screen
-	SDL_window = SDL_CreateWindow(va("Demo 2 Ultimate v%d.%d.%d", MAJORVER, MINORVER, TINYVER), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vid.width, vid.height, flags);
+	SDL_window = SDL_CreateWindow(va("SRB2 Delta Quest v%d.%d.%d", MAJORVER, MINORVER, TINYVER), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vid.width, vid.height, flags);
 
 	if (!SDL_window)
 		I_Error("VID_SetMode(): Could not create window!");

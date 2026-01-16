@@ -1695,7 +1695,7 @@ static void ST_overlayDrawer(void)
 	else
 		splity = 0;
 
-	sprintf(d2uver, "DEMO 2 ULTIMATE v%d.%d.%d", MAJORVER, MINORVER, TINYVER);
+	sprintf(d2uver, "SRB2 DELTA QUEST v%d.%d.%d", MAJORVER, MINORVER, TINYVER);
 
 	V_DrawString(0, 320 - V_StringWidth(d2uver), 0, 0, d2uver);
 

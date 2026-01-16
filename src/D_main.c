@@ -24,7 +24,7 @@
 // Putting this in d_main.c because it's the main file
 // Not like I have any better options
 
-/*! \mainpage Demo 2 Ultimate Index Page
+/*! \mainpage SRB2 Delta Quest Index Page
  *
  * \section intro_sec Introduction
  *
