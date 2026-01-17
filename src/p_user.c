@@ -1265,7 +1265,7 @@ static void P_3dMovement(player_t *player)
 			movepushforward >>= 2; // proper air movement
 
 		// Allow a bit of movement while spinning
-		if (player->spinning)
+		if (player->mfspinning)
 		{
 			if ((mforward && cmd->forwardmove > 0) || (mbackward && cmd->forwardmove < 0))
 				movepushforward = 0;
