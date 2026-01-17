@@ -131,6 +131,7 @@ static void Command_Version_f(void);
 static void Command_ShowGametype_f(void);
 static void Command_JumpToAxis_f(void);
 static void Command_Nodes_f(void);
+static void Command_Playintro_f(void);
 FUNCNORETURN static ATTRNORETURN void Command_Quit_f(void);
 static void Command_Writethings_f(void);
 
@@ -582,6 +583,7 @@ void D_RegisterClientCommands(void)
 	COM_AddCommand("stopmovie", Command_StopMovie_f);
 	COM_AddCommand("teleport", Command_Teleport_f);
 	COM_AddCommand("rteleport", Command_RTeleport_f);
+	COM_AddCommand("playintro", Command_Playintro_f);
 	COM_AddCommand("writethings", Command_Writethings_f);
 
 	COM_AddCommand("orderpizza", Command_OrderPizza_f);
@@ -2176,8 +2178,9 @@ static void Got_Teamchange(char **cp, int playernum)
 	else if (playernum == secondarydisplayplayer)
 		CV_SetValue(&cv_playercolor2, newteam + 5);
 }
-// TODO: Remove 'cp' parameter, it's unused. (Hennkrido 1-16-2026)
-static void Got_LTG(char **cp, int playernum)
+
+// "LTG" easter egg
+static void Got_LTG(char** cp, int playernum)
 {
 	P_DamageMobj(players[playernum].mo, NULL, NULL, 10000, false);
 }
@@ -2758,6 +2761,16 @@ static void Command_Nodes_f(void)
 		if (playeringame[i])
 			CONS_Printf("%d : %s\n", i, player_names[i]);
 	}
+}
+
+/** Plays the intro.
+*/
+static void Command_Playintro_f(void)
+{ 
+	if (netgame)
+		return;
+
+	F_StartIntro();
 }
 
 /** Writes the mapthings in the current level to a file.

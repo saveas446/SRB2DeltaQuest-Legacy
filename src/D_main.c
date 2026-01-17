@@ -1481,7 +1481,7 @@ void D_SRB2Main(int sys)
 		}
 	}
 	else
-		D_StartTitle();
+		F_StartIntro(); // Restore intro Save 18-01-2026
 
 	if (dedicated && server)
 	{
