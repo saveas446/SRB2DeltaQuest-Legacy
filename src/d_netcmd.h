@@ -22,6 +22,7 @@
 #define __D_NETCMD__
 
 #include "command.h"
+#include "g_state.h"
 
 // console vars
 extern consvar_t cv_playername;
