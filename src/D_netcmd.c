@@ -131,6 +131,7 @@ static void Command_Version_f(void);
 static void Command_ShowGametype_f(void);
 static void Command_JumpToAxis_f(void);
 static void Command_Nodes_f(void);
+static void Command_Playintro_f(void);
 FUNCNORETURN static ATTRNORETURN void Command_Quit_f(void);
 static void Command_Writethings_f(void);
 
@@ -582,6 +583,7 @@ void D_RegisterClientCommands(void)
 	COM_AddCommand("stopmovie", Command_StopMovie_f);
 	COM_AddCommand("teleport", Command_Teleport_f);
 	COM_AddCommand("rteleport", Command_RTeleport_f);
+	COM_AddCommand("playintro", Command_Playintro_f);
 	COM_AddCommand("writethings", Command_Writethings_f);
 
 	COM_AddCommand("orderpizza", Command_OrderPizza_f);
@@ -2176,8 +2178,9 @@ static void Got_Teamchange(char **cp, int playernum)
 	else if (playernum == secondarydisplayplayer)
 		CV_SetValue(&cv_playercolor2, newteam + 5);
 }
-// TODO: Remove 'cp' parameter, it's unused. (Hennkrido 1-16-2026)
-static void Got_LTG(char **cp, int playernum)
+
+// "LTG" easter egg
+static void Got_LTG(char** cp, int playernum)
 {
 	P_DamageMobj(players[playernum].mo, NULL, NULL, 10000, false);
 }
@@ -2354,12 +2357,14 @@ static void Command_RunSOC(void)
 		return;
 	}
 
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE != PLAYTEST_BUILD
 	if (!modifiedgame)
 	{
 		modifiedgame = true;
 		if (!(netgame || multiplayer))
 			CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
 	}
+#endif
 
 	if (!(netgame || multiplayer))
 	{
@@ -2443,12 +2448,14 @@ static void Command_Addfile(void)
 		return;
 	}
 
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE != PLAYTEST_BUILD
 	if (!modifiedgame && !W_VerifyNMUSlumps(fn))
 	{
 		modifiedgame = true;
 		if (!(netgame || multiplayer))
 			CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
 	}
+#endif
 
 	if (!(netgame || multiplayer))
 	{
@@ -2540,8 +2547,10 @@ static void Got_Addfilecmd(char **cp, int playernum)
 		return;
 	}
 
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE != PLAYTEST_BUILD
 	P_AddWadFile(filename, NULL);
 	modifiedgame = true;
+#endif
 }
 
 
@@ -2760,6 +2769,16 @@ static void Command_Nodes_f(void)
 	}
 }
 
+/** Plays the intro.
+*/
+static void Command_Playintro_f(void)
+{ 
+	if (netgame)
+		return;
+
+	F_StartIntro();
+}
+
 /** Writes the mapthings in the current level to a file.
   *
   * \sa cv_objectplace
@@ -2815,6 +2834,8 @@ void ObjectPlace_OnChange(void)
 			P_SetThingPosition(players[i].mo);
 			if (!players[i].currentthing)
 				players[i].currentthing = 1;
+
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE != PLAYTEST_BUILD
 			if (!modifiedgame || savemoddata)
 			{
 				modifiedgame = true;
@@ -2822,6 +2843,7 @@ void ObjectPlace_OnChange(void)
 				if (!(netgame || multiplayer))
 					CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
 			}
+#endif
 		}
 	}
 	else if (players[0].mo)
@@ -2856,6 +2878,7 @@ void ObjectPlace_OnChange(void)
 
 	if (cv_objectplace.value)
 	{
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE != PLAYTEST_BUILD
 		if (!modifiedgame || savemoddata)
 		{
 			modifiedgame = true;
@@ -2863,6 +2886,7 @@ void ObjectPlace_OnChange(void)
 			if (!(netgame || multiplayer))
 				CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
 		}
+#endif
 
 		if (players[0].nightsmode)
 			return;
@@ -3114,6 +3138,7 @@ static void Ringslinger_OnChange(void)
 
 	if (cv_ringslinger.value) // Only if it's been turned on
 	{
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE != PLAYTEST_BUILD
 		if (!modifiedgame || savemoddata)
 		{
 			modifiedgame = true;
@@ -3121,6 +3146,7 @@ static void Ringslinger_OnChange(void)
 			if (!(netgame || multiplayer))
 				CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
 		}
+#endif
 	}
 }
 
@@ -3143,6 +3169,7 @@ static void Startrings_OnChange(void)
 				players[i].health = players[i].mo->health;
 			}
 
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE != PLAYTEST_BUILD
 		if (!modifiedgame || savemoddata)
 		{
 			modifiedgame = true;
@@ -3150,6 +3177,7 @@ static void Startrings_OnChange(void)
 			if (!(netgame || multiplayer))
 				CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
 		}
+#endif
 	}
 }
 
@@ -3169,6 +3197,7 @@ static void Startlives_OnChange(void)
 			if (playeringame[i])
 				players[i].lives = cv_startlives.value;
 
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE != PLAYTEST_BUILD
 		if (!modifiedgame || savemoddata)
 		{
 			modifiedgame = true;
@@ -3176,8 +3205,11 @@ static void Startlives_OnChange(void)
 			if (!(netgame || multiplayer))
 				CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
 		}
+#endif
 	}
 }
+
+
 
 static void Startcontinues_OnChange(void)
 {
@@ -3195,6 +3227,7 @@ static void Startcontinues_OnChange(void)
 			if (playeringame[i])
 				players[i].continues = cv_startcontinues.value;
 
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE != PLAYTEST_BUILD
 		if (!modifiedgame || savemoddata)
 		{
 			modifiedgame = true;
@@ -3202,6 +3235,7 @@ static void Startcontinues_OnChange(void)
 			if (!(netgame || multiplayer))
 				CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
 		}
+#endif
 	}
 }
 
@@ -3482,6 +3516,7 @@ static void Fishcake_OnChange(void)
 		// so don't make modifiedgame always on!
 		if (cv_debug)
 		{
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE != PLAYTEST_BUILD
 			if (!modifiedgame || savemoddata)
 			{
 				modifiedgame = true;
@@ -3489,6 +3524,7 @@ static void Fishcake_OnChange(void)
 				if (!(netgame || multiplayer))
 					CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
 			}
+#endif
 		}
 	}
 

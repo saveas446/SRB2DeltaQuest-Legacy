@@ -1,5 +1,8 @@
 #include <stdlib.h>
 
+extern char toupper(int ch);
+extern char tolower(int ch);
+
 char* strupr(char *n) {
       int i;
       for (i=0;n[i];i++) {

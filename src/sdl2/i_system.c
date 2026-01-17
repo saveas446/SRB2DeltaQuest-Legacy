@@ -1,10 +1,14 @@
-#include "../g_input.h"
-#include "../g_state.h"
+#include "../d_clisrv.h"
+#include "../d_main.h"
 #include "../d_netcmd.h"
 #include "../doomdef.h"
-#include "../screen.h"
+#include "../g_input.h"
 #include "../keys.h"
+#include "../i_sound.h"
 #include "../i_system.h"
+#include "../i_video.h"
+#include "../m_misc.h"
+#include "../screen.h"
 
 #include <SDL.h>
 #include <SDL_keycode.h>
@@ -264,8 +268,6 @@ void I_GetEvent(void){
 }
 
 void I_OsPolling(void){
-	event_t e_w;
-
 	I_GetEvent();
 }
 
@@ -287,7 +289,7 @@ void I_Quit(void)
 	exit(0);
 }
 
-void I_Error(char *error, ...)
+void I_Error(const char *error, ...)
 {
 	int len;
 	char* buffer;
@@ -352,7 +354,7 @@ const char *I_GetJoyName(int joyindex)
 	return NULL;
 }
 
-void I_OutputMsg(char *error, ...)
+void I_OutputMsg(const char *error, ...)
 {
 	int len;
 	char* buffer;

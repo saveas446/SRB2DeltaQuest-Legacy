@@ -1165,7 +1165,7 @@ void D_SRB2Main(int sys)
 	}
 	adminpassword[8] = '\0';
 
-	#if BUILD_TYPE == DEV_RELEASE
+	#if BUILD_TYPE == DEV_RELEASE || BUILD_TYPE == PLAYTEST_BUILD
 		// Convenient parm for adding dev maps quickly
 		if (M_CheckParm("-addmap") && M_IsNextParm()) {
 			while (M_IsNextParm())
@@ -1181,7 +1181,6 @@ void D_SRB2Main(int sys)
 					d--;
 
 					D_AddFile(wad_filenames[d]);
-					modifiedgame = true;
 				}
 			}
 		}
@@ -1201,8 +1200,10 @@ void D_SRB2Main(int sys)
 
 				if (s) // Check for NULL?
 				{
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE != PLAYTEST_BUILD
 					if (!W_VerifyNMUSlumps(s))
 						modifiedgame = true;
+#endif
 					D_AddFile(s);
 				}
 			}
@@ -1216,7 +1217,9 @@ void D_SRB2Main(int sys)
 		while (M_IsNextParm())
 			D_AddFile(M_GetNextParm());
 
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE != PLAYTEST_BUILD
 		modifiedgame = true;
+#endif
 	}
 
 	// get skill / map from parms
@@ -1481,7 +1484,7 @@ void D_SRB2Main(int sys)
 		}
 	}
 	else
-		D_StartTitle();
+		F_StartIntro(); // Restore intro Save 18-01-2026
 
 	if (dedicated && server)
 	{

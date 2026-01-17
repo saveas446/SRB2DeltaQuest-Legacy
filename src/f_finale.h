@@ -46,6 +46,7 @@ void F_Drawer(void);
 void F_DemoEndDrawer(void);
 void F_IntroDrawer(void);
 void F_TitleScreenDrawer(void);
+void F_StartIntro(void);
 
 void F_GameEvaluationDrawer(void);
 void F_StartGameEvaluation(void);

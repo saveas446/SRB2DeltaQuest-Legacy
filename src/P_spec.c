@@ -21,20 +21,20 @@
 ///	 utility functions, etc.
 ///	 - Line Tag handling. Line and Sector triggers.
 
+#include "dstrings.h" //SoM: 3/10/2000
 #include "doomdef.h"
 #include "g_game.h"
+#include "i_system.h"
+#include "m_random.h"
 #include "p_local.h"
+#include "p_mobj.h"
 #include "p_setup.h" // levelflats for flat animation
 #include "r_data.h"
-#include "m_random.h"
-#include "p_mobj.h"
-#include "i_system.h"
+#include "r_main.h" //Two extra includes.
+#include "r_sky.h"
 #include "s_sound.h"
 #include "w_wad.h"
 #include "z_zone.h"
-#include "dstrings.h" //SoM: 3/10/2000
-#include "r_main.h" //Two extra includes.
-#include "r_sky.h"
 
 #include "hardware/hw3sound.h"
 
@@ -1009,19 +1009,9 @@ void P_LinedefExecute(int tag, mobj_t *actor, sector_t *caller)
 		if (lines[masterline].tag != tag)
 			continue;
 
-		if (!(lines[masterline].special == 9
-			|| lines[masterline].special == 10
-			|| lines[masterline].special == 11
-			|| lines[masterline].special == 12
-			|| lines[masterline].special == 13
-			|| lines[masterline].special == 19
-			|| lines[masterline].special == 20
-			|| lines[masterline].special == 21
-			|| lines[masterline].special == 95
-			|| lines[masterline].special == 96
-			|| lines[masterline].special == 97
-			|| lines[masterline].special == 98
-			|| lines[masterline].special == 99))
+		if (!(lines[masterline].special == 400
+			|| lines[masterline].special == 401
+			|| lines[masterline].special == 402))
 			continue;
 
 		specialtype = lines[masterline].special;
@@ -1132,8 +1122,8 @@ void P_LinedefExecute(int tag, mobj_t *actor, sector_t *caller)
 			&& !(actor && actor->player && actor->player->ctfteam == 2))
 			return;
 
-		// Special type 97 only works once when you hit floor
-		if ((specialtype == 97 || specialtype == 11 || specialtype == 13 || specialtype == 20) && actor && !(actor->eflags & (MF_JUSTHITFLOOR | MF_JUSTSTEPPEDDOWN)))
+		// Special type 401 only works once when you hit floor
+		if ((specialtype == 401 || specialtype == 11 || specialtype == 13 || specialtype == 20) && actor && !(actor->eflags & (MF_JUSTHITFLOOR | MF_JUSTSTEPPEDDOWN)))
 			return;
 
 		triplinecaller = caller;
@@ -1231,14 +1221,15 @@ void P_LinedefExecute(int tag, mobj_t *actor, sector_t *caller)
 				{
 					if (ctlsector->lines[i]->flags & ML_DONTPEGTOP)
 						P_AddExecutorDelay(ctlsector->lines[i], actor);
-					else
+					else {
 						P_ProcessLineSpecial(ctlsector->lines[i], actor);
+					}
 				}
 			}
 		}
 
 		// Special type 9, 21, 98 & 99 only work once
-		if (specialtype == 9 || specialtype == 21 || specialtype == 98 || specialtype == 99)
+		if (specialtype == 400)
 		{
 			lines[masterline].special = 0; // Clear it out
 			if (caller && ((caller->special >= 971 && caller->special <= 975) || caller->special == 967 || caller->special == 968))
@@ -1466,31 +1457,22 @@ void P_SwitchWeather(int weathernum)
   * \sa P_LinedefExecute
   * \author Graue <graue@oceanbase.org>
   */
-// TODO: Remove 'mo' from here, it's unused. (Hennkrido 1-16-2026)
 void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 {
-    switch (line->special)
-    {
-        // TRIGGERS.
-        // All from here to RETRIGGERS.
-      case 2:
-        // Open Door
-        if(EV_DoDoor(line,dooropen))
-          line->special = 0;
-        break;
-	}
-	/*// note: no commands with linedef types <= 98 can be used
+	int secnum = -1;
+
+	// note: no commands with linedef types <= 98 can be used
 	switch (line->special)
 	{
-		case 101: // Set tagged sector's floor height/pic
+		case 501: // Set tagged sector's floor height/pic
 			EV_DoFloor(line, instantMoveFloorByFrontSector);
 			break;
 
-		case 102: // Set tagged sector's ceiling height/pic
+		case 502: // Set tagged sector's ceiling height/pic
 			EV_DoCeiling(line, instantMoveCeilingByFrontSector);
 			break;
 
-		case 103: // Set tagged sector's light level
+		case 503: // Set tagged sector's light level
 			{
 				short newlightlevel;
 				int newfloorlightsec, newceilinglightsec;
@@ -1520,7 +1502,7 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 			}
 			break;
 
-		case 104: // Teleport the player or thing
+		case 504: // Teleport the player or thing
 			{
 				mobj_t *dest;
 
@@ -1535,17 +1517,17 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 					return;
 
 				if (line->flags & ML_BLOCKMONSTERS)
-					P_Teleport(mo, dest->x, dest->y, dest->z, (line->flags & ML_NOCLIMB) ?  mo->angle : dest->angle, false, (line->flags & ML_PASSUSE));
+					P_Teleport(mo, dest->x, dest->y, dest->z, (line->flags & ML_NOCLIMB) ?  mo->angle : dest->angle, false, (line->flags & ML_EFFECT4));
 				else
 				{
-					P_Teleport(mo, dest->x, dest->y, dest->z, (line->flags & ML_NOCLIMB) ?  mo->angle : dest->angle, true, (line->flags & ML_PASSUSE));
+					P_Teleport(mo, dest->x, dest->y, dest->z, (line->flags & ML_NOCLIMB) ?  mo->angle : dest->angle, true, (line->flags & ML_EFFECT4));
 					// Play the 'bowrwoosh!' sound
-					S_StartSound(dest, sfx_telept);
+					//S_StartSound(dest, sfx_mixup);
 				}
 			}
 			break;
 
-		case 105: // Change music
+		case 505: // Change music
 			if (mo && mo->player && P_IsLocalPlayer(mo->player)) // console player only
 			{
 				fixed_t musicnum;
@@ -1556,7 +1538,7 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 					musicnum += 2048;
 
 				if ((musicnum & ~2048) < NUMMUSIC && (musicnum & ~2048) > mus_None)
-					//S_ChangeMusic(musicnum & 2047, !(line->flags & ML_NOCLIMB));
+					S_ChangeMusic(musicnum & 2047, !(line->flags & ML_NOCLIMB));
 				else
 					S_StopMusic();
 
@@ -1568,31 +1550,31 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 			}
 			break;
 
-		case 106: // Move floor, linelen = speed, frontsector floor = dest height
+		case 506: // Move floor, linelen = speed, frontsector floor = dest height
 			EV_DoFloor(line, moveFloorByFrontSector);
 			break;
 
-		case 107: // Move ceiling, linelen = speed, frontsector ceiling = dest height
+		case 507: // Move ceiling, linelen = speed, frontsector ceiling = dest height
 			EV_DoCeiling(line, moveCeilingByFrontSector);
 			break;
 
-		case 108: // Lower floor by line, dx = speed, dy = amount to lower
+		case 508: // Lower floor by line, dx = speed, dy = amount to lower
 			EV_DoFloor(line, lowerFloorByLine);
 			break;
 
-		case 109: // Raise floor by line, dx = speed, dy = amount to raise
+		case 509: // Raise floor by line, dx = speed, dy = amount to raise
 			EV_DoFloor(line, raiseFloorByLine);
 			break;
 
-		case 110: // Lower ceiling by line, dx = speed, dy = amount to lower
+		case 510: // Lower ceiling by line, dx = speed, dy = amount to lower
 			EV_DoCeiling(line, lowerCeilingByLine);
 			break;
 
-		case 111: // Raise ceiling by line, dx = speed, dy = amount to raise
+		case 511: // Raise ceiling by line, dx = speed, dy = amount to raise
 			EV_DoCeiling(line, raiseCeilingByLine);
 			break;
 
-		case 112: // Change tagged sectors' tag
+		case 512: // Change tagged sectors' tag
 		// (formerly "Change calling sectors' tag", but behavior
 		//  was changed)
 		{
@@ -1606,7 +1588,7 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 			break;
 		}
 
-		case 113: // Run a script
+		case 513: // Run a script
 			if (cv_runscripts.value)
 			{
 				int lumpnum, scrnum;
@@ -1640,11 +1622,11 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 			}
 			break;
 
-		case 114: // Change front sector's tag
+		case 514: // Change front sector's tag
 			P_ChangeSectorTag((int)(line->frontsector - sectors), P_AproxDistance(line->dx, line->dy)>>FRACBITS);
 			break;
 
-		case 115: // Play SFX
+		case 515: // Play SFX
 			{
 				fixed_t sfxnum;
 
@@ -1658,7 +1640,7 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 						if (mo && mo->player && (mo->player == &players[displayplayer] || mo->player == &players[secondarydisplayplayer]))
 							S_StartSound(NULL, sfxnum);
 					}
-					else if (line->flags & ML_PASSUSE)
+					else if (line->flags & ML_EFFECT4)
 					{
 						// play the sound from nowhere
 						S_StartSound(NULL, sfxnum);
@@ -1680,7 +1662,7 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 			}
 			break;
 
-		case 116: // Stop floor/ceiling movement in tagged sector(s)
+		case 516: // Stop floor/ceiling movement in tagged sector(s)
 			while ((secnum = P_FindSectorFromLineTag(line, secnum)) >= 0)
 			{
 				if (sectors[secnum].floordata)
@@ -1708,11 +1690,11 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 			}
 			break;
 
-		case 117: // Fade light levels in tagged sectors to new value
+		case 517: // Fade light levels in tagged sectors to new value
 			P_FadeLight(line->tag, sectors[secnum].lightlevel, P_AproxDistance(line->dx, line->dy));
 			break;
 
-		case 118: // Stop lighting effect in tagged sectors
+		case 518: // Stop lighting effect in tagged sectors
 			while ((secnum = P_FindSectorFromLineTag(line, secnum)) >= 0)
 				if (sectors[secnum].lightingdata)
 				{
@@ -1721,7 +1703,7 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 				}
 			break;
 
-		case 119: // Spawn adjustable fire flicker
+		case 519: // Spawn adjustable fire flicker
 			while ((secnum = P_FindSectorFromLineTag(line, secnum)) >= 0)
 			{
 				if (line->flags & ML_NOCLIMB && line->backsector)
@@ -1755,7 +1737,7 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 			}
 			break;
 
-		case 120: // Spawn adjustable glowing light
+		case 520: // Spawn adjustable glowing light
 			while ((secnum = P_FindSectorFromLineTag(line, secnum)) >= 0)
 			{
 				if (line->flags & ML_NOCLIMB && line->backsector)
@@ -1789,7 +1771,7 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 			}
 			break;
 
-		case 121: // Cut away to another view
+		case 521: // Cut away to another view
 			{
 				mobj_t *altview;
 
@@ -1825,7 +1807,7 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 			}
 			break;
 
-		case 122: // Moves the mobj to its sector's soundorg and on the floor, and stops it
+		case 522: // Moves the mobj to its sector's soundorg and on the floor, and stops it
 			if (!mo)
 				return;
 
@@ -1848,14 +1830,14 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 				else if (cv_chasecam.value && mo->player == &players[displayplayer])
 					P_ResetCamera(mo->player, &camera);*/
 
-/*				mo->player->rmomx = mo->player->rmomy = 1;
+				mo->player->rmomx = mo->player->rmomy = 1;
 				mo->player->cmomx = mo->player->cmomy = 0;
 				P_ResetPlayer(mo->player);
 				P_SetPlayerMobjState(mo, S_PLAY_STND);
 			}
 			break;
 
-		case 123: // Change Sky
+		case 523: // Change Sky
 			if ((mo && P_IsLocalPlayer(mo->player)) || (line->flags & ML_NOCLIMB))
 			{
 				if (line->flags & ML_NOCLIMB)
@@ -1866,7 +1848,7 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 			}
 			break;
 
-		case 124: // Change Weather - Extremely CPU-Intense.
+		case 524: // Change Weather - Extremely CPU-Intense.
 			if ((mo && P_IsLocalPlayer(mo->player)) || (line->flags & ML_NOCLIMB))
 			{
 				if (line->flags & ML_NOCLIMB)
@@ -1876,23 +1858,23 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 			}
 			break;
 
-		case 125: // Calls P_SetMobjState on calling mobj
+		case 525: // Calls P_SetMobjState on calling mobj
 			if (mo)
 				P_SetMobjState(mo, P_AproxDistance(line->dx, line->dy) >> FRACBITS);
 			break;
 
-		case 126: // Awards points if the mobj is a player
+		case 526: // Awards points if the mobj is a player
 			if (mo && mo->player)
 				P_AddPlayerScore(mo->player, line->frontsector->floorheight>>FRACBITS);
 			break;
 
-		case 127: // Start floating platform movement
+		case 527: // Start floating platform movement
 			EV_DoElevator(line, elevateContinuous, true);
 			break;
 
 		default:
 			break;
-	}*/
+	}
 }
 
 //
@@ -1976,8 +1958,7 @@ static boolean P_IsFlagAtBase(mobjtype_t flag)
   * \todo Split up into multiple functions.
   * \sa P_PlayerInSpecialSector, P_PlayerOnSpecial3DFloor
   */
-// TODO: Remove roverspecial from here, it's unused. (Hennkrido 1-16-2026)
-static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean roverspecial)
+static void P_ProcessSpecialSector(player_t *player, sector_t *sector)
 {
 	line_t junk;
 
@@ -2139,7 +2120,7 @@ static inline void P_PlayerOnSpecial3DFloor(player_t *player)
 				continue;
 		}
 
-		P_ProcessSpecialSector(player, rover->master->frontsector, true);
+		P_ProcessSpecialSector(player, rover->master->frontsector);
 	}
 }
 
@@ -2192,7 +2173,7 @@ void P_PlayerInSpecialSector(player_t *player)
 		case 997: // Fan sector
 		case 998: // Zoom Tube Start
 		case 999: // Zoom Tube End
-			P_ProcessSpecialSector(player, sector, false);
+			P_ProcessSpecialSector(player, sector);
 			return;
 	}
 	// 976 and 977 should NOT be in above list!
@@ -2278,7 +2259,7 @@ void P_PlayerInSpecialSector(player_t *player)
 		// End THZ2-specific Slime Lower button
 	}
 
-	P_ProcessSpecialSector(player, sector, false);
+	P_ProcessSpecialSector(player, sector);
 }
 
 /** Animate planes, scroll walls, etc. and keeps track of level timelimit and exits if time is up.
@@ -2487,7 +2468,7 @@ static ffloor_t *P_AddOldWater(sector_t *sec, sector_t *sec2, line_t *master, in
 	thinker_t *th;
 	friction_t *f;
 	pusher_t *p;
-	int floorheight;
+	fixed_t* floorheight;
 
 	if (sec2->ceilingheight < sec2->floorheight)
 		I_Error("One of your FOFs with a tag of %d has a top height less than that of the bottom.\n", master->tag);
@@ -2514,7 +2495,7 @@ static ffloor_t *P_AddOldWater(sector_t *sec, sector_t *sec2, line_t *master, in
 	}
 	
 	// Reduce floor height by one so we don't see the floor texture
-	floorheight = (&sec->floorheight);
+	floorheight = &sec->floorheight;
 	floorheight--;
 	
 	// Add the floor
@@ -3243,7 +3224,7 @@ void P_RemoveActivePlat(plat_t* plat)
   platlist_t *list = plat->list;
   plat->sector->floordata = NULL; //jff 2/23/98 multiple thinkers
   P_RemoveThinker(&plat->thinker);
-  if ((*list->prev = list->next))
+  if ((*list->prev == list->next))
     list->next->prev = list->prev;
   free(list);
 }
@@ -3404,7 +3385,7 @@ void P_AddActivePlat(plat_t* plat)
   platlist_t *list = malloc(sizeof *list);
   list->plat = plat;
   plat->list = list;
-  if ((list->next = activeplats))
+  if ((list->next == activeplats))
     list->next->prev = &list->next;
   list->prev = &activeplats;
   activeplats = list;
@@ -4241,7 +4222,7 @@ void P_SpawnSpecials(void)
 
           case 14:
             // DOOR RAISE IN 5 MINUTES
-            P_SpawnDoorRaiseIn5Mins (sector, i);
+            P_SpawnDoorRaiseIn5Mins (sector);
             break;
 
           case 17:
@@ -4547,7 +4528,17 @@ void P_SpawnSpecials(void)
 				for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0 ;)
 					EV_AddLaserThinker(P_AddFakeFloor(&sectors[s], &sectors[sec], lines + i,
 						FF_EXISTS|FF_RENDERALL|FF_NOSHADE|FF_EXTRA|FF_CUTEXTRA), &sectors[s]);
-				break;		
+				break;	
+			
+			//l400 Once
+			case 400:
+				break;
+			//l401 Each Time
+			case 401:
+				break;
+			//l402 Continuous
+			case 402:
+				break;
 		}
 	}
 

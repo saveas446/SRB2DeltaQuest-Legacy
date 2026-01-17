@@ -1292,6 +1292,9 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 			return false;
 	}
 
+
+	CONS_Printf("Enemy X: %d Y: %d Z: %d\n", inflictor->x >> FRACBITS, inflictor->y >> FRACBITS, inflictor->z >> FRACBITS);
+
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	// Special case for Crawla Commander
 	if (target->type == MT_CRAWLACOMMANDER)

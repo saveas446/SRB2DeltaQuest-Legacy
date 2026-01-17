@@ -991,6 +991,27 @@ void F_StartCustomCutscene(int cutscenenum, boolean precutscene, boolean resetpl
 
 static void F_IntroTextWrite(void);
 
+// Introduction
+void F_StartIntro(void)
+{
+	if (introtoplay)
+	{
+		F_StartCustomCutscene(introtoplay - 1, false, false);
+		return;
+	}
+
+	gamestate = GS_INTRO;
+	gameaction = ga_nothing;
+	playerdeadview = false;
+	paused = false;
+	CON_ToggleOff();
+	CON_ClearHUD();
+	finaletext = E0TEXT;
+
+	finalestage = finaletextcount = finalecount = timetonext = animtimer = stoptimer = 0;
+	mouthtics = BASEVIDWIDTH - 64;
+}
+
 boolean F_Responder(event_t *event)
 {
 	if (!finalestage)
@@ -1513,7 +1534,12 @@ static void F_IntroTextWrite(void)
 
 	V_DrawFill(0, 0, vid.width, vid.height, 0);
 
-	if (finaletext == C6TEXT)
+	if (finaletext == E0TEXT)
+	{
+		V_DrawCreditString(160 - (V_CreditStringWidth("DELTA TEAM")/2), 80, 0, "DELTA TEAM");
+		V_DrawCreditString(160 - (V_CreditStringWidth("PRESENTS")/2), 96, 0, "PRESENTS");
+	}
+	else if (finaletext == C6TEXT)
 	{
 		if (finaletextcount > 8*TICRATE && finaletextcount < 9*TICRATE)
 		{

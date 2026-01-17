@@ -115,7 +115,7 @@ void G_StopDemo(void);
 boolean G_CheckDemoStatus(void);
 
 void G_ExitLevel(void);
-void G_SecretLevel(void);
+void G_SecretExitLevel(int exit);
 void G_NextLevel(void);
 void G_AfterIntermission(void);
 
