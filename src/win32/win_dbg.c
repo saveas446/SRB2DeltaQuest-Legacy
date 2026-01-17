@@ -302,7 +302,7 @@ static VOID RecordSystemInformation(HANDLE fileHandle)
 // handler.
 // --------------------------------------------------------------------------
 // \attention REWRITE THIS!!!!!!!!! THIS SUCKS! Just use the VS8 or a modern debugger for the time being. I'm sure this can be done in a way that's one million times more modern and practical.
-int __cdecl RecordExceptionInfo (PEXCEPTION_POINTERS data/*, LPCSTR Message, LPSTR lpCmdLine*/) {
+int __cdecl RecordExceptionInfo (/*PEXCEPTION_POINTERS data/*, LPCSTR Message, LPSTR lpCmdLine*/) {
 #if 0
 	PEXCEPTION_RECORD   Exception;
 	PCONTEXT            Context;

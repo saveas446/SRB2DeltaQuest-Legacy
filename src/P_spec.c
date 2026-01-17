@@ -1466,10 +1466,9 @@ void P_SwitchWeather(int weathernum)
   * \sa P_LinedefExecute
   * \author Graue <graue@oceanbase.org>
   */
+// TODO: Remove 'mo' from here, it's unused. (Hennkrido 1-16-2026)
 void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 {
-	int secnum = -1;
-	
     switch (line->special)
     {
         // TRIGGERS.
@@ -1977,11 +1976,10 @@ static boolean P_IsFlagAtBase(mobjtype_t flag)
   * \todo Split up into multiple functions.
   * \sa P_PlayerInSpecialSector, P_PlayerOnSpecial3DFloor
   */
+// TODO: Remove roverspecial from here, it's unused. (Hennkrido 1-16-2026)
 static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean roverspecial)
 {
-	mobj_t *mo;
 	line_t junk;
-	int i = 0;
 
 	//if (sector->special < 32)
 	//{
@@ -2009,9 +2007,6 @@ static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean r
 
 			case 666: // Egg trap capsule
 			{
-				thinker_t* th;
-				mobj_t* mo2;
-
 				if (sector->ceilingdata || sector->floordata)
 					return;
 				junk.tag = 680;
@@ -3455,7 +3450,6 @@ int EV_StartLightStrobing(line_t*      line)
 // Ported from March02 Save 18-05-2025
 void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
     line_t*     line;
-    int         ok;
     int         forceuse; //SoM: 4/26/2000: ALLTRIGGER should allow monsters to use generalized types too!
 	
 	line = &lines[linenum];
@@ -4166,7 +4160,6 @@ void P_SpawnSpecials(void)
 	//PART 1: SETUP
 	sector_t* sector;
     int i;
-	int	z; // Tails 08-26-2001
     int episode;
 	short numlinespecials;
 	int ffloorflags;

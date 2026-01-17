@@ -1042,7 +1042,7 @@ void HU_DrawTabRankings(int x, int y, playersort_t *tab, int scorelines, int whi
 //
 static void HU_DrawRankings(void)
 {
-	patch_t *p;
+	// Removed unreferenced variable (Hennkrido 1-16-2026)
 	playersort_t tab[MAXPLAYERS];
 	int i, scorelines, whiteplayer;
 

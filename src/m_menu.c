@@ -1646,7 +1646,7 @@ static inline void M_SetupChoosePlayer(int choice)
 static void M_DrawSetupChoosePlayerMenu(void)
 {
 	int             mx,my;
-	patch_t *       patch;
+	// Removed unreferenced variable (Hennkrido 1-16-2026)
 
 	mx = 96;
 	my = PlayerDef.y;

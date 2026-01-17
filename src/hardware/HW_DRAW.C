@@ -694,11 +694,11 @@ static inline boolean saveTGA(const char *file_name, const void *buffer,
 // --------------------------------------------------------------------------
 // screen shot
 // --------------------------------------------------------------------------
-
+// TODO: Remove 'lbmname' paramater, it's unused here. (Hennkrido 1-16-2026)
 boolean HWR_Screenshot(const char *lbmname)
 {
 	int i;
-	boolean ret;
+	// Removed unreferenced variable (Hennkrido 1-16-2026)
 	byte *bufw, *dest;
 	unsigned short *bufr, rgb565;
 

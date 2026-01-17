@@ -810,8 +810,8 @@ static void IdentifyVersion(void)
 {
 	char *srb2wad1, *srb2wad2;
 
-	char *s;
-	int d;
+	// Removed unreferenced variables (Hennkrido 1-16-2026)
+
 
 
 #ifdef _arch_dreamcast

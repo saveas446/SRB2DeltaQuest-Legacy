@@ -1426,7 +1426,7 @@ nightsdone:
 		// Check for "Mario" blocks to hit and bounce them
 		if (mo->momz > 0)
 		{
-			msecnode_t *node;
+			// Removed unreferenced variables (Hennkrido 1-16-2026)
 
 
 			
@@ -2731,11 +2731,11 @@ static void P_GimmeAxisXYPos(mobj_t *closestaxis, degenmobj_t *mobj)
 
 void P_SpawnHoopsAndRings(mapthing_t *mthing)
 {
+	// Removed unreferenced variables (Hennkrido 1-16-2026)
 	mobj_t *mobj;
-	int r, i;
-	fixed_t x, y, z, finalx, finaly, finalz, mthingx, mthingy, mthingz;
-	TVector v, *res;
-	angle_t closestangle, fa;
+	int r;
+	fixed_t x, y, z;
+	
 
 	x = mthing->x << FRACBITS;
 	y = mthing->y << FRACBITS;
@@ -3548,9 +3548,9 @@ void P_MobjThinker(mobj_t *mobj)
 		mobj->fuse--;
 		if (!mobj->fuse)
 		{
-			subsector_t *ss;
+			// Removed unreferenced variables (Hennkrido 1-16-2026)
 			fixed_t x, y, z;
-			mobj_t *flagmo;
+
 
 			switch (mobj->type)
 			{
@@ -4581,10 +4581,11 @@ void P_RespawnSpecials(void)
 				{
 					i = M_Random(); // This doesn't need to use P_Random().
 				}
-				else if (leveltime & 1)
+				// Commented this out, completely useless (Hennkrido 1-16-2026)
+				/*else if (leveltime & 1)
 				{
 					byte mrandom = M_Random(); // This doesn't need to use P_Random().
-				}
+				}*/
 			}
 		}
 	}

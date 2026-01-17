@@ -810,20 +810,20 @@ static void ST_drawDebugInfo(void)
 	char smomy[33];
 	char smomz[33];
 	char sspeed[33];
-	char sfloorz[33];
-	char spmomz[33];
-	char scability[33];
-	char scharsped[33];
-	char scharflags[33];
-	char sstrcolor[33];
-	char sendcolor[33];
-	char sdedtimer[33];
-	char sjumpfact[33];
+	// Removed unreferenced variables (Hennkrido 1-16-2026)
+	
+	
+	
+	
+	
+	
+	
+	
 	char sx[33];
 	char sy[33];
 	char sz[33];
 	char sangle[33];
-	char sunderwater[33];
+	
 	char smfjumped[33];
 	char smfspinning[33];
 	char smfstartdash[33];
@@ -837,7 +837,7 @@ static void ST_drawDebugInfo(void)
 	char sactnum[33];
 	char szonename[33];
 
-	char swindowsys[33];
+	
 
 	char ssingleplayer[33];
 	char smatch[33];
@@ -1035,7 +1035,7 @@ static void ST_drawEggsNeeded(void)
 static void ST_drawLevelTitle(void)
 {
 	int realypos;
-	int temp, temp2;
+	// Removed unreferenced variables (Hennkrido 1-16-2026)
 	if (timeinmap == 0) {
 		ST_InitTitleCard();
 	}

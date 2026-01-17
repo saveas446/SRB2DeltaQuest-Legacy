@@ -2176,7 +2176,7 @@ static void Got_Teamchange(char **cp, int playernum)
 	else if (playernum == secondarydisplayplayer)
 		CV_SetValue(&cv_playercolor2, newteam + 5);
 }
-
+// TODO: Remove 'cp' parameter, it's unused. (Hennkrido 1-16-2026)
 static void Got_LTG(char **cp, int playernum)
 {
 	P_DamageMobj(players[playernum].mo, NULL, NULL, 10000, false);

@@ -1205,7 +1205,6 @@ void P_PlayDeathSound(mobj_t *source)
 void P_PlayVictorySound(mobj_t *source)
 {
 	int prandom;
-
 	prandom = P_Random();
 }
 
@@ -1221,7 +1220,6 @@ void P_PlayVictorySound(mobj_t *source)
 void P_PlayTauntSound(mobj_t *source)
 {
 	int prandom;
-
 	prandom = P_Random();
 
 
