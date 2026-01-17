@@ -1586,7 +1586,7 @@ static void M_HandleSetupMultiPlayer(int choice)
         if (l<MAXPLAYERNAME-1)
         {
             S_StartSound(NULL,sfx_stnmov);
-            setupm_name[l]=choice;
+            setupm_name[l]=(char)choice & 0xFF;
             setupm_name[l+1]=0;
         }
         break;

@@ -21,20 +21,20 @@
 ///	 utility functions, etc.
 ///	 - Line Tag handling. Line and Sector triggers.
 
+#include "dstrings.h" //SoM: 3/10/2000
 #include "doomdef.h"
 #include "g_game.h"
+#include "i_system.h"
+#include "m_random.h"
 #include "p_local.h"
+#include "p_mobj.h"
 #include "p_setup.h" // levelflats for flat animation
 #include "r_data.h"
-#include "m_random.h"
-#include "p_mobj.h"
-#include "i_system.h"
+#include "r_main.h" //Two extra includes.
+#include "r_sky.h"
 #include "s_sound.h"
 #include "w_wad.h"
 #include "z_zone.h"
-#include "dstrings.h" //SoM: 3/10/2000
-#include "r_main.h" //Two extra includes.
-#include "r_sky.h"
 
 #include "hardware/hw3sound.h"
 
@@ -1958,8 +1958,7 @@ static boolean P_IsFlagAtBase(mobjtype_t flag)
   * \todo Split up into multiple functions.
   * \sa P_PlayerInSpecialSector, P_PlayerOnSpecial3DFloor
   */
-// TODO: Remove roverspecial from here, it's unused. (Hennkrido 1-16-2026)
-static void P_ProcessSpecialSector(player_t *player, sector_t *sector, boolean roverspecial)
+static void P_ProcessSpecialSector(player_t *player, sector_t *sector)
 {
 	line_t junk;
 
@@ -2121,7 +2120,7 @@ static inline void P_PlayerOnSpecial3DFloor(player_t *player)
 				continue;
 		}
 
-		P_ProcessSpecialSector(player, rover->master->frontsector, true);
+		P_ProcessSpecialSector(player, rover->master->frontsector);
 	}
 }
 
@@ -2174,7 +2173,7 @@ void P_PlayerInSpecialSector(player_t *player)
 		case 997: // Fan sector
 		case 998: // Zoom Tube Start
 		case 999: // Zoom Tube End
-			P_ProcessSpecialSector(player, sector, false);
+			P_ProcessSpecialSector(player, sector);
 			return;
 	}
 	// 976 and 977 should NOT be in above list!
@@ -2260,7 +2259,7 @@ void P_PlayerInSpecialSector(player_t *player)
 		// End THZ2-specific Slime Lower button
 	}
 
-	P_ProcessSpecialSector(player, sector, false);
+	P_ProcessSpecialSector(player, sector);
 }
 
 /** Animate planes, scroll walls, etc. and keeps track of level timelimit and exits if time is up.
@@ -2469,7 +2468,7 @@ static ffloor_t *P_AddOldWater(sector_t *sec, sector_t *sec2, line_t *master, in
 	thinker_t *th;
 	friction_t *f;
 	pusher_t *p;
-	int floorheight;
+	fixed_t* floorheight;
 
 	if (sec2->ceilingheight < sec2->floorheight)
 		I_Error("One of your FOFs with a tag of %d has a top height less than that of the bottom.\n", master->tag);
@@ -2496,7 +2495,7 @@ static ffloor_t *P_AddOldWater(sector_t *sec, sector_t *sec2, line_t *master, in
 	}
 	
 	// Reduce floor height by one so we don't see the floor texture
-	floorheight = (&sec->floorheight);
+	floorheight = &sec->floorheight;
 	floorheight--;
 	
 	// Add the floor
@@ -3225,7 +3224,7 @@ void P_RemoveActivePlat(plat_t* plat)
   platlist_t *list = plat->list;
   plat->sector->floordata = NULL; //jff 2/23/98 multiple thinkers
   P_RemoveThinker(&plat->thinker);
-  if ((*list->prev = list->next))
+  if ((*list->prev == list->next))
     list->next->prev = list->prev;
   free(list);
 }
@@ -3386,7 +3385,7 @@ void P_AddActivePlat(plat_t* plat)
   platlist_t *list = malloc(sizeof *list);
   list->plat = plat;
   plat->list = list;
-  if ((list->next = activeplats))
+  if ((list->next == activeplats))
     list->next->prev = &list->next;
   list->prev = &activeplats;
   activeplats = list;
@@ -4223,7 +4222,7 @@ void P_SpawnSpecials(void)
 
           case 14:
             // DOOR RAISE IN 5 MINUTES
-            P_SpawnDoorRaiseIn5Mins (sector, i);
+            P_SpawnDoorRaiseIn5Mins (sector);
             break;
 
           case 17:
