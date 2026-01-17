@@ -132,8 +132,8 @@ doc/D2U/*
 .vscode/*
 
 # No debug EXEs in the repo!
-srb2debug.exe
-srb2sdldebug.exe
+sdqsdl2_debug.exe
+sdqwin32_debug.exe
 
 # No launcher debugging stuff
 dev/launcher.application
