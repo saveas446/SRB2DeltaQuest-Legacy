@@ -657,7 +657,6 @@ void HWR_DrawFill(int x, int y, int w, int h, int color)
 }
 
 #ifdef HAVE_PNG
- #include <png.h>
  #ifdef PNG_WRITE_SUPPORTED
   #define USE_PNG // PNG is only used if write is supported (see ../m_misc.c)
  #endif
