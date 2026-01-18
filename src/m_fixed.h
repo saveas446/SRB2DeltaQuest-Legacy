@@ -40,6 +40,7 @@
   \brief units of the fraction
 */
 #define FRACUNIT 65536
+#define FRACUNITF 65536.0f
 #define FRACMASK (FRACUNIT -1)
 /**	\brief	Redefinition of int as fixed_t
 	unit used as fixed_t
@@ -124,10 +125,10 @@ FUNCINLINE static ATTRINLINE fixed_t DMulScale16(fixed_t a, fixed_t b, fixed_t c
 			  "  shrdl $16,%1,%0;"
 			: "=a" (ret),          /* eax is always the result */
 			  "=d" (dummy)         /* fix compile problem with gcc-2.95.1
-			                          edx is clobbered, but it might be an input */
+									  edx is clobbered, but it might be an input */
 			: "0" (a),             /* eax is also first operand */
 			  "r" (b)              /* second operand could be mem or reg before,
-			                          but gcc compile problems mean i can only use reg */
+									  but gcc compile problems mean i can only use reg */
 			: "%cc"                /* edx and condition codes clobbered */
 		);
 		return ret;

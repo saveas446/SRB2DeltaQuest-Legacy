@@ -1133,6 +1133,9 @@ static void P_ZMovement(mobj_t *mo)
 	}
 }
 
+#define FIXED_NEG_0_8 ((fixed_t)(-0.8 * FRACUNIT))
+#define FIXED_NEG_0_95 ((fixed_t)(-0.95 * FRACUNIT))
+
 static void P_PlayerZMovement(mobj_t *mo)
 {
 	fixed_t gravityadd = 0;
@@ -1336,10 +1339,10 @@ static void P_PlayerZMovement(mobj_t *mo)
 			if (!jellyfound) {
 				mo->momz = 0;
 			} else {
-				if (!(mo->player->cmd.buttons & BT_JUMP))
-					mo->momz = (mo->momz * -0.8);
-				else 
-					mo->momz = (mo->momz * -0.95);
+				if(!(mo->player->cmd.buttons & BT_JUMP))
+					mo->momz = FixedMul(mo->momz, FIXED_NEG_0_8);
+				else
+					mo->momz = FixedMul(mo->momz, FIXED_NEG_0_95);
 			}
 		}
 	}
@@ -3714,7 +3717,7 @@ void P_MobjThinker(mobj_t *mobj)
 							const angle_t fa = (i*FINEANGLES/16) & FINEMASK;
 							ns = 64 * FRACUNIT;
 							x = mobj->x + FixedMul(finesine[fa],ns);
- 							y = mobj->y + FixedMul(finecosine[fa],ns);
+							y = mobj->y + FixedMul(finecosine[fa],ns);
 
 							mo2 = P_SpawnMobj(x, y, z, MT_EXPLODE);
 							ns = 4 * FRACUNIT;

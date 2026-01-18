@@ -25,6 +25,7 @@
 #include "keys.h"
 #include "d_net.h"
 #include "console.h"
+#include "M_cheat.h"
 
 static CV_PossibleValue_t mousesens_cons_t[] = {{1, "MIN"}, {MAXMOUSESENSITIVITY, "MAXCURSOR"},
 	{MAXINT, "MAX"}, {0, NULL}};
@@ -87,10 +88,10 @@ void G_MapEventsToControls(event_t *ev)
 #if BUILD_TYPE == PLAYTEST_BUILD || BUILD_TYPE == DEV_RELEASE
 			// Uh oh, sticking my dev control code in the middle of the keydown event code isn't a good idea!!!
 			// Whatevs :P
-			if (ev->data1 == gamecontrol[gc_noclip][0] || ev->data1 == gamecontrol[gc_noclip][1])
+			if(ev->data1 == gamecontrol[gc_noclip][0] || ev->data1 == gamecontrol[gc_noclip][1])
 				Command_CheatNoClip_f();
 
-			if (ev->data1 == gamecontrol[gc_god][0] || ev->data1 == gamecontrol[gc_god][1])
+			if(ev->data1 == gamecontrol[gc_god][0] || ev->data1 == gamecontrol[gc_god][1])
 				Command_CheatGod_f();
 #endif
 

@@ -246,6 +246,7 @@ void I_AddExitFunc(void (*func)());
 */
 void I_RemoveExitFunc(void (*func)());
 
+int I_StartupSystem(void);
 
 /**	\brief Shutdown systems
 */

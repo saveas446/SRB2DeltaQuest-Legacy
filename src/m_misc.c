@@ -610,9 +610,9 @@ static mng_bool MNG_DECL MNG_close (mng_handle hHandle)
 }
 
 static mng_bool MNG_DECL MNG_write (mng_handle  hHandle,
-                                    mng_ptr     pBuf,
-                                    mng_uint32  iBuflen,
-                                    mng_uint32p pWritten)
+									mng_ptr     pBuf,
+									mng_uint32  iBuflen,
+									mng_uint32p pWritten)
 {                                      
   MNG_userdatap privdata = (MNG_userdatap)mng_get_userdata(hHandle);
   *pWritten = fwrite(pBuf, 1, iBuflen, privdata->fh);
@@ -651,9 +651,9 @@ static boolean M_SetupMNG(const mng_pchar filename, byte *pal)
 	ret = mng_setcb_writedata   (MNG_ptr, MNG_write);
 	ret = mng_create(MNG_ptr);
 	ret = mng_putchunk_mhdr(MNG_ptr, vid.width, vid.height, TICRATE, 0, 0, 0,
-	      MNG_SIMPLICITY_VALID | MNG_SIMPLICITY_SIMPLEFEATURES);
+		  MNG_SIMPLICITY_VALID | MNG_SIMPLICITY_SIMPLEFEATURES);
 	ret = mng_putchunk_term(MNG_ptr, MNG_TERMACTION_REPEAT,
-	      MNG_ITERACTION_FIRSTFRAME, TICRATE, 0x7FFFFFFF);
+		  MNG_ITERACTION_FIRSTFRAME, TICRATE, 0x7FFFFFFF);
 
 	// iTXT
 
@@ -729,7 +729,7 @@ void M_SaveMNG(void)
 	}
 
 	ret = mng_putchunk_ihdr(MNG_ptr, vid.width, vid.height,
-	      MNG_BITDEPTH_8, mColortype, MNG_COMPRESSION_DEFLATE,
+		  MNG_BITDEPTH_8, mColortype, MNG_COMPRESSION_DEFLATE,
 		   MNG_FILTER_ADAPTIVE, MNG_INTERLACE_NONE);
 
 	if (privdata->pal)
@@ -763,24 +763,24 @@ boolean M_CloseMNG(void)
 ColorMapObject* M_CreateGIFColorMap(byte* data, int count) {
 
 	int i;
-    ColorMapObject* cmap;
+	ColorMapObject* cmap;
 	cmap = GifMakeMapObject(count, NULL);
-    if (!cmap) return NULL;
+	if (!cmap) return NULL;
 
-    for (i = 0; i < count; ++i) {
-        cmap->Colors[i].Red   = data[i * 3 + 0];
-        cmap->Colors[i].Green = data[i * 3 + 1];
-        cmap->Colors[i].Blue  = data[i * 3 + 2];
-    }
+	for (i = 0; i < count; ++i) {
+		cmap->Colors[i].Red   = data[i * 3 + 0];
+		cmap->Colors[i].Green = data[i * 3 + 1];
+		cmap->Colors[i].Blue  = data[i * 3 + 2];
+	}
 
-    return cmap;
+	return cmap;
 }
 
 GifFileType* gif;
 
 int M_SetupGIF(const char* filename, byte* pal) {
-    int error;
-    
+	int error;
+	
 	ColorMapObject* cmap;
 	SavedImage image;
 	byte *linear = NULL;
@@ -788,24 +788,24 @@ int M_SetupGIF(const char* filename, byte* pal) {
 	int datasize;
 	gif = EGifOpenFileName(filename, false, &error);
 
-    if (!gif) return error;
+	if (!gif) return error;
 	if (!filename) return GIF_ERROR;
 
 	cmap = M_CreateGIFColorMap(pal, 256);
 
-    EGifPutScreenDesc(gif, vid.width, vid.height, cmap->BitsPerPixel, 0, cmap);
+	EGifPutScreenDesc(gif, vid.width, vid.height, cmap->BitsPerPixel, 0, cmap);
 
-    // allocate savedimage
-    image.ImageDesc.Left = 0;
-    image.ImageDesc.Top = 0;
-    image.ImageDesc.Width = vid.width;
-    image.ImageDesc.Height = vid.height;
-    image.ImageDesc.Interlace = false;
-    image.ImageDesc.ColorMap = NULL;
+	// allocate savedimage
+	image.ImageDesc.Left = 0;
+	image.ImageDesc.Top = 0;
+	image.ImageDesc.Width = vid.width;
+	image.ImageDesc.Height = vid.height;
+	image.ImageDesc.Interlace = false;
+	image.ImageDesc.ColorMap = NULL;
 
-    datasize = vid.width * vid.height;
+	datasize = vid.width * vid.height;
 
-    image.RasterBits = (GifByteType*)malloc(datasize);
+	image.RasterBits = (GifByteType*)malloc(datasize);
 
 	if (rendermode == render_soft)
 	{
@@ -814,14 +814,14 @@ int M_SetupGIF(const char* filename, byte* pal) {
 		I_ReadScreen(linear);
 	}
 
-    memcpy(image.RasterBits, linear, datasize);
+	memcpy(image.RasterBits, linear, datasize);
 
-    // write the frame
-    EGifPutImageDesc(gif, image.ImageDesc.Left, image.ImageDesc.Top, vid.width, vid.height, false, NULL);
-    EGifPutLine(gif, image.RasterBits, datasize) ;
+	// write the frame
+	EGifPutImageDesc(gif, image.ImageDesc.Left, image.ImageDesc.Top, vid.width, vid.height, false, NULL);
+	EGifPutLine(gif, image.RasterBits, datasize) ;
 
-    free(image.RasterBits);
-    return error;
+	free(image.RasterBits);
+	return error;
 }
 
 int gif_frames;
@@ -872,7 +872,7 @@ int M_SaveGIF(void) {
 	byte* linear = NULL;
 	int y;
 	GraphicsControlBlock gcb;
-    GifByteType extData[4];
+	GifByteType extData[4];
 
 	if (rendermode == render_soft)
 	{
@@ -884,32 +884,32 @@ int M_SaveGIF(void) {
 	// temporary solution until we can calculate delay in a better way
    
 	if (vid.width == 640)
-    	gcb.DelayTime = 3;  // delay in 1/100ths of a second
+		gcb.DelayTime = 3;  // delay in 1/100ths of a second
 
 	if (vid.width == 1280)	
 		gcb.DelayTime = 6;  // delay in 1/100ths of a second
 
 
-    gcb.DisposalMode = DISPOSAL_UNSPECIFIED;
+	gcb.DisposalMode = DISPOSAL_UNSPECIFIED;
 
-    if (EGifGCBToExtension(&gcb, extData) == GIF_ERROR) return gif->Error;
-    if (EGifPutExtension(gif, GRAPHICS_EXT_FUNC_CODE, sizeof(extData), extData) == GIF_ERROR) return gif->Error;
+	if (EGifGCBToExtension(&gcb, extData) == GIF_ERROR) return gif->Error;
+	if (EGifPutExtension(gif, GRAPHICS_EXT_FUNC_CODE, sizeof(extData), extData) == GIF_ERROR) return gif->Error;
 
-    if (EGifPutImageDesc(gif, 0, 0, vid.width, vid.height, false, NULL) == GIF_ERROR)
-        return gif->Error;
+	if (EGifPutImageDesc(gif, 0, 0, vid.width, vid.height, false, NULL) == GIF_ERROR)
+		return gif->Error;
 
-    if (EGifPutLine(gif, (GifByteType*)linear, vid.width * vid.height) == GIF_ERROR)
-        return gif->Error;
+	if (EGifPutLine(gif, (GifByteType*)linear, vid.width * vid.height) == GIF_ERROR)
+		return gif->Error;
 
 	gif_frames++;
 
-    return GIF_OK;
+	return GIF_OK;
 }
 
 M_CloseGIF(void) {
 	int error;
 	if (EGifCloseFile(gif, &error) == GIF_ERROR) return error;
-    return GIF_OK;
+	return GIF_OK;
 }*/
 
 
@@ -934,12 +934,15 @@ M_CloseGIF(void) {
 #define PNG_FILTER_PAETH 4
 
 static UINT8 png_choose_filter(const UINT8* row, const UINT8* prew_row, int width, int channels) {
+	UINT8 filter, best_filter;
+	int width_bytes, best_sum;
 	int x;
-	UINT8 filter;
 
-	int width_bytes = width * channels;
-	int best_sum = INT_MAX;
-	UINT8 best_filter = PNG_FILTER_NONE;
+	if(channels == 1) return PNG_FILTER_NONE;
+
+	width_bytes = width * channels;
+	best_sum = INT_MAX;
+	best_filter = PNG_FILTER_NONE;
 
 	for(filter = PNG_FILTER_NONE; filter <= PNG_FILTER_UP; filter++) {
 		int sum = 0;
@@ -1049,25 +1052,24 @@ boolean M_SavePNG(const char* filename, const UINT8* data, int width, int height
 	{ // write idat chunk
 		uLongf idat_size;
 		size_t start;
-		UINT8* idat_comp_data;
+		UINT8 *idat_comp_data;
 		int y;
 		
 		size_t width_bytes =  width * channels;
 		size_t row_bytes = width_bytes + 1; // filter byte :3
 		size_t img_size = row_bytes * height;
 
-		UINT8* png_rows = malloc(img_size);
-		UINT8* prew_row = calloc(width_bytes, 1);
+		UINT8 *png_rows = malloc(img_size);
+		UINT8 *prew_row = calloc(width_bytes, 1);
 		if(!png_rows || !prew_row) {
 			CONS_Printf("M_SavePNG: Out of memory\n");
 			goto fail_return;
 		}
 
 		for(y = 0; y < height; y++) {
-			UINT8 filter;
+			UINT8 filter, *row_ptr = png_rows + y * row_bytes;
+			const UINT8 *data_ptr = data + y * width_bytes;
 
-			UINT8* row_ptr = png_rows + y * row_bytes;
-			const UINT8* data_ptr = data + y * width_bytes;
 			memcpy(row_ptr + 1, data_ptr, width_bytes);
 
 			filter = png_choose_filter(row_ptr, prew_row, width, channels);
@@ -1119,6 +1121,7 @@ boolean M_SavePNG(const char* filename, const UINT8* data, int width, int height
 	// finish writing
 	if(fb.pos > 0) {
 		size_t written = fwrite(fb.buffer, 1, fb.pos, file);
+
 		if(written != fb.pos) {
 			CONS_Printf("M_SavePNG: Error on writing full buffer for %s\n", filename);
 			goto fail_return;
@@ -1230,69 +1233,65 @@ static boolean WritePCXfile(const char* filename, const byte* data, int width, i
   *
   * \sa HWR_ScreenShot
   */
-void M_ScreenShot(void)
-{
+void M_ScreenShot(void) {
 #if !defined (DC) && !defined (_WIN32_WCE) && !defined (PSP)
 	const char *freename = NULL, *pathname = ".";
 	boolean ret = false;
 	byte *linear = NULL;
 
-	if (cv_screenshot_option.value == 0)
+	if(cv_screenshot_option.value == 0)
 		pathname = usehome ? srb2home : srb2path;
-	else if (cv_screenshot_option.value == 1)
+	else if(cv_screenshot_option.value == 1)
 		pathname = srb2home;
-	else if (cv_screenshot_option.value == 2)
+	else if(cv_screenshot_option.value == 2)
 		pathname = srb2path;
-	else if (cv_screenshot_option.value == 3 && *cv_screenshot_folder.string != '\0')
+	else if(cv_screenshot_option.value == 3 && *cv_screenshot_folder.string != '\0')
 		pathname = cv_screenshot_folder.string;
 
-	if (cv_screenshot_option.value != 3)
-	{
+	if(cv_screenshot_option.value != 3) {
 		// Check that we're not creating a screenshots folder inside a screenshots folder
 		// This has the added downside that if any of the folders D2U is stored in has "screenshots" in it, that it won't add "\screenshots\" to the end of the path
 		// But whatever
-		if (strstr(pathname, "screenshots") == NULL) {
-			strcat(pathname, PATHSEP"screenshots"PATHSEP);
-		}
+		if(strstr(pathname, "screenshots") == NULL)
+			strcat((char*)pathname, PATHSEP"screenshots"PATHSEP);
+
 		I_mkdir(pathname, 0755);
 	}
 
 #ifdef USE_PNG
-	if (rendermode != render_none)
+	if(rendermode != render_none)
 		freename = Newsnapshotfile(pathname,"png");
 #else
-	if (rendermode == render_soft)
+	if(rendermode == render_soft)
 		freename = Newsnapshotfile(pathname,"pcx");
-	else if (rendermode != render_none)
+	else if(rendermode != render_none)
 		freename = Newsnapshotfile(pathname,"tga");
 #endif
 	else
 		I_Error("Can't take a screenshot without a render system");
 
-	if (rendermode == render_soft)
-	{
+	if(rendermode == render_soft) {
 		// munge planar buffer to linear
 		linear = screens[2];
 		I_ReadScreen(linear);
 	}
 
-	if (!freename)
+	if(!freename)
 		goto failure;
 
 		// save the pcx file
 #ifdef HWRENDER
-	if (rendermode != render_soft) {
+	if(rendermode != render_soft) {
 		UINT8* data = HWR_Screenshot();
-		ret = M_SavePNG(va(pandf,pathname,freename), data, vid.width, vid.height, 3, NULL);
+		ret = M_SavePNG(va(pandf, pathname, freename), data, vid.width, vid.height, 3, NULL);
 	} else
 #endif
-	if (rendermode != render_none)
-	{
+	if(rendermode != render_none) {
 #ifdef USE_PNG
-		ret = M_SavePNG(va(pandf,pathname,freename), linear, vid.width, vid.height, 1,
+		ret = M_SavePNG(va(pandf, pathname, freename), linear, vid.width, vid.height, 1,
 			W_CacheLumpName("PLAYPAL", PU_CACHE));
 #else
-		ret = WritePCXfile(va(pandf,pathname,freename), linear, vid.width, vid.height,
+		ret = WritePCXfile(va(pandf, pathname, freename), linear, vid.width, vid.height,
 			W_CacheLumpName("PLAYPAL", PU_CACHE));
 #endif
 	}
@@ -1303,9 +1302,8 @@ failure:
 		//if (!moviemode)
 			//CONS_Printf("screen shot %s saved in %s\n", freename, pathname); Removed because it was annoying for taking screenshots
 	//}
-	if (!ret)
-	{
-		if (freename)
+	if(!ret) {
+		if(freename)
 			CONS_Printf("Couldn't create screen shot %s in %s\n", freename, pathname);
 		else
 			CONS_Printf("Couldn't create screen shot (all 10000 slots used!) in %s\n", pathname);

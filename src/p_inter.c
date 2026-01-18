@@ -28,6 +28,7 @@
 #include "r_main.h"
 #include "st_stuff.h"
 #include "tables.h"
+#include "M_fixed.h"
 
 // Touch debug dump.
 static char debuginfo[] = {
@@ -145,6 +146,8 @@ static boolean P_CanPickupItem(player_t *player)
 	else return true;
 }
 
+#define FIXED_1_05 ((fixed_t)(1.05 * FRACUNIT))
+#define FIXED_0_95 ((fixed_t)(0.95 * FRACUNIT))
 
 /** Takes action based on a ::MF_SPECIAL thing touched by a player.
   * Actually, this just checks a few things (heights, toucher->player, no
@@ -437,7 +440,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 	
 	
 			break;
-		     // Special Stage Token
+			 // Special Stage Token
 		case MT_EMMY:
 			P_SpawnMobj(special->x, special->y, special->z, MT_SPARK);
 			tokenlist += special->health;
@@ -533,12 +536,12 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher, boolean heightcheck)
 
 		case MT_MINECARTSPEEDUP:
 			if (player->linkedminecart) {
-				player->minecartspeed *= 1.05;
+				player->minecartspeed = FixedMul(player->minecartspeed, FIXED_1_05);
 			}
 			return;
 		case MT_MINECARTSPEEDDOWN:
 			if (player->linkedminecart) {
-				player->minecartspeed *= 0.95;
+				player->minecartspeed = FixedMul(player->minecartspeed, FIXED_0_95);
 			}
 			return;
 		case MT_MINECARTSTOPPER:
@@ -1407,7 +1410,7 @@ boolean P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int dama
 
 			player->powers[pw_fireflower] = false;
 			player->mo->flags =  (player->mo->flags & ~MF_TRANSLATION)
-			                   | ((player->skincolor)<<MF_TRANSSHIFT);
+							   | ((player->skincolor)<<MF_TRANSSHIFT);
 
 			if (player->powers[pw_underwater] != 1) // Don't jump up when drowning
 				player->mo->momz = 18*FRACUNIT;
@@ -1866,18 +1869,18 @@ void P_PlayerFlagBurst(player_t *player, boolean toss)
 {
 	mobj_t *flag;
 	angle_t fa;
-	mobjtype_t type;
+	mobjtype_t type = {0};
 
 	flag = P_SpawnMobj(player->mo->x, player->mo->y, player->mo->z, type);
 
-	if (toss)
+	if(toss)
 		fa = player->mo->angle>>ANGLETOFINESHIFT;
 	else
 		fa = P_Random()*FINEANGLES/256;
 
 	flag->momx = FixedMul(finecosine[fa], (6 * FRACUNIT));
 
-	if (toss)
+	if(toss)
 		fa = player->mo->angle>>ANGLETOFINESHIFT;
 	else
 		fa = P_Random()*FINEANGLES/256;

@@ -430,6 +430,8 @@ int P_SectorActive
   sector_t* s );
   
 int     EV_StopPlat(line_t* line);
+
+void P_AddActivePlat(plat_t* plat);
   
 typedef enum
 {
@@ -706,6 +708,8 @@ result_e T_MovePlane(sector_t *sector, fixed_t speed, fixed_t dest, boolean crus
 #define PLATWAIT                3
 
 void T_PlatRaise(plat_t* plat);
+
+void P_ActivateInStasis(int tag);
 
 int EV_DoPlat(line_t* line, plattype_e type, int amount);
 

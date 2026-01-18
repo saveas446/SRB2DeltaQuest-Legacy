@@ -1032,60 +1032,57 @@ static void ST_drawEggsNeeded(void)
 	V_DrawCenteredString(BASEVIDWIDTH/2, BASEVIDHEIGHT/4*3, 0, va("Number of eggs left in this level: %d", numeggs));
 }
 
-static void ST_drawLevelTitle(void)
-{
+static void ST_drawLevelTitle(void) {
 	int realypos;
-	// Removed unreferenced variables (Hennkrido 1-16-2026)
-	if (timeinmap == 0) {
+	if(timeinmap == 0)
 		ST_InitTitleCard();
-	}
 
 	#ifdef NEWTITLECARDS
 	if (gamemap == 1) {
-		if (timeinmap < 105) {
-			if (lvlttlscroll > 0)
+		if(timeinmap < 105) {
+			if(lvlttlscroll > 0)
 				lvlttlscroll -= (lvlttlscroll >> 3);
 		} else {
-			if (lvlttlypos < 200)
+			if(lvlttlypos < 200)
 				lvlttlypos += 12;
-			else if (lvlttlypos > 200)
+			else if(lvlttlypos > 200)
 				lvlttlypos = 200;
 
-			if (zoneypos > 0) 
+			if(zoneypos > 0) 
 				zoneypos -= 24;
-			else if (zoneypos < 0)
+			else if(zoneypos < 0)
 				zoneypos = 0;
 
-			if (ttlnumypos > 0)
+			if(ttlnumypos > 0)
 				ttlnumypos -= 12;
-			else if (ttlnumypos < 0)
+			else if(ttlnumypos < 0)
 				ttlnumypos = 0;
 		}
 	} else {
 	#endif
-		if (timeinmap < 105) {
-			if (lvlttlscroll > 0)
+		if(timeinmap < 105) {
+			if(lvlttlscroll > 0)
 				lvlttlscroll -= (lvlttlscroll >> 3);
 
-			if (zonescroll > 0)
+			if(zonescroll > 0)
 				zonescroll -= (zonescroll >> 3);
 
-			if (lvlttlscroll > 0)
+			if(lvlttlscroll > 0)
 				lvlttlscroll -= (lvlttlscroll >> 3);
 		} else {
-			if (lvlttlypos < 250)
+			if(lvlttlypos < 250)
 				lvlttlypos += 12;
-			else if (lvlttlypos > 250)
+			else if(lvlttlypos > 250)
 				lvlttlypos = 250;
 
-			if (zoneypos > 0) 
+			if(zoneypos > -60) 
 				zoneypos -= 24;
-			else if (zoneypos < 0)
-				zoneypos = 0;
+			else if(zoneypos < -60)
+				zoneypos = -60;
 
-			if (ttlnumypos > 0)
+			if(ttlnumypos > 0)
 				ttlnumypos -= 12;
-			else if (ttlnumypos < 0)
+			else if(ttlnumypos < 0)
 				ttlnumypos = 0;
 		}
 	#ifdef NEWTITLECARDS
@@ -1111,31 +1108,30 @@ static void ST_drawLevelTitle(void)
 	} else {
 	#endif
 		realypos = lvlttlypos - lvlttlscroll;
-		if (!strcmp("", mapheaderinfo[gamemap - 1].lvlttl)) {
-			V_DrawClippedScaledPatch (SCX(lvlttlxpos),SCY(realypos), V_NOSCALESTART,lvlttl);
-		} else {
-			V_DrawLevelTitle(lvlttlxpos, realypos, 0, mapheaderinfo[gamemap - 1].lvlttl);
-		}
 
+		if(!strcmp("", mapheaderinfo[gamemap - 1].lvlttl))
+			V_DrawClippedScaledPatch (SCX(lvlttlxpos),SCY(realypos), V_NOSCALESTART,lvlttl);
+		else
+			V_DrawLevelTitle(lvlttlxpos, realypos, 0, mapheaderinfo[gamemap - 1].lvlttl);
 
 		realypos = zoneypos - zonescroll;
-		V_DrawClippedScaledPatch (SCX(zonexpos),SCY(realypos), V_NOSCALESTART,ttlzone);
-		if (actdraw) 
-			V_DrawClippedScaledPatch (SCX(ttlnumxpos),SCY(realypos), V_NOSCALESTART,ttlnum);
-		realypos = lvlttlypos - lvlttlscroll;
-		if (!strcmp("", mapheaderinfo[gamemap - 1].lvlttl)) {
-			V_DrawClippedScaledPatch (SCX(lvlttlxpos),SCY(realypos), V_NOSCALESTART,lvlttl);
-		} else {
-			V_DrawLevelTitle(lvlttlxpos, realypos, 0, mapheaderinfo[gamemap - 1].lvlttl);
-		}
+		V_DrawClippedScaledPatch(SCX(zonexpos), SCY(realypos), V_NOSCALESTART, ttlzone);
 
+		if(actdraw) 
+			V_DrawClippedScaledPatch(SCX(ttlnumxpos), SCY(realypos), V_NOSCALESTART, ttlnum);
+
+		realypos = lvlttlypos - lvlttlscroll;
+
+		if(!strcmp("", mapheaderinfo[gamemap - 1].lvlttl))
+			V_DrawClippedScaledPatch(SCX(lvlttlxpos), SCY(realypos), V_NOSCALESTART, lvlttl);
+		else
+			V_DrawLevelTitle(lvlttlxpos, realypos, 0, mapheaderinfo[gamemap - 1].lvlttl);
 
 		realypos = zoneypos - zonescroll;	
-		V_DrawClippedScaledPatch (SCX(zonexpos),SCY(realypos), V_NOSCALESTART,ttlzone);
+		V_DrawClippedScaledPatch(SCX(zonexpos), SCY(realypos), V_NOSCALESTART, ttlzone);
 
-		if (actdraw) 
-			V_DrawClippedScaledPatch (SCX(ttlnumxpos),SCY(realypos), V_NOSCALESTART,ttlnum);
-
+		if(actdraw) 
+			V_DrawClippedScaledPatch(SCX(ttlnumxpos), SCY(realypos), V_NOSCALESTART,ttlnum);
 	#ifdef NEWTITLECARDS
 	}
 	#endif
@@ -1726,7 +1722,7 @@ static void ST_overlayDrawer(void)
 		creditstxt = "Insert credits here!";
 
 
-        temp = (double)(leveltime);
+		temp = (double)(leveltime);
 
 		// No bit shifting with floats :(
 		temp2 = sin(temp / 8) * 32;

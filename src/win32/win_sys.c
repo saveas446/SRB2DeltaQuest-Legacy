@@ -844,7 +844,7 @@ void I_RemoveExitFunc(void (*func)())
 // Create a DirectInputDevice interface,
 // create a DirectInputDevice2 interface if possible
 static void CreateDevice2(LPDIRECTINPUT di, REFGUID pguid, LPDIRECTINPUTDEVICE* lpDEV,
-                          LPDIRECTINPUTDEVICE2* lpDEV2)
+						  LPDIRECTINPUTDEVICE2* lpDEV2)
 {
 	HRESULT hr, hr2;
 	LPDIRECTINPUTDEVICE lpdid1;
@@ -997,9 +997,9 @@ void I_StartupMouse2(void)
 	{
 		// COM file handle
 		mouse2filehandle = CreateFileA(cv_mouse2port.string, GENERIC_READ|GENERIC_WRITE,
-		                              0, // exclusive access
-		                              NULL, // no security attrs
-		                              OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+									  0, // exclusive access
+									  NULL, // no security attrs
+									  OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (mouse2filehandle == (HANDLE)(-1))
 		{
 			int e = GetLastError();
@@ -1361,14 +1361,14 @@ typedef struct DIJoyInfo_s DIJoyInfo_t;
 //       each force feedback enabled axis
 //-----------------------------------------------------------------------------
 static BOOL CALLBACK EnumAxesCallback(const DIDEVICEOBJECTINSTANCE* pdidoi,
-                                VOID* pContext)
+								VOID* pContext)
 {
-    DWORD* pdwNumForceFeedbackAxis = (DWORD*) pContext;
+	DWORD* pdwNumForceFeedbackAxis = (DWORD*) pContext;
 
-    if ((pdidoi->dwFlags & DIDOI_FFACTUATOR) != 0)
-        (*pdwNumForceFeedbackAxis)++;
+	if ((pdidoi->dwFlags & DIDOI_FFACTUATOR) != 0)
+		(*pdwNumForceFeedbackAxis)++;
 
-    return DIENUM_CONTINUE;
+	return DIENUM_CONTINUE;
 }
 
 
@@ -1415,17 +1415,17 @@ static HRESULT SetupForceTacile(LPDIRECTINPUTDEVICE2 DJI, LPDIRECTINPUTEFFECT *D
 	//eff.dwStartDelay            = 0;
 #endif
 
-    // Create the prepared effect
-    if (FAILED(hr = IDirectInputDevice2_CreateEffect(DJI, EffectGUID, 
-                                              &eff, DJE, NULL)))
-    {
-        return hr;
-    }
+	// Create the prepared effect
+	if (FAILED(hr = IDirectInputDevice2_CreateEffect(DJI, EffectGUID, 
+											  &eff, DJE, NULL)))
+	{
+		return hr;
+	}
 
-    if (NULL == *DJE)
-        return E_FAIL;
+	if (NULL == *DJE)
+		return E_FAIL;
 
-    return hr;
+	return hr;
 }
 
 static BOOL CALLBACK DIEnumEffectsCallback1(LPCDIEFFECTINFO pdei, LPVOID pvRef)
@@ -1609,10 +1609,10 @@ void I_Tactile2(FFType Type, const JoyFF_t *Effect)
 // Set a DWORD property on a DirectInputDevice.
 // ------------------
 static HRESULT SetDIDwordProperty(LPDIRECTINPUTDEVICE pdev,
-                                   REFGUID guidProperty,
-                                   DWORD dwObject,
-                                   DWORD dwHow,
-                                   DWORD dwValue)
+								   REFGUID guidProperty,
+								   DWORD dwObject,
+								   DWORD dwHow,
+								   DWORD dwValue)
 {
 	DIPROPDWORD dipdw;
 
@@ -1632,7 +1632,7 @@ static HRESULT SetDIDwordProperty(LPDIRECTINPUTDEVICE pdev,
 // we must enumerate and choose one joystick device to use
 // ---------------
 static BOOL CALLBACK DIEnumJoysticks (LPCDIDEVICEINSTANCE lpddi,
-                                       LPVOID pvRef)   //cv_usejoystick
+									   LPVOID pvRef)   //cv_usejoystick
 {
 	LPDIRECTINPUTDEVICE pdev;
 	DIPROPRANGE         diprg;
@@ -1655,10 +1655,10 @@ static BOOL CALLBACK DIEnumJoysticks (LPCDIDEVICEINSTANCE lpddi,
 
 	// print out device name
 	CONS_Printf("%c%d: %s\n",
-	             (bUseThisOne) ? '\2' : ' ',   // show name in white if this is the one we will use
-	             iJoyNum,
-	             //(GET_DIDEVICE_SUBTYPE(lpddi->dwDevType) == DIDEVTYPEJOYSTICK_GAMEPAD) ? "Gamepad " : "Joystick",
-	             lpddi->tszProductName); //, lpddi->tszInstanceName);
+				 (bUseThisOne) ? '\2' : ' ',   // show name in white if this is the one we will use
+				 iJoyNum,
+				 //(GET_DIDEVICE_SUBTYPE(lpddi->dwDevType) == DIDEVTYPEJOYSTICK_GAMEPAD) ? "Gamepad " : "Joystick",
+				 lpddi->tszProductName); //, lpddi->tszInstanceName);
 
 	// use specified joystick (cv_usejoystick.value in pvRef)
 	if (!bUseThisOne)
@@ -1666,7 +1666,7 @@ static BOOL CALLBACK DIEnumJoysticks (LPCDIDEVICEINSTANCE lpddi,
 
 	((consvar_t *)pvRef)->value = iJoyNum;
 	if (IDirectInput_CreateDevice (lpDI, &lpddi->guidInstance,
-	                                &pdev, NULL) != DI_OK)
+									&pdev, NULL) != DI_OK)
 	{
 		// if it failed, then we can't use this joystick for some
 		// bizarre reason.  (Maybe the user unplugged it while we
@@ -1700,7 +1700,7 @@ static BOOL CALLBACK DIEnumJoysticks (LPCDIDEVICEINSTANCE lpddi,
 
 
 	CONS_Printf("Capabilities: %d axes, %d buttons, %d POVs, poll %d, Gamepad %d\n",
-	             caps.dwAxes, caps.dwButtons, caps.dwPOVs, Joystick.bJoyNeedPoll, Joystick.bGamepadStyle);
+				 caps.dwAxes, caps.dwButtons, caps.dwPOVs, Joystick.bJoyNeedPoll, Joystick.bGamepadStyle);
 	
 
 	// Set the data format to "simple joystick" - a predefined data format 
@@ -1721,7 +1721,7 @@ static BOOL CALLBACK DIEnumJoysticks (LPCDIDEVICEINSTANCE lpddi,
 	// this device should interact with the system and with other
 	// DirectInput applications.
 	if (IDirectInputDevice_SetCooperativeLevel (pdev, hWndMain,
-	         DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK)
+			 DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK)
 	{
 		CONS_Printf("DIEnumJoysticks(): SetCooperativeLevel FAILED\n");
 		IDirectInputDevice_Release (pdev);
@@ -1806,7 +1806,7 @@ static BOOL CALLBACK DIEnumJoysticks (LPCDIDEVICEINSTANCE lpddi,
 	{
 		if (JoyInfo.X)
 			if (FAILED(SetDIDwordProperty (pdev, DIPROP_DEADZONE, DIJOFS_X,
-			                                 DIPH_BYOFFSET, 2500)))
+											 DIPH_BYOFFSET, 2500)))
 			{
 				CONS_Printf("DIEnumJoysticks(): couldn't SetProperty for X DEAD ZONE");
 				//IDirectInputDevice_Release (pdev);
@@ -1814,7 +1814,7 @@ static BOOL CALLBACK DIEnumJoysticks (LPCDIDEVICEINSTANCE lpddi,
 			}
 		if (JoyInfo.Y)
 			if (FAILED(SetDIDwordProperty (pdev, DIPROP_DEADZONE, DIJOFS_Y,
-			                                 DIPH_BYOFFSET, 2500)))
+											 DIPH_BYOFFSET, 2500)))
 			{
 				CONS_Printf("DIEnumJoysticks(): couldn't SetProperty for Y DEAD ZONE\n");
 				//IDirectInputDevice_Release (pdev);
@@ -1822,7 +1822,7 @@ static BOOL CALLBACK DIEnumJoysticks (LPCDIDEVICEINSTANCE lpddi,
 			}
 		if (JoyInfo.Z)
 			if (FAILED(SetDIDwordProperty (pdev, DIPROP_DEADZONE, DIJOFS_Z,
-			                                 DIPH_BYOFFSET, 2500)))
+											 DIPH_BYOFFSET, 2500)))
 			{
 				CONS_Printf("DIEnumJoysticks(): couldn't SetProperty for Z DEAD ZONE\n");
 				//IDirectInputDevice_Release (pdev);
@@ -1830,7 +1830,7 @@ static BOOL CALLBACK DIEnumJoysticks (LPCDIDEVICEINSTANCE lpddi,
 			}
 		if (JoyInfo.Rx)
 			if (FAILED(SetDIDwordProperty (pdev, DIPROP_DEADZONE, DIJOFS_RX,
-			                                 DIPH_BYOFFSET, 2500)))
+											 DIPH_BYOFFSET, 2500)))
 			{
 				CONS_Printf("DIEnumJoysticks(): couldn't SetProperty for RX DEAD ZONE\n");
 				//IDirectInputDevice_Release (pdev);
@@ -1838,7 +1838,7 @@ static BOOL CALLBACK DIEnumJoysticks (LPCDIDEVICEINSTANCE lpddi,
 			}
 		if (JoyInfo.Ry)
 			if (FAILED(SetDIDwordProperty (pdev, DIPROP_DEADZONE, DIJOFS_RY,
-			                                 DIPH_BYOFFSET, 2500)))
+											 DIPH_BYOFFSET, 2500)))
 			{
 				CONS_Printf("DIEnumJoysticks(): couldn't SetProperty for RY DEAD ZONE\n");
 				//IDirectInputDevice_Release (pdev);
@@ -1846,7 +1846,7 @@ static BOOL CALLBACK DIEnumJoysticks (LPCDIDEVICEINSTANCE lpddi,
 			}
 		if (JoyInfo.Rz)
 			if (FAILED(SetDIDwordProperty (pdev, DIPROP_DEADZONE, DIJOFS_RZ,
-			                                 DIPH_BYOFFSET, 2500)))
+											 DIPH_BYOFFSET, 2500)))
 			{
 				CONS_Printf("DIEnumJoysticks(): couldn't SetProperty for RZ DEAD ZONE\n");
 				//IDirectInputDevice_Release (pdev);
@@ -1854,7 +1854,7 @@ static BOOL CALLBACK DIEnumJoysticks (LPCDIDEVICEINSTANCE lpddi,
 			}
 		if (JoyInfo.U)
 			if (FAILED(SetDIDwordProperty (pdev, DIPROP_DEADZONE, DIJOFS_SLIDER(0),
-			                                 DIPH_BYOFFSET, 2500)))
+											 DIPH_BYOFFSET, 2500)))
 			{
 				CONS_Printf("DIEnumJoysticks(): couldn't SetProperty for U DEAD ZONE\n");
 				//IDirectInputDevice_Release (pdev);
@@ -1862,7 +1862,7 @@ static BOOL CALLBACK DIEnumJoysticks (LPCDIDEVICEINSTANCE lpddi,
 			}
 		if (JoyInfo.V)
 			if (FAILED(SetDIDwordProperty (pdev, DIPROP_DEADZONE, DIJOFS_SLIDER(1),
-			                                 DIPH_BYOFFSET, 2500)))
+											 DIPH_BYOFFSET, 2500)))
 			{
 				CONS_Printf("DIEnumJoysticks(): couldn't SetProperty for V DEAD ZONE\n");
 				//IDirectInputDevice_Release (pdev);
@@ -1980,7 +1980,7 @@ void I_InitJoystick(void)
 
 		// set coop level
 		if (FAILED(IDirectInputDevice_SetCooperativeLevel(lpDIJ, hWndMain,
-		          DISCL_NONEXCLUSIVE|DISCL_FOREGROUND)))
+				  DISCL_NONEXCLUSIVE|DISCL_FOREGROUND)))
 		{
 			I_Error("I_InitJoystick: SetCooperativeLevel FAILED");
 		}
@@ -1999,7 +1999,7 @@ void I_InitJoystick(void)
 // we must enumerate and choose one joystick device to use
 // ---------------
 static BOOL CALLBACK DIEnumJoysticks2 (LPCDIDEVICEINSTANCE lpddi,
-                                        LPVOID pvRef)   //cv_usejoystick
+										LPVOID pvRef)   //cv_usejoystick
 {
 	LPDIRECTINPUTDEVICE pdev;
 	DIPROPRANGE         diprg;
@@ -2022,10 +2022,10 @@ static BOOL CALLBACK DIEnumJoysticks2 (LPCDIDEVICEINSTANCE lpddi,
 
 	// print out device name
 	CONS_Printf("%c%d: %s\n",
-	             (bUseThisOne) ? '\2' : ' ',   // show name in white if this is the one we will use
-	             iJoy2Num,
-	             //(GET_DIDEVICE_SUBTYPE(lpddi->dwDevType) == DIDEVTYPEJOYSTICK_GAMEPAD) ? "Gamepad " : "Joystick",
-	             lpddi->tszProductName); //, lpddi->tszInstanceName);
+				 (bUseThisOne) ? '\2' : ' ',   // show name in white if this is the one we will use
+				 iJoy2Num,
+				 //(GET_DIDEVICE_SUBTYPE(lpddi->dwDevType) == DIDEVTYPEJOYSTICK_GAMEPAD) ? "Gamepad " : "Joystick",
+				 lpddi->tszProductName); //, lpddi->tszInstanceName);
 
 	// use specified joystick (cv_usejoystick.value in pvRef)
 	if (!bUseThisOne)
@@ -2033,7 +2033,7 @@ static BOOL CALLBACK DIEnumJoysticks2 (LPCDIDEVICEINSTANCE lpddi,
 
 	((consvar_t *)pvRef)->value = iJoy2Num;
 	if (IDirectInput_CreateDevice (lpDI, &lpddi->guidInstance,
-	                                &pdev, NULL) != DI_OK)
+									&pdev, NULL) != DI_OK)
 	{
 		// if it failed, then we can't use this joystick for some
 		// bizarre reason.  (Maybe the user unplugged it while we
@@ -2067,7 +2067,7 @@ static BOOL CALLBACK DIEnumJoysticks2 (LPCDIDEVICEINSTANCE lpddi,
 
 
 	CONS_Printf("Capabilities: %d axes, %d buttons, %d POVs, poll %d, Gamepad %d\n",
-	             caps.dwAxes, caps.dwButtons, caps.dwPOVs, Joystick2.bJoyNeedPoll, Joystick2.bGamepadStyle);
+				 caps.dwAxes, caps.dwButtons, caps.dwPOVs, Joystick2.bJoyNeedPoll, Joystick2.bGamepadStyle);
 
 
 	// Set the data format to "simple joystick" - a predefined data format
@@ -2088,7 +2088,7 @@ static BOOL CALLBACK DIEnumJoysticks2 (LPCDIDEVICEINSTANCE lpddi,
 	// this device should interact with the system and with other
 	// DirectInput applications.
 	if (IDirectInputDevice_SetCooperativeLevel (pdev, hWndMain,
-	         DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK)
+			 DISCL_EXCLUSIVE | DISCL_FOREGROUND) != DI_OK)
 	{
 		CONS_Printf("DIEnumJoysticks2(): SetCooperativeLevel FAILED\n");
 		IDirectInputDevice_Release (pdev);
@@ -2173,7 +2173,7 @@ static BOOL CALLBACK DIEnumJoysticks2 (LPCDIDEVICEINSTANCE lpddi,
 	{
 		if (JoyInfo2.X)
 			if (FAILED(SetDIDwordProperty (pdev, DIPROP_DEADZONE, DIJOFS_X,
-			                                 DIPH_BYOFFSET, 2500)))
+											 DIPH_BYOFFSET, 2500)))
 			{
 				CONS_Printf("DIEnumJoysticks2(): couldn't SetProperty for X DEAD ZONE");
 				//IDirectInputDevice_Release (pdev);
@@ -2181,7 +2181,7 @@ static BOOL CALLBACK DIEnumJoysticks2 (LPCDIDEVICEINSTANCE lpddi,
 			}
 		if (JoyInfo2.Y)
 			if (FAILED(SetDIDwordProperty (pdev, DIPROP_DEADZONE, DIJOFS_Y,
-			                                 DIPH_BYOFFSET, 2500)))
+											 DIPH_BYOFFSET, 2500)))
 			{
 				CONS_Printf("DIEnumJoysticks2(): couldn't SetProperty for Y DEAD ZONE\n");
 				//IDirectInputDevice_Release (pdev);
@@ -2189,7 +2189,7 @@ static BOOL CALLBACK DIEnumJoysticks2 (LPCDIDEVICEINSTANCE lpddi,
 			}
 		if (JoyInfo2.Z)
 			if (FAILED(SetDIDwordProperty (pdev, DIPROP_DEADZONE, DIJOFS_Z,
-			                                 DIPH_BYOFFSET, 2500)))
+											 DIPH_BYOFFSET, 2500)))
 			{
 				CONS_Printf("DIEnumJoysticks2(): couldn't SetProperty for Z DEAD ZONE\n");
 				//IDirectInputDevice_Release (pdev);
@@ -2197,7 +2197,7 @@ static BOOL CALLBACK DIEnumJoysticks2 (LPCDIDEVICEINSTANCE lpddi,
 			}
 		if (JoyInfo2.Rx)
 			if (FAILED(SetDIDwordProperty (pdev, DIPROP_DEADZONE, DIJOFS_RX,
-			                                 DIPH_BYOFFSET, 2500)))
+											 DIPH_BYOFFSET, 2500)))
 			{
 				CONS_Printf("DIEnumJoysticks2(): couldn't SetProperty for RX DEAD ZONE\n");
 				//IDirectInputDevice_Release (pdev);
@@ -2205,7 +2205,7 @@ static BOOL CALLBACK DIEnumJoysticks2 (LPCDIDEVICEINSTANCE lpddi,
 			}
 		if (JoyInfo2.Ry)
 			if (FAILED(SetDIDwordProperty (pdev, DIPROP_DEADZONE, DIJOFS_RY,
-			                                 DIPH_BYOFFSET, 2500)))
+											 DIPH_BYOFFSET, 2500)))
 			{
 				CONS_Printf("DIEnumJoysticks2(): couldn't SetProperty for RY DEAD ZONE\n");
 				//IDirectInputDevice_Release (pdev);
@@ -2213,7 +2213,7 @@ static BOOL CALLBACK DIEnumJoysticks2 (LPCDIDEVICEINSTANCE lpddi,
 			}
 		if (JoyInfo2.Rz)
 			if (FAILED(SetDIDwordProperty (pdev, DIPROP_DEADZONE, DIJOFS_RZ,
-			                                 DIPH_BYOFFSET, 2500)))
+											 DIPH_BYOFFSET, 2500)))
 			{
 				CONS_Printf("DIEnumJoysticks2(): couldn't SetProperty for RZ DEAD ZONE\n");
 				//IDirectInputDevice_Release (pdev);
@@ -2221,7 +2221,7 @@ static BOOL CALLBACK DIEnumJoysticks2 (LPCDIDEVICEINSTANCE lpddi,
 			}
 		if (JoyInfo2.U)
 			if (FAILED(SetDIDwordProperty (pdev, DIPROP_DEADZONE, DIJOFS_SLIDER(0),
-			                                 DIPH_BYOFFSET, 2500)))
+											 DIPH_BYOFFSET, 2500)))
 			{
 				CONS_Printf("DIEnumJoysticks2(): couldn't SetProperty for U DEAD ZONE\n");
 				//IDirectInputDevice_Release (pdev);
@@ -2229,7 +2229,7 @@ static BOOL CALLBACK DIEnumJoysticks2 (LPCDIDEVICEINSTANCE lpddi,
 			}
 		if (JoyInfo2.V)
 			if (FAILED(SetDIDwordProperty (pdev, DIPROP_DEADZONE, DIJOFS_SLIDER(1),
-			                                 DIPH_BYOFFSET, 2500)))
+											 DIPH_BYOFFSET, 2500)))
 			{
 				CONS_Printf("DIEnumJoysticks2(): couldn't SetProperty for V DEAD ZONE\n");
 				//IDirectInputDevice_Release (pdev);
@@ -2320,9 +2320,9 @@ void I_InitJoystick2 (void)
 		CONS_Printf("Looking for joystick devices:\n");
 		iJoy2Num = 0;
 		hr = IDirectInput_EnumDevices(lpDI, DIDEVTYPE_JOYSTICK,
-		                                DIEnumJoysticks2,
-		                                (void *)&cv_usejoystick2,    // our user parameter is joystick number
-		                                DIEDFL_ATTACHEDONLY);
+										DIEnumJoysticks2,
+										(void *)&cv_usejoystick2,    // our user parameter is joystick number
+										DIEDFL_ATTACHEDONLY);
 		if (FAILED(hr))
 		{
 			CONS_Printf("\nI_InitJoystick2(): EnumDevices FAILED\n");
@@ -2338,10 +2338,10 @@ void I_InitJoystick2 (void)
 			{
 				CONS_Printf("none used\n");
 				if (cv_usejoystick2.value > 0 &&
-				    cv_usejoystick2.value > iJoy2Num)
+					cv_usejoystick2.value > iJoy2Num)
 				{
 					CONS_Printf("\2Set the use_joystick2 variable to one of the"
-					              " enumerated joysticks number\n");
+								  " enumerated joysticks number\n");
 				}
 			}
 			cv_usejoystick2.value = 0;
@@ -2561,18 +2561,16 @@ acquire:
 			joybuttons |= 1;
 	}
 
-	for (i = JOYHATS_MIN -1; i >=0; i--)
-	{
-		if (js.rgdwPOV[i] != 0xffff && js.rgdwPOV[i] != 0xffffffff)
-		{
-			if     (js.rgdwPOV[i] > 270 * DI_DEGREES || js.rgdwPOV[i] <  90 * DI_DEGREES)
-				joyhats |= 1<<(0 + 4*i); // UP
-			else if (js.rgdwPOV[i] >  90 * DI_DEGREES && js.rgdwPOV[i] < 270 * DI_DEGREES)
-				joyhats |= 1<<(1 + 4*i); // DOWN
-			if     (js.rgdwPOV[i] >   0 * DI_DEGREES && js.rgdwPOV[i] < 180 * DI_DEGREES)
-				joyhats |= 1<<(3 + 4*i); // LEFT
-			else if (js.rgdwPOV[i] > 180 * DI_DEGREES && js.rgdwPOV[i] < 360 * DI_DEGREES)
-				joyhats |= 1<<(2 + 4*i); // RIGHT
+	for (i = JOYHATS_MIN - 1; i >= 0; i--) {
+		if (js.rgdwPOV[i] != 0xffff && js.rgdwPOV[i] != 0xffffffff) {
+			if(js.rgdwPOV[i] > 270 * DI_DEGREES || js.rgdwPOV[i] < 90 * DI_DEGREES)
+				joyhats |= 1ULL << (0 + 4 * i); // UP
+			else if(js.rgdwPOV[i] >  90 * DI_DEGREES && js.rgdwPOV[i] < 270 * DI_DEGREES)
+				joyhats |= 1ULL << (1 + 4 * i); // DOWN
+			if(js.rgdwPOV[i] >   0 * DI_DEGREES && js.rgdwPOV[i] < 180 * DI_DEGREES)
+				joyhats |= 1ULL << (3 + 4 * i); // LEFT
+			else if(js.rgdwPOV[i] > 180 * DI_DEGREES && js.rgdwPOV[i] < 360 * DI_DEGREES)
+				joyhats |= 1ULL << (2 + 4 * i); // RIGHT
 		}
 	}
 
@@ -2753,21 +2751,19 @@ void I_GetJoystick2Events(void)
 	INT64 joyhats = 0;
 	event_t event;
 
-	if (!lpDIJ2)
+	if(!lpDIJ2)
 		return;
 
 	// if input is lost then acquire and keep trying
-	for (;;)
-	{
+	for(;;) {
 		// poll the joystick to read the current state
 		// if the device doesn't require polling, this function returns almost instantly
-		if (lpDIJ2A)
-		{
+		if(lpDIJ2A) {
 			hr = IDirectInputDevice2_Poll(lpDIJ2A);
-			if (hr == DIERR_INPUTLOST || hr == DIERR_NOTACQUIRED)
+
+			if(hr == DIERR_INPUTLOST || hr == DIERR_NOTACQUIRED)
 				goto acquire;
-			else if (FAILED(hr))
-			{
+			else if (FAILED(hr)) {
 				CONS_Printf("I_GetJoystick2Events(): Poll FAILED\n");
 				return;
 			}
@@ -2776,84 +2772,74 @@ void I_GetJoystick2Events(void)
 		// get the input's device state, and put the state in dims
 		hr = IDirectInputDevice_GetDeviceState(lpDIJ2, sizeof (DIJOYSTATE), &js);
 
-		if (hr == DIERR_INPUTLOST || hr == DIERR_NOTACQUIRED)
-		{
+		if(hr == DIERR_INPUTLOST || hr == DIERR_NOTACQUIRED) {
 			// DirectInput is telling us that the input stream has
 			// been interrupted.  We aren't tracking any state
 			// between polls, so we don't have any special reset
 			// that needs to be done.  We just re-acquire and
 			// try again.
 			goto acquire;
-		}
-		else if (FAILED(hr))
-		{
+		} else if(FAILED(hr)) {
 			CONS_Printf("I_GetJoystickEvents2(): GetDeviceState FAILED\n");
 			return;
 		}
 
 		break;
 acquire:
-		if (FAILED(IDirectInputDevice_Acquire(lpDIJ2)))
+		if(FAILED(IDirectInputDevice_Acquire(lpDIJ2)))
 			return;
 	}
 
 	// look for as many buttons as g_input code supports, we don't use the others
-	for (i = JOYBUTTONS_MIN - 1; i >= 0; i--)
-	{
+	for(i = JOYBUTTONS_MIN - 1; i >= 0; i--) {
 		joybuttons <<= 1;
-		if (js.rgbButtons[i])
+
+		if(js.rgbButtons[i])
 			joybuttons |= 1;
 	}
 
-	for (i = JOYHATS_MIN -1; i >=0; i--)
-	{
-		if (js.rgdwPOV[i] != 0xffff && js.rgdwPOV[i] != 0xffffffff)
-		{
-			if     (js.rgdwPOV[i] > 270 * DI_DEGREES || js.rgdwPOV[i] <  90 * DI_DEGREES)
-				joyhats |= 1<<(0 + 4*i); // UP
+	for(i = JOYHATS_MIN - 1; i >= 0; i--) {
+		if(js.rgdwPOV[i] != 0xffff && js.rgdwPOV[i] != 0xffffffff) {
+			if(js.rgdwPOV[i] > 270 * DI_DEGREES || js.rgdwPOV[i] < 90 * DI_DEGREES)
+				joyhats |= 1ULL << (0 + 4 * i); // UP
 			else if (js.rgdwPOV[i] >  90 * DI_DEGREES && js.rgdwPOV[i] < 270 * DI_DEGREES)
-				joyhats |= 1<<(1 + 4*i); // DOWN
-			if     (js.rgdwPOV[i] >   0 * DI_DEGREES && js.rgdwPOV[i] < 180 * DI_DEGREES)
-				joyhats |= 1<<(3 + 4*i); // LEFT
-			else if (js.rgdwPOV[i] > 180 * DI_DEGREES && js.rgdwPOV[i] < 360 * DI_DEGREES)
-				joyhats |= 1<<(2 + 4*i); // RIGHT
+				joyhats |= 1ULL << (1 + 4 * i); // DOWN
+
+			if(js.rgdwPOV[i] > 0 * DI_DEGREES && js.rgdwPOV[i] < 180 * DI_DEGREES)
+				joyhats |= 1ULL << (3 + 4 * i); // LEFT
+			else if(js.rgdwPOV[i] > 180 * DI_DEGREES && js.rgdwPOV[i] < 360 * DI_DEGREES)
+				joyhats |= 1ULL << (2 + 4 * i); // RIGHT
 		}
 	}
 
-	if (joybuttons != lastjoy2buttons)
-	{
+	if(joybuttons != lastjoy2buttons) {
 		INT64 j = 1; // keep only bits that changed since last time
 		INT64 newbuttons = joybuttons ^ lastjoy2buttons;
 		lastjoy2buttons = joybuttons;
 
-		for (i = 0; i < JOYBUTTONS && i < JOYBUTTONS_MAX; i++, j <<= 1)
-		{
-			if (newbuttons & j) // button changed state?
-			{
-				if (joybuttons & j)
-					event.type = ev_keydown;
-				else
-					event.type = ev_keyup;
+		for(i = 0; i < JOYBUTTONS && i < JOYBUTTONS_MAX; i++, j <<= 1) {
+			// button changed state?
+			if(newbuttons & j) {
+				if(joybuttons & j) event.type = ev_keydown;
+				else event.type = ev_keyup;
+
 				event.data1 = KEY_2JOY1 + i;
 				D_PostEvent(&event);
 			}
 		}
 	}
 
-	if (joyhats != lastjoy2hats)
-	{
+	if(joyhats != lastjoy2hats) {
 		INT64 j = 1; // keep only bits that changed since last time
 		INT64 newhats = joyhats ^ lastjoy2hats;
 		lastjoy2hats = joyhats;
 
-		for (i = 0; i < JOYHATS*4 && i < JOYHATS_MAX*4; i++, j <<= 1)
-		{
-			if (newhats & j) // button changed state?
-			{
-				if (joyhats & j)
-					event.type = ev_keydown;
-				else
-					event.type = ev_keyup;
+		for(i = 0; i < JOYHATS * 4 && i < JOYHATS_MAX * 4; i++, j <<= 1) {
+			// button changed state?
+			if(newhats & j) {
+				if(joyhats & j) event.type = ev_keydown;
+				else event.type = ev_keyup;
+
 				event.data1 = KEY_2HAT1 + i;
 				D_PostEvent(&event);
 			}
@@ -2865,29 +2851,21 @@ acquire:
 	event.type = ev_joystick2;
 	event.data1 = event.data2 = event.data3 = 0;
 
-	if (Joystick2.bGamepadStyle)
-	{
+	if(Joystick2.bGamepadStyle) {
 		// gamepad control type, on or off, live or die
-		if (JoyInfo2.X)
-		{
-			if (js.lX < -(JOYAXISRANGE/2))
-				event.data2 = -1;
-			else if (js.lX > JOYAXISRANGE/2)
-				event.data2 = 1;
+		if(JoyInfo2.X) {
+			if(js.lX < -(JOYAXISRANGE / 2)) event.data2 = -1;
+			else if(js.lX > JOYAXISRANGE / 2) event.data2 = 1;
 		}
-		if (JoyInfo2.Y)
-		{
-			if (js.lY < -(JOYAXISRANGE/2))
-				event.data3 = -1;
-			else if (js.lY > JOYAXISRANGE/2)
-				event.data3 = 1;
+
+		if (JoyInfo2.Y) {
+			if(js.lY < -(JOYAXISRANGE / 2)) event.data3 = -1;
+			else if(js.lY > JOYAXISRANGE / 2) event.data3 = 1;
 		}
-	}
-	else
-	{
+	} else {
 		// analog control style, just send the raw data
-		if (JoyInfo2.X)  event.data2 = js.lX; // x axis
-		if (JoyInfo2.Y)  event.data3 = js.lY; // y axis
+		if(JoyInfo2.X) event.data2 = js.lX; // x axis
+		if(JoyInfo2.Y) event.data3 = js.lY; // y axis
 	}
 
 	D_PostEvent(&event);
@@ -2895,29 +2873,21 @@ acquire:
 	event.data1 = 1;
 	event.data2 = event.data3 = 0;
 
-	if (Joystick2.bGamepadStyle)
-	{
+	if(Joystick2.bGamepadStyle) {
 		// gamepad control type, on or off, live or die
-		if (JoyInfo2.Z)
-		{
-			if (js.lZ < -(JOYAXISRANGE/2))
-				event.data2 = -1;
-			else if (js.lZ > JOYAXISRANGE/2)
-				event.data2 = 1;
+		if(JoyInfo2.Z) {
+			if(js.lZ < -(JOYAXISRANGE / 2)) event.data2 = -1;
+			else if(js.lZ > JOYAXISRANGE / 2) event.data2 = 1;
 		}
-		if (JoyInfo2.Rx)
-		{
-			if (js.lRx < -(JOYAXISRANGE/2))
-				event.data3 = -1;
-			else if (js.lRx > JOYAXISRANGE/2)
-				event.data3 = 1;
+
+		if (JoyInfo2.Rx) {
+			if(js.lRx < -(JOYAXISRANGE / 2)) event.data3 = -1;
+			else if(js.lRx > JOYAXISRANGE / 2) event.data3 = 1;
 		}
-	}
-	else
-	{
+	} else {
 		// analog control style, just send the raw data
-		if (JoyInfo2.Z)  event.data2 = js.lZ;  // z axis
-		if (JoyInfo2.Rx) event.data3 = js.lRx; // rx axis
+		if(JoyInfo2.Z) event.data2 = js.lZ;  // z axis
+		if(JoyInfo2.Rx) event.data3 = js.lRx; // rx axis
 	}
 
 	D_PostEvent(&event);
@@ -2926,29 +2896,19 @@ acquire:
 	event.data1 = 2;
 	event.data2 = event.data3 = 0;
 
-	if (Joystick2.bGamepadStyle)
-	{
+	if(Joystick2.bGamepadStyle) {
 		// gamepad control type, on or off, live or die
-		if (JoyInfo2.Rx)
-		{
-			if (js.lRy < -(JOYAXISRANGE/2))
-				event.data2 = -1;
-			else if (js.lRy > JOYAXISRANGE/2)
-				event.data2 = 1;
+		if(JoyInfo2.Rx) {
+			if(js.lRy < -(JOYAXISRANGE / 2)) event.data2 = -1;
+			else if (js.lRy > JOYAXISRANGE / 2) event.data2 = 1;
+		} if (JoyInfo2.Rz) {
+			if(js.lRz < -(JOYAXISRANGE / 2)) event.data3 = -1;
+			else if(js.lRz > JOYAXISRANGE / 2) event.data3 = 1;
 		}
-		if (JoyInfo2.Rz)
-		{
-			if (js.lRz < -(JOYAXISRANGE/2))
-				event.data3 = -1;
-			else if (js.lRz > JOYAXISRANGE/2)
-				event.data3 = 1;
-		}
-	}
-	else
-	{
+	} else {
 		// analog control style, just send the raw data
-		if (JoyInfo2.Ry) event.data2 = js.lRy; // ry axis
-		if (JoyInfo2.Rz) event.data3 = js.lRz; // rz axis
+		if(JoyInfo2.Ry) event.data2 = js.lRy; // ry axis
+		if(JoyInfo2.Rz) event.data3 = js.lRz; // rz axis
 	}
 
 	D_PostEvent(&event);
@@ -2956,30 +2916,25 @@ acquire:
 #if JOYAXISSET > 3
 	event.data1 = 3;
 	event.data2 = event.data3 = 0;
-	if (Joystick2.bGamepadStyle)
-	{
+	if(Joystick2.bGamepadStyle) {
 		// gamepad control type, on or off, live or die
-		if (JoyInfo2.U)
-		{
-			if (js.rglSlider[0] < -(JOYAXISRANGE/2))
+		if(JoyInfo2.U) {
+			if(js.rglSlider[0] < -(JOYAXISRANGE/2))
 				event.data2 = -1;
-			else if (js.rglSlider[0] > JOYAXISRANGE/2)
+			else if(js.rglSlider[0] > JOYAXISRANGE/2)
 				event.data2 = 1;
 		}
-		if (JoyInfo2.V)
-		{
-			if (js.rglSlider[1] < -(JOYAXISRANGE/2))
-				event.data3 = -1;
-			else if (js.rglSlider[1] > JOYAXISRANGE/2)
-				event.data3 = 1;
+
+		if(JoyInfo2.V) {
+			if (js.rglSlider[1] < -(JOYAXISRANGE / 2)) event.data3 = -1;
+			else if (js.rglSlider[1] > JOYAXISRANGE / 2) event.data3 = 1;
 		}
-	}
-	else
-	{
+	} else {
 		// analog control style, just send the raw data
-		if (JoyInfo2.U)  event.data2 = js.rglSlider[0]; // U axis
-		if (JoyInfo2.V)  event.data3 = js.rglSlider[1]; // V axis
+		if(JoyInfo2.U) event.data2 = js.rglSlider[0]; // U axis
+		if(JoyInfo2.V) event.data3 = js.rglSlider[1]; // V axis
 	}
+
 	D_PostEvent(&event);
 #endif
 }
@@ -2989,7 +2944,7 @@ static char joyname[MAX_PATH];
 static int needjoy = -1;
 
 static BOOL CALLBACK DIEnumJoysticksCount (LPCDIDEVICEINSTANCE lpddi,
-                                            LPVOID pvRef)   //joyname
+											LPVOID pvRef)   //joyname
 {
 	numofjoy++;
 	if (needjoy == numofjoy && pvRef && pvRef == (void *)joyname && lpddi
@@ -2998,7 +2953,7 @@ static BOOL CALLBACK DIEnumJoysticksCount (LPCDIDEVICEINSTANCE lpddi,
 		sprintf(joyname,"%s",lpddi->tszProductName);
 		return DIENUM_STOP;
 	}
- 	//else if (devparm) CONS_Printf("DIEnumJoysticksCount need help!");
+	//else if (devparm) CONS_Printf("DIEnumJoysticksCount need help!");
 	return DIENUM_CONTINUE;
 }
 

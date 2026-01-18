@@ -22,7 +22,7 @@
 
 // called in the exception filter of the __try block, writes all useful debugging information
 // to a file, using only win32 functions in case the C runtime is in a bad state.
-int __cdecl RecordExceptionInfo (PEXCEPTION_POINTERS data/*, LPCSTR Message, LPSTR lpCmdLine*/);
+int __cdecl RecordExceptionInfo (/*PEXCEPTION_POINTERS data, LPCSTR Message, LPSTR lpCmdLine*/);
 
 #ifdef __MINGW32__
 

@@ -272,7 +272,7 @@ static inline VOID OpenTextConsole(void)
 	FreeConsole();
 	AllocConsole(); //Let get the real console HANDLE, because Mingw's Bash is bad!
 	ci = CreateFile(TEXT("CONIN$") ,               GENERIC_READ, FILE_SHARE_READ,  NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
- 	co = CreateFile(TEXT("CONOUT$"), GENERIC_WRITE|GENERIC_READ, FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	co = CreateFile(TEXT("CONOUT$"), GENERIC_WRITE|GENERIC_READ, FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (ci != (HANDLE)-1)
 	{
 		const DWORD CM = ENABLE_LINE_INPUT|ENABLE_ECHO_INPUT|ENABLE_PROCESSED_INPUT;
@@ -316,21 +316,21 @@ static HWND OpenMainWindow (HINSTANCE hInstance, int nCmdShow, LPSTR wTitle)
 
 	hWnd = CreateWindowExA(
 #ifdef _DEBUG
-           0,     //ExStyle
+		   0,     //ExStyle
 #else
-           dedicated ? 0:WS_EX_TOPMOST,     //ExStyle
+		   dedicated ? 0:WS_EX_TOPMOST,     //ExStyle
 #endif
-	       "SRB2WC",                         //Classname
-	       wTitle,                           //Windowname
-	       WS_CAPTION|WS_POPUP|WS_SYSMENU,   //dwStyle       //WS_VISIBLE|WS_POPUP for bAppFullScreen
-	       0,
-	       0,
-	       dedicated ? 0:BASEVIDWIDTH,  //GetSystemMetrics(SM_CXSCREEN),
-	       dedicated ? 0:BASEVIDHEIGHT,  //GetSystemMetrics(SM_CYSCREEN),
-	       NULL,                             //hWnd Parent
-	       NULL,                             //hMenu Menu
-	       hInstance,
-	       NULL);
+		   "SRB2WC",                         //Classname
+		   wTitle,                           //Windowname
+		   WS_CAPTION|WS_POPUP|WS_SYSMENU,   //dwStyle       //WS_VISIBLE|WS_POPUP for bAppFullScreen
+		   0,
+		   0,
+		   dedicated ? 0:BASEVIDWIDTH,  //GetSystemMetrics(SM_CXSCREEN),
+		   dedicated ? 0:BASEVIDHEIGHT,  //GetSystemMetrics(SM_CYSCREEN),
+		   NULL,                             //hWnd Parent
+		   NULL,                             //hMenu Menu
+		   hInstance,
+		   NULL);
 
 	return hWnd;
 }
@@ -447,9 +447,9 @@ static inline VOID MakeCodeWritable(VOID)
 // HandledWinMain : called by exception handler
 // -----------------------------------------------------------------------------
 static int WINAPI HandledWinMain(HINSTANCE hInstance,
-                          HINSTANCE hPrevInstance,
-                          LPSTR lpCmdLine,
-                          int nCmdShow)
+						  HINSTANCE hPrevInstance,
+						  LPSTR lpCmdLine,
+						  int nCmdShow)
 {
 	int             i;
 	LPSTR          args;
@@ -461,7 +461,7 @@ static int WINAPI HandledWinMain(HINSTANCE hInstance,
 	w_logstream = INVALID_HANDLE_VALUE;
 
 	w_logstream = CreateFile (TEXT("log.txt"), GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS,
-	                        FILE_ATTRIBUTE_NORMAL, NULL);  //file flag writethrough?
+							FILE_ATTRIBUTE_NORMAL, NULL);  //file flag writethrough?
 #endif
 
 	// fill myargc,myargv for m_argv.c retrieval of cmdline arguments
@@ -507,9 +507,9 @@ static int WINAPI HandledWinMain(HINSTANCE hInstance,
 // Exception handler calls WinMain for catching exceptions
 // -----------------------------------------------------------------------------
 int WINAPI WinMain (HINSTANCE hInstance,
-                    HINSTANCE hPrevInstance,
-                    LPSTR     lpCmdLine,
-                    int       nCmdShow)
+					HINSTANCE hPrevInstance,
+					LPSTR     lpCmdLine,
+					int       nCmdShow)
 {
 	int Result = -1;
 #if (defined (NO_SEH_MINGW) || defined (_NDEBUG)) && 0

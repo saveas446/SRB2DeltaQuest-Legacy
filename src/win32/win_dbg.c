@@ -114,7 +114,7 @@ static VOID PrintTime (LPSTR output, FILETIME TimeToPrint)
 {
 	WORD Date, Time;
 	if (FileTimeToLocalFileTime (&TimeToPrint, &TimeToPrint) &&
-	    FileTimeToDosDateTime (&TimeToPrint, &Date, &Time))
+		FileTimeToDosDateTime (&TimeToPrint, &Date, &Time))
 	{
 		// What a silly way to print out the file date/time.
 		wsprintfA(output, "%d/%d/%d %02d:%02d:%02d",
@@ -278,19 +278,19 @@ static VOID RecordSystemInformation(HANDLE fileHandle)
 	
 	GetSystemInfo (&SystemInfo);
 	FPrintf (fileHandle, "%d processor(s), type %d %d.%d.\r\n"
-	         "Program Memory from 0x%p to 0x%p\r\n",
-	         SystemInfo.dwNumberOfProcessors, 
-	         SystemInfo.dwProcessorType,
-	         SystemInfo.wProcessorLevel,
-	         SystemInfo.wProcessorRevision,
-	         SystemInfo.lpMinimumApplicationAddress,
-	         SystemInfo.lpMaximumApplicationAddress);
+			 "Program Memory from 0x%p to 0x%p\r\n",
+			 SystemInfo.dwNumberOfProcessors, 
+			 SystemInfo.dwProcessorType,
+			 SystemInfo.wProcessorLevel,
+			 SystemInfo.wProcessorRevision,
+			 SystemInfo.lpMinimumApplicationAddress,
+			 SystemInfo.lpMaximumApplicationAddress);
 	
 	MemInfo.dwLength = sizeof (MemInfo);
 	GlobalMemoryStatus(&MemInfo);
 	// Print out the amount of physical memory, rounded up.
 	FPrintf(fileHandle, "%d MBytes physical memory.\r\n", (MemInfo.dwTotalPhys +
-	        ONEM - 1) / ONEM);
+			ONEM - 1) / ONEM);
 }
 
 // --------------------------------------------------------------------------
@@ -302,7 +302,7 @@ static VOID RecordSystemInformation(HANDLE fileHandle)
 // handler.
 // --------------------------------------------------------------------------
 // \attention REWRITE THIS!!!!!!!!! THIS SUCKS! Just use the VS8 or a modern debugger for the time being. I'm sure this can be done in a way that's one million times more modern and practical.
-int __cdecl RecordExceptionInfo (/*PEXCEPTION_POINTERS data/*, LPCSTR Message, LPSTR lpCmdLine*/) {
+int __cdecl RecordExceptionInfo (/*PEXCEPTION_POINTERS data, LPCSTR Message, LPSTR lpCmdLine*/) {
 #if 0
 	PEXCEPTION_RECORD   Exception;
 	PCONTEXT            Context;
@@ -366,9 +366,9 @@ int __cdecl RecordExceptionInfo (/*PEXCEPTION_POINTERS data/*, LPCSTR Message, L
 	// code address, which is the same as the ModuleHandle. This can be used
 	// to get the filename of the module that the crash happened in.
 	if (VirtualQuery ((LPVOID)(size_t)Context->Eip, &MemInfo, sizeof (MemInfo)) &&
-	     GetModuleFileName ((HINSTANCE)MemInfo.AllocationBase,
-	                        CrashModulePathName,
-	                        sizeof (CrashModulePathName)) > 0)
+		 GetModuleFileName ((HINSTANCE)MemInfo.AllocationBase,
+							CrashModulePathName,
+							sizeof (CrashModulePathName)) > 0)
 		CrashModuleFileName = GetFilePart(CrashModulePathName);
 	
 	// Print out the beginning of the error log in a Win95 error window

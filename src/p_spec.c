@@ -99,37 +99,37 @@ static size_t maxanims;
   */
 animdef_t               harddefs[] =
 {
-    // DOOM II flat animations.
-    {false,     "NUKAGE3",      "NUKAGE1",      8},
-    {false,     "FWATER16",     "FWATER1",      4},
-    {false,     "SWATER4",      "SWATER1",      8},
-    {false,     "LAVA4",        "LAVA1",        8},
+	// DOOM II flat animations.
+	{false,     "NUKAGE3",      "NUKAGE1",      8},
+	{false,     "FWATER16",     "FWATER1",      4},
+	{false,     "SWATER4",      "SWATER1",      8},
+	{false,     "LAVA4",        "LAVA1",        8},
 	{false,     "RLAVA8",        "RLAVA1",        4},
-    {false,     "BLOOD3",       "BLOOD1",       8},
+	{false,     "BLOOD3",       "BLOOD1",       8},
 	{false,     "BWATER16",       "BWATER1",       8},
 
-    {false,     "RROCK08",      "RROCK05",      8},
-    {false,     "CHEMG16",      "CHEMG01",      4}, // Tails 12-11-2000 THZ Chemical gunk
-    {false,     "SLIME08",      "SLIME05",      4}, // Tails
+	{false,     "RROCK08",      "RROCK05",      8},
+	{false,     "CHEMG16",      "CHEMG01",      4}, // Tails 12-11-2000 THZ Chemical gunk
+	{false,     "SLIME08",      "SLIME05",      4}, // Tails
 //    {false,     "SLIME12",      "SLIME09",      8},
 
-    // animated textures
+	// animated textures
 /*    {true,      "BLODGR4",      "BLODGR1",      8},
-    {true,      "SLADRIP3",     "SLADRIP1",     8},
+	{true,      "SLADRIP3",     "SLADRIP1",     8},
 
-    {true,      "BLODRIP4",     "BLODRIP1",     8},
-    {true,      "FIREWALL",     "FIREWALA",     8},
-    {true,      "GSTFONT3",     "GSTFONT1",     8},
-    {true,      "FIRELAVA",     "FIRELAV3",     8},
-    {true,      "FIREMAG3",     "FIREMAG1",     8},
-    {true,      "FIREBLU2",     "FIREBLU1",     8},
-    {true,      "ROCKRED3",     "ROCKRED1",     8},
+	{true,      "BLODRIP4",     "BLODRIP1",     8},
+	{true,      "FIREWALL",     "FIREWALA",     8},
+	{true,      "GSTFONT3",     "GSTFONT1",     8},
+	{true,      "FIRELAVA",     "FIRELAV3",     8},
+	{true,      "FIREMAG3",     "FIREMAG1",     8},
+	{true,      "FIREBLU2",     "FIREBLU1",     8},
+	{true,      "ROCKRED3",     "ROCKRED1",     8},
 
-    {true,      "BFALL4",       "BFALL1",       8},
+	{true,      "BFALL4",       "BFALL1",       8},
  */  {true,      "SFALL4",       "SFALL1",       8},
-    {true,      "RVZFAL8",       "RVZFAL1",       4},/*
-    {true,      "WFALL4",       "WFALL1",       8},
-    {true,      "DBRAIN4",      "DBRAIN1",      8},*/
+	{true,      "RVZFAL8",       "RVZFAL1",       4},/*
+	{true,      "WFALL4",       "WFALL1",       8},
+	{true,      "DBRAIN4",      "DBRAIN1",      8},*/
 	{true,      "GFALL4",       "GFALL1",       4}, // Short waterfall Tails 11-07-2000
 	{true,      "CFALL4",       "CFALL1",       4}, // Long waterfall Tails 11-07-2000
 
@@ -143,7 +143,7 @@ animdef_t               harddefs[] =
 	{true,      "BFALL4",       "BFALL1",       4},
 	#endif
 
-    {-1}
+	{-1}
 };
 
 
@@ -1240,15 +1240,15 @@ void P_LinedefExecute(int tag, mobj_t *actor, sector_t *caller)
 
 int P_SectorActive(special_e t,sector_t *sec)
 {
-    switch (t)
-    {
-      case floor_special:
-        return (int)sec->floordata;
-      case ceiling_special:
-        return (int)sec->ceilingdata;
-      case lighting_special:
-        return (int)sec->lightingdata;
-    }
+	switch (t)
+	{
+	  case floor_special:
+		return (int)sec->floordata;
+	  case ceiling_special:
+		return (int)sec->ceilingdata;
+	  case lighting_special:
+		return (int)sec->lightingdata;
+	}
   return 1;
 }
 
@@ -1885,12 +1885,12 @@ void P_ProcessLineSpecial(line_t *line, mobj_t *mo)
 //
 void P_SetupSignExit(player_t *player)
 {
-    mobj_t *thing;
-    msecnode_t *node;
+	mobj_t *thing;
+	msecnode_t *node;
 
-    node = player->mo->subsector->sector->touching_thinglist; // things touching this sector
-    for (; node; node = node->m_snext)
-    {
+	node = player->mo->subsector->sector->touching_thinglist; // things touching this sector
+	for (; node; node = node->m_snext)
+	{
 		thing = node->m_thing;
 		if (thing->type != MT_SIGN)
 			continue;
@@ -2959,180 +2959,180 @@ static int axtoi(char *hexStg)
 boolean P_Teleport(mobj_t *thing, fixed_t x, fixed_t y, fixed_t z, angle_t angle, boolean flash, boolean dontstopmove);
 
 int EV_Teleport ( line_t*       line,
-                  int           side,
-                  mobj_t*       thing )
+				  int           side,
+				  mobj_t*       thing )
 {
-    int         i;
-    int         tag;
-    mobj_t*     m;
-    thinker_t*  thinker;
-    sector_t*   sector;
+	int         i;
+	int         tag;
+	mobj_t*     m;
+	thinker_t*  thinker;
+	sector_t*   sector;
 
-    // don't teleport missiles
-    if ((thing->flags & MF_MISSILE) || (thing->flags2 & MF2_NOTELEPORT))
-        return 0;
+	// don't teleport missiles
+	if ((thing->flags & MF_MISSILE) || (thing->flags2 & MF2_NOTELEPORT))
+		return 0;
 
-    // Don't teleport if hit back of line,
-    //  so you can get out of teleporter.
-    if (side == 1)
-        return 0;
+	// Don't teleport if hit back of line,
+	//  so you can get out of teleporter.
+	if (side == 1)
+		return 0;
 
 
-    tag = line->tag;
-    for (i = 0; i < numsectors; i++)
-    {
-        if (sectors[ i ].tag == tag )
-        {
-            thinker = thinkercap.next;
-            for (thinker = thinkercap.next;
-                 thinker != &thinkercap;
-                 thinker = thinker->next)
-            {
-                // not a mobj
-                if (thinker->function.acp1 != (actionf_p1)P_MobjThinker)
-                    continue;
+	tag = line->tag;
+	for (i = 0; i < numsectors; i++)
+	{
+		if (sectors[ i ].tag == tag )
+		{
+			thinker = thinkercap.next;
+			for (thinker = thinkercap.next;
+				 thinker != &thinkercap;
+				 thinker = thinker->next)
+			{
+				// not a mobj
+				if (thinker->function.acp1 != (actionf_p1)P_MobjThinker)
+					continue;
 
-                m = (mobj_t *)thinker;
+				m = (mobj_t *)thinker;
 
-                // not a teleportman
-                if (m->type != MT_TELEPORTMAN )
-                    continue;
+				// not a teleportman
+				if (m->type != MT_TELEPORTMAN )
+					continue;
 
-                sector = m->subsector->sector;
-                // wrong sector
-                if (sector-sectors != i )
-                    continue;
+				sector = m->subsector->sector;
+				// wrong sector
+				if (sector-sectors != i )
+					continue;
 
-                return P_Teleport(thing, m->x, m->y, m->angle, m->angle, m->angle, m->angle);
-            }
-        }
-    }
-    return 0;
+				return P_Teleport(thing, m->x, m->y, m->angle, m->angle, m->angle, m->angle);
+			}
+		}
+	}
+	return 0;
 }
 
 int EV_SilentLineTeleport(line_t *line, int side, mobj_t *thing,
-                          boolean reverse)
+						  boolean reverse)
 {
   int i;
   line_t *l;
 
   if (side || thing->flags & MF_MISSILE)
-    return 0;
+	return 0;
 
   for (i = -1; (i = P_FindLineFromLineTag(line, i)) >= 0;)
-    if ((l=lines+i) != line && l->backsector)
-      {
-        // Get the thing's position along the source linedef
-        fixed_t pos = abs(line->dx) > abs(line->dy) ?
-          FixedDiv(thing->x - line->v1->x, line->dx) :
-          FixedDiv(thing->y - line->v1->y, line->dy) ;
+	if ((l=lines+i) != line && l->backsector)
+	  {
+		// Get the thing's position along the source linedef
+		fixed_t pos = abs(line->dx) > abs(line->dy) ?
+		  FixedDiv(thing->x - line->v1->x, line->dx) :
+		  FixedDiv(thing->y - line->v1->y, line->dy) ;
 
-        // Get the angle between the two linedefs, for rotating
-        // orientation and momentum. Rotate 180 degrees, and flip
-        // the position across the exit linedef, if reversed.
-        angle_t angle = (reverse ? pos = FRACUNIT-pos, 0 : ANG180) +
-          R_PointToAngle2(0, 0, l->dx, l->dy) -
-          R_PointToAngle2(0, 0, line->dx, line->dy);
+		// Get the angle between the two linedefs, for rotating
+		// orientation and momentum. Rotate 180 degrees, and flip
+		// the position across the exit linedef, if reversed.
+		angle_t angle = (reverse ? pos = FRACUNIT-pos, 0 : ANG180) +
+		  R_PointToAngle2(0, 0, l->dx, l->dy) -
+		  R_PointToAngle2(0, 0, line->dx, line->dy);
 
-        // Interpolate position across the exit linedef
-        fixed_t x = l->v2->x - FixedMul(pos, l->dx);
-        fixed_t y = l->v2->y - FixedMul(pos, l->dy);
+		// Interpolate position across the exit linedef
+		fixed_t x = l->v2->x - FixedMul(pos, l->dx);
+		fixed_t y = l->v2->y - FixedMul(pos, l->dy);
 
-        // Sine, cosine of angle adjustment
-        fixed_t s = finesine[angle>>ANGLETOFINESHIFT];
-        fixed_t c = finecosine[angle>>ANGLETOFINESHIFT];
+		// Sine, cosine of angle adjustment
+		fixed_t s = finesine[angle>>ANGLETOFINESHIFT];
+		fixed_t c = finecosine[angle>>ANGLETOFINESHIFT];
 
-        // Maximum distance thing can be moved away from interpolated
-        // exit, to ensure that it is on the correct side of exit linedef
-        int fudge = FUDGEFACTOR;
+		// Maximum distance thing can be moved away from interpolated
+		// exit, to ensure that it is on the correct side of exit linedef
+		int fudge = FUDGEFACTOR;
 
-        // Whether this is a player, and if so, a pointer to its player_t.
-        // Voodoo dolls are excluded by making sure thing->player->mo==thing.
-        player_t *player = thing->player && thing->player->mo == thing ?
-          thing->player : NULL;
+		// Whether this is a player, and if so, a pointer to its player_t.
+		// Voodoo dolls are excluded by making sure thing->player->mo==thing.
+		player_t *player = thing->player && thing->player->mo == thing ?
+		  thing->player : NULL;
 
-        // Whether walking towards first side of exit linedef steps down
-        int stepdown =
-          l->frontsector->floorheight < l->backsector->floorheight;
+		// Whether walking towards first side of exit linedef steps down
+		int stepdown =
+		  l->frontsector->floorheight < l->backsector->floorheight;
 
-        // Height of thing above ground
-        fixed_t z = thing->z - thing->floorz;
+		// Height of thing above ground
+		fixed_t z = thing->z - thing->floorz;
 
-        // Side to exit the linedef on positionally.
-        //
-        // Notes:
-        //
-        // This flag concerns exit position, not momentum. Due to
-        // roundoff error, the thing can land on either the left or
-        // the right side of the exit linedef, and steps must be
-        // taken to make sure it does not end up on the wrong side.
-        //
-        // Exit momentum is always towards side 1 in a reversed
-        // teleporter, and always towards side 0 otherwise.
-        //
-        // Exiting positionally on side 1 is always safe, as far
-        // as avoiding oscillations and stuck-in-wall problems,
-        // but may not be optimum for non-reversed teleporters.
-        //
-        // Exiting on side 0 can cause oscillations if momentum
-        // is towards side 1, as it is with reversed teleporters.
-        //
-        // Exiting on side 1 slightly improves player viewing
-        // when going down a step on a non-reversed teleporter.
+		// Side to exit the linedef on positionally.
+		//
+		// Notes:
+		//
+		// This flag concerns exit position, not momentum. Due to
+		// roundoff error, the thing can land on either the left or
+		// the right side of the exit linedef, and steps must be
+		// taken to make sure it does not end up on the wrong side.
+		//
+		// Exit momentum is always towards side 1 in a reversed
+		// teleporter, and always towards side 0 otherwise.
+		//
+		// Exiting positionally on side 1 is always safe, as far
+		// as avoiding oscillations and stuck-in-wall problems,
+		// but may not be optimum for non-reversed teleporters.
+		//
+		// Exiting on side 0 can cause oscillations if momentum
+		// is towards side 1, as it is with reversed teleporters.
+		//
+		// Exiting on side 1 slightly improves player viewing
+		// when going down a step on a non-reversed teleporter.
 
-        int side = reverse || (player && stepdown);
+		int side = reverse || (player && stepdown);
 
-        // Make sure we are on correct side of exit linedef.
-        while (P_PointOnLineSide(x, y, l) != side && --fudge>=0)
-          if (abs(l->dx) > abs(l->dy))
-            y -= l->dx < 0 != side ? -1 : 1;
-          else
-            x += l->dy < 0 != side ? -1 : 1;
+		// Make sure we are on correct side of exit linedef.
+		while (P_PointOnLineSide(x, y, l) != side && --fudge>=0)
+		  if (abs(l->dx) > abs(l->dy))
+			y -= l->dx < 0 != side ? -1 : 1;
+		  else
+			x += l->dy < 0 != side ? -1 : 1;
 
-        // Adjust z position to be same height above ground as before.
-        // Ground level at the exit is measured as the higher of the
-        // two floor heights at the exit linedef.
-        thing->z = z + sides[l->sidenum[stepdown]].sector->floorheight;
+		// Adjust z position to be same height above ground as before.
+		// Ground level at the exit is measured as the higher of the
+		// two floor heights at the exit linedef.
+		thing->z = z + sides[l->sidenum[stepdown]].sector->floorheight;
 
-        // Attempt to teleport, aborting if blocked
+		// Attempt to teleport, aborting if blocked
 
 		// PLEASE I'M BEGGING YOU
-        if (!P_TeleportMove(thing, x, y, thing->z))
-          return 0;
+		if (!P_TeleportMove(thing, x, y, thing->z))
+		  return 0;
 
-        // Rotate thing's orientation according to difference in linedef angles
-        thing->angle += angle;
+		// Rotate thing's orientation according to difference in linedef angles
+		thing->angle += angle;
 
-        // Momentum of thing crossing teleporter linedef
-        x = thing->momx;
-        y = thing->momy;
+		// Momentum of thing crossing teleporter linedef
+		x = thing->momx;
+		y = thing->momy;
 
-        // Rotate thing's momentum to come out of exit just like it entered
-        thing->momx = FixedMul(x, c) - FixedMul(y, s);
-        thing->momy = FixedMul(y, c) + FixedMul(x, s);
+		// Rotate thing's momentum to come out of exit just like it entered
+		thing->momx = FixedMul(x, c) - FixedMul(y, s);
+		thing->momy = FixedMul(y, c) + FixedMul(x, s);
 
-        // Adjust a player's view, in case there has been a height change
-        if (player)
-          {
-            // Save the current deltaviewheight, used in stepping
-            fixed_t deltaviewheight = player->deltaviewheight;
+		// Adjust a player's view, in case there has been a height change
+		if (player)
+		  {
+			// Save the current deltaviewheight, used in stepping
+			fixed_t deltaviewheight = player->deltaviewheight;
 
-            // Clear deltaviewheight, since we don't want any changes now
-            player->deltaviewheight = 0;
+			// Clear deltaviewheight, since we don't want any changes now
+			player->deltaviewheight = 0;
 
-            // Set player's view according to the newly set parameters
-            P_CalcHeight(player);
+			// Set player's view according to the newly set parameters
+			P_CalcHeight(player);
 
-            // Reset the delta to have the same dynamics as before
-            player->deltaviewheight = deltaviewheight;
+			// Reset the delta to have the same dynamics as before
+			player->deltaviewheight = deltaviewheight;
 
-            // SoM: 3/15/2000: move chasecam at new player location
-            if ( camera.chase )
-               P_ResetCamera (thing->player, &camera);
-          }
+			// SoM: 3/15/2000: move chasecam at new player location
+			if ( camera.chase )
+			   P_ResetCamera (thing->player, &camera);
+		  }
 
-        return 1;
-      }
+		return 1;
+	  }
   return 0;
 }
 
@@ -3147,72 +3147,72 @@ int EV_SilentTeleport(line_t *line, int side, mobj_t *thing)
   // so you can get out of teleporter.
 
   if (side || thing->flags & MF_MISSILE)
-    return 0;
+	return 0;
 
   for (i = -1; (i = P_FindSectorFromLineTag(line, i)) >= 0;)
-    for (th = thinkercap.next; th != &thinkercap; th = th->next)
-      if (th->function.acp1 == (actionf_p1) P_MobjThinker &&
-          (m = (mobj_t *) th)->type == MT_TELEPORTMAN  &&
-          m->subsector->sector-sectors == i)
-        {
-          // Height of thing above ground, in case of mid-air teleports:
-          fixed_t z = thing->z - thing->floorz;
+	for (th = thinkercap.next; th != &thinkercap; th = th->next)
+	  if (th->function.acp1 == (actionf_p1) P_MobjThinker &&
+		  (m = (mobj_t *) th)->type == MT_TELEPORTMAN  &&
+		  m->subsector->sector-sectors == i)
+		{
+		  // Height of thing above ground, in case of mid-air teleports:
+		  fixed_t z = thing->z - thing->floorz;
 
-          // Get the angle between the exit thing and source linedef.
-          // Rotate 90 degrees, so that walking perpendicularly across
-          // teleporter linedef causes thing to exit in the direction
-          // indicated by the exit thing.
-          angle_t angle =
-            R_PointToAngle2(0, 0, line->dx, line->dy) - m->angle + ANG90;
+		  // Get the angle between the exit thing and source linedef.
+		  // Rotate 90 degrees, so that walking perpendicularly across
+		  // teleporter linedef causes thing to exit in the direction
+		  // indicated by the exit thing.
+		  angle_t angle =
+			R_PointToAngle2(0, 0, line->dx, line->dy) - m->angle + ANG90;
 
-          // Sine, cosine of angle adjustment
-          fixed_t s = finesine[angle>>ANGLETOFINESHIFT];
-          fixed_t c = finecosine[angle>>ANGLETOFINESHIFT];
+		  // Sine, cosine of angle adjustment
+		  fixed_t s = finesine[angle>>ANGLETOFINESHIFT];
+		  fixed_t c = finecosine[angle>>ANGLETOFINESHIFT];
 
-          // Momentum of thing crossing teleporter linedef
-          fixed_t momx = thing->momx;
-          fixed_t momy = thing->momy;
+		  // Momentum of thing crossing teleporter linedef
+		  fixed_t momx = thing->momx;
+		  fixed_t momy = thing->momy;
 
-          // Whether this is a player, and if so, a pointer to its player_t
-          player_t *player = thing->player;
+		  // Whether this is a player, and if so, a pointer to its player_t
+		  player_t *player = thing->player;
 
-          // Rotate thing according to difference in angles
-          thing->angle += angle;
+		  // Rotate thing according to difference in angles
+		  thing->angle += angle;
 
-          // Adjust z position to be same height above ground as before
-          thing->z = z + thing->floorz;
+		  // Adjust z position to be same height above ground as before
+		  thing->z = z + thing->floorz;
 
-          // Attempt to teleport, aborting if blocked
-          if (!P_TeleportMove(thing, m->x, m->y, thing->z))
-            return 0;
+		  // Attempt to teleport, aborting if blocked
+		  if (!P_TeleportMove(thing, m->x, m->y, thing->z))
+			return 0;
 		
-          // Rotate thing's momentum to come out of exit just like it entered
-          thing->momx = FixedMul(momx, c) - FixedMul(momy, s);
-          thing->momy = FixedMul(momy, c) + FixedMul(momx, s);
+		  // Rotate thing's momentum to come out of exit just like it entered
+		  thing->momx = FixedMul(momx, c) - FixedMul(momy, s);
+		  thing->momy = FixedMul(momy, c) + FixedMul(momx, s);
 
-          // Adjust player's view, in case there has been a height change
-          // Voodoo dolls are excluded by making sure player->mo == thing.
-          if (player && player->mo == thing)
-            {
-              // Save the current deltaviewheight, used in stepping
-              fixed_t deltaviewheight = player->deltaviewheight;
+		  // Adjust player's view, in case there has been a height change
+		  // Voodoo dolls are excluded by making sure player->mo == thing.
+		  if (player && player->mo == thing)
+			{
+			  // Save the current deltaviewheight, used in stepping
+			  fixed_t deltaviewheight = player->deltaviewheight;
 
-              // Clear deltaviewheight, since we don't want any changes
-              player->deltaviewheight = 0;
+			  // Clear deltaviewheight, since we don't want any changes
+			  player->deltaviewheight = 0;
 
-              // Set player's view according to the newly set parameters
-              P_CalcHeight(player);
+			  // Set player's view according to the newly set parameters
+			  P_CalcHeight(player);
 
-              // Reset the delta to have the same dynamics as before
-              player->deltaviewheight = deltaviewheight;
+			  // Reset the delta to have the same dynamics as before
+			  player->deltaviewheight = deltaviewheight;
 
-              // SoM: 3/15/2000: move chasecam at new player location
-              if ( camera.chase )
-                 P_ResetCamera (thing->player, &camera);
+			  // SoM: 3/15/2000: move chasecam at new player location
+			  if ( camera.chase )
+				 P_ResetCamera (thing->player, &camera);
 
-            }
-          return 1;
-        }
+			}
+		  return 1;
+		}
   return 0;
 }
 
@@ -3225,7 +3225,7 @@ void P_RemoveActivePlat(plat_t* plat)
   plat->sector->floordata = NULL; //jff 2/23/98 multiple thinkers
   P_RemoveThinker(&plat->thinker);
   if ((*list->prev == list->next))
-    list->next->prev = list->prev;
+	list->next->prev = list->prev;
   free(list);
 }
 
@@ -3234,114 +3234,114 @@ void P_RemoveActivePlat(plat_t* plat)
 //
 void T_PlatRaise(plat_t* plat)
 {
-    result_e    res;
+	result_e    res;
 
-    switch(plat->status)
-    {
-      case up:
-        res = T_MovePlane(plat->sector,
-                          plat->speed,
-                          plat->high,
-                          plat->crush,0,1);
+	switch(plat->status)
+	{
+	  case up:
+		res = T_MovePlane(plat->sector,
+						  plat->speed,
+						  plat->high,
+						  plat->crush,0,1);
 
-        if (!(leveltime % (32*NEWTICRATERATIO)))
-            S_StartSound ((mobj_t *) & plat->sector->soundorg,
-                          sfx_stnmov);
+		if (!(leveltime % (32*NEWTICRATERATIO)))
+			S_StartSound ((mobj_t *) & plat->sector->soundorg,
+						  sfx_stnmov);
 
-        if (plat->type == raiseAndChange
-            || plat->type == raiseToNearestAndChange)
-        {
-            if (!(leveltime % (8*NEWTICRATERATIO)))
-                S_StartSound((mobj_t *)&plat->sector->soundorg,
-                             sfx_stnmov);
-        }
+		if (plat->type == raiseAndChange
+			|| plat->type == raiseToNearestAndChange)
+		{
+			if (!(leveltime % (8*NEWTICRATERATIO)))
+				S_StartSound((mobj_t *)&plat->sector->soundorg,
+							 sfx_stnmov);
+		}
 
 
-        if (res == crushed && (!plat->crush))
-        {
-            plat->count = plat->wait;
-            plat->status = down;
-            S_StartSound((mobj_t *)&plat->sector->soundorg,
-                         sfx_pstart);
-        }
-        else
-        {
-            if (res == pastdest)
-            {
-                //SoM: 3/7/2000: Moved this little baby over.
-                // if not an instant toggle type, wait, make plat stop sound
-                if (plat->type!=toggleUpDn)
-                {
-                  plat->count = plat->wait;
-                  plat->status = waiting;
-                  S_StartSound((mobj_t *)&plat->sector->soundorg, sfx_pstop);
-                }
-                else // else go into stasis awaiting next toggle activation
-                {
-                  plat->oldstatus = plat->status;//jff 3/14/98 after action wait  
-                  plat->status = in_stasis;      //for reactivation of toggle
-                }
+		if (res == crushed && (!plat->crush))
+		{
+			plat->count = plat->wait;
+			plat->status = down;
+			S_StartSound((mobj_t *)&plat->sector->soundorg,
+						 sfx_pstart);
+		}
+		else
+		{
+			if (res == pastdest)
+			{
+				//SoM: 3/7/2000: Moved this little baby over.
+				// if not an instant toggle type, wait, make plat stop sound
+				if (plat->type!=toggleUpDn)
+				{
+				  plat->count = plat->wait;
+				  plat->status = waiting;
+				  S_StartSound((mobj_t *)&plat->sector->soundorg, sfx_pstop);
+				}
+				else // else go into stasis awaiting next toggle activation
+				{
+				  plat->oldstatus = plat->status;//jff 3/14/98 after action wait  
+				  plat->status = in_stasis;      //for reactivation of toggle
+				}
 
-                switch(plat->type)
-                {
-                  case blazeDWUS:
-                  case downWaitUpStay:
-                  case raiseAndChange:
-                  case raiseToNearestAndChange:
-                  case genLift:
-                    P_RemoveActivePlat(plat); //SoM: 3/7/2000: Much cleaner boom code.
-                  default:
-                    break;
-                }
-            }
-        }
-        break;
+				switch(plat->type)
+				{
+				  case blazeDWUS:
+				  case downWaitUpStay:
+				  case raiseAndChange:
+				  case raiseToNearestAndChange:
+				  case genLift:
+					P_RemoveActivePlat(plat); //SoM: 3/7/2000: Much cleaner boom code.
+				  default:
+					break;
+				}
+			}
+		}
+		break;
 
-      case      down:
-        res = T_MovePlane(plat->sector,plat->speed,plat->low,false,0,-1);
+	  case      down:
+		res = T_MovePlane(plat->sector,plat->speed,plat->low,false,0,-1);
 
-        if (res == pastdest)
-        {
-            //SoM: 3/7/2000: if not an instant toggle, start waiting, make plat stop sound
-            if (plat->type!=toggleUpDn) 
-            {                           
-              plat->count = plat->wait;
-              plat->status = waiting;
-              S_StartSound((mobj_t *)&plat->sector->soundorg,sfx_pstop);
-            }
-            else //SoM: 3/7/2000: instant toggles go into stasis awaiting next activation
-            {
-              plat->oldstatus = plat->status;  
-              plat->status = in_stasis;      
-            }
+		if (res == pastdest)
+		{
+			//SoM: 3/7/2000: if not an instant toggle, start waiting, make plat stop sound
+			if (plat->type!=toggleUpDn) 
+			{                           
+			  plat->count = plat->wait;
+			  plat->status = waiting;
+			  S_StartSound((mobj_t *)&plat->sector->soundorg,sfx_pstop);
+			}
+			else //SoM: 3/7/2000: instant toggles go into stasis awaiting next activation
+			{
+			  plat->oldstatus = plat->status;  
+			  plat->status = in_stasis;      
+			}
 
-            //jff 1/26/98 remove the plat if it bounced so it can be tried again
-            //only affects plats that raise and bounce
-    
-              switch(plat->type)
-              {
-                case raiseAndChange:
-                case raiseToNearestAndChange:
-                  P_RemoveActivePlat(plat);
-                default:
-                  break;
-              }
-        }
+			//jff 1/26/98 remove the plat if it bounced so it can be tried again
+			//only affects plats that raise and bounce
+	
+			  switch(plat->type)
+			  {
+				case raiseAndChange:
+				case raiseToNearestAndChange:
+				  P_RemoveActivePlat(plat);
+				default:
+				  break;
+			  }
+		}
 
-        break;
+		break;
 
-      case      waiting:
-        if (!--plat->count)
-        {
-            if (plat->sector->floorheight == plat->low)
-                plat->status = up;
-            else
-                plat->status = down;
-            S_StartSound((mobj_t *)&plat->sector->soundorg,sfx_pstart);
-        }
-      case      in_stasis:
-        break;
-    }
+	  case      waiting:
+		if (!--plat->count)
+		{
+			if (plat->sector->floorheight == plat->low)
+				plat->status = up;
+			else
+				plat->status = down;
+			S_StartSound((mobj_t *)&plat->sector->soundorg,sfx_pstart);
+		}
+	  case      in_stasis:
+		break;
+	}
 }
 
 //SoM: 3/7/2000: Use boom limit removal
@@ -3350,15 +3350,15 @@ void P_ActivateInStasis(int tag)
   platlist_t *pl;
   for (pl=activeplats; pl; pl=pl->next)
   {
-    plat_t *plat = pl->plat;
-    if (plat->tag == tag && plat->status == in_stasis) 
-    {
-      if (plat->type==toggleUpDn)
-        plat->status = plat->oldstatus==up? down : up;
-      else
-        plat->status = plat->oldstatus;
-      plat->thinker.function.acp1 = (actionf_p1) T_PlatRaise;
-    }
+	plat_t *plat = pl->plat;
+	if (plat->tag == tag && plat->status == in_stasis) 
+	{
+	  if (plat->type==toggleUpDn)
+		plat->status = plat->oldstatus==up? down : up;
+	  else
+		plat->status = plat->oldstatus;
+	  plat->thinker.function.acp1 = (actionf_p1) T_PlatRaise;
+	}
   }
 }
 
@@ -3368,13 +3368,13 @@ int EV_StopPlat(line_t* line)
   platlist_t *pl;
   for (pl=activeplats; pl; pl=pl->next)
   {
-    plat_t *plat = pl->plat;
-    if (plat->status != in_stasis && plat->tag == line->tag)
-    {
-      plat->oldstatus = plat->status;
-      plat->status = in_stasis;
-      plat->thinker.function.acv = (actionf_v)NULL;
-    }
+	plat_t *plat = pl->plat;
+	if (plat->status != in_stasis && plat->tag == line->tag)
+	{
+	  plat->oldstatus = plat->status;
+	  plat->status = in_stasis;
+	  plat->thinker.function.acv = (actionf_v)NULL;
+	}
   }
   return 1;
 }
@@ -3386,7 +3386,7 @@ void P_AddActivePlat(plat_t* plat)
   list->plat = plat;
   plat->list = list;
   if ((list->next == activeplats))
-    list->next->prev = &list->next;
+	list->next->prev = &list->next;
   list->prev = &activeplats;
   activeplats = list;
 }
@@ -3397,9 +3397,9 @@ void P_RemoveAllActivePlats(void)
 {
   while (activeplats)
   {  
-    platlist_t *next = activeplats->next;
-    free(activeplats);
-    activeplats = next;
+	platlist_t *next = activeplats->next;
+	free(activeplats);
+	activeplats = next;
   }
 }
 
@@ -3408,19 +3408,19 @@ void P_RemoveAllActivePlats(void)
 //
 int EV_StartLightStrobing(line_t*      line)
 {
-    int         secnum;
-    sector_t*   sec;
+	int         secnum;
+	sector_t*   sec;
 
-    secnum = -1;
-    while ((secnum = P_FindSectorFromLineTag(line,secnum)) >= 0)
-    {
-        sec = &sectors[secnum];
-        if (P_SectorActive(lighting_special,sec)) //SoM: 3/7/2000: New way to check thinker
-          continue;
+	secnum = -1;
+	while ((secnum = P_FindSectorFromLineTag(line,secnum)) >= 0)
+	{
+		sec = &sectors[secnum];
+		if (P_SectorActive(lighting_special,sec)) //SoM: 3/7/2000: New way to check thinker
+		  continue;
 
-        P_SpawnStrobeFlash (sec,SLOWDARK, 0);
-    }
-    return 1;
+		P_SpawnStrobeFlash (sec,SLOWDARK, 0);
+	}
+	return 1;
 }
 
 
@@ -3430,697 +3430,697 @@ int EV_StartLightStrobing(line_t*      line)
 //  to cross a line with a non 0 special.
 // Ported from March02 Save 18-05-2025
 void P_CrossSpecialLine(int linenum, int side, mobj_t* thing) {
-    line_t*     line;
-    int         forceuse; //SoM: 4/26/2000: ALLTRIGGER should allow monsters to use generalized types too!
+	line_t*     line;
+	int         forceuse; //SoM: 4/26/2000: ALLTRIGGER should allow monsters to use generalized types too!
 	
 	line = &lines[linenum];
-    forceuse = line->flags & ML_EFFECT5;
+	forceuse = line->flags & ML_EFFECT5;
 	
-    switch (line->special)
-    {
+	switch (line->special)
+	{
 		//l2 (Activates Once) Door Open Stay Save 18-05-2025
 		case 2:
 			// Open Door
 			if(EV_DoDoor(line,dooropen))
 				line->special = 0;
-        break;
+		break;
 
 		case 3:
 			// Close Door
 			if(EV_DoDoor(line,doorclose))
 				line->special = 0;
-        break;
+		break;
 
 		case 4:
 			// Raise Door
 			if(EV_DoDoor(line,door_normal))
 				line->special = 0;
-        break;
+		break;
 
 		case 5:
 			// Raise Floor
 			if(EV_DoFloor(line,raiseFloor))
 				line->special = 0;
-        break;
+		break;
 
 		case 6:
 			// Fast Ceiling Crush & Raise
 			if(EV_DoCeiling(line,fastCrushAndRaise))
 				line->special = 0;
-        break;
+		break;
 
 		case 8:
 			// Build Stairs
 			if(EV_BuildStairs(line,build8))
 				line->special = 0;
-        break;
+		break;
 
 		case 10:
 			// PlatDownWaitUp
 			if(EV_DoPlat(line,downWaitUpStay,0))
 				line->special = 0;
-        break;
+		break;
 
 		case 12:
 			// Light Turn On - brightest near
 			if(EV_LightTurnOn(line,0))
 				line->special = 0;
-        break;
+		break;
 
 		case 13:
 			// Light Turn On 255
 			if(EV_LightTurnOn(line,255))
 				line->special = 0;
-        break;
+		break;
 
 		case 16:
 			// Close Door 30
 			if(EV_DoDoor(line,close30ThenOpen))
 				line->special = 0;
-        break;
+		break;
 
 		case 17:
 			// Start Light Strobing
 			if(EV_StartLightStrobing(line))
 				line->special = 0;
-        break;
+		break;
 
 		case 19:
 			// Lower Floor
 			if(EV_DoFloor(line,lowerFloor))
 				line->special = 0;
-        break;
+		break;
 
 		case 22:
 			// Raise floor to nearest height and change texture
 			if(EV_DoPlat(line,raiseToNearestAndChange,0))
 				line->special = 0;
-        break;
+		break;
 
-      case 25:
-        // Ceiling Crush and Raise
-        if(EV_DoCeiling(line,crushAndRaise))
-          line->special = 0;
-        break;
+	  case 25:
+		// Ceiling Crush and Raise
+		if(EV_DoCeiling(line,crushAndRaise))
+		  line->special = 0;
+		break;
 
-      case 30:
-        // Raise floor to shortest texture height
-        //  on either side of lines.
-        if(EV_DoFloor(line,raiseToTexture))
-          line->special = 0;
-        break;
+	  case 30:
+		// Raise floor to shortest texture height
+		//  on either side of lines.
+		if(EV_DoFloor(line,raiseToTexture))
+		  line->special = 0;
+		break;
 
-      case 35:
-        // Lights Very Dark
-        if(EV_LightTurnOn(line,35))
-          line->special = 0;
-        break;
+	  case 35:
+		// Lights Very Dark
+		if(EV_LightTurnOn(line,35))
+		  line->special = 0;
+		break;
 
-      case 36:
-        // Lower Floor (TURBO)
-        if(EV_DoFloor(line,turboLower))
-          line->special = 0;
-        break;
+	  case 36:
+		// Lower Floor (TURBO)
+		if(EV_DoFloor(line,turboLower))
+		  line->special = 0;
+		break;
 
-      case 37:
-        // LowerAndChange
-        if(EV_DoFloor(line,lowerAndChange))
-          line->special = 0;
-        break;
+	  case 37:
+		// LowerAndChange
+		if(EV_DoFloor(line,lowerAndChange))
+		  line->special = 0;
+		break;
 
-      case 38:
-        // Lower Floor To Lowest
-        if(EV_DoFloor( line, lowerFloorToLowest ))
-          line->special = 0;
-        break;
+	  case 38:
+		// Lower Floor To Lowest
+		if(EV_DoFloor( line, lowerFloorToLowest ))
+		  line->special = 0;
+		break;
 
-      case 39:
-        // TELEPORT!
-        if(EV_Teleport( line, side, thing ))
-          line->special = 0;
-        break;
+	  case 39:
+		// TELEPORT!
+		if(EV_Teleport( line, side, thing ))
+		  line->special = 0;
+		break;
 
-      case 40:
-        // RaiseCeilingLowerFloor
-        if(EV_DoCeiling( line, raiseToHighest ) || EV_DoFloor( line, lowerFloorToLowest ))
-          line->special = 0;
-        break;
+	  case 40:
+		// RaiseCeilingLowerFloor
+		if(EV_DoCeiling( line, raiseToHighest ) || EV_DoFloor( line, lowerFloorToLowest ))
+		  line->special = 0;
+		break;
 
 	  case 41:
-        // L41 Raise Ceiling to Highest Ceiling 
+		// L41 Raise Ceiling to Highest Ceiling 
 		// Save 26-11-2025
-        if(EV_DoCeiling( line, raiseToHighest ))
-          line->special = 0;
-        break;
+		if(EV_DoCeiling( line, raiseToHighest ))
+		  line->special = 0;
+		break;
 
 		case 42:
-        // L42 Raise Ceiling to Highest Ceiling (adjustable speed) 
+		// L42 Raise Ceiling to Highest Ceiling (adjustable speed) 
 		// Save 11-01-2026
-        if(EV_DoCeiling( line, raiseToHighestCustom))
-          line->special = 0;
-        break;
+		if(EV_DoCeiling( line, raiseToHighestCustom))
+		  line->special = 0;
+		break;
 
-      case 44:
-        // Ceiling Crush
-        if(EV_DoCeiling( line, lowerAndCrush ))
-          line->special = 0;
-        break;
+	  case 44:
+		// Ceiling Crush
+		if(EV_DoCeiling( line, lowerAndCrush ))
+		  line->special = 0;
+		break;
 		//l52 (Activates Once) Exit Level Save 18-05-2025
 		case 52:
 			// EXIT!
 			//if( cv_allowexitlevel.value ) don't care lol
 				G_ExitLevel ();
-        break;
-      /*case 53:
-        // Perpetual Platform Raise
-        if(EV_DoPlat(line,perpetualRaise,0))
-          line->special = 0;
-        break;*/
+		break;
+	  /*case 53:
+		// Perpetual Platform Raise
+		if(EV_DoPlat(line,perpetualRaise,0))
+		  line->special = 0;
+		break;*/
 
-      case 54:
-        // Platform Stop
-        if(EV_StopPlat(line))
-          line->special = 0;
-        break;
+	  case 54:
+		// Platform Stop
+		if(EV_StopPlat(line))
+		  line->special = 0;
+		break;
 	
 	case 55:
-        // Raise Floor to Ceiling Crush Fast
-        if(EV_DoFloor(line,raiseFloorCrushFast))
-          line->special = 0;
-        break;
+		// Raise Floor to Ceiling Crush Fast
+		if(EV_DoFloor(line,raiseFloorCrushFast))
+		  line->special = 0;
+		break;
 
 
-      case 56:
-        // Raise Floor to 8 below Ceiling Crush
-        if(EV_DoFloor(line,raiseFloorCrush))
-          line->special = 0;
-        break;
+	  case 56:
+		// Raise Floor to 8 below Ceiling Crush
+		if(EV_DoFloor(line,raiseFloorCrush))
+		  line->special = 0;
+		break;
 
-      case 57:
-        // Ceiling Crush Stop
-        if(EV_CeilingCrushStop(line))
-          line->special = 0;
-        break;
+	  case 57:
+		// Ceiling Crush Stop
+		if(EV_CeilingCrushStop(line))
+		  line->special = 0;
+		break;
 
 /*      case 58:
-        // Raise Floor 24
-        if(EV_DoFloor(line,raiseFloor24))
-          line->special = 0;
-        break;
+		// Raise Floor 24
+		if(EV_DoFloor(line,raiseFloor24))
+		  line->special = 0;
+		break;
 
-      case 59:
-        // Raise Floor 24 And Change
-        if(EV_DoFloor(line,raiseFloor24AndChange))
-          line->special = 0;
-        break;*/
+	  case 59:
+		// Raise Floor 24 And Change
+		if(EV_DoFloor(line,raiseFloor24AndChange))
+		  line->special = 0;
+		break;*/
 		
-      case 72:
-        // Ceiling Crush
-        EV_DoCeiling( line, lowerAndCrush );
-        break;
+	  case 72:
+		// Ceiling Crush
+		EV_DoCeiling( line, lowerAndCrush );
+		break;
 
-     case 73:
-        // Ceiling Crush and Raise
-        EV_DoCeiling(line,crushAndRaise);
-        break;
+	 case 73:
+		// Ceiling Crush and Raise
+		EV_DoCeiling(line,crushAndRaise);
+		break;
 
-      case 74:
-        // Ceiling Crush Stop
-        EV_CeilingCrushStop(line);
-        break;
+	  case 74:
+		// Ceiling Crush Stop
+		EV_CeilingCrushStop(line);
+		break;
 
-      case 75:
-        // Close Door
-        EV_DoDoor(line,doorclose);
-        break;
+	  case 75:
+		// Close Door
+		EV_DoDoor(line,doorclose);
+		break;
 
-      case 76:
-        // Close Door 30
-        EV_DoDoor(line,close30ThenOpen);
-        break;
+	  case 76:
+		// Close Door 30
+		EV_DoDoor(line,close30ThenOpen);
+		break;
 
-      case 77:
-        // Fast Ceiling Crush & Raise
-        EV_DoCeiling(line,fastCrushAndRaise);
-        break;
+	  case 77:
+		// Fast Ceiling Crush & Raise
+		EV_DoCeiling(line,fastCrushAndRaise);
+		break;
 
-      case 79:
-        // Lights Very Dark
-        EV_LightTurnOn(line,35);
-        break;
+	  case 79:
+		// Lights Very Dark
+		EV_LightTurnOn(line,35);
+		break;
 
-      case 80:
-        // Light Turn On - brightest near
-        EV_LightTurnOn(line,0);
-        break;
+	  case 80:
+		// Light Turn On - brightest near
+		EV_LightTurnOn(line,0);
+		break;
 
-      case 81:
-        // Light Turn On 255
-        EV_LightTurnOn(line,255);
-        break;
+	  case 81:
+		// Light Turn On 255
+		EV_LightTurnOn(line,255);
+		break;
 
-      case 82:
-        // Lower Floor To Lowest
-        EV_DoFloor( line, lowerFloorToLowest );
-        break;
+	  case 82:
+		// Lower Floor To Lowest
+		EV_DoFloor( line, lowerFloorToLowest );
+		break;
 
 /*      case 83:
-        // Lower Floor
-        EV_DoFloor(line,lowerFloor);
-        break;
+		// Lower Floor
+		EV_DoFloor(line,lowerFloor);
+		break;
 
-      case 84:
-        // LowerAndChange
-        EV_DoFloor(line,lowerAndChange);
-        break;*/
+	  case 84:
+		// LowerAndChange
+		EV_DoFloor(line,lowerAndChange);
+		break;*/
 
-      case 86:
-        // Open Door
-        EV_DoDoor(line,dooropen);
-        break;
+	  case 86:
+		// Open Door
+		EV_DoDoor(line,dooropen);
+		break;
 
 /*      case 87:
-        // Perpetual Platform Raise
-        EV_DoPlat(line,perpetualRaise,0);
-        break;
+		// Perpetual Platform Raise
+		EV_DoPlat(line,perpetualRaise,0);
+		break;
 
-      case 88:
-        // PlatDownWaitUp
-        EV_DoPlat(line,downWaitUpStay,0);
-        break;*/
+	  case 88:
+		// PlatDownWaitUp
+		EV_DoPlat(line,downWaitUpStay,0);
+		break;*/
 
-      case 89:
-        // Platform Stop
-        EV_StopPlat(line);
-        break;
+	  case 89:
+		// Platform Stop
+		EV_StopPlat(line);
+		break;
 
-      case 90:
-        // Raise Door
-        EV_DoDoor(line,door_normal);
-        break;
+	  case 90:
+		// Raise Door
+		EV_DoDoor(line,door_normal);
+		break;
 
 /*      case 91:
-        // Raise Floor
-        EV_DoFloor(line,raiseFloor);
-        break;
+		// Raise Floor
+		EV_DoFloor(line,raiseFloor);
+		break;
 
-      case 92:
-        // Raise Floor 24
-        EV_DoFloor(line,raiseFloor24);
-        break;
+	  case 92:
+		// Raise Floor 24
+		EV_DoFloor(line,raiseFloor24);
+		break;
 
-      case 93:
-        // Raise Floor 24 And Change
-        EV_DoFloor(line,raiseFloor24AndChange);
-        break;
+	  case 93:
+		// Raise Floor 24 And Change
+		EV_DoFloor(line,raiseFloor24AndChange);
+		break;
 
-      case 94:
-        // Raise Floor Crush
-        EV_DoFloor(line,raiseFloorCrush);
-        break;
+	  case 94:
+		// Raise Floor Crush
+		EV_DoFloor(line,raiseFloorCrush);
+		break;
 
-      case 95:
-        // Raise floor to nearest height
-        // and change texture.
-        EV_DoPlat(line,raiseToNearestAndChange,0);
-        break;
+	  case 95:
+		// Raise floor to nearest height
+		// and change texture.
+		EV_DoPlat(line,raiseToNearestAndChange,0);
+		break;
 
-      case 96:
-        // Raise floor to shortest texture height
-        // on either side of lines.
-        EV_DoFloor(line,raiseToTexture);
-        break;*/
+	  case 96:
+		// Raise floor to shortest texture height
+		// on either side of lines.
+		EV_DoFloor(line,raiseToTexture);
+		break;*/
 
-      case 97:
-        // TELEPORT!
-        EV_Teleport( line, side, thing );
-        break;
+	  case 97:
+		// TELEPORT!
+		EV_Teleport( line, side, thing );
+		break;
 
 /*      case 98:
-        // Lower Floor (TURBO)
-        EV_DoFloor(line,turboLower);
-        break;
+		// Lower Floor (TURBO)
+		EV_DoFloor(line,turboLower);
+		break;
 		
-      case 100:
-        // Build Stairs Turbo 16
-        if(EV_BuildStairs(line,turbo16))
-          line->special = 0;
-        break;
+	  case 100:
+		// Build Stairs Turbo 16
+		if(EV_BuildStairs(line,turbo16))
+		  line->special = 0;
+		break;
 		
-      case 104:
-        // Turn lights off in sector(tag)
-        if(EV_TurnTagLightsOff(line))
-          line->special = 0;
-        break;*/
+	  case 104:
+		// Turn lights off in sector(tag)
+		if(EV_TurnTagLightsOff(line))
+		  line->special = 0;
+		break;*/
 
-      case 105:
-        // Blazing Door Raise (faster than TURBO!)
-        EV_DoDoor (line,blazeRaise);
-        break;
+	  case 105:
+		// Blazing Door Raise (faster than TURBO!)
+		EV_DoDoor (line,blazeRaise);
+		break;
 
-      case 106:
-        // Blazing Door Open (faster than TURBO!)
-        EV_DoDoor (line,blazeOpen);
-        break;
+	  case 106:
+		// Blazing Door Open (faster than TURBO!)
+		EV_DoDoor (line,blazeOpen);
+		break;
 
-      case 107:
-        // Blazing Door Close (faster than TURBO!)
-        EV_DoDoor (line,blazeClose);
-        break;
+	  case 107:
+		// Blazing Door Close (faster than TURBO!)
+		EV_DoDoor (line,blazeClose);
+		break;
 		
-      case 108:
-        // Blazing Door Raise (faster than TURBO!)
-        if(EV_DoDoor (line,blazeRaise))
-          line->special = 0;
-        break;
+	  case 108:
+		// Blazing Door Raise (faster than TURBO!)
+		if(EV_DoDoor (line,blazeRaise))
+		  line->special = 0;
+		break;
 
-      case 109:
-        // Blazing Door Open (faster than TURBO!)
-        if(EV_DoDoor (line,blazeOpen))
-          line->special = 0;
-        break;
+	  case 109:
+		// Blazing Door Open (faster than TURBO!)
+		if(EV_DoDoor (line,blazeOpen))
+		  line->special = 0;
+		break;
 
 
-      case 110:
-        // Blazing Door Close (faster than TURBO!)
-        if(EV_DoDoor (line,blazeClose))
-          line->special = 0;
-        break;
+	  case 110:
+		// Blazing Door Close (faster than TURBO!)
+		if(EV_DoDoor (line,blazeClose))
+		  line->special = 0;
+		break;
 
-      case 119:
-        // Raise floor to nearest surr. floor
-        if(EV_DoFloor(line,raiseFloorToNearest))
-          line->special = 0;
-        break;
+	  case 119:
+		// Raise floor to nearest surr. floor
+		if(EV_DoFloor(line,raiseFloorToNearest))
+		  line->special = 0;
+		break;
 
-      case 120:
-        // Blazing PlatDownWaitUpStay.
-        EV_DoPlat(line,blazeDWUS,0);
-        break;
+	  case 120:
+		// Blazing PlatDownWaitUpStay.
+		EV_DoPlat(line,blazeDWUS,0);
+		break;
 
 /*
-      case 121:
-        // Blazing PlatDownWaitUpStay
-        if(EV_DoPlat(line,blazeDWUS,0))
-          line->special = 0;
-        break;*/
+	  case 121:
+		// Blazing PlatDownWaitUpStay
+		if(EV_DoPlat(line,blazeDWUS,0))
+		  line->special = 0;
+		break;*/
 		/*case 122:
-        // Secret EXIT
+		// Secret EXIT
 		G_SecretExitLevel(1);
-        break;
+		break;
 
 		case 123:
-        // Secret EXIT
+		// Secret EXIT
 		G_SecretExitLevel(2);
-        break;*/
+		break;*/
 
-      case 124:
-        // Secret EXIT
+	  case 124:
+		// Secret EXIT
 		G_SecretExitLevel(3);
-        break;
+		break;
 
-      case 125:
-        // TELEPORT MonsterONLY
-        if (!thing->player)
-        {
-            if(EV_Teleport( line, side, thing ))
-              line->special = 0;
-        }
-        break;
+	  case 125:
+		// TELEPORT MonsterONLY
+		if (!thing->player)
+		{
+			if(EV_Teleport( line, side, thing ))
+			  line->special = 0;
+		}
+		break;
 
-      case 126:
-        // TELEPORT MonsterONLY.
-        if (!thing->player)
-            EV_Teleport( line, side, thing );
-        break;
+	  case 126:
+		// TELEPORT MonsterONLY.
+		if (!thing->player)
+			EV_Teleport( line, side, thing );
+		break;
 
 		/*case 127:
-        // Secret EXIT
+		// Secret EXIT
 		G_SecretExitLevel(4);
-        break;
+		break;
 
 /*    case 128:
-        // Raise To Nearest Floor
-        EV_DoFloor(line,raiseFloorToNearest);
-        break;
+		// Raise To Nearest Floor
+		EV_DoFloor(line,raiseFloorToNearest);
+		break;
 
-      case 129:
-        // Raise Floor Turbo
-        EV_DoFloor(line,raiseFloorTurbo);
-        break;
+	  case 129:
+		// Raise Floor Turbo
+		EV_DoFloor(line,raiseFloorTurbo);
+		break;
 
-      case 130:
-        // Raise Floor Turbo
-        if(EV_DoFloor(line,raiseFloorTurbo))
-          line->special = 0;
-        break;
+	  case 130:
+		// Raise Floor Turbo
+		if(EV_DoFloor(line,raiseFloorTurbo))
+		  line->special = 0;
+		break;
 
-      case 141:
-        // Silent Ceiling Crush & Raise
-        if(EV_DoCeiling(line,silentCrushAndRaise))
-          line->special = 0;
-        break;
+	  case 141:
+		// Silent Ceiling Crush & Raise
+		if(EV_DoCeiling(line,silentCrushAndRaise))
+		  line->special = 0;
+		break;
 
-            case 142:
-              // Raise Floor 512
-              if (EV_DoFloor(line,raiseFloor512))
-                line->special = 0;
-              break;
+			case 142:
+			  // Raise Floor 512
+			  if (EV_DoFloor(line,raiseFloor512))
+				line->special = 0;
+			  break;
   
-            case 143:
-              // Raise Floor 24 and change
-              if (EV_DoPlat(line,raiseAndChange,24))
-                line->special = 0;
-              break;
+			case 143:
+			  // Raise Floor 24 and change
+			  if (EV_DoPlat(line,raiseAndChange,24))
+				line->special = 0;
+			  break;
 
-            case 144:
-              // Raise Floor 32 and change
-              if (EV_DoPlat(line,raiseAndChange,32))
-                line->special = 0;
-              break;
+			case 144:
+			  // Raise Floor 32 and change
+			  if (EV_DoPlat(line,raiseAndChange,32))
+				line->special = 0;
+			  break;
 
-            case 145:
-              // Lower Ceiling to Floor
-              if (EV_DoCeiling( line, lowerToFloor ))
-                line->special = 0;
-              break;*/
+			case 145:
+			  // Lower Ceiling to Floor
+			  if (EV_DoCeiling( line, lowerToFloor ))
+				line->special = 0;
+			  break;*/
 
-            case 146:
-              // Lower Pillar, Raise Donut
-              if (EV_DoDonut(line))
-                line->special = 0;
-              break;
+			case 146:
+			  // Lower Pillar, Raise Donut
+			  if (EV_DoDonut(line))
+				line->special = 0;
+			  break;
 
 /*            case 147:
-              // Raise Floor 512
-              EV_DoFloor(line,raiseFloor512);
-              break;
+			  // Raise Floor 512
+			  EV_DoFloor(line,raiseFloor512);
+			  break;
 
-            case 148:
-              // Raise Floor 24 and Change
-              EV_DoPlat(line,raiseAndChange,24);
-              break;
+			case 148:
+			  // Raise Floor 24 and Change
+			  EV_DoPlat(line,raiseAndChange,24);
+			  break;
 
-            case 149:
-              // Raise Floor 32 and Change
-              EV_DoPlat(line,raiseAndChange,32);
-              break;
+			case 149:
+			  // Raise Floor 32 and Change
+			  EV_DoPlat(line,raiseAndChange,32);
+			  break;
 
-            case 150:
-              // Start slow silent crusher
-              EV_DoCeiling(line,silentCrushAndRaise);
-              break;
+			case 150:
+			  // Start slow silent crusher
+			  EV_DoCeiling(line,silentCrushAndRaise);
+			  break;
 
-            case 151:
-              // RaiseCeilingLowerFloor
-              EV_DoCeiling( line, raiseToHighest );
-              EV_DoFloor( line, lowerFloorToLowest );
-              break;
+			case 151:
+			  // RaiseCeilingLowerFloor
+			  EV_DoCeiling( line, raiseToHighest );
+			  EV_DoFloor( line, lowerFloorToLowest );
+			  break;
 
-            case 152:
-              // Lower Ceiling to Floor
-              EV_DoCeiling( line, lowerToFloor );
-              break;
+			case 152:
+			  // Lower Ceiling to Floor
+			  EV_DoCeiling( line, lowerToFloor );
+			  break;
 			  
-            case 153: 
-              // Texture/Type Change Only (Trig)
-              if (EV_DoChange(line,trigChangeOnly))
-                line->special = 0;
-              break;
+			case 153: 
+			  // Texture/Type Change Only (Trig)
+			  if (EV_DoChange(line,trigChangeOnly))
+				line->special = 0;
+			  break;
 
-            case 154:
-              // Texture/Type Change Only (Trigger)
-              EV_DoChange(line,trigChangeOnly);
-              break;*/
+			case 154:
+			  // Texture/Type Change Only (Trigger)
+			  EV_DoChange(line,trigChangeOnly);
+			  break;*/
 			  
-            case 155:
-              // Lower Pillar, Raise Donut
-              EV_DoDonut(line);
-              break;
+			case 155:
+			  // Lower Pillar, Raise Donut
+			  EV_DoDonut(line);
+			  break;
 
-            case 156:
-              // Start lights strobing
-              EV_StartLightStrobing(line);
-              break;
+			case 156:
+			  // Start lights strobing
+			  EV_StartLightStrobing(line);
+			  break;
 
-            case 157:
-              // Lights to dimmest near
-              EV_TurnTagLightsOff(line);
-              break;
+			case 157:
+			  // Lights to dimmest near
+			  EV_TurnTagLightsOff(line);
+			  break;
 			  
-            case 199:
-              // Lower ceiling to lowest surrounding ceiling
-              if (EV_DoCeiling(line,lowerToLowest))
-                line->special = 0;
-              break;
+			case 199:
+			  // Lower ceiling to lowest surrounding ceiling
+			  if (EV_DoCeiling(line,lowerToLowest))
+				line->special = 0;
+			  break;
 
 /*            case 200:
-              // Lower ceiling to highest surrounding floor
-              if (EV_DoCeiling(line,lowerToMaxFloor))
-                line->special = 0;
-              break;*/
+			  // Lower ceiling to highest surrounding floor
+			  if (EV_DoCeiling(line,lowerToMaxFloor))
+				line->special = 0;
+			  break;*/
 
-            case 201:
-              // Lower ceiling to lowest surrounding ceiling
-              EV_DoCeiling(line,lowerToLowest);
-              break;
+			case 201:
+			  // Lower ceiling to lowest surrounding ceiling
+			  EV_DoCeiling(line,lowerToLowest);
+			  break;
 
 /*            case 202:
-              // Lower ceiling to highest surrounding floor
-              EV_DoCeiling(line,lowerToMaxFloor);
-              break;*/
+			  // Lower ceiling to highest surrounding floor
+			  EV_DoCeiling(line,lowerToMaxFloor);
+			  break;*/
 			  
-            case 207:
-              // W1 silent teleporter (normal kind)
-              if (EV_SilentTeleport(line, side, thing))
-                line->special = 0;
-              break;
+			case 207:
+			  // W1 silent teleporter (normal kind)
+			  if (EV_SilentTeleport(line, side, thing))
+				line->special = 0;
+			  break;
 
-            case 208:
-              // WR silent teleporter (normal kind)
-              EV_SilentTeleport(line, side, thing);
-              break;
+			case 208:
+			  // WR silent teleporter (normal kind)
+			  EV_SilentTeleport(line, side, thing);
+			  break;
 
 /*            case 212:
-              // Toggle floor between C and F instantly
-              EV_DoPlat(line,toggleUpDn,0);
-              break;
+			  // Toggle floor between C and F instantly
+			  EV_DoPlat(line,toggleUpDn,0);
+			  break;
 			  
-            case 219:
-              // Lower floor to next lower neighbor
-              if (EV_DoFloor(line,lowerFloorToNearest))
-                line->special = 0;
-              break;
+			case 219:
+			  // Lower floor to next lower neighbor
+			  if (EV_DoFloor(line,lowerFloorToNearest))
+				line->special = 0;
+			  break;
 
-            case 220:
-              // Lower floor to next lower neighbor
-              EV_DoFloor(line,lowerFloorToNearest);
-              break;*/
+			case 220:
+			  // Lower floor to next lower neighbor
+			  EV_DoFloor(line,lowerFloorToNearest);
+			  break;*/
 			  
-            case 227:
-              // Raise elevator next floor
-              if (EV_DoElevator(line,elevateUp, false))
-                line->special = 0;
-              break;
+			case 227:
+			  // Raise elevator next floor
+			  if (EV_DoElevator(line,elevateUp, false))
+				line->special = 0;
+			  break;
 
-            case 228:
-              // Raise elevator next floor
-              EV_DoElevator(line,elevateUp, false);
-              break;
+			case 228:
+			  // Raise elevator next floor
+			  EV_DoElevator(line,elevateUp, false);
+			  break;
 
-            case 231:
-              // Lower elevator next floor
-              if (EV_DoElevator(line,elevateDown, false))
-                line->special = 0;
-              break;
+			case 231:
+			  // Lower elevator next floor
+			  if (EV_DoElevator(line,elevateDown, false))
+				line->special = 0;
+			  break;
 
-            case 235:
-              // Elevator to current floor
-              if (EV_DoElevator(line,elevateCurrent, false))
-                line->special = 0;
-              break;
+			case 235:
+			  // Elevator to current floor
+			  if (EV_DoElevator(line,elevateCurrent, false))
+				line->special = 0;
+			  break;
 
-            case 236:
-              // Elevator to current floor
-              EV_DoElevator(line,elevateCurrent, false);
-              break;
+			case 236:
+			  // Elevator to current floor
+			  EV_DoElevator(line,elevateCurrent, false);
+			  break;
 			  
-            /*case 239: 
-              // Texture/Type Change Only (Numeric)
-              if (EV_DoChange(line,numChangeOnly))
-                line->special = 0;
-              break;
+			/*case 239: 
+			  // Texture/Type Change Only (Numeric)
+			  if (EV_DoChange(line,numChangeOnly))
+				line->special = 0;
+			  break;
 			
-            case 240: 
-              // Texture/Type Change Only (Numeric)
-              EV_DoChange(line,numChangeOnly);
-              break;*/
+			case 240: 
+			  // Texture/Type Change Only (Numeric)
+			  EV_DoChange(line,numChangeOnly);
+			  break;*/
 			  
-            case 243: 
-              // W1 silent teleporter (linedef-linedef kind)
-              if (EV_SilentLineTeleport(line, side, thing, false))
-                line->special = 0;
-              break;
+			case 243: 
+			  // W1 silent teleporter (linedef-linedef kind)
+			  if (EV_SilentLineTeleport(line, side, thing, false))
+				line->special = 0;
+			  break;
 
-            case 244: 
-              // WR silent teleporter (linedef-linedef kind)
-              EV_SilentLineTeleport(line, side, thing, false);
-              break;
+			case 244: 
+			  // WR silent teleporter (linedef-linedef kind)
+			  EV_SilentLineTeleport(line, side, thing, false);
+			  break;
 
 /*            case 256:
-              // Build stairs, step 8
-              EV_BuildStairs(line,build8);
-              break;
+			  // Build stairs, step 8
+			  EV_BuildStairs(line,build8);
+			  break;
 
-            case 257:
-              // Build stairs, step 16
-              EV_BuildStairs(line,turbo16);
-              break;*/
+			case 257:
+			  // Build stairs, step 16
+			  EV_BuildStairs(line,turbo16);
+			  break;*/
 		
-            case 262: 
-              if (EV_SilentLineTeleport(line, side, thing, true))
-                line->special = 0;
-              break;
+			case 262: 
+			  if (EV_SilentLineTeleport(line, side, thing, true))
+				line->special = 0;
+			  break;
  
-             case 263: 
-              //Silent line-line reversed
-              EV_SilentLineTeleport(line, side, thing, true);
-              break;
+			 case 263: 
+			  //Silent line-line reversed
+			  EV_SilentLineTeleport(line, side, thing, true);
+			  break;
 			  
-            case 264: 
-              if (!thing->player &&
-              EV_SilentLineTeleport(line, side, thing, true))
-                line->special = 0;
-              break;
+			case 264: 
+			  if (!thing->player &&
+			  EV_SilentLineTeleport(line, side, thing, true))
+				line->special = 0;
+			  break;
 
-            case 265: 
-              //Monster-only silent line-line reversed
-              if (!thing->player)
-                EV_SilentLineTeleport(line, side, thing, true);
-              break;
+			case 265: 
+			  //Monster-only silent line-line reversed
+			  if (!thing->player)
+				EV_SilentLineTeleport(line, side, thing, true);
+			  break;
 			  
-            case 266: 
-              if (!thing->player &&
-                  EV_SilentLineTeleport(line, side, thing, false))
-                line->special = 0;
-              break;
+			case 266: 
+			  if (!thing->player &&
+				  EV_SilentLineTeleport(line, side, thing, false))
+				line->special = 0;
+			  break;
 
-            case 267: 
-              //Monster-only silent line-line
-              if (!thing->player)
-                EV_SilentLineTeleport(line, side, thing, false);
-              break;
+			case 267: 
+			  //Monster-only silent line-line
+			  if (!thing->player)
+				EV_SilentLineTeleport(line, side, thing, false);
+			  break;
 
-            case 268: 
-              if (!thing->player && EV_SilentTeleport(line, side, thing))
-                line->special = 0;
-              break;
+			case 268: 
+			  if (!thing->player && EV_SilentTeleport(line, side, thing))
+				line->special = 0;
+			  break;
 			  
-            case 269: 
-              //Monster-only silent
-              if (!thing->player)
-                EV_SilentTeleport(line, side, thing);
-              break;
+			case 269: 
+			  //Monster-only silent
+			  if (!thing->player)
+				EV_SilentTeleport(line, side, thing);
+			  break;
 
 			case 324:
 			  // THZ2 door
@@ -4140,111 +4140,111 @@ void P_SpawnSpecials(void)
 {
 	//PART 1: SETUP
 	sector_t* sector;
-    int i;
-    int episode;
+	int i;
+	int episode;
 	short numlinespecials;
 	int ffloorflags;
 	
-    episode = 1;
-    if (W_CheckNumForName("texture2") >= 0)
-        episode = 2;
+	episode = 1;
+	if (W_CheckNumForName("texture2") >= 0)
+		episode = 2;
 
 
-    /*// See if -TIMER needs to be used. (or -avg)
-    levelTimer = false;
+	/*// See if -TIMER needs to be used. (or -avg)
+	levelTimer = false;
 
-    if(cv_timelimit.value)
-    {
-        levelTimer = true;
-        levelTimeCount = cv_timelimit.value * 60 * TICRATE;
-    }*/
+	if(cv_timelimit.value)
+	{
+		levelTimer = true;
+		levelTimeCount = cv_timelimit.value * 60 * TICRATE;
+	}*/
 	
 	//PART 2: SECTOR SPECIALS
-    /*for (i=0 ; i<numsectors ; i++, sector++)
-    {
-        if (!sector->special)
-            continue;
+	/*for (i=0 ; i<numsectors ; i++, sector++)
+	{
+		if (!sector->special)
+			continue;
 
 		//secrets don't do anything in demo 2 anyway
-        /*if (sector->special&SECRET_MASK) //SoM: 3/8/2000: count secret flags
-          totalsecret++;*/
+		/*if (sector->special&SECRET_MASK) //SoM: 3/8/2000: count secret flags
+		  totalsecret++;*/
 	/*
-        switch (sector->special&31)
-        {
-          case 1:
-            // FLICKERING LIGHTS
-            P_SpawnLightFlash (sector);
-            break;
+		switch (sector->special&31)
+		{
+		  case 1:
+			// FLICKERING LIGHTS
+			P_SpawnLightFlash (sector);
+			break;
 
-          case 2:
-            // STROBE FAST
-            P_SpawnStrobeFlash(sector,FASTDARK,0);
-            break;
+		  case 2:
+			// STROBE FAST
+			P_SpawnStrobeFlash(sector,FASTDARK,0);
+			break;
 
-          case 3:
-            // STROBE SLOW
-            P_SpawnStrobeFlash(sector,SLOWDARK,0);
-            break;
+		  case 3:
+			// STROBE SLOW
+			P_SpawnStrobeFlash(sector,SLOWDARK,0);
+			break;
 
-          case 4:
-            // STROBE FAST/DEATH SLIME
-            P_SpawnStrobeFlash(sector,FASTDARK,0);
-            sector->special |= 3<<DAMAGE_SHIFT; //SoM: 3/8/2000: put damage bits in
-            break;
+		  case 4:
+			// STROBE FAST/DEATH SLIME
+			P_SpawnStrobeFlash(sector,FASTDARK,0);
+			sector->special |= 3<<DAMAGE_SHIFT; //SoM: 3/8/2000: put damage bits in
+			break;
 
-          case 8:
-            // GLOWING LIGHT
-            P_SpawnGlowingLight(sector);
-            sector->special = 4; // Tails 9-15-99
-            break;
+		  case 8:
+			// GLOWING LIGHT
+			P_SpawnGlowingLight(sector);
+			sector->special = 4; // Tails 9-15-99
+			break;
 
 		//secrets don't do anything in demo 2 anyway
-          /*case 9:
-            // SECRET SECTOR
-            if(sector->special<32)
-              totalsecret++;
-            break;*/
+		  /*case 9:
+			// SECRET SECTOR
+			if(sector->special<32)
+			  totalsecret++;
+			break;*/
 
 	/*		case 10:
-            // DOOR CLOSE IN 30 SECONDS
-            P_SpawnDoorCloseIn30 (sector);
-            break;
+			// DOOR CLOSE IN 30 SECONDS
+			P_SpawnDoorCloseIn30 (sector);
+			break;
 
-          case 12:
-            // SYNC STROBE SLOW
-            P_SpawnStrobeFlash (sector, SLOWDARK, 1);
-            break;
+		  case 12:
+			// SYNC STROBE SLOW
+			P_SpawnStrobeFlash (sector, SLOWDARK, 1);
+			break;
 
-          case 13:
-            // SYNC STROBE FAST
-            P_SpawnStrobeFlash (sector, FASTDARK, 1);
-            break;
+		  case 13:
+			// SYNC STROBE FAST
+			P_SpawnStrobeFlash (sector, FASTDARK, 1);
+			break;
 
-          case 14:
-            // DOOR RAISE IN 5 MINUTES
-            P_SpawnDoorRaiseIn5Mins (sector);
-            break;
+		  case 14:
+			// DOOR RAISE IN 5 MINUTES
+			P_SpawnDoorRaiseIn5Mins (sector);
+			break;
 
-          case 17:
-            P_SpawnFireFlicker(sector);
-            break;
-        }
-    }*/
+		  case 17:
+			P_SpawnFireFlicker(sector);
+			break;
+		}
+	}*/
 	
 	//PART 3: LINEDEFS
 	
-    /*copy pasted from march 02 plsss work
-    P_RemoveAllActiveCeilings();
-    P_RemoveAllActivePlats();*/
+	/*copy pasted from march 02 plsss work
+	P_RemoveAllActiveCeilings();
+	P_RemoveAllActivePlats();*/
 
 	//the stuff seen here seems to be gone, maybe 
-    /*for (i = 0;i < MAXBUTTONS;i++)
-      memset(&buttonlist[i],0,sizeof(button_t));*/
+	/*for (i = 0;i < MAXBUTTONS;i++)
+	  memset(&buttonlist[i],0,sizeof(button_t));*/
 
-    /*P_InitTagLists();   //Create xref tables for tags
-    P_SpawnScrollers(); //Add generalized scrollers
-    P_SpawnFriction();  //New friction model using linedefs
-    P_SpawnPushers();   //New pusher model using linedefs*/
+	/*P_InitTagLists();   //Create xref tables for tags
+	P_SpawnScrollers(); //Add generalized scrollers
+	P_SpawnFriction();  //New friction model using linedefs
+	P_SpawnPushers();   //New pusher model using linedefs*/
 	
 	if (mapheaderinfo[gamemap-1].weather == 2) // snow
 		curWeather = PRECIP_SNOW;
@@ -4263,12 +4263,12 @@ void P_SpawnSpecials(void)
 	P_SpawnPushers();   // Pusher model using linedefs
 	
 	
-    //  Init line EFFECTs
-    numlinespecials = 0;
-    for (i = 0;i < numlines; i++)
-    {
-        switch(lines[i].special)
-        {
+	//  Init line EFFECTs
+	numlinespecials = 0;
+	for (i = 0;i < numlines; i++)
+	{
+		switch(lines[i].special)
+		{
 			int s, sec;
 			
 			//l213 Transfer Sector Brightness to Floor Save 18-05-2025
@@ -4284,11 +4284,11 @@ void P_SpawnSpecials(void)
 			EV_DoElevator(&lines[i], elevateContinuous, false);
 			break;
 			//l242 Fake Floors 
-          	case 242:
-            sec = sides[*lines[i].sidenum].sector-sectors;
-            for (s = -1; (s = P_FindSectorFromLineTag(lines+i,s)) >= 0;)
-              sectors[s].heightsec = sec;
-            break;
+			case 242:
+			sec = sides[*lines[i].sidenum].sector-sectors;
+			for (s = -1; (s = P_FindSectorFromLineTag(lines+i,s)) >= 0;)
+			  sectors[s].heightsec = sec;
+			break;
 			//l270 Old Water Save 17-05-2025
 			case 270:
 				// GFZ1 and DSZ2 have new water
@@ -4356,7 +4356,7 @@ void P_SpawnSpecials(void)
 				sec = sides[*lines[i].sidenum].sector-sectors;
 				for (s = -1; (s = P_FindSectorFromLineTag(lines+i,s)) >= 0;)
 					P_AddFakeFloor(&sectors[s], &sectors[sec], lines+i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL);
-            break;
+			break;
 			//l282 Instanly lower floor (used for the illusion of floating objects) Save 17-05-2025
 			case 282:
 				EV_DoFloor(&lines[i], instantLower); // Tails 10-31-2000
@@ -4364,7 +4364,7 @@ void P_SpawnSpecials(void)
 			//l289 FOF, Solid, Opaque, No Shadows Save 18-05-2025
 			case 289:
 				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_NOSHADE|FF_CUTLEVEL);
-            break;
+			break;
 			//l300 FOF, Solid, Translucent Save 18-05-2025
 			case 300:
 				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_NOSHADE|FF_TRANSLUCENT|FF_EXTRA|FF_CUTEXTRA);
@@ -4707,7 +4707,7 @@ void P_SpawnSpecials(void)
 #endif
 
 			case 1: // Air bobbing platform that will crumble and bob on
-			        // the water when it falls and hits, then never return
+					// the water when it falls and hits, then never return
 				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL|FF_FLOATBOB|FF_CRUMBLE|FF_NORETURN);
 				lines[i].flags |= ML_BLOCKMONSTERS;
 				P_AddOldAirbob(lines[i].frontsector, lines + i, true);
@@ -5432,7 +5432,7 @@ void T_Scroll(scroll_t *s)
 						if (!(thing->flags & MF_NOCLIP)) // Thing must be clipped
 						if (!(thing->flags & MF_NOGRAVITY || thing->z != height) ||
 							thing->z < waterheight) // Thing must a) be non-floating and have z == height
-							                        // or b) be underwater
+													// or b) be underwater
 						{
 							// Move objects only if on floor or underwater,
 							// non-floating, and clipped.

@@ -33,6 +33,7 @@
 #include "p_local.h"
 #include "am_map.h"
 #include "d_main.h"
+#include "M_argv.h"
 
 #ifdef HWRENDER
 #include "hardware/hw_main.h"
@@ -498,8 +499,7 @@ fixed_t R_SecplanePointToDist2(secplane_t *secplane, fixed_t x, fixed_t y, fixed
 // rw_distance must be calculated first.
 //
 // note: THIS IS USED ONLY FOR WALLS!
-fixed_t R_ScaleFromGlobalAngle(angle_t visangle)
-{
+fixed_t R_ScaleFromGlobalAngle(angle_t visangle) {
 	fixed_t scale, num;
 	int anglea, angleb, sinea, sineb, den;
 
@@ -507,173 +507,147 @@ fixed_t R_ScaleFromGlobalAngle(angle_t visangle)
 	angleb = ANG90 + visangle - rw_normalangle;
 
 	// both sines are always positive
-	sinea = finesine[anglea>>ANGLETOFINESHIFT];
-	sineb = finesine[angleb>>ANGLETOFINESHIFT];
+	sinea = finesine[anglea >> ANGLETOFINESHIFT];
+	sineb = finesine[angleb >> ANGLETOFINESHIFT];
 	// use projectiony instead of projection for correct aspect ratio!
 	num = FixedMul(projectiony, sineb);
 	den = FixedMul(rw_distance, sinea);
 
-	if (den > num>>16)
-	{
+	if(den > num>>16) {
 		scale = FixedDiv(num, den);
 
-		if (scale > 64*FRACUNIT)
+		if(scale > 64*FRACUNIT)
 			scale = 64*FRACUNIT;
-		else if (scale < 256)
+		else if(scale < 256)
 			scale = 256;
-	}
-	else
-		scale = 64*FRACUNIT;
+	} else
+		scale = 64 * FRACUNIT;
 
 	return scale;
 }
 
 #define PI 3.141592654
+#define PIF 3.141592654f
 
 //
 // R_InitTables
 //
-static inline void R_InitTables (void)
-{
-    // UNUSED: now getting from tables.c
-    int         i;
-    float       a;
-    float       fv;
-    int         t;
+static inline void R_InitTables(void) {
+	float a, pi;
+	int i;
 
-	float 		pi;
-
-	if (M_CheckParm("-pi") && M_IsNextParm())
+	if(M_CheckParm("-pi") && M_IsNextParm())
 		sscanf(M_GetNextParm(), "%f", &pi);
 	else
-		pi = PI;
+		pi = PIF;
 
+	// view angle tangent table
+	for(i = 0; i < FINEANGLES / 2; i++) {
+		a = (i - FINEANGLES / 4 + .5f) * pi * 2 / FINEANGLES;
 
-    // viewangle tangent table
-    for (i = 0; i < FINEANGLES/2; i++)
-    {
-        a = (i-FINEANGLES/4+0.5f)*pi*2/FINEANGLES;
-        fv = FRACUNIT*tan (a);
-        t = fv;
-        finetangent[i] = t;
-    }
+		finetangent[i] = (int)(FRACUNIT * tanf(a));
+	}
 
-    // finesine table
-    for (i = 0; i < 5*FINEANGLES/4; i++)
-    {
-        // OPTIMIZE: mirror...
-        a = (i+0.5f)*pi*2/FINEANGLES;
-        t = FRACUNIT*sin (a);
-        finesine[i] = t;
-    }
+	// finesine table
+	for(i = 0; i < 5 * FINEANGLES / 4; i++) {
+		// OPTIMIZE: mirror...
+		a = (i + .5f) * pi * 2 / FINEANGLES;
 
+		finesine[i] = (int)(FRACUNIT * sinf(a));
+	}
 }
 
 //
 // R_InitTextureMapping
 //
-static void R_InitTextureMapping (void)
-{
-    int                 i;
-    int                 x;
-    int                 t;
-    fixed_t             focallength;
+static void R_InitTextureMapping (void) {
+	int i, x, t;
+	fixed_t focallength;
 
-    // Use tangent table to generate viewangletox:
-    //  viewangletox will give the next greatest x
-    //  after the view angle.
-    //
-    // Calc focallength
-    //  so FIELDOFVIEW angles covers SCREENWIDTH.
-    focallength = FixedDiv (centerxfrac,
-                            finetangent[FINEANGLES/4+/*cv_fov.value*/ FIELDOFVIEW/2]);
+	// Use tangent table to generate viewangletox:
+	//  viewangletox will give the next greatest x
+	//  after the view angle.
+	//
+	// Calc focallength
+	//  so FIELDOFVIEW angles covers SCREENWIDTH.
+	focallength = FixedDiv(centerxfrac, finetangent[FINEANGLES / 4 +/*cv_fov.value*/FIELDOFVIEW / 2]);
 
-    for (i = 0; i < FINEANGLES/2; i++)
-    {
-        if (finetangent[i] > FRACUNIT*2)
-            t = -1;
-        else if (finetangent[i] < -FRACUNIT*2)
-            t = viewwidth+1;
-        else
-        {
-            t = FixedMul (finetangent[i], focallength);
-            t = (centerxfrac - t+FRACUNIT-1)>>FRACBITS;
+	for(i = 0; i < FINEANGLES / 2; i++) {
+		if(finetangent[i] > FRACUNIT * 2)
+			t = -1;
+		else if(finetangent[i] < -FRACUNIT * 2)
+			t = viewwidth + 1;
+		else {
+			t = FixedMul(finetangent[i], focallength);
+			t = (centerxfrac - t + FRACUNIT - 1) >> FRACBITS;
 
-            if (t < -1)
-                t = -1;
-            else if (t > viewwidth+1)
-                t = viewwidth+1;
-        }
-        viewangletox[i] = t;
-    }
+			if(t < -1)
+				t = -1;
+			else if(t > viewwidth+1)
+				t = viewwidth+1;
+		}
 
-    // Scan viewangletox[] to generate xtoviewangle[]:
-    //  xtoviewangle will give the smallest view angle
-    //  that maps to x.
-    for (x = 0;x <= viewwidth;x++)
-    {
-        i = 0;
-        while (viewangletox[i]>x)
-            i++;
-        xtoviewangle[x] = (i<<ANGLETOFINESHIFT)-ANG90;
-    }
+		viewangletox[i] = t;
+	}
 
-    // Take out the fencepost cases from viewangletox.
-    for (i = 0; i < FINEANGLES/2; i++)
-    {
-        t = FixedMul (finetangent[i], focallength);
-        t = centerx - t;
+	// Scan viewangletox[] to generate xtoviewangle[]:
+	//  xtoviewangle will give the smallest view angle
+	//  that maps to x.
+	for(x = 0; x <= viewwidth; x++) {
+		i = 0;
 
-        if (viewangletox[i] == -1)
-            viewangletox[i] = 0;
-        else if (viewangletox[i] == viewwidth+1)
-            viewangletox[i]  = viewwidth;
-    }
+		while(viewangletox[i] > x) i++;
 
-    clipangle = xtoviewangle[0];
+		xtoviewangle[x] = (i << ANGLETOFINESHIFT)-ANG90;
+	}
+
+	// Take out the fencepost cases from viewangletox.
+	for(i = 0; i < FINEANGLES / 2; i++) {
+		t = FixedMul(finetangent[i], focallength);
+		t = centerx - t;
+
+		if(viewangletox[i] == -1)
+			viewangletox[i] = 0;
+		else if (viewangletox[i] == viewwidth+1)
+			viewangletox[i] = viewwidth;
+	}
+
+	clipangle = xtoviewangle[0];
 }
-
-
 
 //
 // R_InitLightTables
 // Only inits the zlight table,
 //  because the scalelight table changes with view size.
 //
-#define DISTMAP         2
+#define DISTMAP 2
 
-static inline void R_InitLightTables (void)
-{
-    int         i;
-    int         j;
-    int         level;
-    int         startmapl;
-    int         scale;
+static inline void R_InitLightTables(void) {
+	int level, startmapl, scale;
+	int i, j;
 
-    // Calculate the light levels to use
-    //  for each level / distance combination.
-    for (i = 0; i< LIGHTLEVELS; i++)
-    {
-        startmapl = ((LIGHTLEVELS-1-i)*2)*NUMCOLORMAPS/LIGHTLEVELS;
-        for (j = 0; j < MAXLIGHTZ; j++)
-        {
-            //added : 02-02-98 : use BASEVIDWIDTH, vid.width is not set already,
-            // and it seems it needs to be calculated only once.
-            scale = FixedDiv ((BASEVIDWIDTH/2*FRACUNIT), (j+1)<<LIGHTZSHIFT);
-            scale >>= LIGHTSCALESHIFT;
-            level = startmapl - scale/DISTMAP;
+	// Calculate the light levels to use
+	//  for each level / distance combination.
+	for(i = 0; i< LIGHTLEVELS; i++) {
+		startmapl = ((LIGHTLEVELS - 1 - i) * 2) * NUMCOLORMAPS / LIGHTLEVELS;
 
-            if (level < 0)
-                level = 0;
+		for(j = 0; j < MAXLIGHTZ; j++) {
+			// added : 02-02-98: use BASEVIDWIDTH, vid.width is not set already,
+			// and it seems it needs to be calculated only once.
+			scale = FixedDiv((BASEVIDWIDTH / 2 * FRACUNIT), (j + 1) << LIGHTZSHIFT);
+			scale >>= LIGHTSCALESHIFT;
+			level = startmapl - scale/DISTMAP;
 
-            if (level >= NUMCOLORMAPS)
-                level = NUMCOLORMAPS-1;
+			if(level < 0)
+				level = 0;
 
-            zlight[i][j] = colormaps + level*256;
-        }
-    }
+			if(level >= NUMCOLORMAPS)
+				level = NUMCOLORMAPS-1;
+
+			zlight[i][j] = colormaps + level*256;
+		}
+	}
 }
-
 
 //
 // R_SetViewSize
@@ -681,16 +655,15 @@ static inline void R_InitLightTables (void)
 //  because it might be in the middle of a refresh.
 // The change will take effect next refresh.
 //
-boolean         setsizeneeded;
+boolean setsizeneeded;
 
-void R_SetViewSize (void)
-{
-    setsizeneeded = true;
+void R_SetViewSize(void) {
+	setsizeneeded = true;
 
 	// Not sure WHY this has to be the thing to catch it...
-	if (cv_viewsize.value < 3)
+	if(cv_viewsize.value < 3)
 		cv_viewsize.value = 3;
-	else if (cv_viewsize.value > 12)
+	else if(cv_viewsize.value > 12)
 		cv_viewsize.value = 12;
 }
 
@@ -699,126 +672,113 @@ void R_SetViewSize (void)
 // R_ExecuteSetViewSize
 //
 
-
 // now uses screen variables cv_viewsize, cv_detaillevel
 //
-void R_ExecuteSetViewSize (void)
-{
-	fixed_t     cosadj;
-	fixed_t     dy;
-	int         i;
- 	int         j;
-	int         level;
-	int         startmapl;
-
-	int         aspectx;  //added : 02-02-98 : for aspect ratio calc. below...
+void R_ExecuteSetViewSize (void) {
+	fixed_t cosadj, dy;
+	int i, j;
+	int level, startmapl;
+	int aspectx;  // added: 02-02-98 : for aspect ratio calc. below...
 
 	setsizeneeded = false;
 
-	if (rendermode == render_none)
+	if(rendermode == render_none)
 		return;
 
 	// no reduced view in splitscreen mode
-	if (cv_splitscreen.value && cv_viewsize.value < 11)
+	if(cv_splitscreen.value && cv_viewsize.value < 11)
 		CV_SetValue (&cv_viewsize, 11);
 
 	// added by Hurdler
-	if ((rendermode != render_soft) && (cv_viewsize.value < 6))
+	if((rendermode != render_soft) && (cv_viewsize.value < 6))
 		CV_SetValue (&cv_viewsize, 6);
 
 	// status bar overlay at viewsize 11
 	st_overlay = cv_viewsize.value == 11;
 
 	// full screen view, without statusbar
-	if (cv_viewsize.value > 10)
-	{
+	if(cv_viewsize.value > 10) {
 		scaledviewwidth = vid.width;
 		viewheight = vid.height;
-	}
-	else
-	{
+	} else {
 		// always a multiple of eight
-		scaledviewwidth = (cv_viewsize.value*vid.width/10)&~7;
+		scaledviewwidth = (cv_viewsize.value * vid.width / 10) & ~7;
 		// make viewheight multiple of 2, because sometimes
 		// a line is not refreshed by R_DrawViewBorder()
-		viewheight = (cv_viewsize.value*(vid.height)/10)&~7;
+		viewheight = (cv_viewsize.value * vid.height / 10) & ~7;
 	}
 
-	if (cv_splitscreen.value)
+	if(cv_splitscreen.value)
 		viewheight >>= 1;
 
 	viewwidth = scaledviewwidth;
 
-	centery = viewheight/2;
-	centerx = viewwidth/2;
-	centerxfrac = centerx<<FRACBITS;
-	centeryfrac = centery<<FRACBITS;
+	centery = viewheight / 2;
+	centerx = viewwidth / 2;
+	centerxfrac = centerx << FRACBITS;
+	centeryfrac = centery << FRACBITS;
 
 	projection = centerxfrac;
-	projectiony = (((vid.height*centerx*BASEVIDWIDTH)/BASEVIDHEIGHT)/vid.width)<<FRACBITS;
+	projectiony = (((vid.height * centerx * BASEVIDWIDTH) / BASEVIDHEIGHT) / vid.width) << FRACBITS;
 
 	R_InitViewBuffer(scaledviewwidth, viewheight);
-
 	R_InitTextureMapping();
 
 #ifdef HWRENDER
-	if (rendermode != render_soft)
+	if(rendermode != render_soft)
 		HWR_InitTextureMapping();
 #endif
 
-	pspritescale = (viewwidth<<FRACBITS)/BASEVIDWIDTH;
-	pspriteiscale = (BASEVIDWIDTH<<FRACBITS)/viewwidth; // x axis scale
-	pspriteyscale = (((vid.height*viewwidth)/vid.width)<<FRACBITS)/BASEVIDHEIGHT;
+	pspritescale = (viewwidth << FRACBITS) / BASEVIDWIDTH;
+	pspriteiscale = (BASEVIDWIDTH << FRACBITS) / viewwidth; // x axis scale
+	pspriteyscale = (((vid.height * viewwidth) / vid.width) << FRACBITS) / BASEVIDHEIGHT;
 
 	// thing clipping
-	for (i = 0; i < viewwidth; i++)
+	for(i = 0; i < viewwidth; i++)
 		screenheightarray[i] = (short)viewheight;
 
 	// setup sky scaling (uses pspriteyscale)
 	R_SetSkyScale();
 
 	// planes
-	aspectx = (((vid.height*centerx*BASEVIDWIDTH)/BASEVIDHEIGHT)/vid.width);
+	aspectx = (((vid.height * centerx * BASEVIDWIDTH) / BASEVIDHEIGHT) / vid.width);
 
-	if (rendermode == render_soft)
-	{
+	if(rendermode == render_soft) {
 		// this is only used for planes rendering in software mode
-		j = viewheight*4;
-		for (i = 0; i < j; i++)
-		{
-			dy = ((i - viewheight*2)<<FRACBITS) + FRACUNIT/2;
+		j = viewheight * 4;
+
+		for(i = 0; i < j; i++) {
+			dy = ((i - viewheight * 2) << FRACBITS) + FRACUNIT / 2;
 			dy = abs(dy);
-			yslopetab[i] = FixedDiv(aspectx*FRACUNIT, dy);
+			yslopetab[i] = FixedDiv(aspectx * FRACUNIT, dy);
 		}
 	}
 
-	for (i = 0; i < viewwidth; i++)
-	{
-		cosadj = abs(finecosine[xtoviewangle[i]>>ANGLETOFINESHIFT]);
+	for(i = 0; i < viewwidth; i++) {
+		cosadj = abs(finecosine[xtoviewangle[i] >> ANGLETOFINESHIFT]);
 		distscale[i] = FixedDiv(FRACUNIT, cosadj);
 	}
 
 	// Calculate the light levels to use for each level/scale combination.
-	for (i = 0; i< LIGHTLEVELS; i++)
-	{
-		startmapl = ((LIGHTLEVELS - 1 - i)*2)*NUMCOLORMAPS/LIGHTLEVELS;
-		for (j = 0; j < MAXLIGHTSCALE; j++)
-		{
-			level = startmapl - j*vid.width/(viewwidth)/DISTMAP;
+	for(i = 0; i< LIGHTLEVELS; i++) {
+		startmapl = ((LIGHTLEVELS - 1 - i) * 2) * NUMCOLORMAPS / LIGHTLEVELS;
 
-			if (level < 0)
+		for(j = 0; j < MAXLIGHTSCALE; j++) {
+			level = startmapl - j * vid.width / viewwidth / DISTMAP;
+
+			if(level < 0)
 				level = 0;
 
-			if (level >= NUMCOLORMAPS)
+			if(level >= NUMCOLORMAPS)
 				level = NUMCOLORMAPS - 1;
 
-			scalelight[i][j] = colormaps + level*256;
+			scalelight[i][j] = colormaps + level * 256;
 		}
 	}
 
 	// continue to do the software setviewsize as long as we use the reference software view
 #ifdef HWRENDER
-	if (rendermode != render_soft)
+	if(rendermode != render_soft)
 		HWR_SetViewSize(cv_viewsize.value);
 #endif
 
@@ -828,7 +788,6 @@ void R_ExecuteSetViewSize (void)
 //
 // R_Init
 //
-
 void R_Init(void)
 {
 	R_LoadSkinTable();
