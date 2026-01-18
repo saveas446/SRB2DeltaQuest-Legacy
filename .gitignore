@@ -132,8 +132,8 @@ doc/D2U/*
 .vscode/*
 
 # No debug or old EXEs in the repo!
-sdqsdl2_debug.exe
-sdqwin32_debug.exe
+dev/sdqsdl2_debug.exe
+dev/sdqwin32_debug.exe
 srb2win.exe
 srb2debug.exe
 srb2sdl2.exe
