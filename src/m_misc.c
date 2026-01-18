@@ -34,13 +34,12 @@
 #endif
 #endif
 
-#ifdef HAVE_PNG
-#include <png.h>
-#ifdef PNG_WRITE_SUPPORTED
-#define USE_PNG // Only actually use PNG if write is supported.
-// See hardware/hw_draw.c for a similar check to this one.
-#endif
-#endif
+#include "console.h"
+#include "M_filewriter.h"
+
+#include "zlib.h"
+
+#define USE_PNG
 
 #ifdef HAVE_MNG
 #define MNG_NO_INCLUDE_JNG	
@@ -913,17 +912,6 @@ M_CloseGIF(void) {
 
 
 #ifdef USE_PNG
-static void PNG_error(png_structp PNG, png_const_charp text)
-{
-	CONS_Printf("libpng error at %p: %s", PNG, text);
-	//I_Error("libpng error at %p: %s", PNG,text);
-}
-
-static void PNG_warn(png_structp PNG, png_const_charp text)
-{
-	CONS_Printf("libpng warning at %p: %s", PNG, text);
-}
-
 /** Writes a PNG file to disk.
   *
   * \param filename Filename to write to.
@@ -933,142 +921,122 @@ static void PNG_warn(png_structp PNG, png_const_charp text)
   * \param palette  Palette of image data
   *  \note if palette is NULL, BGR888 format
   */
-boolean M_SavePNG(const char* filename, void* data, int width, int height, byte* palette)
-{
-	png_structp png_ptr;
-	png_infop png_info_ptr;
-	const int png_interlace = PNG_INTERLACE_NONE; //PNG_INTERLACE_ADAM7
-#ifdef PNG_SETJMP_SUPPORTED
-#ifdef USE_FAR_KEYWORD
-	jmp_buf jmpbuf;
-#endif
-#endif
-	FILE* png_FILE;
+#define PNG_COLOR_TYPE_INDEXED 3
+#define PNG_COLOR_TYPE_RGB 2
 
-	png_FILE = fopen(filename, "wb");
-	if (!png_FILE)
-	{
+const UINT8 png_signature[8] = {137, 80, 78, 71, 13, 10, 26, 10};
+boolean M_SavePNG(const char* filename, void* data, int width, int height, byte* palette) {
+	// get file
+	FileBuffer fb = {0};
+
+	FILE* file = fopen(filename, "wb");
+	if(!file) {
 		CONS_Printf("M_SavePNG: Error on opening %s for write\n", filename);
 		return false;
 	}
 
-	png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL,
-		PNG_error, PNG_warn);
-	if (!png_ptr)
-	{
-		CONS_Printf("M_SavePNG: Error on initialize libpng\n");
-		fclose(png_FILE);
-		remove(filename);
-		return false;
+	fw_write_bytes(&fb, png_signature, sizeof png_signature);
+
+	{ // write ihdr chunk
+		size_t start;
+	
+		// header
+		fw_be_write_u32(&fb, 13); // length
+		start = fb.pos;
+
+		fw_write_string(&fb, "IHDR"); // identifier
+		
+		// chunk data
+		fw_be_write_u32(&fb, width);
+		fw_be_write_u32(&fb, height);
+		fw_write_u8(&fb, 8); // bit depht
+		fw_write_u8(&fb, PNG_COLOR_TYPE_INDEXED);
+		fw_write_u8(&fb, 0); // compression method
+		fw_write_u8(&fb, 0); // filter method
+		fw_write_u8(&fb, 0); // interlace method
+		
+		// checksum
+		fw_be_write_u32(&fb, fw_get_crc32(&fb, start, 17)); // 17 = chunk length + sizeof(UINT32)
 	}
 
-	png_info_ptr = png_create_info_struct(png_ptr);
-	if (!png_info_ptr)
-	{
-		CONS_Printf("M_SavePNG: Error on allocate for libpng\n");
-		png_destroy_write_struct(&png_ptr, NULL);
-		fclose(png_FILE);
-		remove(filename);
-		return false;
+	{ // write plte chunk
+		size_t start;
+
+		fw_be_write_u32(&fb, 256 * 3);
+		start = fb.pos;
+
+		fw_write_string(&fb, "PLTE");
+		fw_write_bytes(&fb, palette, 256 * 3);
+
+		fw_be_write_u32(&fb, fw_get_crc32(&fb, start, 256 * 3 + 4));
 	}
 
-#ifdef USE_FAR_KEYWORD
-	if (setjmp(jmpbuf))
-#else
-	if (setjmp(png_jmpbuf(png_ptr)))
-#endif
-	{
-		//CONS_Printf("libpng write error on %s\n", filename);
-		png_destroy_write_struct(&png_ptr, &png_info_ptr);
-		fclose(png_FILE);
-		remove(filename);
-		return false;
-	}
-#ifdef USE_FAR_KEYWORD
-	png_memcpy(png_jmpbuf(png_ptr), jmpbuf, sizeof(jmp_buf));
-#endif
-	png_init_io(png_ptr, png_FILE);
-
-#ifdef PNG_SET_USER_LIMITS_SUPPORTED
-	png_set_user_limits(png_ptr, MAXVIDWIDTH, MAXVIDHEIGHT);
-#endif
-
-	png_set_filter(png_ptr, 0, PNG_ALL_FILTERS);
-
-	png_set_compression_level(png_ptr, Z_BEST_COMPRESSION);
-	png_set_compression_window_bits(png_ptr, 15);
-	png_set_compression_mem_level(png_ptr, 9);
-#ifdef Z_RLE
-	png_set_compression_strategy(png_ptr, Z_RLE);
-#endif
-
-	if (palette)
-	{
-		png_set_IHDR(png_ptr, png_info_ptr, width, height, 8, PNG_COLOR_TYPE_PALETTE,
-			png_interlace, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
-		png_set_PLTE(png_ptr, png_info_ptr, (png_colorp)palette, 256);
-	}
-	else
-	{
-		png_set_IHDR(png_ptr, png_info_ptr, width, height, 8, PNG_COLOR_TYPE_RGB,
-			png_interlace, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
-		png_set_bgr(png_ptr); //PNG_WRITE_BGR_SUPPORTED
-	}
-
-	{
-#ifdef PNG_TEXT_SUPPORTED
-		int i;
-#define SRB2PNGTXT 5
-		png_text png_infotext[SRB2PNGTXT];
-		char keytxt[SRB2PNGTXT][12] = { "Title", "Author", "Description", "Playername", "Interface" }; //PNG_KEYWORD_MAX_LENGTH(79) is the max
-		char titletxt[] = "Sonic Robo Blast 2"VERSIONSTRING;
-		char* authortxt = I_GetUserName();
-		char* playertxt = cv_playername.zstring;
-		char desctxt[] = "SRB2 Screenshot";
-		char interfacetxt[] =
-#ifdef SDL
-			"SDL";
-#elif defined (_WINDOWS)
-			"DirectX";
-#elif defined (PC_DOS)
-			"Allegro";
-#else
-			"Unknown";
-#endif
-		memset(png_infotext, 0x00, sizeof(png_infotext));
-
-		for (i = 0; i < SRB2PNGTXT; i++)
-			png_infotext[i].key = keytxt[i];
-
-		png_infotext[0].text = titletxt;
-		png_infotext[1].text = authortxt;
-		png_infotext[2].text = desctxt;
-		png_infotext[3].text = playertxt;
-		png_infotext[4].text = interfacetxt;
-
-		png_set_text(png_ptr, png_info_ptr, png_infotext, SRB2PNGTXT);
-#undef SRB2PNGTXT
-#endif
-		png_write_info(png_ptr, png_info_ptr);
-	}
-
-	{
-		png_uint_32 pitch = png_get_rowbytes(png_ptr, png_info_ptr);
-		png_bytep png_buf = (png_bytep)data;
-		png_bytep* row_pointers = png_malloc(png_ptr, height * sizeof(png_bytep));
+	{ // write idat chunk
+		uLongf idat_size_ul;
+		size_t start, idat_size;
+		UINT8* idat_comp_data;
 		int y;
-		for (y = 0; y < height; y++)
-			row_pointers[y] = png_buf + y * pitch;
-		png_write_image(png_ptr, row_pointers);
-		png_free(png_ptr, (png_voidp)row_pointers);
+		
+		size_t row_bytes = width + 1; // filter byte :3
+		size_t img_size = row_bytes * height;
+		UINT8* png_rows = malloc(img_size);
+
+		for(y = 0; y < height; y++) {
+			png_rows[y * row_bytes] = 0; // filter byte
+			memcpy(png_rows + y * row_bytes + 1, (UINT8*)data + y * width, width);
+		}
+
+		idat_size_ul = compressBound(img_size);
+		idat_size = (size_t)idat_size_ul;
+
+		idat_comp_data = malloc(idat_size);
+		if(compress2(idat_comp_data, &idat_size_ul, png_rows, img_size, Z_BEST_COMPRESSION) != Z_OK) {
+			free(png_rows);
+			free(idat_comp_data);
+
+			CONS_Printf("M_SavePNG: Error at compressing IDAT chunk on %s\n", filename);
+
+			return false;
+		}
+
+		idat_size = (size_t)idat_size_ul;
+
+		fw_be_write_u32(&fb, idat_size);
+		start = fb.pos;
+
+		fw_write_string(&fb, "IDAT");
+		fw_write_bytes(&fb, idat_comp_data, idat_size);
+
+		fw_be_write_u32(&fb, fw_get_crc32(&fb, start, idat_size + 4));
 	}
 
-	png_write_end(png_ptr, png_info_ptr);
-	png_destroy_write_struct(&png_ptr, &png_info_ptr);
+	{ // write iend chunk
+		size_t start;
 
-	fclose(png_FILE);
+		fw_be_write_u32(&fb, 0);
+		start = fb.pos;
+
+		fw_write_string(&fb, "IEND");
+
+		fw_be_write_u32(&fb, fw_get_crc32(&fb, start, 4));
+	}
+	
+	// finish writing
+	if(0 < fb.pos) {
+		size_t written = fwrite(fb.buffer, 1, fb.pos, file);
+		if(written != fb.pos) {
+			CONS_Printf("M_SavePNG: Error on writing full buffer for %s\n", filename);
+			fclose(file);
+			return false;
+		}
+	}
+
+	fclose(file);
+	if(fb.buffer) free(fb.buffer);
+
 	return true;
 }
+
 #else
 /** PCX file structure.
   */

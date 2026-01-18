@@ -81,7 +81,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="true"
-				AdditionalDependencies="dxguid.lib dinput.lib dsound.lib ddraw.lib winmm.lib wsock32.lib fmodvc.lib zlib.lib libpng.lib"
+				AdditionalDependencies="dxguid.lib dinput.lib dsound.lib ddraw.lib winmm.lib wsock32.lib fmodvc.lib zlib.lib"
 				OutputFile="$(OutDir)\sdqwin32_debug.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -576,7 +576,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling $(InputName).nas with NASM..."
-						CommandLine="&quot;$(SolutionDir)tools\nasmw&quot; -o &quot;$(IntDir)/$(InputName).obj&quot; -f win32 &quot;$(InputPath)&quot;"
+						CommandLine="&quot;$(SolutionDir)tools\nasmw&quot; -o &quot;$(IntDir)/$(InputName).obj&quot; -f win32 &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputPath)"
 						Outputs="$(IntDir)/$(InputName).obj"
 					/>
@@ -602,7 +602,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling $(InputName).nas with NASM..."
-						CommandLine="&quot;$(SolutionDir)tools\nasmw&quot; -o &quot;$(IntDir)/$(InputName).obj&quot; -f win32 &quot;$(InputPath)&quot;"
+						CommandLine="&quot;$(SolutionDir)tools\nasmw&quot; -o &quot;$(IntDir)/$(InputName).obj&quot; -f win32 &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputPath)"
 						Outputs="$(IntDir)/$(InputName).obj"
 					/>
@@ -628,7 +628,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling $(InputName).nas with NASM..."
-						CommandLine="&quot;$(SolutionDir)tools\nasmw&quot; -o &quot;$(IntDir)/$(InputName).obj&quot; -f win32 &quot;$(InputPath)&quot;"
+						CommandLine="&quot;$(SolutionDir)tools\nasmw&quot; -o &quot;$(IntDir)/$(InputName).obj&quot; -f win32 &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputPath)"
 						Outputs="$(IntDir)/$(InputName).obj"
 					/>
@@ -1576,6 +1576,14 @@
 			</File>
 			<File
 				RelativePath="..\M_cheat.h"
+				>
+			</File>
+			<File
+				RelativePath="..\M_filewriter.c"
+				>
+			</File>
+			<File
+				RelativePath="..\M_filewriter.h"
 				>
 			</File>
 			<File
