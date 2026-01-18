@@ -148,7 +148,7 @@ extern mapthing_t *rflagpoint, *bflagpoint; // Original flag spawn locations
 #define MF_REDFLAG 1
 #define MF_BLUEFLAG 2
 
-#define LEVELARRAYSIZE 51
+#define LEVELARRAYSIZE 50
 extern char lvltable[LEVELARRAYSIZE+3][64];
 
 extern boolean twodlevel;

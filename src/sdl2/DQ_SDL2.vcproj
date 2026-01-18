@@ -74,7 +74,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL2.lib SDL2main.lib SDL2_mixer.lib libpng.lib zlib.lib opengl32.lib glu32.lib wsock32.lib"
+				AdditionalDependencies="SDL2.lib SDL2main.lib SDL2_mixer.lib zlib.lib opengl32.lib glu32.lib wsock32.lib"
 				OutputFile="$(OutDir)\sdqsdl2_debug.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -183,8 +183,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MD"
-				AdditionalDependencies="SDL2.lib SDL2main.lib SDL2_mixer.lib libpng.lib zlib.lib opengl32.lib glu32.lib wsock32.lib"
-				OutputFile="$(OutDir)\sdqsdl2_debug.exe"
+				AdditionalDependencies="SDL2.lib SDL2main.lib SDL2_mixer.lib zlib.lib opengl32.lib glu32.lib wsock32.lib"
+				OutputFile="$(OutDir)\sdqsdl2.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(SolutionDir)lib"
@@ -1227,6 +1227,14 @@
 			</File>
 			<File
 				RelativePath="..\m_cheat.h"
+				>
+			</File>
+			<File
+				RelativePath="..\M_filewriter.c"
+				>
+			</File>
+			<File
+				RelativePath="..\M_filewriter.h"
 				>
 			</File>
 			<File

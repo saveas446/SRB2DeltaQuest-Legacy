@@ -1,7 +1,7 @@
 // d2udef.h
 /// \file
 /// \brief Various #define statements that allow you to easily 
-///	enable/disable various Demo 2 Ultimate-specific things.
+///	enable/disable various SRB2 Delta Quest-specific things.
 /// A control panel of sorts to configure the build
 /// with different gameplay/interface options for mine and Sam's ease of use.
 
@@ -74,7 +74,7 @@
 	/**
 	\brief Disables the Time Attack and Statistics menus
 	*/	
-    //#define FD_SPMENUOPTIONS
+    #define FD_SPMENUOPTIONS
 
     
 
@@ -120,9 +120,9 @@
 	/**
 	\brief 
 	Controls "tiny" version number (0.0.x)
-	Increment this every day that work on D2U is done
+	Increment this every day that work on Delta Quest is done
 	*/
-    #define TINYVER 18
+    #define TINYVER 19
 
 	/**
 	\brief Controls whether the title screen uses "TITLESKY" or "SKY1" as its BG

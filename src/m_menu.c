@@ -800,8 +800,7 @@ CV_PossibleValue_t skill_cons_t[] = {{1,"Easy"} // Tails 01-18-2001
                              ,{4,"Very Hard" } // Tails 01-18-2001
                              ,{0,NULL}};
 
-//WHAT THE FUCK SSN
-static CV_PossibleValue_t map_cons_t[LEVELARRAYSIZE] = {{1,"MAP01"},
+static CV_PossibleValue_t map_cons_t[LEVELARRAYSIZE+3] = {{1,"MAP01"},
 														{2,"MAP02"},
 														{3,"MAP03"},
 														{4,"MAP04"},
@@ -2609,6 +2608,7 @@ static void M_TimeAttack(int choice)
 //
 void M_DrawTimeAttackMenu(void)
 {
+	patch_t *PictureOfLevel;
 	int lumpnum;
 	char hours[4];
 	char minutes[4];
@@ -2617,7 +2617,7 @@ void M_DrawTimeAttackMenu(void)
 	tic_t besttime = 0;
 	int i;
 
-	S_ChangeMusic(mus_lvclr, true); // Eww, but needed for when user hits escape during demo playback
+	S_ChangeMusic(mus_racent, true); // Eww, but needed for when user hits escape during demo playback
 
 	V_DrawPatchFill(W_CachePatchName("SRB2BACK", PU_CACHE));
 
@@ -2626,7 +2626,14 @@ void M_DrawTimeAttackMenu(void)
 
 //  A 160x100 image of the level as entry MAPxxP
 	lumpnum = W_CheckNumForName(va("%sP", G_BuildMapName(cv_nextmap.value)));
+
+	if (lumpnum != -1)
+		PictureOfLevel = W_CachePatchName(va("%sP", G_BuildMapName(cv_nextmap.value)), PU_CACHE);
+	else
+		PictureOfLevel = W_CachePatchName("BLANKLVL", PU_CACHE);
 	
+	V_DrawSmallScaledPatch(208, 128, 0, PictureOfLevel);
+
 	for (i = 0; i < NUMMAPS; i++)
 	{
 		if (!(mapheaderinfo[i].timeattack))

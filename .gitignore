@@ -131,9 +131,13 @@ doc/D2U/*
 
 .vscode/*
 
-# No debug EXEs in the repo!
+# No debug or old EXEs in the repo!
 sdqsdl2_debug.exe
 sdqwin32_debug.exe
+srb2win.exe
+srb2debug.exe
+srb2sdl2.exe
+srb2sdl2_debug.exe
 
 # No launcher debugging stuff
 dev/launcher.application
@@ -152,8 +156,5 @@ dev/reshadepreset.ini
 #My 2.2 folder (hey i had to put it somewhere where i could see it so sorry bruv)
 /2.2 (for reference)/
 lib/libpng.lib
-dev/sdllog.txt
 lib/zlib.lib
-lib/libpng.lib
-dev/srb2sdl2debug.exe
 lib/libpng.lib

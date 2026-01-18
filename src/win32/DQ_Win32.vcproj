@@ -192,7 +192,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dxguid.lib dinput.lib dsound.lib ddraw.lib winmm.lib wsock32.lib fmodvc.lib zlib.lib libpng.lib"
+				AdditionalDependencies="dxguid.lib dinput.lib dsound.lib ddraw.lib winmm.lib wsock32.lib fmodvc.lib zlib.lib"
 				OutputFile="$(OutDir)\sdqwin32.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"

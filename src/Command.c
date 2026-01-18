@@ -1326,7 +1326,9 @@ void CV_AddValue(consvar_t *var, int increment)
 #endif
 							|| (gt == GT_CTF && !(mapheaderinfo[newvalue].typeoflevel & TOL_CTF))) && inlevelselect == 0)
 						|| (inlevelselect == 1 && !(mapheaderinfo[newvalue].levelselect))
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE == PLAYTEST_BUILD
 						|| (inlevelselect == 2 && !(mapheaderinfo[newvalue].timeattack && mapvisited[newvalue]))
+#endif
 						);
 					var->value = newvalue + 1;
 					var->string = var->PossibleValue[newvalue].strvalue;
@@ -1353,7 +1355,9 @@ void CV_AddValue(consvar_t *var, int increment)
 #endif
 						|| (gt == GT_CTF && !(mapheaderinfo[newvalue].typeoflevel & TOL_CTF))) && inlevelselect == 0)
 						|| (inlevelselect == 1 && !(mapheaderinfo[newvalue].levelselect))
-						|| (inlevelselect == 2 && !(mapheaderinfo[newvalue].timeattack && mapvisited[newvalue]))
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE == PLAYTEST_BUILD
+						|| (inlevelselect == 2 && !(mapheaderinfo[newvalue].timeattack && mapvisited[newvalue])
+#endif
 						);
 					var->value = newvalue + 1;
 					var->string = var->PossibleValue[newvalue].strvalue;

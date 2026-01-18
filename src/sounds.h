@@ -214,6 +214,7 @@ typedef enum
     mus_drown, // drowning Tails 03-06-2000
     mus_gmover, // Tails 03-14-2000
     mus_xtlife, // Tails 03-14-2000
+    mus_racent,
     NUMMUSIC
 } musicenum_t;
 

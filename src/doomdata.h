@@ -224,6 +224,6 @@ typedef struct
 
 extern const char *Color_Names[MAXSKINCOLORS];
 
-#define NUMMAPS 1035
+#define NUMMAPS 50
 
 #endif // __DOOMDATA__

@@ -118,6 +118,7 @@ musicinfo_t S_music[NUMMUSIC] =
     { "drown\0" , 0 }, // drowning Tails 03-06-2000
     { "gmover"  , 0 }, // Tails 03-14-2000
     { "xtlife"  , 0 }, // Tails 03-14-2000
+    { "racent"  , 0 }
 };
 
 
