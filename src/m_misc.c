@@ -61,6 +61,8 @@
 #include "m_argv.h"
 #include "i_system.h"
 
+#include <windows.h>
+#include <gl/GL.h>
 
 #ifdef _WIN32_WCE
 #include "sdl/SRB2CE/cehelp.h"
@@ -923,16 +925,81 @@ M_CloseGIF(void) {
   */
 #define PNG_COLOR_TYPE_INDEXED 3
 #define PNG_COLOR_TYPE_RGB 2
+#define PNG_COLOR_TYPE_RGBA 6
+
+#define PNG_FILTER_NONE 0
+#define PNG_FILTER_SUB 1
+#define PNG_FILTER_UP 2
+#define PNG_FILTER_AVG 3
+#define PNG_FILTER_PAETH 4
+
+static UINT8 png_choose_filter(const UINT8* row, const UINT8* prew_row, int width, int channels) {
+	int x;
+	UINT8 filter;
+
+	int width_bytes = width * channels;
+	int best_sum = INT_MAX;
+	UINT8 best_filter = PNG_FILTER_NONE;
+
+	for(filter = PNG_FILTER_NONE; filter <= PNG_FILTER_UP; filter++) {
+		int sum = 0;
+
+		for(x = 0; x < width_bytes; x++) {
+			int left = (x >= channels) ? row[x - channels] : 0;
+			int up = prew_row ? prew_row[x] : 0;
+			int val = 0;
+
+			switch(filter) {
+				case PNG_FILTER_NONE: val = row[x]; break;
+				case PNG_FILTER_SUB: val = row[x] - left; break;
+				case PNG_FILTER_UP: val = row[x] - up; break;
+			}
+
+			sum += abs(val);
+		}
+
+		if(sum < best_sum) {
+			best_sum = sum;
+			best_filter = filter;
+		}
+	}
+
+	return best_filter;
+}
+
+static void png_apply_sub_filter(UINT8* row, int width, int channels) {
+	int x;
+	int width_bytes = width * channels;
+
+	row[0] = PNG_FILTER_SUB;
+	for(x = width_bytes - 1; x >= channels; x--) {
+		int i = x + 1;
+		row[i] = (row[i] - row[i - channels]) & 0xff;
+	}
+}
+
+static void png_apply_up_filter(UINT8* row, UINT8* prew_row, int width, int channels) {
+	int x;
+	int width_bytes =width * channels;
+
+	row[0] = PNG_FILTER_UP;
+	if(!prew_row) return;
+
+	for(x = 0; x < width_bytes; x++) {
+		int i = x + 1;
+		row[i] = (row[i] - prew_row[x]) & 0xff;
+	}
+}
 
 const UINT8 png_signature[8] = {137, 80, 78, 71, 13, 10, 26, 10};
-boolean M_SavePNG(const char* filename, void* data, int width, int height, byte* palette) {
+boolean M_SavePNG(const char* filename, const UINT8* data, int width, int height, int channels, const UINT8* palette) {
 	// get file
 	FileBuffer fb = {0};
 
 	FILE* file = fopen(filename, "wb");
 	if(!file) {
 		CONS_Printf("M_SavePNG: Error on opening %s for write\n", filename);
-		return false;
+		goto fail_return;
 	}
 
 	fw_write_bytes(&fb, png_signature, sizeof png_signature);
@@ -949,8 +1016,16 @@ boolean M_SavePNG(const char* filename, void* data, int width, int height, byte*
 		// chunk data
 		fw_be_write_u32(&fb, width);
 		fw_be_write_u32(&fb, height);
-		fw_write_u8(&fb, 8); // bit depht
-		fw_write_u8(&fb, PNG_COLOR_TYPE_INDEXED);
+		fw_write_u8(&fb, 8); // bit depth
+
+		if(channels == 1) fw_write_u8(&fb, PNG_COLOR_TYPE_INDEXED);
+		else if(channels == 3) fw_write_u8(&fb, PNG_COLOR_TYPE_RGB);
+		else if(channels == 4) fw_write_u8(&fb, PNG_COLOR_TYPE_RGBA);
+		else {
+			CONS_Printf("M_SavePNG: Unsupported amount of color channels (%u)\n", channels);
+			goto fail_return;
+		}
+
 		fw_write_u8(&fb, 0); // compression method
 		fw_write_u8(&fb, 0); // filter method
 		fw_write_u8(&fb, 0); // interlace method
@@ -959,7 +1034,7 @@ boolean M_SavePNG(const char* filename, void* data, int width, int height, byte*
 		fw_be_write_u32(&fb, fw_get_crc32(&fb, start, 17)); // 17 = chunk length + sizeof(UINT32)
 	}
 
-	{ // write plte chunk
+	if(channels == 1) { // write plte chunk
 		size_t start;
 
 		fw_be_write_u32(&fb, 256 * 3);
@@ -972,42 +1047,62 @@ boolean M_SavePNG(const char* filename, void* data, int width, int height, byte*
 	}
 
 	{ // write idat chunk
-		uLongf idat_size_ul;
-		size_t start, idat_size;
+		uLongf idat_size;
+		size_t start;
 		UINT8* idat_comp_data;
 		int y;
 		
-		size_t row_bytes = width + 1; // filter byte :3
+		size_t width_bytes =  width * channels;
+		size_t row_bytes = width_bytes + 1; // filter byte :3
 		size_t img_size = row_bytes * height;
-		UINT8* png_rows = malloc(img_size);
 
-		for(y = 0; y < height; y++) {
-			png_rows[y * row_bytes] = 0; // filter byte
-			memcpy(png_rows + y * row_bytes + 1, (UINT8*)data + y * width, width);
+		UINT8* png_rows = malloc(img_size);
+		UINT8* prew_row = calloc(width_bytes, 1);
+		if(!png_rows || !prew_row) {
+			CONS_Printf("M_SavePNG: Out of memory\n");
+			goto fail_return;
 		}
 
-		idat_size_ul = compressBound(img_size);
-		idat_size = (size_t)idat_size_ul;
+		for(y = 0; y < height; y++) {
+			UINT8 filter;
 
-		idat_comp_data = malloc(idat_size);
-		if(compress2(idat_comp_data, &idat_size_ul, png_rows, img_size, Z_BEST_COMPRESSION) != Z_OK) {
+			UINT8* row_ptr = png_rows + y * row_bytes;
+			const UINT8* data_ptr = data + y * width_bytes;
+			memcpy(row_ptr + 1, data_ptr, width_bytes);
+
+			filter = png_choose_filter(row_ptr, prew_row, width, channels);
+			
+			if(!filter) row_ptr[0] = PNG_FILTER_NONE;
+			else if(filter == 1) png_apply_sub_filter(row_ptr, width, channels);
+			else if(filter == 2) png_apply_up_filter(row_ptr, prew_row, width, channels);
+
+			memcpy(prew_row, data_ptr, width_bytes);
+		}
+
+		free(prew_row);
+
+		idat_size = compressBound(img_size);
+		idat_comp_data = malloc((size_t)idat_size);
+		if(!idat_comp_data) goto fail_return;
+
+		if(compress2(idat_comp_data, &idat_size, png_rows, img_size, Z_BEST_COMPRESSION) != Z_OK) {
 			free(png_rows);
 			free(idat_comp_data);
 
 			CONS_Printf("M_SavePNG: Error at compressing IDAT chunk on %s\n", filename);
-
-			return false;
+			goto fail_return;
 		}
 
-		idat_size = (size_t)idat_size_ul;
-
-		fw_be_write_u32(&fb, idat_size);
+		fw_be_write_u32(&fb, (size_t)idat_size);
 		start = fb.pos;
 
 		fw_write_string(&fb, "IDAT");
-		fw_write_bytes(&fb, idat_comp_data, idat_size);
+		fw_write_bytes(&fb, idat_comp_data, (size_t)idat_size);
 
-		fw_be_write_u32(&fb, fw_get_crc32(&fb, start, idat_size + 4));
+		fw_be_write_u32(&fb, fw_get_crc32(&fb, start, (size_t)idat_size + 4));
+
+		free(png_rows);
+		free(idat_comp_data);
 	}
 
 	{ // write iend chunk
@@ -1022,12 +1117,11 @@ boolean M_SavePNG(const char* filename, void* data, int width, int height, byte*
 	}
 	
 	// finish writing
-	if(0 < fb.pos) {
+	if(fb.pos > 0) {
 		size_t written = fwrite(fb.buffer, 1, fb.pos, file);
 		if(written != fb.pos) {
 			CONS_Printf("M_SavePNG: Error on writing full buffer for %s\n", filename);
-			fclose(file);
-			return false;
+			goto fail_return;
 		}
 	}
 
@@ -1035,6 +1129,12 @@ boolean M_SavePNG(const char* filename, void* data, int width, int height, byte*
 	if(fb.buffer) free(fb.buffer);
 
 	return true;
+
+fail_return:
+	fclose(file);
+	if(fb.buffer) free(fb.buffer);
+
+	return false;
 }
 
 #else
@@ -1181,14 +1281,15 @@ void M_ScreenShot(void)
 
 		// save the pcx file
 #ifdef HWRENDER
-	if (rendermode != render_soft)
-		ret = HWR_Screenshot(va(pandf,pathname,freename));
-	else
+	if (rendermode != render_soft) {
+		UINT8* data = HWR_Screenshot();
+		ret = M_SavePNG(va(pandf,pathname,freename), data, vid.width, vid.height, 3, NULL);
+	} else
 #endif
 	if (rendermode != render_none)
 	{
 #ifdef USE_PNG
-		ret = M_SavePNG(va(pandf,pathname,freename), linear, vid.width, vid.height,
+		ret = M_SavePNG(va(pandf,pathname,freename), linear, vid.width, vid.height, 1,
 			W_CacheLumpName("PLAYPAL", PU_CACHE));
 #else
 		ret = WritePCXfile(va(pandf,pathname,freename), linear, vid.width, vid.height,

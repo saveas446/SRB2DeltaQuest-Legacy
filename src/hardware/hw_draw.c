@@ -694,33 +694,41 @@ static inline boolean saveTGA(const char *file_name, const void *buffer,
 // --------------------------------------------------------------------------
 // screen shot
 // --------------------------------------------------------------------------
-// TODO: Remove 'lbmname' paramater, it's unused here. (Hennkrido 1-16-2026)
-boolean HWR_Screenshot(const char *lbmname)
-{
+UINT8* HWR_Screenshot(void) {
 	int i;
-	// Removed unreferenced variable (Hennkrido 1-16-2026)
-	byte *bufw, *dest;
-	unsigned short *bufr, rgb565;
 
-	bufr = malloc(vid.width * vid.height * 2);
-	if (!bufr)
-		return false;
-	bufw = malloc(vid.width * vid.height * 3);
-	if (!bufw)
-	{
-		free(bufr);
-		return false;
+	int total = vid.width * vid.height;
+
+	UINT8* buf_rgb;
+	UINT16* buf565 = malloc(total << 1);
+	if(!buf565) return NULL;
+
+	buf_rgb = malloc(total * 3);
+	if(!buf_rgb) {
+		free(buf565);
+		return NULL;
 	}
 
-	// returns 16bit 565 RGB
-	HWD.pfnReadRect(0, 0, vid.width, vid.height, vid.width * 2, bufr);
+	HWD.pfnReadRect(0, 0, vid.width, vid.height, vid.width * 2, buf565);
 
-	for (dest = bufw, i = 0; i < vid.width * vid.height; i++)
-	{
-		rgb565 = bufr[i];
-		*(dest++) = (byte)((rgb565 & 31) <<3);
-		*(dest++) = (byte)(((rgb565 >> 5) & 63) <<2);
-		*(dest++) = (byte)(((rgb565 >> 11) & 31) <<3);
+	for(i = 0; i < total; i++) {
+		int pos = i * 3;
+
+		UINT16 rgb565 = buf565[i];
+
+		UINT8 b = rgb565 & 31;
+		UINT8 g = (rgb565 >> 5) & 63;
+		UINT8 r = (rgb565 >> 11) & 31;
+		
+		// red
+		buf_rgb[pos] = (r << 3) | (r >> 2);
+		// green
+		buf_rgb[pos + 1] = (g << 2) | (g >> 4);
+		// blue
+		buf_rgb[pos + 2] = (b << 3) | (b >> 2);
 	}
-	free(bufr);
+
+	free(buf565);
+
+	return buf_rgb;
 }
