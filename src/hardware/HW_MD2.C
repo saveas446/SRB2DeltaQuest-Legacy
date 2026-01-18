@@ -23,7 +23,7 @@
 #include <string.h>
 #include <math.h>
 
-#ifdef HAVE_PNG
+#if 0
  #include <png.h>
  #ifndef PNG_READ_SUPPORTED
  #undef HAVE_PNG
@@ -42,6 +42,8 @@
 #include "../m_misc.h"
 #include "../w_wad.h"
 #include "../z_zone.h"
+
+md2_t md2_models[NUMSPRITES];
 
 /*
  * free model
@@ -441,7 +443,7 @@ static inline void md2_printModelInfo (md2_model_t *model)
 #endif
 }
 
-#ifdef HAVE_PNG
+#if 0
 static void PNG_error(png_structp PNG, png_const_charp text)
 {
 	CONS_Printf("libpng error at %p: %s", PNG,text);
@@ -653,4 +655,222 @@ static GrTextureFormat_t PCX_Load(const char *filename, int *w, int *h,
 	}
 	fclose(file);
 	return GR_RGBA;
+}
+
+// -----------------+
+// md2_loadTexture  : Download a pcx texture for MD2 models
+// -----------------+
+static void md2_loadTexture(md2_t *model)
+{
+	GlidePatch_t *grpatch;
+	const char *filename = model->filename;
+
+	if (model->grpatch)
+	{
+		grpatch = model->grpatch;
+		Z_Free(grpatch->mipmap.grInfo.data);
+	}
+	else
+	{
+		grpatch = Z_Malloc(sizeof *grpatch, PU_HWRPATCHINFO,
+			&(model->grpatch));
+		memset(grpatch, 0, sizeof *grpatch);
+	}
+
+	if (!grpatch->mipmap.downloaded && !grpatch->mipmap.grInfo.data)
+	{
+		int w = 0, h = 0;
+#if 0
+		grpatch->mipmap.grInfo.format = PNG_Load(filename, &w, &h, grpatch);
+		if (grpatch->mipmap.grInfo.format == 0)
+#endif
+		grpatch->mipmap.grInfo.format = PCX_Load(filename, &w, &h, grpatch);
+		if (grpatch->mipmap.grInfo.format == 0)
+			return;
+
+		grpatch->mipmap.downloaded = 0;
+		grpatch->mipmap.flags = 0;
+
+		grpatch->width = (short)w;
+		grpatch->height = (short)h;
+		grpatch->mipmap.width = (unsigned short)w;
+		grpatch->mipmap.height = (unsigned short)h;
+
+		// not correct!
+		grpatch->mipmap.grInfo.smallLodLog2 = GR_LOD_LOG2_256;
+		grpatch->mipmap.grInfo.largeLodLog2 = GR_LOD_LOG2_256;
+		grpatch->mipmap.grInfo.aspectRatioLog2 = GR_ASPECT_LOG2_1x1;
+	}
+	HWD.pfnSetTexture(&grpatch->mipmap);
+}
+
+void HWR_InitMD2(void)
+{
+	size_t i;
+	FILE *f;
+	char name[5], filename[32];
+	float scale, offset;
+
+	CONS_Printf("InitMD2()...\n");
+	for (i = 0; i < NUMSPRITES; i++)
+	{
+		md2_models[i].scale = -1.0f;
+		md2_models[i].model = NULL;
+		md2_models[i].grpatch = NULL;
+	}
+	// read the md2.dat file
+
+	f = fopen("md2.dat", "rt");
+	if (!f)
+	{
+		CONS_Printf("Error while loading md2.dat\n");
+		return;
+	}
+	while (fscanf(f, "%4s %31s %f %f", name, filename, &scale, &offset) == 4)
+	{
+		for (i = 0; i < NUMSPRITES; i++)
+		{
+			if (strcmp(name, sprnames[i]) == 0)
+			{
+				//CONS_Printf("  Found: %s %s %f %f\n", name, filename, scale, offset);
+				md2_models[i].scale = scale;
+				md2_models[i].offset = offset;
+				strcpy(md2_models[i].filename, filename);
+				break;
+			}
+		}
+		if (i == NUMSPRITES)
+			CONS_Printf("    Not found: %s\n", name);
+	}
+	fclose(f);
+}
+
+
+
+// -----------------+
+// HWR_DrawMD2      : Draw MD2
+//                  : (monsters, bonuses, weapons, lights, ...)
+// Returns          :
+// -----------------+
+	/*
+	wait/stand
+	death
+	pain
+	walk
+	shoot/fire
+
+	die?
+	atka?
+	atkb?
+	attacka/b/c/d?
+	res?
+	run?
+	*/
+void HWR_DrawMD2(gr_vissprite_t *spr)
+{
+	GlidePatch_t *gpatch; // sprite patch converted to hardware
+	FSurfaceInfo Surf;
+
+	char filename[64];
+	int frame;
+	FTransform p;
+	md2_t *md2;
+
+	// cache sprite graphics
+	//12/12/99: Hurdler:
+	//          OK, I don't change anything for MD2 support because I want to be
+	//          sure to do it the right way. So actually, we keep normal sprite
+	//          in memory and we add the md2 model if it exists for that sprite
+
+	// convert srpite differently when fxtranslucent is detected
+	if ((spr->mobj->frame & FF_TRANSMASK) == tr_transfx1<<FF_TRANSSHIFT)
+	{
+		firetranslucent = true;
+		gpatch = W_CachePatchNum(spr->patchlumpnum, PU_CACHE);
+		firetranslucent = false;
+	}
+	else
+		gpatch = W_CachePatchNum(spr->patchlumpnum, PU_CACHE);
+
+	/// \todo manage spr->flip
+
+	//12/12/99: Hurdler: same comment as above (for md2)
+	HWR_GetMappedPatch(gpatch, spr->colormap);
+
+	// sprite lighting by modulating the RGB components
+	/// \todo coloured
+	Surf.FlatColor.s.red = Surf.FlatColor.s.green = Surf.FlatColor.s.blue = spr->sectorlight;
+
+	// Look at HWR_ProjetctSprite for more
+	if (cv_grmd2.value && (md2_models[spr->mobj->sprite].scale > 0) && !spr->precip)
+	{
+		int blend = 0;
+		GlidePatch_t *oldgpatch = gpatch;
+
+		if (spr->mobj->frame & FF_TRANSMASK)
+			blend = HWR_TranstableToAlpha((spr->mobj->frame & FF_TRANSMASK)>>FF_TRANSSHIFT, &Surf);
+		else if (spr->mobj->frame & FF_SMOKESHADE)
+		{
+			Surf.FlatColor.s.alpha = 0x80;
+			blend = PF_Translucent;
+		}
+		else if (spr->mobj->flags2 & MF2_SHADOW)
+		{
+			Surf.FlatColor.s.alpha = 0x40;
+			blend = PF_Translucent;
+		}
+		else
+		{
+			Surf.FlatColor.s.alpha = 0xFF;
+			blend = PF_Translucent|PF_Occlude;
+		}
+		// hack for updating the light level before drawing the md2
+		HWD.pfnDrawPolygon(&Surf, NULL, 4, blend|PF_Modulated|PF_Clip|PF_MD2);
+
+		// dont forget to enabled the depth test because we can't do this like
+		// before: polygons models are not sorted
+
+		// 1. load model+texture if not already loaded
+		// 2. draw model with correct position, rotation,...
+		md2 = &md2_models[spr->mobj->sprite];
+		if (!md2->model) 
+		{
+			//CONS_Printf("Loading MD2... (%s)", sprnames[spr->mobj->sprite]);
+			sprintf(filename, "md2/%s", md2->filename);
+			md2->model = md2_readModel(filename);
+
+			if (md2->model)
+			{
+				md2_printModelInfo(md2->model);
+			}
+			else
+			{
+				//CONS_Printf(" FAILED\n");
+				return;
+			}
+		}
+		//Hurdler: arf, I don't like that implementation at all... too much crappy
+		gpatch = md2->grpatch;
+		if (!gpatch || !gpatch->mipmap.grInfo.format ||!gpatch->mipmap.downloaded)
+			md2_loadTexture(md2);
+		else if (gpatch->mipmap.grInfo.format)
+			HWD.pfnSetTexture(&gpatch->mipmap);
+		else
+			HWD.pfnSetTexture(&oldgpatch->mipmap);
+
+		//FIXME: this is not yet correct
+		frame = spr->mobj->frame % md2->model->header.numFrames;
+
+		//Hurdler: it seems there is still a small problem with mobj angle 
+		p.x = FIXED_TO_FLOAT(spr->mobj->x);
+		p.y = FIXED_TO_FLOAT(spr->mobj->y)+md2->offset;
+		p.z = FIXED_TO_FLOAT(spr->mobj->z);
+		{
+			const fixed_t anglef = AngleFixed(spr->mobj->angle);
+			p.angley = FIXED_TO_FLOAT(anglef);
+		}
+		p.anglex = 0.0f;
+
+		HWD.pfnDrawMD2(md2->model->glCommandBuffer, &md2->model->frames[frame], &p, md2->scale);
+	}
 }

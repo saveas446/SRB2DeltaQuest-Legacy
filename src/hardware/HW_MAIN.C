@@ -35,7 +35,6 @@
 #include "../r_splats.h"
 #include "../g_game.h"
 #include "../st_stuff.h"
-#include "../tables.h"
 
 #define R_FAKEFLOORS
 
@@ -1279,20 +1278,6 @@ static void HWR_StoreWallRange(int startfrac, int endfrac)
 			}
 
 			if (gr_linedef->flags & ML_DONTPEGBOTTOM)
-			{
-				polybottom = popenbottom + gr_sidedef->rowoffset;
-				polytop = polybottom + textureheight[gr_midtexture];
-			}
-			if (gr_linedef->flags & ML_EFFECT4)
-			{
-				polytop = polybottom + textureheight[gr_midtexture];
-				polybottom = max(gr_frontsector->floorheight, gr_backsector->floorheight) + gr_sidedef->rowoffset;
-			}
-			if (gr_linedef->flags & ML_EFFECT4)
-			{
-				texturevpeg = textureheight[gr_midtexture] - h + polybottom;
-			}
-			if (gr_linedef->flags & ML_EFFECT4)
 			{
 				polybottom = popenbottom + gr_sidedef->rowoffset;
 				polytop = polybottom + textureheight[gr_midtexture];
@@ -2658,6 +2643,7 @@ static void HWR_DrawSprite(gr_vissprite_t *spr)
 	}
 
 	/// \todo do the test earlier
+	if (!cv_grmd2.value || (md2_models[spr->mobj->sprite].scale < 0.0f))
 	{
 		FBITFIELD blend = 0;
 		if (spr->mobj->frame & FF_TRANSMASK)
@@ -2829,6 +2815,25 @@ static void HWR_DrawSprites(void)
 				HWR_DrawPrecipitationSprite(spr);
 			else
 				HWR_DrawSprite(spr);
+		}
+	}
+}
+
+// --------------------------------------------------------------------------
+//  Draw all MD2
+// --------------------------------------------------------------------------
+static void HWR_DrawMD2S(void)
+{
+	if (gr_vissprite_p > gr_vissprites)
+	{
+		gr_vissprite_t *spr;
+
+		// draw all MD2 back to front
+		for (spr = gr_vsprsortedhead.next;
+			spr != &gr_vsprsortedhead;
+			spr = spr->next)
+		{
+			HWR_DrawMD2(spr);
 		}
 	}
 }
@@ -3457,6 +3462,7 @@ void HWR_RenderPlayerView(int viewnumber, player_t *player)
 
 	// Draw MD2 and sprites
 	HWR_SortVisSprites();
+	HWR_DrawMD2S();
 	// Draw the sprites like it was done previously without T&L
 	HWD.pfnSetTransform(NULL);
 	HWR_DrawSprites();
@@ -3632,6 +3638,8 @@ void HWR_Startup(void)
 		doomwaterflat  = W_CheckNumForName("FWATER1");
 		if (doomwaterflat == -1) // if FWATER1 not found (in doom shareware)
 			doomwaterflat = W_GetNumForName("WATER0");
+
+		HWR_InitMD2();
 	}
 
 	HWR_InitLight();
