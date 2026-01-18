@@ -812,7 +812,7 @@ void A_Look(mobj_t *actor)
 void A_HeavyTurretsGuyFind(mobj_t *actor)
 {
 	int locvar1 = var1;
-	int locvar2 = var2;
+	// Removed unreferenced variable (Hennkrido 1-16-2026)
 
 	if (!P_LookForPlayersHTG(actor, locvar1, false))
 		return;
@@ -831,7 +831,7 @@ void A_HeavyTurretsGuyFind(mobj_t *actor)
 void A_HeavyTurretsGuyKeep(mobj_t *actor)
 {
 	int locvar1 = var1;
-	int locvar2 = var2;
+	// Removed unreferenced variable (Hennkrido 1-16-2026)
 
 	if (!P_LookForPlayersHTG2(actor, locvar1, false)) {
 		P_SetMobjState(actor, actor->info->spawnstate);
@@ -1552,8 +1552,7 @@ void A_MonitorPop(mobj_t *actor)
 {
 	mobj_t *remains;
 	mobjtype_t item;
-	int prandom;
-	mobjtype_t newbox;
+	// Removed unreferenced variables (Hennkrido 1-16-2026)
 
 	// de-solidify
 	P_UnsetThingPosition(actor);
@@ -4499,10 +4498,10 @@ void A_SetObjectFlags2(mobj_t *actor)
 //		1 = Boss2 jet fume pattern
 // var2 = unused
 //
+// TODO_ Remove 'actor' parameter, it's unused. (Hennkrido 1-16-2026)
 void A_BossJetFume(mobj_t *actor)
 {
-	mobj_t *filler;
-	int locvar1 = var1;
+	// Removed unreferenced variables (Hennkrido 1-16-2026)
 
 	// no thanks...
 	/*

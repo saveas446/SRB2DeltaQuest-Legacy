@@ -183,6 +183,7 @@ static void TimeAttacked_OnChange(void)
 {
 	if (cv_timeattacked.value)
 	{
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE != PLAYTEST_BUILD
 		if (!modifiedgame || savemoddata)
 		{
 			modifiedgame = true;
@@ -190,6 +191,7 @@ static void TimeAttacked_OnChange(void)
 			if (!(netgame || multiplayer))
 				CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
 		}
+#endif
 	}
 }
 

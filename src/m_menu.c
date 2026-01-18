@@ -1586,7 +1586,7 @@ static void M_HandleSetupMultiPlayer(int choice)
         if (l<MAXPLAYERNAME-1)
         {
             S_StartSound(NULL,sfx_stnmov);
-            setupm_name[l]=choice;
+            setupm_name[l]=(char)choice & 0xFF;
             setupm_name[l+1]=0;
         }
         break;
@@ -1646,7 +1646,7 @@ static inline void M_SetupChoosePlayer(int choice)
 static void M_DrawSetupChoosePlayerMenu(void)
 {
 	int             mx,my;
-	patch_t *       patch;
+	// Removed unreferenced variable (Hennkrido 1-16-2026)
 
 	mx = 96;
 	my = PlayerDef.y;

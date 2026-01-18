@@ -1163,7 +1163,7 @@ void T_ThwompSector(elevator_t *elevator)
 
 		if (res == pastdest)
 		{
-			mobj_t *mp = (mobj_t *)&elevator->actionsector->soundorg;
+			// Removed unreferenced variable (Hennkrido 1-16-2026)
 			elevator->direction = 1; // start heading back up
 			elevator->distance = TICRATE; // but only after a small delay
 		}

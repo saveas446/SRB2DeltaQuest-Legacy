@@ -235,6 +235,8 @@ int EV_DoCeiling(line_t *line, ceiling_e type);
 int EV_DoCrush(line_t *line, ceiling_e type);
 void T_CrushCeiling(ceiling_t *ceiling);
 
+extern int EV_CeilingCrushStop(line_t* line);
+
 void T_MoveCeiling(ceiling_t *ceiling);
 
 //
@@ -352,6 +354,8 @@ typedef enum
 } result_e;
 
 int EV_SilentLineTeleport(line_t *line, int side, mobj_t *thing, boolean reverse);
+
+extern int EV_DoDonut(line_t*  line);
 
 typedef enum
 {
@@ -493,13 +497,19 @@ EV_DoLockedDoor
   vldoor_e      type,
   mobj_t*       thing );
 
+extern int
+EV_LightTurnOn
+( line_t*       line,
+  int           bright );
+
+extern int EV_TurnTagLightsOff(line_t* line);
+
 void    T_VerticalDoor (vldoor_t* door);
 void    P_SpawnDoorCloseIn30 (sector_t* sec);
 
 void
 P_SpawnDoorRaiseIn5Mins
-( sector_t*     sec,
-  int           secnum );
+( sector_t*     sec);
 
 
 

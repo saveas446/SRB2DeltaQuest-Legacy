@@ -2888,7 +2888,7 @@ void G_TimeDemo(const char *name)
 	demostarttime = I_GetTime();
 	G_DeferedPlayDemo(name);
 }
-
+// TODO: Remove 'enable' parameter, it's unused. (Hennkrido 1-16-2026)
 void G_MovieMode(boolean enable)
 {
 	/*if (enable)

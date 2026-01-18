@@ -39,6 +39,7 @@
 #include "r_splats.h"
 #include "z_zone.h"
 #include "w_wad.h"
+#include "m_fixed.h"
 
 #include "d2udef.h"
 
@@ -665,6 +666,35 @@ void P_RestoreMusic(player_t *player)
 }
 
 //
+// P_IsObjectOnGround
+//
+// Returns true if the player is
+// on the ground. Takes reverse
+// gravity into account.
+//
+boolean P_IsObjectOnGround(mobj_t *mo)
+{
+	if ((mo->z <= mo->floorz) || (mo->flags2&(MF2_ONMOBJ)))
+		return true;
+
+	return false;
+}
+
+//
+// P_SetObjectMomZ
+//
+// Sets the player momz appropriately.
+// Takes reverse gravity into account.
+//
+void P_SetObjectMomZ(mobj_t *mo, fixed_t value, boolean relative)
+{
+	if (relative)
+		mo->momz += value;
+	else
+		mo->momz = value;
+}
+
+//
 // P_IsLocalPlayer
 //
 // Returns true if player is
@@ -1069,14 +1099,16 @@ static void P_2dMovement(player_t *player)
 	}
 }
 
+// Port of v2.0.6's movement code to 1.09.4's engine
 static void P_3dMovement(player_t *player)
 {
 	ticcmd_t *cmd;
-	angle_t	movepushangle, movepushsideangle; // Analog
-	int topspeed, acceleration, thrustfactor;
+	angle_t movepushangle, movepushsideangle; // Analog
+	INT32 topspeed, acceleration, thrustfactor;
 	fixed_t movepushforward = 0, movepushside = 0;
-	int mforward = 0, mbackward = 0;
+	INT32 mforward = 0, mbackward = 0;
 	camera_t *thiscam;
+	fixed_t normalspd = player->normalspeed;
 
 	if (cv_splitscreen.value && player == &players[secondarydisplayplayer])
 		thiscam = &camera2;
@@ -1086,101 +1118,106 @@ static void P_3dMovement(player_t *player)
 	cmd = &player->cmd;
 
 	if (player->exiting)
+	{
 		cmd->forwardmove = cmd->sidemove = 0;
+		if (player->gliding)
+			player->gliding = false;
+		if (player->spinning && !player->exiting)
+		{
+			player->spinning = false;
+			P_SetPlayerMobjState(player->mo, S_PLAY_STND);
+		}
+	}
 
 	if (!netgame && ((player == &players[consoleplayer] && cv_analog.value) || (cv_splitscreen.value && player == &players[secondarydisplayplayer] && cv_analog2.value)))
 	{
 		movepushangle = thiscam->angle;
-		movepushsideangle = thiscam->angle-ANG90;
+		movepushsideangle = thiscam->angle-ANGLE_90;
 	}
 	else
 	{
 		movepushangle = player->mo->angle;
-		movepushsideangle = player->mo->angle-ANG90;
+		movepushsideangle = player->mo->angle-ANGLE_90;
 	}
 
 	// cmomx/cmomy stands for the conveyor belt speed.
-	if (player->onconveyor == 984)
+	if (player->onconveyor == 2) // Wind/Current
 	{
-//		if (player->mo->z > player->mo->watertop || player->mo->z + player->mo->height < player->mo->waterbottom)
+		//if (player->mo->z > player->mo->watertop || player->mo->z + player->mo->height < player->mo->waterbottom)
 		if (!(player->mo->eflags & MF_UNDERWATER) && !(player->mo->eflags & MF_TOUCHWATER))
 			player->cmomx = player->cmomy = 0;
 	}
-
-	else if (player->onconveyor == 985 && player->mo->z > player->mo->floorz)
+	else if (player->onconveyor == 4 && !P_IsObjectOnGround(player->mo)) // Actual conveyor belt
 		player->cmomx = player->cmomy = 0;
-
-	else if (player->onconveyor != 984 && player->onconveyor != 985)
+	else if (player->onconveyor != 2 && player->onconveyor != 4)
 		player->cmomx = player->cmomy = 0;
 
 	player->rmomx = player->mo->momx - player->cmomx;
 	player->rmomy = player->mo->momy - player->cmomy;
 
 	// Calculates player's speed based on distance-of-a-line formula
-	player->speed = P_AproxDistance(player->rmomx, player->rmomy) >> FRACBITS;
+	player->speed = P_AproxDistance(player->rmomx, player->rmomy)>>FRACBITS;
 
 	// This determines if the player is facing the direction they are travelling or not.
 	// Didn't your teacher say to pay attention in Geometry/Trigonometry class? ;)
 	// forward
-	if ((player->rmomx > 0 && player->rmomy > 0) && (/*player->mo->angle >= 0 &&*/ player->mo->angle < ANG90)) // Quadrant 1
+	if ((player->rmomx > 0 && player->rmomy > 0) && (/*player->mo->angle >= 0 &&*/ player->mo->angle < ANGLE_90)) // Quadrant 1
 		mforward = 1;
-	else if ((player->rmomx < 0 && player->rmomy > 0) && (player->mo->angle >= ANG90 && player->mo->angle < ANG180)) // Quadrant 2
+	else if ((player->rmomx < 0 && player->rmomy > 0) && (player->mo->angle >= ANGLE_90 && player->mo->angle < ANGLE_180)) // Quadrant 2
 		mforward = 1;
-	else if ((player->rmomx < 0 && player->rmomy < 0) && (player->mo->angle >= ANG180 && player->mo->angle < ANG270)) // Quadrant 3
+	else if ((player->rmomx < 0 && player->rmomy < 0) && (player->mo->angle >= ANGLE_180 && player->mo->angle < ANGLE_270)) // Quadrant 3
 		mforward = 1;
-	else if ((player->rmomx > 0 && player->rmomy < 0) && ((player->mo->angle >= ANG270 && (player->mo->angle <= ANGLE_MAX)) || (/*player->mo->angle >= 0 &&*/ player->mo->angle <= ANG45))) // Quadrant 4
+	else if ((player->rmomx > 0 && player->rmomy < 0) && ((player->mo->angle >= ANGLE_270 /*&& (player->mo->angle <= ANGLE_MAX)*/) || (/*player->mo->angle >= 0 &&*/ player->mo->angle <= ANGLE_45))) // Quadrant 4
 		mforward = 1;
-	else if (player->rmomx > 0 && ((player->mo->angle >= ANG270+ANG45 && player->mo->angle <= ANGLE_MAX)))
+	else if (player->rmomx > 0 && ((player->mo->angle >= ANGLE_315 /*&& player->mo->angle <= ANGLE_MAX*/)))
 		mforward = 1;
-	else if (player->rmomx < 0 && (player->mo->angle >= ANG90+ANG45 && player->mo->angle <= ANG180+ANG45))
+	else if (player->rmomx < 0 && (player->mo->angle >= ANGLE_135 && player->mo->angle <= ANGLE_225))
 		mforward = 1;
-	else if (player->rmomy > 0 && (player->mo->angle >= ANG45 && player->mo->angle <= ANG90+ANG45))
+	else if (player->rmomy > 0 && (player->mo->angle >= ANGLE_45 && player->mo->angle <= ANGLE_135))
 		mforward = 1;
-	else if (player->rmomy < 0 && (player->mo->angle >= ANG180+ANG45 && player->mo->angle <= ANG270+ANG45))
+	else if (player->rmomy < 0 && (player->mo->angle >= ANGLE_225 && player->mo->angle <= ANGLE_315))
 		mforward = 1;
 	else
 		mforward = 0;
 	// backward
-	if ((player->rmomx > 0 && player->rmomy > 0) && (player->mo->angle >= ANG180 && player->mo->angle < ANG270)) // Quadrant 3
+	if ((player->rmomx > 0 && player->rmomy > 0) && (player->mo->angle >= ANGLE_180 && player->mo->angle < ANGLE_270)) // Quadrant 3
 		mbackward = 1;
-	else if ((player->rmomx < 0 && player->rmomy > 0) && (player->mo->angle >= ANG270 && (player->mo->angle <= ANGLE_MAX))) // Quadrant 4
+	else if ((player->rmomx < 0 && player->rmomy > 0) && (player->mo->angle >= ANGLE_270 /*&& (player->mo->angle <= ANGLE_MAX)*/)) // Quadrant 4
 		mbackward = 1;
-	else if ((player->rmomx < 0 && player->rmomy < 0) && (/*player->mo->angle >= 0 &&*/ player->mo->angle < ANG90)) // Quadrant 1
+	else if ((player->rmomx < 0 && player->rmomy < 0) && (/*player->mo->angle >= 0 &&*/ player->mo->angle < ANGLE_90)) // Quadrant 1
 		mbackward = 1;
-	else if ((player->rmomx > 0 && player->rmomy < 0) && (player->mo->angle >= ANG90 && player->mo->angle < ANG180)) // Quadrant 2
+	else if ((player->rmomx > 0 && player->rmomy < 0) && (player->mo->angle >= ANGLE_90 && player->mo->angle < ANGLE_180)) // Quadrant 2
 		mbackward = 1;
-	else if (player->rmomx < 0 && ((player->mo->angle >= ANG270+ANG45 && player->mo->angle <= ANGLE_MAX) || (/*player->mo->angle >= 0 &&*/ player->mo->angle <= ANG45)))
+	else if (player->rmomx < 0 && ((player->mo->angle >= ANGLE_315 /*&& player->mo->angle <= ANGLE_MAX*/) || (/*player->mo->angle >= 0 &&*/ player->mo->angle <= ANGLE_45)))
 		mbackward = 1;
-	else if (player->rmomx > 0 && (player->mo->angle >= ANG90+ANG45 && player->mo->angle <= ANG180+ANG45))
+	else if (player->rmomx > 0 && (player->mo->angle >= ANGLE_135 && player->mo->angle <= ANGLE_225))
 		mbackward = 1;
-	else if (player->rmomy < 0 && (player->mo->angle >= ANG45 && player->mo->angle <= ANG90+ANG45))
+	else if (player->rmomy < 0 && (player->mo->angle >= ANGLE_45 && player->mo->angle <= ANGLE_135))
 		mbackward = 1;
-	else if (player->rmomy > 0 && (player->mo->angle >= ANG180+ANG45 && player->mo->angle <= ANG270+ANG45))
+	else if (player->rmomy > 0 && (player->mo->angle >= ANGLE_225 && player->mo->angle <= ANGLE_315))
 		mbackward = 1;
 	else // Put in 'or' checks here!
 		mbackward = 0;
 
 	// Do not let the player control movement if not onground.
-	onground = (player->mo->z <= player->mo->floorz) || (player->cheats & CF_FLYAROUND)
-		|| (player->mo->flags2&(MF2_ONMOBJ));
+	onground = P_IsObjectOnGround(player->mo);
 
 	player->aiming = cmd->aiming<<FRACBITS;
 
-	// Set the player speeds.
 	if (player->powers[pw_super] || player->powers[pw_sneakers])
 	{
 		thrustfactor = player->thrustfactor*2;
 		acceleration = player->accelstart/4 + player->speed*(player->acceleration/4);
 
 		if (player->powers[pw_tailsfly])
-			topspeed = player->normalspeed;
+			topspeed = normalspd;
 		else if (player->mo->eflags & MF_UNDERWATER)
 		{
-			topspeed = player->normalspeed;
+			topspeed = normalspd;
 			acceleration = (acceleration * 2) / 3;
 		}
 		else
-			topspeed = player->normalspeed * 2 > 50 ? 50 : player->normalspeed * 2;
+			topspeed = normalspd * 2 > 50 ? 50 : normalspd * 2;
 	}
 	else
 	{
@@ -1188,24 +1225,36 @@ static void P_3dMovement(player_t *player)
 		acceleration = player->accelstart + player->speed*player->acceleration;
 
 		if (player->powers[pw_tailsfly])
-			topspeed = player->normalspeed/2;
+			topspeed = normalspd/2;
 		else if (player->mo->eflags & MF_UNDERWATER)
 		{
-			topspeed = player->normalspeed/2;
+			topspeed = normalspd/2;
 			acceleration = (acceleration * 2) / 3;
 		}
 		else
-			topspeed = player->normalspeed;
+			topspeed = normalspd;
+	}
+
+	// Better maneuverability while flying
+	if(player->powers[pw_tailsfly])
+	{
+		thrustfactor = player->thrustfactor*2;
+		acceleration = player->accelstart + player->speed*player->acceleration;
 	}
 
 	if ((netgame || (player == &players[consoleplayer] && !cv_analog.value)
 		|| (cv_splitscreen.value && player == &players[secondarydisplayplayer] && !cv_analog2.value))
 		&& cmd->forwardmove != 0 && !(player->gliding || player->exiting
-		|| (player->mo->state == &states[S_PLAY_PAIN] && player->powers[pw_flashing]
+		|| (player->mo->state == &states[player->mo->info->painstate] && player->powers[pw_flashing]
 		&& !onground)))
 	{
 		if (player->climbing)
-			player->mo->momz = (cmd->forwardmove*FRACUNIT)/10;
+		{
+			P_SetObjectMomZ(player->mo, FixedDiv(cmd->forwardmove*FRACUNIT,10*FRACUNIT), false);
+
+			if (player->powers[pw_super])
+				player->mo->momz *= 2;
+		}
 		else if (player->powers[pw_sneakers] || player->powers[pw_super]) // super sneakers?
 			movepushforward = cmd->forwardmove * ((thrustfactor*2)*acceleration);
 		else // if not, then run normally
@@ -1213,12 +1262,7 @@ static void P_3dMovement(player_t *player)
 
 		// allow very small movement while in air for gameplay
 		if (!onground)
-		{
-			if (player->powers[pw_tailsfly]) // control better while flying
-				movepushforward >>= 1;
-			else
-				movepushforward >>= 2; // proper air movement
-		}
+			movepushforward >>= 2; // proper air movement
 
 		// Allow a bit of movement while spinning
 		if (player->mfspinning)
@@ -1247,8 +1291,7 @@ static void P_3dMovement(player_t *player)
 		|| (cv_splitscreen.value && player == &players[secondarydisplayplayer]
 		&& cv_analog2.value)) && thiscam->chase)
 	{
-		if (!(player->gliding || player->exiting || (player->mo->state == &states[S_PLAY_PAIN]
-			&& player->powers[pw_flashing])))
+		if (!(player->gliding || player->exiting || (player->mo->state == &states[player->mo->info->painstate] && player->powers[pw_flashing])))
 		{
 			angle_t controldirection, controllerdirection, controlplayerdirection;
 			fixed_t tempx, tempy;
@@ -1266,7 +1309,7 @@ static void P_3dMovement(player_t *player)
 			tempx += FixedMul(cmd->forwardmove,finecosine[tempangle]);
 			tempy += FixedMul(cmd->forwardmove,finesine[tempangle]);
 
-			tempangle = thiscam->angle-ANG90;
+			tempangle = thiscam->angle-ANGLE_90;
 			tempangle >>= ANGLETOFINESHIFT;
 			tempx += FixedMul(cmd->sidemove,finecosine[tempangle]);
 			tempy += FixedMul(cmd->sidemove,finesine[tempangle]);
@@ -1280,20 +1323,20 @@ static void P_3dMovement(player_t *player)
 
 			controlplayerdirection = player->mo->angle;
 
-			if (controlplayerdirection < ANG90)
+			if (controlplayerdirection < ANGLE_90)
 			{
-				controlplayerdirection += ANG90;
-				controllerdirection += ANG90;
+				controlplayerdirection += ANGLE_90;
+				controllerdirection += ANGLE_90;
 			}
-			else if (controlplayerdirection > ANG270)
+			else if (controlplayerdirection >= ANGLE_270)
 			{
-				controlplayerdirection -= ANG90;
-				controllerdirection -= ANG90;
+				controlplayerdirection -= ANGLE_90;
+				controllerdirection -= ANGLE_90;
 			}
 
 			// Controls pointing backwards from player
-			if (controllerdirection > controlplayerdirection + ANG90
-				&& controllerdirection < controlplayerdirection - ANG90)
+			if (controllerdirection > controlplayerdirection + ANGLE_90
+				&& controllerdirection < controlplayerdirection - ANGLE_90)
 			{
 				cbackward = true;
 			}
@@ -1302,15 +1345,24 @@ static void P_3dMovement(player_t *player)
 
 			if (player->climbing)
 			{
+				fixed_t value = 10*FRACUNIT;
+
 				// Thrust in the direction of the controls
-				P_InstaThrust(player->mo, player->mo->angle-ANG90, (cmd->sidemove/10)*FRACUNIT);
-				player->mo->momz = (cmd->forwardmove*FRACUNIT)/10;
+				P_SetObjectMomZ(player->mo, FixedDiv(cmd->forwardmove*FRACUNIT,10*FRACUNIT), false);
+
+				if (player->powers[pw_super])
+				{
+					player->mo->momz *= 2;
+					value /= 2;
+				}
+
+				P_InstaThrust(player->mo, player->mo->angle-ANGLE_90, FixedDiv(cmd->sidemove*FRACUNIT,value));
 			}
 
 			else if (player->powers[pw_sneakers] || player->powers[pw_super]) // super sneakers?
-				movepushforward = (fixed_t)((float)sqrt((float)(cmd->sidemove*cmd->sidemove + cmd->forwardmove*cmd->forwardmove)) * ((thrustfactor*2)*acceleration));
+				movepushforward = FixedMul(FixedHypot(cmd->sidemove*FRACUNIT, cmd->forwardmove*FRACUNIT), ((thrustfactor*2)*acceleration));
 			else // if not, then run normally
-				movepushforward = (fixed_t)((float)sqrt((float)(cmd->sidemove*cmd->sidemove + cmd->forwardmove*cmd->forwardmove)) * (thrustfactor*acceleration));
+				movepushforward = FixedMul(FixedHypot(cmd->sidemove*FRACUNIT, cmd->forwardmove*FRACUNIT), ((thrustfactor*1)*acceleration));
 
 			// allow very small movement while in air for gameplay
 			if (!onground)
@@ -1324,7 +1376,7 @@ static void P_3dMovement(player_t *player)
 				if ((mforward && cmd->forwardmove > 0) || (mbackward && cmd->forwardmove < 0))
 					movepushforward = 0;
 				else if (!player->mfstartdash)
-					movepushforward = FixedDiv(movepushforward,16*FRACUNIT);
+					movepushforward = FixedDiv(movepushforward, 16*FRACUNIT);
 				else
 					movepushforward = 0;
 			}
@@ -1344,51 +1396,55 @@ static void P_3dMovement(player_t *player)
 		&& !cv_analog2.value))
 	{
 		if (player->climbing)
-			P_InstaThrust(player->mo, player->mo->angle-ANG90, (cmd->sidemove/10)*FRACUNIT);
-
-		else if (cmd->sidemove && !player->gliding && !player->exiting && !player->climbing && !(player->mo->state == &states[S_PLAY_PAIN] && player->powers[pw_flashing]))
+		{
+			if (player->powers[pw_super])
+				P_InstaThrust(player->mo, player->mo->angle-ANGLE_90, (cmd->sidemove/5)*FRACUNIT);
+			else
+				P_InstaThrust(player->mo, player->mo->angle-ANGLE_90, (cmd->sidemove/10)*FRACUNIT);
+		}
+		else if (cmd->sidemove && !player->gliding && !player->exiting && !player->climbing && !(player->mo->state == &states[player->mo->info->painstate] && player->powers[pw_flashing]))
 		{
 			boolean mright;
 			boolean mleft;
 			angle_t sideangle;
 
-			sideangle = player->mo->angle - ANG90;
+			sideangle = player->mo->angle - ANGLE_90;
 
 			// forward
-			if ((player->rmomx > 0 && player->rmomy > 0) && (/*sideangle >= 0 &&*/ sideangle < ANG90)) // Quadrant 1
+			if ((player->rmomx > 0 && player->rmomy > 0) && (/*sideangle >= 0 &&*/ sideangle < ANGLE_90)) // Quadrant 1
 				mright = 1;
-			else if ((player->rmomx < 0 && player->rmomy > 0) && (sideangle >= ANG90 && sideangle < ANG180)) // Quadrant 2
+			else if ((player->rmomx < 0 && player->rmomy > 0) && (sideangle >= ANGLE_90 && sideangle < ANGLE_180)) // Quadrant 2
 				mright = 1;
-			else if ((player->rmomx < 0 && player->rmomy < 0) && (sideangle >= ANG180 && sideangle < ANG270)) // Quadrant 3
+			else if ((player->rmomx < 0 && player->rmomy < 0) && (sideangle >= ANGLE_180 && sideangle < ANGLE_270)) // Quadrant 3
 				mright = 1;
-			else if ((player->rmomx > 0 && player->rmomy < 0) && ((sideangle >= ANG270 && (sideangle <= ANGLE_MAX)) || (/*sideangle >= 0 &&*/ sideangle <= ANG45))) // Quadrant 4
+			else if ((player->rmomx > 0 && player->rmomy < 0) && ((sideangle >= ANGLE_270 /*&& (sideangle <= ANGLE_MAX)*/) || (/*sideangle >= 0 &&*/ sideangle <= ANGLE_45))) // Quadrant 4
 				mright = 1;
-			else if (player->rmomx > 0 && ((sideangle >= ANG270+ANG45 && sideangle <= ANGLE_MAX)))
+			else if (player->rmomx > 0 && ((sideangle >= ANGLE_315 /*&& sideangle <= ANGLE_MAX*/)))
 				mright = 1;
-			else if (player->rmomx < 0 && (sideangle >= ANG90+ANG45 && sideangle <= ANG180+ANG45))
+			else if (player->rmomx < 0 && (sideangle >= ANGLE_135 && sideangle <= ANGLE_225))
 				mright = 1;
-			else if (player->rmomy > 0 && (sideangle >= ANG45 && sideangle <= ANG90+ANG45))
+			else if (player->rmomy > 0 && (sideangle >= ANGLE_45 && sideangle <= ANGLE_135))
 				mright = 1;
-			else if (player->rmomy < 0 && (sideangle >= ANG180+ANG45 && sideangle <= ANG270+ANG45))
+			else if (player->rmomy < 0 && (sideangle >= ANGLE_225 && sideangle <= ANGLE_315))
 				mright = 1;
 			else
 				mright = 0;
 			// backward
-			if ((player->rmomx > 0 && player->rmomy > 0) && (sideangle >= ANG180 && sideangle < ANG270)) // Quadrant 3
+			if ((player->rmomx > 0 && player->rmomy > 0) && (sideangle >= ANGLE_180 && sideangle < ANGLE_270)) // Quadrant 3
 				mleft = 1;
-			else if ((player->rmomx < 0 && player->rmomy > 0) && (sideangle >= ANG270 && (sideangle <= ANGLE_MAX))) // Quadrant 4
+			else if ((player->rmomx < 0 && player->rmomy > 0) && (sideangle >= ANGLE_270 /*&& (sideangle <= ANGLE_MAX)*/)) // Quadrant 4
 				mleft = 1;
-			else if ((player->rmomx < 0 && player->rmomy < 0) && (/*sideangle >= 0 &&*/ sideangle < ANG90)) // Quadrant 1
+			else if ((player->rmomx < 0 && player->rmomy < 0) && (/*sideangle >= 0 &&*/ sideangle < ANGLE_90)) // Quadrant 1
 				mleft = 1;
-			else if ((player->rmomx > 0 && player->rmomy < 0) && (sideangle >= ANG90 && sideangle < ANG180)) // Quadrant 2
+			else if ((player->rmomx > 0 && player->rmomy < 0) && (sideangle >= ANGLE_90 && sideangle < ANGLE_180)) // Quadrant 2
 				mleft = 1;
-			else if (player->rmomx < 0 && ((sideangle >= ANG270+ANG45 && sideangle <= ANGLE_MAX) || (/*sideangle >= 0 &&*/ sideangle <= ANG45)))
+			else if (player->rmomx < 0 && ((sideangle >= ANGLE_315 /*&& sideangle <= ANGLE_MAX*/) || (/*sideangle >= 0 &&*/ sideangle <= ANGLE_45)))
 				mleft = 1;
-			else if (player->rmomx > 0 && (sideangle >= ANG90+ANG45 && sideangle <= ANG180+ANG45))
+			else if (player->rmomx > 0 && (sideangle >= ANGLE_135 && sideangle <= ANGLE_225))
 				mleft = 1;
-			else if (player->rmomy < 0 && (sideangle >= ANG45 && sideangle <= ANG90+ANG45))
+			else if (player->rmomy < 0 && (sideangle >= ANGLE_45 && sideangle <= ANGLE_135))
 				mleft = 1;
-			else if (player->rmomy > 0 && (sideangle >= ANG180+ANG45 && sideangle <= ANG270+ANG45))
+			else if (player->rmomy > 0 && (sideangle >= ANGLE_225 && sideangle <= ANGLE_315))
 				mleft = 1;
 			else // Put in 'or' checks here!
 				mleft = 0;
@@ -1399,7 +1455,16 @@ static void P_3dMovement(player_t *player)
 				movepushside *= 2;
 
 			if (!onground)
+			{
 				movepushside >>= 2;
+
+				//Lower speed if over "max" flight speed and greatly reduce movepushslide.
+				if (player->powers[pw_tailsfly] && player->speed > topspeed)
+				{
+					player->speed = topspeed - 1;
+					movepushside /= 8;
+				}
+			}
 
 			// Allow a bit of movement while spinning
 			if (player->mfspinning)
@@ -5346,7 +5411,6 @@ void P_HomingAttack(mobj_t *source, mobj_t *enemy) // Home in on your target
 void P_FindEmerald(void)
 {
 	thinker_t *th;
-	mobj_t *mo2;
 
 	hunt1 = hunt2 = hunt3 = NULL;
 

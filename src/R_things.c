@@ -231,7 +231,6 @@ static boolean R_AddSingleSpriteDef(const char *sprname, spritedef_t *spritedef,
 
             //----------------------------------------------------
 
-			// if sawnic was a developer xD
 			if (rotation <= 8 && frame < 64) {
 				R_InstallSpriteLump((wadnum<<16)+l, numspritelumps, frame, rotation, false);
 			} else {
@@ -248,17 +247,16 @@ static boolean R_AddSingleSpriteDef(const char *sprname, spritedef_t *spritedef,
             {
                 frame = lumpinfo[l].name[6] - 'A';
                 rotation = lumpinfo[l].name[7] - '0';
-				// if sawnic was a developer xD
 				if (rotation <= 8 && frame < 64) {
-					R_InstallSpriteLump((wadnum<<16)+l, numspritelumps, frame, rotation, false);
+					R_InstallSpriteLump((wadnum<<16)+l, numspritelumps, frame, rotation, true);
 				} else {
 					if (frame >= 64) {
 					CONS_Printf("Eeeeek! Bad frame value! Making it 63.\n");
-					R_InstallSpriteLump((wadnum<<16)+l, numspritelumps, 63, rotation, false);		
+					R_InstallSpriteLump((wadnum<<16)+l, numspritelumps, 63, rotation, true);		
 					}
 					if (rotation > 8) {
 					CONS_Printf("Eeeeek! Bad rotation value! Making it 8.\n");
-					R_InstallSpriteLump((wadnum<<16)+l, numspritelumps, frame, 8, false);
+					R_InstallSpriteLump((wadnum<<16)+l, numspritelumps, frame, 8, true);
 					}	
 				}
             }

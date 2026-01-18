@@ -33,11 +33,9 @@
 // Revision 1.1.1.1  2000/02/22 20:32:32  hurdler
 // Initial import into CVS (v1.29 pr3)
 //
-//
-// DESCRIPTION: 
-//      Door animation code (opening/closing)
-//
 //-----------------------------------------------------------------------------
+/// \file
+/// \brief Door animation code (opening/closing)
 
 
 #include "doomdef.h"
@@ -56,7 +54,7 @@ int EV_TurnTagLightsOff(line_t* line)
 {
     int                 i;
     int                 j;
-    int                 min;
+    short               min;
     sector_t*           sector;
     sector_t*           tsec;
     line_t*             templine;
@@ -97,12 +95,13 @@ EV_LightTurnOn
     sector_t*   sector;
     sector_t*   temp;
     line_t*     templine;
+    short       tbright;
 
     sector = sectors;
 
     for (i=0;i<numsectors;i++, sector++)
     {
-        int tbright = bright; //SoM: 3/7/2000: Search for maximum per sector
+        tbright = (short)bright & 0xFFFF; //SoM: 3/7/2000: Search for maximum per sector
         if (sector->tag == line->tag)
         {
             // bright = 0 means to search
@@ -669,10 +668,8 @@ void P_SpawnDoorCloseIn30 (sector_t* sec)
 //
 // Spawn a door that opens after 5 minutes
 //
-void
-P_SpawnDoorRaiseIn5Mins
-( sector_t*     sec,
-  int           secnum )
+void P_SpawnDoorRaiseIn5Mins
+( sector_t*     sec)
 {
     vldoor_t*   door;
 

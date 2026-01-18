@@ -906,10 +906,9 @@ static void P_SpawnEmblems(void)
 	*/
 }
 
+// TODO: Remove 'loademblems' from here, it's unused. (Hennkrido 1-16-2026)
 void P_SpawnSecretItems(boolean loademblems)
 {
-	int i;
-	mobj_t *emblemmobj;
 
 	#if BUILD_TYPE != DEV_RELEASE
 	// Now let's spawn those funky emblem things! Tails 12-08-2002
@@ -1525,6 +1524,7 @@ static void P_CreateBlockMap(void)
 //
 // Levels might not have a blockmap, so if one does not exist
 // this should return false.
+// Removed some stupid 'return with value' warnings (Hennkrido 1-16-2026)
 void P_LoadBlockMap(int lump)
 {
 	int count;
@@ -1556,20 +1556,20 @@ void P_LoadBlockMap(int lump)
 	if ((lump&0xffff) >= wadfiles[lump>>16]->numlumps
 		|| strcmp(W_CheckNameForNum(lump), "BLOCKMAP") != 0)
 	{
-		return false;
+		return;
 	}
 
 	count = W_LumpLength(lump);
 
 	if (!count || count >= 0x20000)
-		return false;
+		return;
 
 	{
 		long i;
 		short *wadblockmaplump = malloc(count); //short *wadblockmaplump = W_CacheLumpNum (lump, PU_LEVEL);
 
 		if (wadblockmaplump) W_ReadLump(lump, wadblockmaplump);
-		else return false;
+		else return;
 		count /= 2;
 		blockmaplump = Z_Malloc(sizeof (*blockmaplump) * count, PU_LEVEL, 0);
 
@@ -1602,7 +1602,7 @@ void P_LoadBlockMap(int lump)
 	blocklinks = Z_Malloc(count, PU_LEVEL, NULL);
 	memset (blocklinks, 0, count);
 	blockmap = blockmaplump+4;
-	return true;
+	return;
 }
 
 //

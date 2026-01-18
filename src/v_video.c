@@ -504,7 +504,7 @@ donedrawing:
 void V_DrawClippedScaledPatch(int x, int y, int scrn, patch_t *patch)
 {
 	size_t count;
-	int col, dupx, dupy, ofs, colfrac, rowfrac, offy;
+	int col, dupx, dupy, ofs, colfrac, rowfrac; // Removed unreferenced variable (Hennkrido 1-16-2026)
 	const column_t *column;
 	byte *desttop, *dest, *destend;
 	const byte *source, *deststop;

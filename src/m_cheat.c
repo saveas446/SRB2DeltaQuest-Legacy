@@ -147,6 +147,7 @@ boolean cht_Responder(event_t *ev)
 		// 'dqd' cheat for toggleable god mode
 		else if (cht_CheckCheat(&cheat_god, (char)ev->data1))
 		{
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE != PLAYTEST_BUILD
 			if (!modifiedgame || savemoddata)
 			{
 				modifiedgame = true;
@@ -154,6 +155,7 @@ boolean cht_Responder(event_t *ev)
 				if (!(netgame || multiplayer))
 					CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
 			}
+#endif
 
 			plyr->cheats ^= CF_GODMODE;
 			if (plyr->cheats & CF_GODMODE)
@@ -205,6 +207,7 @@ void Command_CheatNoClip_f(void)
 	plyr->cheats ^= CF_NOCLIP;
 	CONS_Printf("No Clipping %s\n", plyr->cheats & CF_NOCLIP ? "On" : "Off");
 
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE != PLAYTEST_BUILD
 	if (!modifiedgame || savemoddata)
 	{
 		modifiedgame = true;
@@ -212,6 +215,7 @@ void Command_CheatNoClip_f(void)
 		if (!(netgame || multiplayer))
 			CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
 	}
+#endif
 }
 
 void Command_CheatGod_f(void)
@@ -225,6 +229,7 @@ void Command_CheatGod_f(void)
 	plyr->cheats ^= CF_GODMODE;
 	CONS_Printf("Sissy Mode %s\n", plyr->cheats & CF_GODMODE ? "On" : "Off");
 
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE != PLAYTEST_BUILD
 	if (!modifiedgame || savemoddata)
 	{
 		modifiedgame = true;
@@ -232,6 +237,7 @@ void Command_CheatGod_f(void)
 		if (!(netgame || multiplayer))
 			CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
 	}
+#endif
 }
 
 void Command_Resetemeralds_f(void)
@@ -257,13 +263,13 @@ void Command_Devmode_f(void)
 	else
 		cv_debug = false;
 
+#if BUILD_TYPE != DEV_RELEASE && BUILD_TYPE != PLAYTEST_BUILD
 	if (!modifiedgame || savemoddata)
 	{
-		#if BUILD_TYPE != DEV_RELEASE
 		modifiedgame = true;
-		#endif
 		savemoddata = false;
 		if (!(netgame || multiplayer))
 			CONS_Printf("WARNING: Game must be restarted to record statistics.\n");
 	}
+#endif
 }
