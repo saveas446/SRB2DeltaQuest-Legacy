@@ -140,42 +140,38 @@ static StackSound_t    StackSounds[MAXSTACKSOUNDS];
 // Fill the DirectSoundBuffer with data from a sample, made separate so that
 // sound data cna be reloaded if a sound buffer was lost.
 // --------------------------------------------------------------------------
-static boolean CopySoundData (LPDIRECTSOUNDBUFFER dsbuffer, byte *data, DWORD length)
-{
-	LPVOID  lpvAudio1;              // receives address of lock start
-	DWORD   dwBytes1;               // receives number of bytes locked
-	LPVOID  lpvAudio2;              // receives address of lock start
-	DWORD   dwBytes2;               // receives number of bytes locked
+static boolean CopySoundData(LPDIRECTSOUNDBUFFER dsbuffer, byte *data, DWORD length) {
+	LPVOID lpvAudio1; // receives address of lock start
+	DWORD dwBytes1; // receives number of bytes locked
+	LPVOID lpvAudio2; // receives address of lock start
+	DWORD dwBytes2; // receives number of bytes locked
 	HRESULT hr;
 
 	// Obtain memory address of write block.
 	hr = IDirectSoundBuffer_Lock (dsbuffer, 0, length, &lpvAudio1, &dwBytes1, &lpvAudio2, &dwBytes2, 0);
 
 	// If DSERR_BUFFERLOST is returned, restore and retry lock. 
-	if (hr == DSERR_BUFFERLOST) 
-	{ 
+	if(hr == DSERR_BUFFERLOST)  { 
 		hr = IDirectSoundBuffer_Restore (dsbuffer);
-		if (FAILED (hr))
+		if(FAILED (hr))
 			I_Error("Restore fail on %x, %s\n",dsbuffer,DXErrorToString(hr));
+
 		hr = IDirectSoundBuffer_Lock (dsbuffer, 0, length, &lpvAudio1, &dwBytes1, &lpvAudio2, &dwBytes2, 0);
-		if (FAILED (hr))
+		if(FAILED (hr))
 			I_Error("Lock fail(2) on %x, %s\n",dsbuffer,DXErrorToString(hr));
-	}
-	else
-		if (FAILED (hr))
-			I_Error("Lock fail(1) on %x, %s\n",dsbuffer,DXErrorToString(hr));
+	} else if(FAILED (hr))
+		I_Error("Lock fail(1) on %x, %s\n",dsbuffer,DXErrorToString(hr));
 
 	// copy wave data into the buffer (note: dwBytes1 should equal to dsbdesc->dwBufferBytes ...)
-	CopyMemory (lpvAudio1, data, dwBytes1);
+	CopyMemory(lpvAudio1, data, dwBytes1);
 
-	if (dwBytes2 && lpvAudio2)
+	if(dwBytes2 && lpvAudio2)
 		CopyMemory(lpvAudio2, data+dwBytes1, dwBytes2); 
-
 	
 	// finally, unlock the buffer
 	hr = IDirectSoundBuffer_Unlock (dsbuffer, lpvAudio1, dwBytes1, lpvAudio2, dwBytes2);
 
-	if (FAILED (hr))
+	if(FAILED (hr))
 		I_Error("Unlock fail on %x, %s\n",dsbuffer,DXErrorToString(hr));
 
 	return true;
@@ -184,20 +180,18 @@ static boolean CopySoundData (LPDIRECTSOUNDBUFFER dsbuffer, byte *data, DWORD le
 #ifdef SURROUND
 // judgecutor:
 // Hmmm... May be this function is not too good...
-static void CopyAndInvertMemory(void *dest, void *src, int bytes)
-{
+static void CopyAndInvertMemory(void *dest, void *src, int bytes) {
 #ifdef __GNUC__
 	__asm__("CAIM:;lodsb;neg %%al;stosb;loop CAIM;"::"c"(bytes),"D"(dest),"S"(src): "memory","cc");
 #else
-	_asm
-	{
+	_asm {
 		push esi
 		push edi
 		push ecx
 		mov ecx,bytes
 		mov  esi,src
 		mov  edi,dest
-a:
+	a:
 		lodsb
 		neg  al
 		stosb
@@ -251,10 +245,10 @@ static boolean CopyAndInvertSoundData(LPDIRECTSOUNDBUFFER dsbuffer, byte *data, 
 #endif
 
 static DWORD sound_buffer_flags = DSBCAPS_CTRLPAN | 
-                                  DSBCAPS_CTRLVOLUME | 
-                                  DSBCAPS_STICKYFOCUS | 
-                                //DSBCAPS_LOCSOFTWARE | 
-                                  DSBCAPS_STATIC; 
+								  DSBCAPS_CTRLVOLUME | 
+								  DSBCAPS_STICKYFOCUS | 
+								//DSBCAPS_LOCSOFTWARE | 
+								  DSBCAPS_STATIC; 
 
 // --------------------------------------------------------------------------
 // raw2DS : convert a raw sound data, returns a LPDIRECTSOUNDBUFFER
@@ -428,7 +422,7 @@ void I_SetSfxVolume(int volume)
 	// use the last quarter of volume range
 	if (volume)
 		vol = (volume * ((DSBVOLUME_MAX-DSBVOLUME_MIN)/4)) / 31 +
-		      (DSBVOLUME_MAX - ((DSBVOLUME_MAX-DSBVOLUME_MIN)/4));
+			  (DSBVOLUME_MAX - ((DSBVOLUME_MAX-DSBVOLUME_MIN)/4));
 	else
 		vol = DSBVOLUME_MIN;    // make sure 0 is silence
 	//CONS_Printf("setvolume to %d\n", vol);
@@ -533,8 +527,8 @@ static LPDIRECTSOUNDBUFFER CreateInvertedSound(int id)
 static float recalc_pitch(int doom_pitch)
 {
 	return doom_pitch < NORMAL_PITCH ?
-	       (float)(doom_pitch + NORMAL_PITCH) / (NORMAL_PITCH * 2)
-	       :(float)doom_pitch / (float)NORMAL_PITCH;
+		   (float)(doom_pitch + NORMAL_PITCH) / (NORMAL_PITCH * 2)
+		   :(float)doom_pitch / (float)NORMAL_PITCH;
 }
 #endif
 
@@ -542,10 +536,10 @@ static float recalc_pitch(int doom_pitch)
 // Start the given S_sfx[id] sound with given properties (panning, volume..)
 // --------------------------------------------------------------------------
 int I_StartSound (int            id,
-                  int            vol,
-                  int            sep,
-                  int            pitch,
-                  int            priority)
+				  int            vol,
+				  int            sep,
+				  int            pitch,
+				  int            priority)
 {
 	HRESULT     hr;
 	LPDIRECTSOUNDBUFFER     dsbuffer;
@@ -775,9 +769,9 @@ int I_SoundIsPlaying(int handle)
 // Update properties of a sound currently playing
 // --------------------------------------------------------------------------
 void I_UpdateSoundParams(int    handle,
-                         int        vol,
-                         int        sep,
-                         int        pitch)
+						 int        vol,
+						 int        sep,
+						 int        pitch)
 {
 	LPDIRECTSOUNDBUFFER     dsbuffer;
 #ifdef SURROUND
@@ -1000,7 +994,7 @@ void I_StartupSound(void)
 	ZeroMemory (&dsbdesc, sizeof (DSBUFFERDESC));
 	dsbdesc.dwSize        = sizeof (DSBUFFERDESC);
 	dsbdesc.dwFlags = DSBCAPS_PRIMARYBUFFER |
-	                  DSBCAPS_CTRLVOLUME;
+					  DSBCAPS_CTRLVOLUME;
 	dsbdesc.dwBufferBytes = 0;      // Must be 0 for primary buffer
 	dsbdesc.lpwfxFormat = NULL;     // Must be NULL for primary buffer
 
@@ -1106,16 +1100,16 @@ static  BOOL            bMusicStarted;
 static  UINT        uMIDIDeviceID, uCallbackStatus;
 static  HMIDISTRM   hStream;
 static  HANDLE      hBufferReturnEvent; // for synch between the callback thread and main program thread
-                                        // (we need to synch when we decide to stop/free stream buffers)
+										// (we need to synch when we decide to stop/free stream buffers)
 
 static  int         nCurrentBuffer = 0, nEmptyBuffers;
 
 static  BOOL        bBuffersPrepared = FALSE;
 static  DWORD       dwVolCache[MAX_MIDI_IN_TRACKS];
-        DWORD       dwVolumePercent;    // accessed by win_main.c
+		DWORD       dwVolumePercent;    // accessed by win_main.c
 
-        // this is accessed by mid2strm.c conversion code
-        BOOL bMidiLooped = FALSE;
+		// this is accessed by mid2strm.c conversion code
+		BOOL bMidiLooped = FALSE;
 static  BOOL bMidiPlaying = FALSE;
 static  BOOL bMidiPaused = FALSE;
 static  CONVERTINFO ciStreamBuffers[NUM_STREAM_BUFFERS];
@@ -1125,7 +1119,7 @@ static  CONVERTINFO ciStreamBuffers[NUM_STREAM_BUFFERS];
 #define STATUS_WAITINGFOREND        300     // Callback's waiting for buffers to play
 
 #define DEBUG_CALLBACK_TIMEOUT 2000         // Wait 2 seconds for callback
-                                            // faB: don't freeze the main code if we debug..
+											// faB: don't freeze the main code if we debug..
 
 #define VOL_CACHE_INIT              127     // for dwVolCache[]
 
@@ -1133,7 +1127,7 @@ static BOOL bMidiCanSetVolume;          // midi caps
 
 static void Mid2StreamFreeBuffers(void);
 static void CALLBACK MidiStreamCallback (HMIDIIN hMidi, UINT uMsg, DWORD dwInstance,
-                                         DWORD dwParam1, DWORD dwParam2);
+										 DWORD dwParam1, DWORD dwParam2);
 static BOOL StreamBufferSetup(unsigned char *pMidiData, int iMidiSize);
 
 // -------------------
@@ -1255,7 +1249,7 @@ void I_InitMIDIMusic(void)
 	// get MIDI device caps
 	//
 	if ((mmrRetVal = midiOutGetDevCaps (uMIDIDeviceID, &MidiOutCaps, sizeof (MIDIOUTCAPS))) !=
-	     MMSYSERR_NOERROR)
+		 MMSYSERR_NOERROR)
 	{
 		CONS_Printf("midiOutGetCaps FAILED : \n");
 		MidiErrorMessageBox (mmrRetVal);
@@ -1296,7 +1290,7 @@ void I_InitMIDIMusic(void)
 	// create event for synch'ing the callback thread to main program thread
 	// when we will need it
 	hBufferReturnEvent = CreateEvent(NULL, FALSE, FALSE,
-	                                  TEXT("SRB2 Midi Playback: Wait For Buffer Return"));
+									  TEXT("SRB2 Midi Playback: Wait For Buffer Return"));
 
 	if (!hBufferReturnEvent)
 	{
@@ -1306,10 +1300,10 @@ void I_InitMIDIMusic(void)
 	}
 
 	if ((mmrRetVal = midiStreamOpen(&hStream,
-	                                &uMIDIDeviceID,
-	                                (DWORD)1, (DWORD)(size_t)MidiStreamCallback/*NULL*/,
-	                                (DWORD)0,
-	                                CALLBACK_FUNCTION /*CALLBACK_NULL*/)) != MMSYSERR_NOERROR)
+									&uMIDIDeviceID,
+									(DWORD)1, (DWORD)(size_t)MidiStreamCallback/*NULL*/,
+									(DWORD)0,
+									CALLBACK_FUNCTION /*CALLBACK_NULL*/)) != MMSYSERR_NOERROR)
 	{
 		CONS_Printf("I_RegisterSong: midiStreamOpen FAILED\n");
 		MidiErrorMessageBox(mmrRetVal);
@@ -1559,8 +1553,8 @@ boolean I_PlaySong(int handle, int bLooping)
 		midiStreamClose(hStream);
 		//I_Error("I_PlaySong: midiStreamRestart error");
 		midiStreamOpen(&hStream, &uMIDIDeviceID, (DWORD)1,
-		               (DWORD)(size_t)MidiStreamCallback/*NULL*/,
-		               (DWORD)0, CALLBACK_FUNCTION /*CALLBACK_NULL*/);
+					   (DWORD)(size_t)MidiStreamCallback/*NULL*/,
+					   (DWORD)0, CALLBACK_FUNCTION /*CALLBACK_NULL*/);
 	}
 	else bMidiPlaying = TRUE;
 	bMidiLooped = bLooping;
@@ -1673,7 +1667,7 @@ void I_StopSong(int handle)
 	{
 		bMidiPlaying = bMidiPaused = FALSE;
 		if (uCallbackStatus != STATUS_CALLBACKDEAD &&
-		    uCallbackStatus != STATUS_WAITINGFOREND)
+			uCallbackStatus != STATUS_WAITINGFOREND)
 			uCallbackStatus = STATUS_KILLCALLBACK;
 
 		//CONS_Printf("a: %d\n",I_GetTime());
@@ -1707,7 +1701,7 @@ void I_StopSong(int handle)
 		// calling SetEvent() once all buffers are returned to it
 		if ((devparm)
 			&& (WaitForSingleObject(hBufferReturnEvent, DEBUG_CALLBACK_TIMEOUT)
-			    == WAIT_TIMEOUT))
+				== WAIT_TIMEOUT))
 		{
 			// Note, this is a risky move because the callback may be genuinely busy, but
 			// when we're debugging, it's safer and faster than freezing the application,
@@ -1727,8 +1721,8 @@ void I_StopSong(int handle)
 		//     a little quirk in mmsystem (see DirectX6 mstream note)
 		midiStreamClose(hStream);
 		midiStreamOpen(&hStream, &uMIDIDeviceID, (DWORD)1,
-		               (DWORD)(size_t)MidiStreamCallback/*NULL*/,
-		               (DWORD)0, CALLBACK_FUNCTION /*CALLBACK_NULL*/);
+					   (DWORD)(size_t)MidiStreamCallback/*NULL*/,
+					   (DWORD)0, CALLBACK_FUNCTION /*CALLBACK_NULL*/);
 	}
 }
 
@@ -1796,105 +1790,108 @@ void I_UnRegisterSong(int handle)
 }
 
 // Special FMOD support Tails 11-21-2002
-boolean I_StartDigSong(const char *musicname, int looping)
-{
+boolean I_StartDigSong(const char *musicname, int looping) {
 #ifdef FMODSOUND
 	char filename[9];
 	void *data;
 	int lumpnum;
 
-	if (FSOUND_GetError() != FMOD_ERR_NONE && FSOUND_GetError() != FMOD_ERR_CHANNEL_ALLOC &&
+	if(FSOUND_GetError() != FMOD_ERR_NONE && FSOUND_GetError() != FMOD_ERR_CHANNEL_ALLOC &&
 	   FSOUND_GetError() != FMOD_ERR_MEDIAPLAYER && FSOUND_GetError() != FMOD_ERR_INVALID_PARAM)
-		if (devparm) CONS_Printf("FMOD(Start,Unknown): %s\n", FMOD_ErrorString(FSOUND_GetError()));
+		if(devparm)
+			CONS_Printf("FMOD(Start,Unknown): %s\n", FMOD_ErrorString(FSOUND_GetError()));
 
-	if (fmus)
-	{
-		if (FSOUND_IsPlaying(fsoundchannel))
-			if (!FSOUND_Stream_Stop(fmus))
-				if (devparm) CONS_Printf("FMOD(Start,FSOUND_Stream_Stop): %s\n", FMOD_ErrorString(FSOUND_GetError()));
-		if (!FSOUND_Stream_Close(fmus))
-			if (devparm) CONS_Printf("FMOD(Start,FSOUND_Stream_Close): %s\n", FMOD_ErrorString(FSOUND_GetError()));
+	if(fmus) {
+		if(FSOUND_IsPlaying(fsoundchannel))
+			if(!FSOUND_Stream_Stop(fmus))
+				if(devparm)
+					CONS_Printf("FMOD(Start,FSOUND_Stream_Stop): %s\n", FMOD_ErrorString(FSOUND_GetError()));
+
+		if(!FSOUND_Stream_Close(fmus))
+			if(devparm)
+				CONS_Printf("FMOD(Start,FSOUND_Stream_Close): %s\n", FMOD_ErrorString(FSOUND_GetError()));
+
 		fsoundchannel = -1;
 		fmus = NULL;
 	}
-	if (mod)
-	{
-		if (FMUSIC_IsPlaying(mod))
-			if (!FMUSIC_StopSong(mod))
-				if (devparm) CONS_Printf("FMOD(Start,FMUSIC_StopSong): %s\n", FMOD_ErrorString(FSOUND_GetError()));
-		if (!FMUSIC_FreeSong(mod))
-			if (devparm) CONS_Printf("FMOD(Start,FMUSIC_FreeSong): %s\n", FMOD_ErrorString(FSOUND_GetError()));
+
+	if(mod) {
+		if(FMUSIC_IsPlaying(mod))
+			if(!FMUSIC_StopSong(mod))
+				if(devparm)
+					CONS_Printf("FMOD(Start,FMUSIC_StopSong): %s\n", FMOD_ErrorString(FSOUND_GetError()));
+
+		if(!FMUSIC_FreeSong(mod))
+			if(devparm)
+				CONS_Printf("FMOD(Start,FMUSIC_FreeSong): %s\n", FMOD_ErrorString(FSOUND_GetError()));
+
 		mod = NULL;
 	}
-	//if (!FSOUND_StopSound(FSOUND_ALL))
-		//if (FSOUND_GetError() != FMOD_ERR_MEDIAPLAYER) CONS_Printf("FMOD(Start,FSOUND_StopSound): %s\n", FMOD_ErrorString(FSOUND_GetError()));
+
+	//if(!FSOUND_StopSound(FSOUND_ALL))
+		//if(FSOUND_GetError() != FMOD_ERR_MEDIAPLAYER) CONS_Printf("FMOD(Start,FSOUND_StopSound): %s\n", FMOD_ErrorString(FSOUND_GetError()));
 	//FMUSIC_StopAllSongs();
-		//if (FSOUND_GetError() != FMOD_ERR_NONE && FSOUND_GetError() != FMOD_ERR_MEDIAPLAYER) CONS_Printf("FMOD(Start,FMUSIC_StopAllSongs): %s\n", FMOD_ErrorString(FSOUND_GetError()));
+		//if(FSOUND_GetError() != FMOD_ERR_NONE && FSOUND_GetError() != FMOD_ERR_MEDIAPLAYER) CONS_Printf("FMOD(Start,FMUSIC_StopAllSongs): %s\n", FMOD_ErrorString(FSOUND_GetError()));
 
 	// Create the filename we need
 	sprintf(filename, "o_%s", musicname);
 
 	lumpnum = W_CheckNumForName(filename);
-
-	if (lumpnum == -1)
-	{
+	if(lumpnum == -1) {
 		// Graue 02-29-2004: don't worry about missing music, there might still be a MIDI
 		return false; // No music found. Oh well!
 	}
 
-	data = W_CacheLumpName (filename, PU_CACHE);
+	data = W_CacheLumpName(filename, PU_CACHE);
+	I_SaveMemToFile(data, W_LumpLength(lumpnum), "fmod.tmp");
 
-	I_SaveMemToFile (data, W_LumpLength(lumpnum), "fmod.tmp");
-
-	Z_Free(data);
+	// Z_Free(data);
 
 	mod = FMUSIC_LoadSong("fmod.tmp");
-
-	if (FSOUND_GetError() != FMOD_ERR_NONE)
-	{
-		if (FSOUND_GetError() != FMOD_ERR_FILE_FORMAT)
-			if (devparm) CONS_Printf("FMOD(Start,FMUSIC_LoadSong): %s\n", FMOD_ErrorString(FSOUND_GetError()));
+	if(FSOUND_GetError() != FMOD_ERR_NONE) {
+		if(FSOUND_GetError() != FMOD_ERR_FILE_FORMAT)
+			if(devparm) CONS_Printf("FMOD(Start,FMUSIC_LoadSong): %s\n", FMOD_ErrorString(FSOUND_GetError()));
 		
-		if (mod)
-		{
-			if (FMUSIC_IsPlaying(mod))
-				if (!FMUSIC_StopSong(mod))
-					if (devparm) CONS_Printf("FMOD(Start,FMUSIC_StopSong): %s\n", FMOD_ErrorString(FSOUND_GetError()));
-			if (!FMUSIC_FreeSong(mod))
-				if (devparm) CONS_Printf("FMOD(Start,FMUSIC_FreeSong): %s\n", FMOD_ErrorString(FSOUND_GetError()));
+		if(mod) {
+			if(FMUSIC_IsPlaying(mod))
+				if(!FMUSIC_StopSong(mod))
+					if(devparm)
+						CONS_Printf("FMOD(Start,FMUSIC_StopSong): %s\n", FMOD_ErrorString(FSOUND_GetError()));
+
+			if(!FMUSIC_FreeSong(mod))
+				if(devparm)
+					CONS_Printf("FMOD(Start,FMUSIC_FreeSong): %s\n", FMOD_ErrorString(FSOUND_GetError()));
+
 			mod = NULL;
 		}
 	}
 
-	if (mod)
-	{
-		if (!FMUSIC_SetLooping(mod, (signed char)looping))
-		{
-			if (devparm) CONS_Printf("FMOD(Start,FMUSIC_SetLooping): %s\n", FMOD_ErrorString(FSOUND_GetError()));
+	if(mod) {
+		if(!FMUSIC_SetLooping(mod, (signed char)looping)) {
+			if(devparm)
+				CONS_Printf("FMOD(Start,FMUSIC_SetLooping): %s\n", FMOD_ErrorString(FSOUND_GetError()));
 		}
 //		else if (FMUSIC_GetType(mod) == FMUSIC_TYPE_MOD || FMUSIC_GetType(mod) == FMUSIC_TYPE_S3M)
 //		{
 //			if (!FMUSIC_SetPanSeperation(mod, 0.85f))		/* 15% crossover */
 //				CONS_Printf("FMOD(Start,FMUSIC_SetPanSeperation): %s\n", FMOD_ErrorString(FSOUND_GetError()));
 //		}
-		else if (!FMUSIC_SetPanSeperation(mod, 0.0f))
-		{
-			if (devparm) CONS_Printf("FMOD(Start,FMUSIC_SetPanSeperation): %s\n", FMOD_ErrorString(FSOUND_GetError()));
+		else if (!FMUSIC_SetPanSeperation(mod, 0.0f)) {
+			if(devparm)
+				CONS_Printf("FMOD(Start,FMUSIC_SetPanSeperation): %s\n", FMOD_ErrorString(FSOUND_GetError()));
 		}
-	}
-	else
-	{
+	} else {
 		fmus = FSOUND_Stream_OpenFile("fmod.tmp", ((looping) ? (FSOUND_LOOP_NORMAL) : (0)),0);
-		if (fmus == NULL)
-		{
-			if (devparm) CONS_Printf("FMOD(Start,FSOUND_Stream_Open): %s\n", FMOD_ErrorString(FSOUND_GetError()));
+		if(fmus == NULL) {
+			if(devparm)
+				CONS_Printf("FMOD(Start,FSOUND_Stream_Open): %s\n", FMOD_ErrorString(FSOUND_GetError()));
+
 			return false;
 		}
 	}
 
 	// Scan the Ogg Vorbis file for the COMMENT= field for a custom loop point
-	if (fmus && looping)
-	{
+	if(fmus && looping) {
 		int scan;
 		byte *dataum;
 		char looplength[64];
@@ -1904,50 +1901,40 @@ boolean I_StartDigSong(const char *musicname, int looping)
 		int lumplength = W_LumpLength(lumpnum);
 		int length = FSOUND_Stream_GetLengthMs(fmus);
 
-		if (length == 0)
-		{
-			if (devparm) CONS_Printf("FMOD(Start,FSOUND_Stream_GetLengthMs): %s\n", FMOD_ErrorString(FSOUND_GetError()));
-		}
-		else
-		{
+		if(length == 0) {
+			if(devparm)
+				CONS_Printf("FMOD(Start,FSOUND_Stream_GetLengthMs): %s\n", FMOD_ErrorString(FSOUND_GetError()));
+		} else {
 			//freq = FSOUND_GetFrequency(fsoundchannel);
 	
-			data = W_CacheLumpName (filename, PU_CACHE);
+			data = W_CacheLumpName(filename, PU_CACHE);
+			dataum = (byte*)data;
 	
-			dataum = (byte *)data;
-	
-			for (scan = 0;scan < lumplength; scan++)
-			{
-				if (*dataum++ == 'C'){
-				if (*dataum++ == 'O'){
-				if (*dataum++ == 'M'){
-				if (*dataum++ == 'M'){
-				if (*dataum++ == 'E'){
-				if (*dataum++ == 'N'){
-				if (*dataum++ == 'T'){
-				if (*dataum++ == '='){
-				if (*dataum++ == 'L'){
-				if (*dataum++ == 'O'){
-				if (*dataum++ == 'O'){
-				if (*dataum++ == 'P'){
-				if (*dataum++ == 'P'){
-				if (*dataum++ == 'O'){
-				if (*dataum++ == 'I'){
-				if (*dataum++ == 'N'){
-				if (*dataum++ == 'T'){
-				if (*dataum++ == '=')
-				{
-	
+			for(scan = 0; scan < lumplength; scan++) {
+				if (*dataum++ == 'C') {
+				if (*dataum++ == 'O') {
+				if (*dataum++ == 'M') {
+				if (*dataum++ == 'M') {
+				if (*dataum++ == 'E') {
+				if (*dataum++ == 'N') {
+				if (*dataum++ == 'T') {
+				if (*dataum++ == '=') {
+				if (*dataum++ == 'L') {
+				if (*dataum++ == 'O') {
+				if (*dataum++ == 'O') {
+				if (*dataum++ == 'P') {
+				if (*dataum++ == 'P') {
+				if (*dataum++ == 'O') {
+				if (*dataum++ == 'I') {
+				if (*dataum++ == 'N') {
+				if (*dataum++ == 'T') {
+				if (*dataum++ == '=') {
 					while (*dataum != 1 && newcount != 63)
-					{
 						looplength[newcount++] = *dataum++;
-					}
 	
 					looplength[newcount] = '\n';
-	
 					loopstart = atoi(looplength);
-				}
-				else
+				} else
 					dataum--;}
 				else
 					dataum--;}
@@ -1983,14 +1970,13 @@ boolean I_StartDigSong(const char *musicname, int looping)
 					dataum--;}
 			}
 	
-			Z_Free(data);
+			// Z_Free(data);
 		}
 
-		if (loopstart > 0)
-		{
+		if(loopstart > 0) {
 			const unsigned int loopend = (unsigned int)((freq/1000.0f)*length-(freq/1000.0f));
 		//	const unsigned int loopend = (((freq/2)*length)/500)-8;
-			if (!FSOUND_Stream_SetLoopPoints(fmus, loopstart, loopend) && devparm)
+			if(!FSOUND_Stream_SetLoopPoints(fmus, loopstart, loopend) && devparm)
 				CONS_Printf("FMOD(Start,FSOUND_Stream_SetLoopPoints): %s\n",
 					FMOD_ErrorString(FSOUND_GetError()));
 		}
@@ -1999,36 +1985,29 @@ boolean I_StartDigSong(const char *musicname, int looping)
 	/*
 		PLAY SONG
 	*/
-	if (mod)
-	{
-		if (FMUSIC_PlaySong(mod))
-		{
+	if(mod) {
+		if(FMUSIC_PlaySong(mod)) {
 			fsoundchannel = -1;
 			I_SetDigMusicVolume(-1);
 			return true;
-		}
-		else
-		{
-			if (devparm)
+		} else {
+			if(devparm)
 				CONS_Printf("FMOD(Start,FMUSIC_PlaySong): %s\n",
-				            FMOD_ErrorString(FSOUND_GetError()));
+							FMOD_ErrorString(FSOUND_GetError()));
 			return false;
 		}
 	}
-	if (fmus)
-	{
+
+	if(fmus) {
 		fsoundchannel = FSOUND_Stream_PlayEx(FSOUND_FREE, fmus, NULL, TRUE);
 
-		if (fsoundchannel == -1)
-		{
-			if (devparm)
+		if(fsoundchannel == -1) {
+			if(devparm)
 				CONS_Printf("FMOD(Start,FSOUND_Stream_PlayEx): %s\n",
-				            FMOD_ErrorString(FSOUND_GetError()));
+							FMOD_ErrorString(FSOUND_GetError()));
 			return false;
-		}
-		else if (!FSOUND_SetPaused(fsoundchannel, FALSE))
-		{
-			if (devparm)
+		} else if (!FSOUND_SetPaused(fsoundchannel, FALSE)) {
+			if(devparm)
 				CONS_Printf("FMOD(Start,FSOUND_SetPaused): %s\n",
 					FMOD_ErrorString(FSOUND_GetError()));
 			return false;
@@ -2041,9 +2020,8 @@ boolean I_StartDigSong(const char *musicname, int looping)
 	musicname = NULL;
 	looping = 0;
 #endif
-	return false;
 
-/////////////////////////////////////////////////////////////////////////////////
+	return false;
 }
 
 // --------------

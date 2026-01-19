@@ -2353,19 +2353,16 @@ static ffloor_t *P_AddFakeFloor(sector_t *sec, sector_t *sec2, line_t *master, i
 	friction_t *f;
 	pusher_t *p;
 
-	if (sec2->ceilingheight < sec2->floorheight)
+	if(sec2->ceilingheight < sec2->floorheight)
 		I_Error("One of your FOFs with a tag of %d has a top height less than that of the bottom.\n", master->tag);
 
-	if (sec2->numattached == 0)
-	{
+	if(sec2->numattached == 0) {
 		sec2->attached = malloc(sizeof (size_t));
 		if (!sec2->attached)
 			I_Error("No more free memory to AddFakeFloor");
 		sec2->attached[0] = sec - sectors;
 		sec2->numattached = 1;
-	}
-	else
-	{
+	} else {
 		int i;
 
 		for (i = 0; i < sec2->numattached; i++)
@@ -2398,7 +2395,7 @@ static ffloor_t *P_AddFakeFloor(sector_t *sec, sector_t *sec2, line_t *master, i
 	
 	// scan the thinkers
 	// to see if this FOF should have friction
-	for (th = thinkercap.next; th != &thinkercap; th = th->next) {
+	for(th = thinkercap.next; th != &thinkercap; th = th->next) {
 		if(!th) continue; // could fix crash
 
 		if(th->function.acp1 != (actionf_p1)T_Friction)
@@ -2418,14 +2415,14 @@ static ffloor_t *P_AddFakeFloor(sector_t *sec, sector_t *sec2, line_t *master, i
 		if(th->function.acp1 != (actionf_p1)T_Pusher)
 			continue;
 
-		p = (pusher_t *)th;
+		p = (pusher_t*)th;
 
 		if(&sectors[p->affectee] == sec2)
 			Add_Pusher(p->type, p->x_mag<<FRACBITS, p->y_mag<<FRACBITS, p->source, (int)(sec-sectors), p->affectee);
 	}
 
-	if (flags & FF_TRANSLUCENT) {
-		if (sides[master->sidenum[0]].toptexture > 0)
+	if(flags & FF_TRANSLUCENT) {
+		if(sides[master->sidenum[0]].toptexture > 0)
 			ffloor->alpha = sides[master->sidenum[0]].toptexture;
 		else
 			ffloor->alpha = 0x80;
@@ -2441,7 +2438,7 @@ static ffloor_t *P_AddFakeFloor(sector_t *sec, sector_t *sec2, line_t *master, i
 	if((flags & FF_CRUMBLE))
 		sec2->crumblestate = 1;
 
-	if ((flags & FF_FLOATBOB)) {
+	if((flags & FF_FLOATBOB)) {
 		P_AddFloatThinker(sec2, sec);
 		CheckForFloatBob = true;
 	}

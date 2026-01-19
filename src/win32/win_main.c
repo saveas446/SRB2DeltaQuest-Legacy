@@ -76,75 +76,72 @@ HANDLE w_logstream;
 
 BOOL nodinput = FALSE;
 
-static LRESULT CALLBACK MainWndproc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	event_t ev;              //Doom input event
-	int     mouse_keys;
+static LRESULT CALLBACK MainWndproc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+	event_t ev; // Doom input event
+	int mouse_keys;
 
 	// judgecutor:
 	// Response MSH Mouse Wheel event
 
-	if (message == MSHWheelMessage)
-	{
-			message = WM_MOUSEWHEEL;
-		if (win9x)
-			wParam <<= 16;
+	if(message == MSHWheelMessage) {
+		message = WM_MOUSEWHEEL;
+
+		if(win9x) wParam <<= 16;
 	}
 	
-	
-	switch (message)
-	{
+	switch(message) {
 		case WM_CREATE:
 			nodinput = M_CheckParm("-nodinput");
 			break;
 	
 		case WM_ACTIVATEAPP:           // Handle task switching
 			appActive = (int)wParam;
+
 			// pause music when alt-tab
-			if (appActive  && !paused)
+			if(appActive && !paused)
 				I_ResumeSong(0);
-			else if (!paused)
+			else if(!paused)
 				I_PauseSong(0);
+
 			{
 				HANDLE ci = GetStdHandle(STD_INPUT_HANDLE);
-				if (ci != INVALID_HANDLE_VALUE && GetFileType(ci) == FILE_TYPE_CHAR)
+				if(ci != INVALID_HANDLE_VALUE && GetFileType(ci) == FILE_TYPE_CHAR)
 					appActive = true;
 			}
-			InvalidateRect (hWnd, NULL, TRUE);
+
+			InvalidateRect(hWnd, NULL, TRUE);
 			break;
 	
 		//for MIDI music
 		case WM_MSTREAM_UPDATEVOLUME:
 			I_SetMidiChannelVolume((DWORD)wParam, dwVolumePercent);
 			break;
-	
+
 		case WM_PAINT:
-			if (!appActive && !bAppFullScreen && !netgame)
-				// app becomes inactive (if windowed)
-			{
+			// app becomes inactive (if windowed)
+			if(!appActive && !bAppFullScreen && !netgame) {
 				// Paint "Game Paused" in the middle of the screen
 				PAINTSTRUCT ps;
 				RECT        rect;
-				HDC hdc = BeginPaint (hWnd, &ps);
-				GetClientRect (hWnd, &rect);
+				HDC hdc = BeginPaint(hWnd, &ps);
+				GetClientRect(hWnd, &rect);
 				DrawText (hdc, TEXT("Game Paused"), -1, &rect,
 					DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-				EndPaint (hWnd, &ps);
+
+				EndPaint(hWnd, &ps);
 				return 0;
 			}
+
 			break;
 	
 		//case WM_RBUTTONDOWN:
 		//case WM_LBUTTONDOWN:
 	
 		case WM_MOVE:
-			if (bAppFullScreen)
-			{
+			if(bAppFullScreen) {
 				SetWindowPos(hWnd, NULL, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
 				return 0;
-			}
-			else
-			{
+			} else {
 				windowPosX = (SHORT) LOWORD(lParam);    // horizontal position
 				windowPosY = (SHORT) HIWORD(lParam);    // vertical position
 				break;
@@ -159,7 +156,7 @@ static LRESULT CALLBACK MainWndproc(HWND hWnd, UINT message, WPARAM wParam, LPAR
 			break;
 	
 		case WM_SETCURSOR:
-			if (bAppFullScreen)
+			if(bAppFullScreen)
 				SetCursor(NULL);
 			else
 				SetCursor(windowCursor);
@@ -175,12 +172,10 @@ static LRESULT CALLBACK MainWndproc(HWND hWnd, UINT message, WPARAM wParam, LPAR
 	
 	handleKeyDoom:
 			ev.data1 = 0;
-			if (wParam == VK_PAUSE)
 			// intercept PAUSE key
-			{
+			if (wParam == VK_PAUSE) {
 				ev.data1 = KEY_PAUSE;
-			}
-			else if (!keyboard_started)
+			} else if (!keyboard_started)
 			// post some keys during the game startup
 			// (allow escaping from network synchronization, or pressing enter after
 			//  an error message in the console)
@@ -210,23 +205,22 @@ static LRESULT CALLBACK MainWndproc(HWND hWnd, UINT message, WPARAM wParam, LPAR
 		case WM_XBUTTONDOWN:
 		case WM_XBUTTONUP:
 		case WM_MOUSEMOVE:
-			if (nodinput)
-			{
+			if(nodinput) {
 				mouse_keys = 0;
-				if (wParam & MK_LBUTTON)
+				if(wParam & MK_LBUTTON)
 					mouse_keys |= 1;
-				if (wParam & MK_RBUTTON)
+				if(wParam & MK_RBUTTON)
 					mouse_keys |= 2;
-				if (wParam & MK_MBUTTON)
+				if(wParam & MK_MBUTTON)
 					mouse_keys |= 4;
-				if (wParam & MK_XBUTTON1)
+				if(wParam & MK_XBUTTON1)
 					mouse_keys |= 8;
-				if (wParam & MK_XBUTTON2)
+				if(wParam & MK_XBUTTON2)
 					mouse_keys |= 16;
+
 				I_GetSysMouseEvents(mouse_keys);
 			}
 			break;
-	
 	
 		case WM_MOUSEWHEEL:
 			//CONS_Printf("MW_WHEEL dispatched.\n");
@@ -261,9 +255,7 @@ static LRESULT CALLBACK MainWndproc(HWND hWnd, UINT message, WPARAM wParam, LPAR
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-
-static inline VOID OpenTextConsole(void)
-{
+static inline VOID OpenTextConsole(void) {
 	HANDLE ci, co;
 	const BOOL tco = M_CheckParm("-console") != 0;
 	dedicated = M_CheckParm("-dedicated") != 0;
@@ -290,10 +282,9 @@ static inline VOID OpenTextConsole(void)
 //
 // Do that Windows initialization stuff...
 //
-static HWND OpenMainWindow (HINSTANCE hInstance, int nCmdShow, LPSTR wTitle)
-{
-	HWND        hWnd;
-	WNDCLASS    wc;
+static HWND OpenMainWindow (HINSTANCE hInstance, int nCmdShow, LPSTR wTitle) {
+	HWND hWnd;
+	WNDCLASS wc;
 
 	// Set up and register window class
 	nCmdShow = 0;
@@ -307,8 +298,9 @@ static HWND OpenMainWindow (HINSTANCE hInstance, int nCmdShow, LPSTR wTitle)
 	wc.hCursor       = windowCursor;
 	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	wc.lpszMenuName  = NULL;
-	wc.lpszClassName = TEXT("SRB2WC");
-	if (!RegisterClass(&wc))
+	wc.lpszClassName = TEXT("SRB2DQ");
+
+	if(!RegisterClass(&wc))
 		return (HANDLE)-1;
 
 	// Create a window
@@ -320,7 +312,7 @@ static HWND OpenMainWindow (HINSTANCE hInstance, int nCmdShow, LPSTR wTitle)
 #else
 		   dedicated ? 0:WS_EX_TOPMOST,     //ExStyle
 #endif
-		   "SRB2WC",                         //Classname
+		   "SRB2DQ",                         //Classname
 		   wTitle,                           //Windowname
 		   WS_CAPTION|WS_POPUP|WS_SYSMENU,   //dwStyle       //WS_VISIBLE|WS_POPUP for bAppFullScreen
 		   0,
@@ -336,8 +328,7 @@ static HWND OpenMainWindow (HINSTANCE hInstance, int nCmdShow, LPSTR wTitle)
 }
 
 
-static inline BOOL tlErrorMessage(const TCHAR *err)
-{
+static inline BOOL tlErrorMessage(const TCHAR *err) {
 	/* make the cursor visible */
 	SetCursor(LoadCursor(NULL, IDC_ARROW));
 

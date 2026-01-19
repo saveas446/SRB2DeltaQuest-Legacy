@@ -2565,19 +2565,19 @@
 			Name="Docs"
 			>
 			<File
-				RelativePath="..\..\doc\Copying"
+				RelativePath="..\..\doc\copying"
 				>
 			</File>
 			<File
-				RelativePath="..\..\doc\Faq.txt"
+				RelativePath="..\..\doc\credits.txt"
 				>
 			</File>
 			<File
-				RelativePath="..\..\readme.txt"
+				RelativePath="..\..\doc\filestructure.md"
 				>
 			</File>
 			<File
-				RelativePath="..\..\doc\Source.txt"
+				RelativePath="..\..\doc\quick_m5q_doc.md"
 				>
 			</File>
 		</Filter>
