@@ -1361,6 +1361,8 @@ void M_ScreenShot(void) {
 	if(rendermode != render_soft) {
 		UINT8* data = HWR_Screenshot();
 		ret = M_SavePNG(va(pandf, pathname, freename), data, vid.width, vid.height, 3, NULL);
+
+		free(data);
 	} else
 #endif
 	if(rendermode != render_none) {
