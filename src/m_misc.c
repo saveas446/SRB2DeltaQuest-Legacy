@@ -933,64 +933,140 @@ M_CloseGIF(void) {
 #define PNG_FILTER_AVG 3
 #define PNG_FILTER_PAETH 4
 
-static UINT8 png_choose_filter(const UINT8* row, const UINT8* prew_row, int width, int channels) {
-	UINT8 filter, best_filter;
-	int width_bytes, best_sum;
-	int x;
+static inline int uabs(int x) {
+	return (x < 0) ? -x : x;
+}
+
+static inline UINT8 paeth_calc(UINT8 a, UINT8 b, UINT8 c) {
+	INT16 p = a + b - c;
+
+	INT16 pa = (INT16)uabs(p - a);
+	INT16 pb = (INT16)uabs(p - b);
+	INT16 pc = (INT16)uabs(p - c);
+
+	return (pa <= pb && pa <= pc) ? a : (pb <= pc ? b : c);
+}
+
+static UINT8 png_choose_filter(const UINT8* data, const UINT8* prev, int width, int channels) {
+	int sum_none, sum_sub, sum_up, sum_avg, sum_paeth;
+	int x, width_bytes;
 
 	if(channels == 1) return PNG_FILTER_NONE;
 
 	width_bytes = width * channels;
-	best_sum = INT_MAX;
-	best_filter = PNG_FILTER_NONE;
+	sum_none = sum_sub = sum_up = sum_avg = sum_paeth = 0;
+	
+	// compute per-filter sums
+	for(x = 0; x < channels; x++) {
+		UINT8 curr = data[x];
+		UINT8 up = prev ? prev[x] : 0;
 
-	for(filter = PNG_FILTER_NONE; filter <= PNG_FILTER_UP; filter++) {
-		int sum = 0;
+		int abs_up = uabs(curr - up);
 
-		for(x = 0; x < width_bytes; x++) {
-			int left = (x >= channels) ? row[x - channels] : 0;
-			int up = prew_row ? prew_row[x] : 0;
-			int val = 0;
-
-			switch(filter) {
-				case PNG_FILTER_NONE: val = row[x]; break;
-				case PNG_FILTER_SUB: val = row[x] - left; break;
-				case PNG_FILTER_UP: val = row[x] - up; break;
-			}
-
-			sum += abs(val);
-		}
-
-		if(sum < best_sum) {
-			best_sum = sum;
-			best_filter = filter;
-		}
+		sum_none += curr;
+		sum_sub += curr;
+		sum_up += abs_up;
+		sum_avg += uabs(curr - (up >> 1));
+		sum_paeth += abs_up;
 	}
+	for(x = channels; x < width_bytes; x++) {
+		UINT8 curr = data[x];
+		UINT8 left = data[x - channels];
+		UINT8 up = prev ? prev[x] : 0;
+		UINT8 ul = prev ? prev[x - channels] : 0;
 
-	return best_filter;
+		sum_none += curr;
+		sum_sub += uabs(curr - left);
+		sum_up += uabs(curr - up);
+		sum_avg += uabs(curr - ((UINT16)(left + up) >> 1));
+		sum_paeth += uabs(curr - paeth_calc(left, up, ul));
+	}
+	
+	{ // select best filter
+		int best = sum_none;
+		UINT8 filter = PNG_FILTER_NONE;
+
+		if(sum_sub < best) {
+			best = sum_sub;
+			filter = PNG_FILTER_SUB;
+		}
+		if(sum_up < best) {
+			best = sum_up;
+			filter = PNG_FILTER_UP;
+		}
+		if(sum_avg < best) {
+			best = sum_avg;
+			filter = PNG_FILTER_AVG;
+		}
+		if(sum_paeth < best) {
+			best = sum_paeth;
+			filter = PNG_FILTER_PAETH;
+		}
+
+		return filter;
+	}
 }
 
-static void png_apply_sub_filter(UINT8* row, int width, int channels) {
-	int x;
+static void png_apply_sub_filter(const UINT8* data, UINT8* row, int width, int channels) {
 	int width_bytes = width * channels;
+	int x;
 
 	row[0] = PNG_FILTER_SUB;
-	for(x = width_bytes - 1; x >= channels; x--) {
-		int i = x + 1;
-		row[i] = (row[i] - row[i - channels]) & 0xff;
+	memcpy(row + 1, data, channels);
+
+	for(x = channels; x < width_bytes; x++)
+		row[x + 1] = data[x] - data[x - channels];
+}
+
+static void png_apply_up_filter(const UINT8* data, const UINT8* prev, UINT8* row, int width, int channels) {
+	int width_bytes = width * channels;
+	int x;
+
+	if(!prev) {
+		row[0] = PNG_FILTER_NONE;
+		memcpy(row + 1, data, width_bytes);
+		return;
+	}
+
+	row[0] = PNG_FILTER_UP;
+	for(x = 0; x < width_bytes; x++)
+		row[x + 1] = data[x] - prev[x];
+}
+
+static void png_apply_avg_filter(const UINT8* data, const UINT8* prev, UINT8* row, int width, int channels) {
+	int width_bytes = width * channels;
+	int x;
+
+	row[0] = PNG_FILTER_AVG;
+	for(x = 0; x < channels; x++) {
+		UINT8 up = prev ? prev[x] : 0;
+
+		row[x + 1] = data[x] - (up >> 1);
+	}
+	for(x = channels; x < width_bytes; x++) {
+		UINT8 left = data[x - channels];
+		UINT8 up = prev ? prev[x] : 0;
+
+		row[x + 1] = data[x] - ((UINT16)(left + up) >> 1);
 	}
 }
 
-static void png_apply_up_filter(UINT8* row, UINT8* prew_row, int width, int channels) {
+static void png_apply_paeth_filter(const UINT8* data, const UINT8* prev, UINT8* row, int width, int channels) {
+	int width_bytes = width * channels;
 	int x;
-	int width_bytes =width * channels;
 
-	row[0] = PNG_FILTER_UP;
-	if(!prew_row) return;
+	row[0] = PNG_FILTER_PAETH;
+	for(x = 0; x < channels; x++) {
+		UINT8 up = prev ? prev[x] : 0;
 
-	for(x = 0; x < width_bytes; x++) {
-		int i = x + 1;
-		row[i] = (row[i] - prew_row[x]) & 0xff;
+		row[x + 1] = data[x] - up;
+	}
+	for(x = channels; x < width_bytes; x++) {
+		UINT8 left = data[x - channels];
+		UINT8 up = prev ? prev[x] : 0;
+		UINT8 ul = prev ? prev[x - channels] : 0;
+
+		row[x + 1] = data[x] - paeth_calc(left, up, ul);
 	}
 }
 
@@ -1004,6 +1080,8 @@ boolean M_SavePNG(const char* filename, const UINT8* data, int width, int height
 		CONS_Printf("M_SavePNG: Error on opening %s for write\n", filename);
 		goto fail_return;
 	}
+
+	CONS_Printf("M_SavePNG: Trying to save PNG image...\n");
 
 	fw_write_bytes(&fb, png_signature, sizeof png_signature);
 
@@ -1060,28 +1138,27 @@ boolean M_SavePNG(const char* filename, const UINT8* data, int width, int height
 		size_t img_size = row_bytes * height;
 
 		UINT8 *png_rows = malloc(img_size);
-		UINT8 *prew_row = calloc(width_bytes, 1);
-		if(!png_rows || !prew_row) {
+		if(!png_rows) {
 			CONS_Printf("M_SavePNG: Out of memory\n");
 			goto fail_return;
 		}
 
 		for(y = 0; y < height; y++) {
 			UINT8 filter, *row_ptr = png_rows + y * row_bytes;
-			const UINT8 *data_ptr = data + y * width_bytes;
+			const UINT8 *data_ptr = data + y * width_bytes,
+				*prev_ptr = y > 0 ? (data + (y - 1) * width_bytes) : NULL;
 
-			memcpy(row_ptr + 1, data_ptr, width_bytes);
+			filter = png_choose_filter(data_ptr, prev_ptr, width, channels);
 
-			filter = png_choose_filter(row_ptr, prew_row, width, channels);
-			
-			if(!filter) row_ptr[0] = PNG_FILTER_NONE;
-			else if(filter == 1) png_apply_sub_filter(row_ptr, width, channels);
-			else if(filter == 2) png_apply_up_filter(row_ptr, prew_row, width, channels);
-
-			memcpy(prew_row, data_ptr, width_bytes);
+			if(filter == PNG_FILTER_SUB) png_apply_sub_filter(data_ptr, row_ptr, width, channels);
+			else if(filter == PNG_FILTER_UP) png_apply_up_filter(data_ptr, prev_ptr, row_ptr, width, channels);
+			else if(filter == PNG_FILTER_AVG) png_apply_avg_filter(data_ptr, prev_ptr, row_ptr, width, channels);
+			else if(filter == PNG_FILTER_PAETH) png_apply_paeth_filter(data_ptr, prev_ptr, row_ptr, width, channels);
+			else {
+				row_ptr[0] = PNG_FILTER_NONE;
+				memcpy(row_ptr + 1, data_ptr, width_bytes);
+			}
 		}
-
-		free(prew_row);
 
 		idat_size = compressBound(img_size);
 		idat_comp_data = malloc((size_t)idat_size);

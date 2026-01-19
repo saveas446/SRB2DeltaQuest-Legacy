@@ -694,9 +694,8 @@ static inline boolean saveTGA(const char *file_name, const void *buffer,
 // screen shot
 // --------------------------------------------------------------------------
 UINT8* HWR_Screenshot(void) {
-	int i;
-
 	int total = vid.width * vid.height;
+	int i;
 
 	UINT8* buf_rgb;
 	UINT16* buf565 = malloc(total << 1);
