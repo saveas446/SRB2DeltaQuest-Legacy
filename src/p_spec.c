@@ -2395,54 +2395,53 @@ static ffloor_t *P_AddFakeFloor(sector_t *sec, sector_t *sec2, line_t *master, i
 
 	ffloor->flags = flags;
 	ffloor->master = master;
-
+	
 	// scan the thinkers
 	// to see if this FOF should have friction
-	for (th = thinkercap.next; th != &thinkercap; th = th->next)
-	{
-		if (th->function.acp1 != (actionf_p1)T_Friction)
+	for (th = thinkercap.next; th != &thinkercap; th = th->next) {
+		if(!th) continue; // could fix crash
+
+		if(th->function.acp1 != (actionf_p1)T_Friction)
 			continue;
 
 		f = (friction_t *)th;
 
-		if (&sectors[f->affectee] == sec2)
+		if(&sectors[f->affectee] == sec2)
 			Add_Friction(f->friction, f->movefactor, (int)(sec-sectors), true);
 	}
 
 	// scan the thinkers
 	// to see if this FOF should have wind/current/pusher
-	for (th = thinkercap.next; th != &thinkercap; th = th->next)
-	{
-		if (th->function.acp1 != (actionf_p1)T_Pusher)
+	for (th = thinkercap.next; th != &thinkercap; th = th->next) {
+		if(!th) continue; // could fix crash
+
+		if(th->function.acp1 != (actionf_p1)T_Pusher)
 			continue;
 
 		p = (pusher_t *)th;
 
-		if (&sectors[p->affectee] == sec2)
+		if(&sectors[p->affectee] == sec2)
 			Add_Pusher(p->type, p->x_mag<<FRACBITS, p->y_mag<<FRACBITS, p->source, (int)(sec-sectors), p->affectee);
 	}
 
-	if (flags & FF_TRANSLUCENT)
-	{
+	if (flags & FF_TRANSLUCENT) {
 		if (sides[master->sidenum[0]].toptexture > 0)
 			ffloor->alpha = sides[master->sidenum[0]].toptexture;
 		else
 			ffloor->alpha = 0x80;
-	}
-	else
+	} else
 		ffloor->alpha = 0xff;
 
-	if (flags & FF_QUICKSAND)
+	if(flags & FF_QUICKSAND)
 		CheckForQuicksand = true;
 
-	if ((flags & FF_BUSTUP) || (flags & FF_SHATTER) || (flags & FF_SPINBUST))
+	if((flags & FF_BUSTUP) || (flags & FF_SHATTER) || (flags & FF_SPINBUST))
 		CheckForBustableBlocks = true;
 
-	if ((flags & FF_CRUMBLE))
+	if((flags & FF_CRUMBLE))
 		sec2->crumblestate = 1;
 
-	if ((flags & FF_FLOATBOB))
-	{
+	if ((flags & FF_FLOATBOB)) {
 		P_AddFloatThinker(sec2, sec);
 		CheckForFloatBob = true;
 	}
