@@ -32,7 +32,6 @@ The way it's structured is the following:
 # Header Chunk ("m5q")
 In the header chunk, there are fields stored in the following order:
 - PPQ (VLQ)
-- Tempo (VLQ, multiplied by 100 for decimals)
 - Bit-flags byte (u8)
 
 For the bit-flags byte:
@@ -89,23 +88,13 @@ At the start of ewery track, the following fields are written in this order:
 - Track name (ASCII)
 - Initial Rest (VLQ)
 
-## Initial Channel State
-If this track is the first one mapped to its channel, it must also write the following fields immediately after the Initial Rest, in this order:
-- Initial Program Entry
-- Initial Wolume (U8)
-- Initial Panning (U8)
-- Initial Bend (ZVLQ)
-
-These values establish the initial channel state at tick `0`.
-
 # Channel Ownership Rule (IMPORTANT)
 Only the first track that maps to a giwen channel is allowed to a define channel-affecting state ewent, including but not limited to:
 - Program Entry.
 - Wolume, Panning and Bend Ewent.
 - Control Changes.
 
-Any subsequent tracks mapped to the same channel must:
-- **Not write** these initial states.
+Any subsequent tracks mapped to the same channel:
 - **Must assume** the channel state is already defined on the first track.
 - **Automatically inherit** all channels settings without redefining them.
 
