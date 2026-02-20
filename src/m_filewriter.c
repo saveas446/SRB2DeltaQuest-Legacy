@@ -144,7 +144,6 @@ UINT32 buf_get_crc32(const UINT8* buf, size_t len) {
 		shr eax, 8
 		xor eax, dword ptr [CRC_TABLE+edx*4]
 		
-	;; decrease ecx by one
 		cmp esi, ecx
 		jb crcLoop
 
