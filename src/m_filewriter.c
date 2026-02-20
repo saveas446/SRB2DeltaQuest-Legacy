@@ -120,34 +120,38 @@ void fw_be_write_u32(FileBuffer* fw, UINT32 val) {
 UINT32 buf_get_crc32(const UINT8* buf, size_t len) {
 #if USEASM
 	__asm {
-		push ebx
-
-		mov eax, 0FFFFFFFFh ; out crc
-		mov ecx, len ; length
-		mov edx, buf ; pointer to buffer
+		push esi
+		
+		; esi = buffer ptr
+		mov esi, buf
+		
+		; ecx = ptr end
+		mov ecx, len
+		lea ecx, [ecx+esi]
+		
+		; eax = checksum
+		mov eax, 0FFFFFFFFh
+		
+		xor edx, edx
 	crcLoop:
-		;; if ecx is 0 then done!
-		test ecx, ecx
-		jz done
+	;; read current byte and increase buffer
+		mov dl, [esi]
+		inc esi
 		
-		;; read current byte and increase buffer
-		movzx ebx, byte ptr [edx]
-		inc edx
+		xor dl, al
 		
-		;;; crc logic
-		xor bl, al
+	;;; crc logic
 		shr eax, 8
-		xor eax, [CRC_TABLE+ebx*4]
+		xor eax, dword ptr [CRC_TABLE+edx*4]
 		
-		;; decrease ecx by one
-		dec ecx
-		jmp crcLoop
-	done:
-		not eax
-		
-		; return register is EAX
+	;; decrease ecx by one
+		cmp esi, ecx
+		jb crcLoop
 
-		pop ebx
+		; last not
+		not eax
+
+		pop esi
 	}
 #else
 	UINT32 i;
