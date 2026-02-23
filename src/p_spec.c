@@ -3379,7 +3379,6 @@ int EV_StopPlat(line_t* line)
 void P_AddActivePlat(plat_t* plat) {
   //platlist_t *list = malloc(sizeof *list);
 	platlist_t *list = malloc(sizeof(platlist_t));
-	CONS_Printf("plat = %u; list = %u\n", plat, list);
 
 	list->plat = plat;
 	plat->list = list;
