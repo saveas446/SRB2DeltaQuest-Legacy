@@ -151,7 +151,7 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				OmitFramePointers="true"
+				OmitFramePointers="false"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)lib&quot;;&quot;$(SolutionDir)include&quot;;&quot;$(SolutionDir)src/lib/libpng&quot;;&quot;$(SolutionDir)src/lib/zlib&quot;"
 				PreprocessorDefinitions="NDEBUG;NOMSERV;SRB2_SDL2;NO_STDIO_REDIRECT;USE_WGL_SWAP;DIRECTFULLSCREEN;SDL;HWRENDER;HAVE_PNG"
 				StringPooling="true"
