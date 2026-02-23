@@ -3376,15 +3376,19 @@ int EV_StopPlat(line_t* line)
 }
 
 //SoM: 3/7/2000: No more limits!
-void P_AddActivePlat(plat_t* plat)
-{
-  platlist_t *list = malloc(sizeof *list);
-  list->plat = plat;
-  plat->list = list;
-  if ((list->next == activeplats))
-	list->next->prev = &list->next;
-  list->prev = &activeplats;
-  activeplats = list;
+void P_AddActivePlat(plat_t* plat) {
+  //platlist_t *list = malloc(sizeof *list);
+	platlist_t *list = malloc(sizeof(platlist_t));
+	CONS_Printf("plat = %u; list = %u\n", plat, list);
+
+	list->plat = plat;
+	plat->list = list;
+
+	if(list->next && list->next == activeplats)
+		list->next->prev = &list->next;
+
+	list->prev = &activeplats;
+	activeplats = list;
 }
 
 
