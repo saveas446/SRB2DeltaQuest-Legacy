@@ -1,6 +1,6 @@
 Sonic Robo Blast 2
-Demo 2 Ultimate - Indev Version
-by save_as, Sam the Wise, Jimmy, and Zurrenda
+Delta Quest - Indev Version
+by save_as, Sam the Wise, Jimmy, and Hennkrido
 Release date: 09.01.2026
 -------------------
 
@@ -12,7 +12,7 @@ Past Mine Maze, the game is very unfinished. There are some nuggets of progress 
 Some of the secret levels, however, have good progress done (Speed Highway is actually complete!)
 
 -------------------
-Demo 2 Ultimate is a project designed to remake the Beta Quest campaign with new gimmicks, new features, new enemies, much better level design, new levels, new music, and more.
+Delta Quest is a project designed to remake the Beta Quest campaign with new gimmicks, new features, new enemies, much better level design, new levels, new music, and more.
 
 It is currently in development and has been since February/March 2024.
 

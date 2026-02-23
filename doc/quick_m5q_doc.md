@@ -1,12 +1,11 @@
-# M5Q Format Documentation (done quickly, Work In Progress)
-## *By Hennkrido herself*
+# M5Q Format (done quickly, Work In Progress)
+## *By Hennkrido himself!!1!!!*
 
-Before reading, I need to make sure you acknowledge the following:
+Meow:
 - M5Q stands for Music 5eQuence.
-- When I deconstruct a byte by bits, it will be from least significant bit to most significant bit.
 - When I say *'VLQ'*, I mean *'LSB-first VLQ'*.
 - When I say *'ZVLQ'*, I mean *'Zig-Zag with LSB-first VLQ'*.
-- M5Q awoids writing the same prewious walue whenefur it's pawssible (:3c)
+- M5Q awoids writing the same prewious walue whenefur it's pawssible.
 - M5Q is a *little-endian* format.
 
 # Zig-Zag Encoding
@@ -34,7 +33,7 @@ In the header chunk, there are fields stored in the following order:
 - PPQ (VLQ)
 - Bit-flags byte (u8)
 
-For the bit-flags byte:
+For the bit-flags byte (LSB to MSB):
 
 `. = Unused; V = Format wersion; C = Compression flag; M = Metadata flag.`
 
@@ -88,18 +87,8 @@ At the start of ewery track, the following fields are written in this order:
 - Track name (ASCII)
 - Initial Rest (VLQ)
 
-# Channel Ownership Rule (IMPORTANT)
-Only the first track that maps to a giwen channel is allowed to a define channel-affecting state ewent, including but not limited to:
-- Program Entry.
-- Wolume, Panning and Bend Ewent.
-- Control Changes.
-
-Any subsequent tracks mapped to the same channel:
-- **Must assume** the channel state is already defined on the first track.
-- **Automatically inherit** all channels settings without redefining them.
-
 # Ewent Structure
-M5Q uses a bit-structured byte to represent a ewent, which are:
+M5Q uses a bit-structured byte to represent a ewent, which are (LSB to MSB):
 
 `R = Rest flag; A = Flag 0; B = Flag 1, C = Flag 2; D = Flag 3; I = Ewent ID`
 
@@ -118,7 +107,7 @@ Currently, there are 4 types of ewents a M5Q can hold:
 - `2`: Utility Ewent.
 - `3`: Miscellaneous Ewent.
 
-**IMPORTANT:** An ewent byte that is equal to `0xFF` marks the end of a track.
+**IMPORTANT:** An ewent byte that is equal to `0xFF` marks the end of a track (start reading another track or end decoding if can't read further)
 
 # Delta-Based Accumulators
 M5Q uses *delta-based accumulators*.
@@ -244,6 +233,7 @@ Each controller ID has its own delta-based accumulator for the walue entry.
 Both Metadata and SysEx ewent don't use flags 0-1.
 
 Instead, they store:
+- Type (u8, only stored for metadata)
 - Data length (VLQ)
 - Data (binary blob)
 

@@ -30,6 +30,7 @@
 #include <direct.h>
 
 #include <mmsystem.h>
+#include <malloc.h>
 
 #include "../m_misc.h"
 #include "../i_video.h"
@@ -53,6 +54,9 @@
 
 // Wheel support for Win95/WinNT3.51
 #include <zmouse.h>
+
+#include <dbghelp.h>
+#pragma comment(lib, "dbghelp.lib")
 
 // Taken from Win98/NT4.0
 #ifndef SM_MOUSEWHEELPRESENT
@@ -467,61 +471,272 @@ void I_StartupTimer(void)
 //                                                                   EXIT CODE, ERROR HANDLING
 // ===========================================================================================
 
-static int errorcount = 0; // phuck recursive errors
+static LONG crash_lock = 0;
+static int errorcount = 0;
 static int shutdowning = false;
+static int reserved_stack = 0;
 
-//
-// Used to trap various signals, to make sure things get shut down cleanly.
-//
 #ifdef NDEBUG
-static void signal_handler(int num)
-{
-	//static char msg[] = "oh no! back to reality!\r\n";
-	const char *sigmsg;
-	char sigdef[64];
+// straight up google'ed these ones
+static __forceinline const char* get_exception_name(DWORD code) {
+	switch(code) {
+		case EXCEPTION_ACCESS_VIOLATION: return "ACCESS_VIOLATION";
+		case EXCEPTION_ARRAY_BOUNDS_EXCEEDED: return "ARRAY_BOUNDS_EXCEEDED";
+		case EXCEPTION_BREAKPOINT: return "BREAKPOINT";
+		case EXCEPTION_DATATYPE_MISALIGNMENT: return "DATATYPE_MISALIGNMENT";
+		case EXCEPTION_FLT_DENORMAL_OPERAND: return "FLT_DENORMAL_OPERAND";
+		case EXCEPTION_FLT_DIVIDE_BY_ZERO: return "FLT_DIVIDE_BY_ZERO";
+		case EXCEPTION_FLT_INEXACT_RESULT: return "FLT_INEXACT_RESULT";
+		case EXCEPTION_FLT_INVALID_OPERATION: return "FLT_INVALID_OPERATION";
+		case EXCEPTION_FLT_OVERFLOW: return "FLT_OVERFLOW";
+		case EXCEPTION_FLT_STACK_CHECK: return "FLT_STACK_CHECK";
+		case EXCEPTION_FLT_UNDERFLOW: return "FLT_UNDERFLOW";
+		case EXCEPTION_ILLEGAL_INSTRUCTION: return "ILLEGAL_INSTRUCTION";
+		case EXCEPTION_IN_PAGE_ERROR: return "IN_PAGE_ERROR";
+		case EXCEPTION_INT_DIVIDE_BY_ZERO: return "INT_DIVIDE_BY_ZERO";
+		case EXCEPTION_INT_OVERFLOW: return "INT_OVERFLOW";
+		case EXCEPTION_INVALID_DISPOSITION: return "INVALID_DISPOSITION";
+		case EXCEPTION_NONCONTINUABLE_EXCEPTION: return "NONCONTINUABLE_EXCEPTION";
+		case EXCEPTION_PRIV_INSTRUCTION: return "PRIV_INSTRUCTION";
+		case EXCEPTION_SINGLE_STEP: return "SINGLE_STEP";
+		case EXCEPTION_STACK_OVERFLOW: return "STACK_OVERFLOW";
+		default: return "UNKNOWN";
+	}
+}
 
+static __forceinline void print_crash_header(HANDLE file, EXCEPTION_POINTERS* ep, DWORD code) {
+	DWORD written;
 
-	switch (num)
 	{
-		case SIGINT:
-			sigmsg = "interrupt";
+		char buf[256];
+
+		CONTEXT* c = ep->ContextRecord;
+
+		const char* exception_name = get_exception_name(code);
+		int len = _snprintf(buf, sizeof(buf),
+			"Exception: %s (0x%08X); Address: 0x%08X\n"
+			"EAX = 0x%08X; EBX = 0x%08X; ECX = 0x%08X; EDX = 0x%08X\n"
+			"ESI = 0x%08X; EDI = 0x%08X\n"
+			"EBP = 0x%08X; ESP = 0x%08X; EIP = 0x%08X\n",
+			exception_name, code, ep->ExceptionRecord->ExceptionAddress,
+			c->Eax, c->Ebx, c->Ecx, c->Edx,
+			c->Esi, c->Edi,
+			c->Ebp, c->Esp, c->Eip
+		);
+
+		WriteFile(file, buf, len, &written, NULL);
+	}
+	
+	// extra info for this specific code
+	if(code == EXCEPTION_ACCESS_VIOLATION) {
+		char buf[64];
+
+		ULONG_PTR type = ep->ExceptionRecord->ExceptionInformation[0];
+		ULONG_PTR addr = ep->ExceptionRecord->ExceptionInformation[1];
+
+		int len = _snprintf(buf, sizeof(buf),
+			"\n%s 0x%08X\n",
+			(type == 0) ? "Read from" :
+			(type == 1) ? "Write to" :
+			(type == 8) ? "Execute at" : "Access at",
+			addr
+		);
+
+		WriteFile(file, buf, len, &written, NULL);
+	}
+}
+
+// old shitass function (doesn't work with /Oy); Conserving this JUST in case
+static __forceinline void manual_stack_walk(HANDLE file, EXCEPTION_POINTERS* ep) {
+	int i;
+
+	DWORD written;
+	char buf[256];
+
+	CONTEXT* ctx = ep->ContextRecord;
+	DWORD* ebp = (DWORD*)ctx->Ebp;
+
+	WriteFile(file, "\nStack:\n", 8, &written, NULL);
+
+	for(i = 0; i < 32; i++) {
+		if(!ebp)
 			break;
-		case SIGILL:
-			sigmsg = "illegal instruction - invalid function image";
+
+		__try {
+			DWORD prev = ebp[0];
+			DWORD ret = ebp[1];
+			
+			// sanity shit here
+			if(!ret)
+				break;
+			if((DWORD)ebp >= prev)
+				break;
+			// misaligned
+			if(prev & 3)
+				break;
+
+			{
+				int len;
+
+				MEMORY_BASIC_INFORMATION mbi;
+
+				DWORD mod_base = 0;
+
+				char mod_name[MAX_PATH] = {0};
+				char* base_name;
+
+				if(VirtualQuery((LPCVOID)ret, &mbi, sizeof(mbi)))
+					mod_base = (DWORD)mbi.AllocationBase;
+
+				// extract only the dll name
+				if(mod_base) {
+					if(GetModuleFileNameA(
+						(HMODULE)mod_base,
+						mod_name,
+						sizeof(mod_name)
+					)) {
+						char* p = mod_name;
+						base_name = mod_name;
+
+						while(*p) {
+							if(*p == '\\' || *p == '/')
+								base_name = p + 1;
+
+							p++;
+						}
+					}
+				}
+
+				len = _snprintf(buf, sizeof(buf),
+					"  #%02d: 0x%08X (%s+0x%08X)\n",
+					i, ret,
+					mod_base ? base_name : "unknown",
+					mod_base ? (ret - mod_base) : 0
+				);
+
+				WriteFile(file, buf, len, &written, NULL);
+			}
+
+			ebp = (DWORD*)prev;
+		} __except(EXCEPTION_EXECUTE_HANDLER) {
 			break;
-		case SIGFPE:
-			sigmsg = "floating point exception";
+		}
+	}
+}
+
+static __forceinline void stack_walk(HANDLE file, EXCEPTION_POINTERS* ep) {
+	int i;
+
+	DWORD written;
+	char buf[256];
+
+	HANDLE process, thread;
+	STACKFRAME64 frame;
+
+	CONTEXT ctx = *ep->ContextRecord;
+	WriteFile(file, "\nStack:\n", 8, &written, NULL);
+
+	process = GetCurrentProcess();
+	thread = GetCurrentThread();
+
+	ZeroMemory(&frame, sizeof(frame));
+
+	frame.AddrPC.Offset = ctx.Eip;
+	frame.AddrPC.Mode = AddrModeFlat;
+
+	frame.AddrFrame.Offset = ctx.Ebp;
+	frame.AddrPC.Mode = AddrModeFlat;
+
+	frame.AddrStack.Offset = ctx.Esp;
+	frame.AddrStack.Mode = AddrModeFlat;
+
+	for(i = 0; i < 32; i++) {
+		DWORD64 ret, mod_base;
+
+		char mod_name[128] = {0}, *base_name = mod_name;
+		
+		if(!StackWalk64(
+			IMAGE_FILE_MACHINE_I386,
+			process, thread,
+			&frame, &ctx,
+			NULL, SymFunctionTableAccess64, SymGetModuleBase64, NULL
+		)) break;
+
+		if(!frame.AddrPC.Offset)
 			break;
-		case SIGSEGV:
-			sigmsg = "segment violation";
-			break;
-		case SIGTERM:
-			sigmsg = "software termination signal from kill";
-			break;
-		case SIGBREAK:
-			sigmsg = "Ctrl-Break sequence";
-			break;
-		case SIGABRT:
-			sigmsg = "abnormal termination triggered by abort call";
-			break;
-		default:
-			sprintf(sigdef, "signal number %d", num);
-			sigmsg = sigdef;
+
+		ret = frame.AddrPC.Offset;
+		mod_base = SymGetModuleBase64(process, ret);
+		
+		// extract only the dll name
+		if(mod_base) {
+			if(GetModuleFileNameA(
+				(HMODULE)mod_base,
+				mod_name,
+				sizeof(mod_name)
+			)) {
+				char* p = mod_name;
+				base_name = mod_name;
+				
+				// meow magic (just assigns the pointer to the last slash + 1)
+				while(*p) {
+					if(*p == '\\' || *p == '/')
+						base_name = p + 1;
+
+					p++;
+				}
+			}
+		}
+
+		{
+			int len = _snprintf(buf, sizeof(buf),
+				"  #%02d: 0x%08X (%s+0x%08X)\n",
+				i, ret,
+				mod_base ? base_name : "unknown",
+				mod_base ? (ret - mod_base) : 0
+			);
+
+			WriteFile(file, buf, len, &written, NULL);
+		}
+	}
+}
+
+static LONG WINAPI win32_crash_handler(EXCEPTION_POINTERS* ep) {
+	DWORD code;
+
+	if(InterlockedExchange(&crash_lock, 1) != 0)
+		TerminateProcess(GetCurrentProcess(), 1);
+
+	code = ep->ExceptionRecord->ExceptionCode;
+	if(code == EXCEPTION_STACK_OVERFLOW && reserved_stack)
+		_resetstkoflw();
+
+	{
+		HANDLE file = CreateFileA(
+			"crash.log",
+			GENERIC_WRITE,
+			FILE_SHARE_READ,
+			NULL,
+			CREATE_ALWAYS,
+			FILE_ATTRIBUTE_NORMAL,
+			NULL
+		);
+
+		if(file != INVALID_HANDLE_VALUE) {
+			print_crash_header(file, ep, code);
+
+			if(code != EXCEPTION_STACK_OVERFLOW) {
+				// manual_stack_walk(file, ep);
+				stack_walk(file, ep);
+			}
+			
+			FlushFileBuffers(file);
+			CloseHandle(file);
+		}
 	}
 
-#ifdef LOGMESSAGES
-	if (w_logstream != INVALID_HANDLE_VALUE)
-	{
-		I_OutputMsg("signal_handler() error: %s\r\n", sigmsg);
-		CloseHandle(w_logstream);
-		w_logstream = INVALID_HANDLE_VALUE;
-	}
-#endif
-
-	MessageBoxA(hWndMain, va("signal_handler(): %s", sigmsg), "SRB2 error", MB_OK|MB_ICONERROR);
-
-	signal(num, SIG_DFL); // default signal action
-	raise(num);
+	TerminateProcess(GetCurrentProcess(), 1);
+	return EXCEPTION_EXECUTE_HANDLER;
 }
 #endif
 
@@ -3252,12 +3467,18 @@ static void I_ShutdownDirectInput(void)
 	lpDI = NULL;
 }
 
+#define STACK_RESERVE_SIZE 64
+
 // This stuff should get rid of the exception and page faults when
 // SRB2 bugs out with an error. Now it should exit cleanly.
 //
 int I_StartupSystem(void)
 {
 	HRESULT hr;
+
+#ifdef NDEBUG
+	ULONG stack;
+#endif
 
 	// some 'more global than globals' things to initialize here ?
 	graphics_started = keyboard_started = sound_started = timer_started = cdaudio_started = false;
@@ -3266,12 +3487,23 @@ int I_StartupSystem(void)
 
 	// check for OS type and version here?
 #ifdef NDEBUG
-	signal(SIGABRT, signal_handler);
+	/*signal(SIGABRT, signal_handler);
 	signal(SIGFPE, signal_handler);
 	signal(SIGILL, signal_handler);
 	signal(SIGSEGV, signal_handler);
 	signal(SIGTERM, signal_handler);
-	signal(SIGINT, signal_handler);
+	signal(SIGINT, signal_handler);*/
+
+	stack = STACK_RESERVE_SIZE * 1024;
+	if(!SetThreadStackGuarantee(&stack))
+		reserved_stack = 0;
+	else
+		reserved_stack = stack;
+
+	SymInitialize(GetCurrentProcess(), NULL, TRUE);
+
+	SetUnhandledExceptionFilter(win32_crash_handler);
+	// AddVectoredExceptionHandler(1, win32_crash_handler); // apparently better
 #endif
 
 	// create DirectInput - so that I_StartupKeyboard/Mouse can be called later on
