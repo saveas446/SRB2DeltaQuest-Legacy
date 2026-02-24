@@ -475,6 +475,7 @@ static LONG crash_lock = 0;
 static int errorcount = 0;
 static int shutdowning = false;
 static int reserved_stack = 0;
+static CRITICAL_SECTION dbg_cs = {0};
 
 #ifdef NDEBUG
 // straight up google'ed these ones
@@ -633,7 +634,7 @@ static __forceinline void stack_walk(HANDLE file, EXCEPTION_POINTERS* ep) {
 	HANDLE process, thread;
 	STACKFRAME64 frame;
 
-	CONTEXT ctx = *ep->ContextRecord;
+	CONTEXT* ctx = ep->ContextRecord;
 	WriteFile(file, "\nStack:\n", 8, &written, NULL);
 
 	process = GetCurrentProcess();
@@ -641,26 +642,38 @@ static __forceinline void stack_walk(HANDLE file, EXCEPTION_POINTERS* ep) {
 
 	ZeroMemory(&frame, sizeof(frame));
 
-	frame.AddrPC.Offset = ctx.Eip;
+	frame.AddrPC.Offset = ctx->Eip;
 	frame.AddrPC.Mode = AddrModeFlat;
 
-	frame.AddrFrame.Offset = ctx.Ebp;
-	frame.AddrPC.Mode = AddrModeFlat;
+	frame.AddrFrame.Offset = ctx->Ebp;
+	frame.AddrFrame.Mode = AddrModeFlat;
 
-	frame.AddrStack.Offset = ctx.Esp;
+	frame.AddrStack.Offset = ctx->Esp;
 	frame.AddrStack.Mode = AddrModeFlat;
 
 	for(i = 0; i < 32; i++) {
 		DWORD64 ret, mod_base;
-
 		char mod_name[128] = {0}, *base_name = mod_name;
 		
 		if(!StackWalk64(
 			IMAGE_FILE_MACHINE_I386,
 			process, thread,
-			&frame, &ctx,
+			&frame, ctx,
 			NULL, SymFunctionTableAccess64, SymGetModuleBase64, NULL
-		)) break;
+		)) {
+			// 0 = init problem
+			// 487 = error_invalid_access
+			// 998 = error_noaccess
+
+			DWORD err = GetLastError();
+			int len = _snprintf(buf, sizeof(buf),
+				"Stack Walk failed: %lu\n",
+				err
+			);
+
+			WriteFile(file, buf, len, &written, NULL);
+			break;
+		}
 
 		if(!frame.AddrPC.Offset)
 			break;
@@ -701,13 +714,11 @@ static __forceinline void stack_walk(HANDLE file, EXCEPTION_POINTERS* ep) {
 	}
 }
 
-static LONG WINAPI win32_crash_handler(EXCEPTION_POINTERS* ep) {
-	DWORD code;
-
+static LONG WINAPI win32_crash_handler(PEXCEPTION_POINTERS ep) {
+	DWORD code = ep->ExceptionRecord->ExceptionCode;
 	if(InterlockedExchange(&crash_lock, 1) != 0)
 		TerminateProcess(GetCurrentProcess(), 1);
 
-	code = ep->ExceptionRecord->ExceptionCode;
 	if(code == EXCEPTION_STACK_OVERFLOW && reserved_stack)
 		_resetstkoflw();
 
@@ -726,14 +737,25 @@ static LONG WINAPI win32_crash_handler(EXCEPTION_POINTERS* ep) {
 			print_crash_header(file, ep, code);
 
 			if(code != EXCEPTION_STACK_OVERFLOW) {
+				EnterCriticalSection(&dbg_cs);
+
 				// manual_stack_walk(file, ep);
 				stack_walk(file, ep);
+
+				LeaveCriticalSection(&dbg_cs);
 			}
 			
 			FlushFileBuffers(file);
 			CloseHandle(file);
 		}
 	}
+
+	MessageBoxA(
+		NULL,
+		"Looks like the game crashed!\nSubmit the crash.log file to the SDQ devs and tell them what you were doing before this happened.",
+		"SRB2 Error",
+		MB_OK | MB_ICONERROR | MB_SYSTEMMODAL
+	);
 
 	TerminateProcess(GetCurrentProcess(), 1);
 	return EXCEPTION_EXECUTE_HANDLER;
@@ -3487,6 +3509,7 @@ int I_StartupSystem(void)
 
 	// check for OS type and version here?
 #ifdef NDEBUG
+	// ancient code from DooM ig
 	/*signal(SIGABRT, signal_handler);
 	signal(SIGFPE, signal_handler);
 	signal(SIGILL, signal_handler);
@@ -3499,11 +3522,13 @@ int I_StartupSystem(void)
 		reserved_stack = 0;
 	else
 		reserved_stack = stack;
-
-	SymInitialize(GetCurrentProcess(), NULL, TRUE);
+	
+	SymSetOptions(SYMOPT_DEFERRED_LOADS | SYMOPT_UNDNAME);
+	if(!SymInitialize(GetCurrentProcess(), NULL, TRUE))
+		MessageBoxA(NULL, "Couldn't initialize symbols", "SRB2 Debug Error", MB_ICONEXCLAMATION);
 
 	SetUnhandledExceptionFilter(win32_crash_handler);
-	// AddVectoredExceptionHandler(1, win32_crash_handler); // apparently better
+	InitializeCriticalSection(&dbg_cs);
 #endif
 
 	// create DirectInput - so that I_StartupKeyboard/Mouse can be called later on
