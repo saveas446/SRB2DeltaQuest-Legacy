@@ -136,142 +136,132 @@ light_t lspr[NUMLIGHTS] =
 
 light_t *t_lspr[NUMSPRITES] =
 {
-	&lspr[NOLIGHT],     // SPR_MISL
-	&lspr[NOLIGHT],     // SPR_PLAY
-	&lspr[NOLIGHT],     // SPR_POSS
-	&lspr[NOLIGHT],     // SPR_SPOS
-	&lspr[NOLIGHT],     // SPR_EGGM
-	&lspr[NOLIGHT],     // SPR_BON1
-	&lspr[NOLIGHT],     // SPR_STIM
-	&lspr[NOLIGHT],     // SPR_MEDI
-	&lspr[NOLIGHT],     // SPR_EMMY
-	&lspr[NOLIGHT],     // SPR_PINV
-	&lspr[NOLIGHT],     // SPR_GRTV
-	&lspr[NOLIGHT],     // SPR_SPRY
-	&lspr[NOLIGHT],     // SPR_SUDY
-	&lspr[NOLIGHT],     // SPR_SHTV
-	&lspr[NOLIGHT],     // SPR_FANS
-	&lspr[NOLIGHT],     // SPR_BUBL
-	&lspr[NOLIGHT],     // SPR_YLTV
-	&lspr[NOLIGHT],     // SPR_COL5
-	&lspr[NOLIGHT],     // SPR_SPRR
-	&lspr[NOLIGHT],     // SPR_SUDR
-	&lspr[NOLIGHT],     // SPR_SMOK
-	&lspr[NOLIGHT],     // SPR_SPLA
-	&lspr[NOLIGHT],     // SPR_TNT1
-	&lspr[NOLIGHT],     // SPR_BIRD
-	&lspr[NOLIGHT],     // SPR_SQRL
-	&lspr[YELLOWSHIELD_L],     // SPR_YORB
-	&lspr[BLUESHIELD_L],     // SPR_BORB
-	&lspr[BLACKSHIELD_L],     // SPR_KORB
-	&lspr[RINGSPARK_L],     // SPR_SPRK
-	&lspr[INVINCIBLE_L],     // SPR_IVSP
-	&lspr[INVINCIBLE_L],     // SPR_IVSQ
-	&lspr[NOLIGHT],     // SPR_DISS
-	&lspr[NOLIGHT],     // SPR_BUBP
-	&lspr[NOLIGHT],     // SPR_BUBO
-	&lspr[NOLIGHT],     // SPR_BUBN
-	&lspr[NOLIGHT],     // SPR_BUBM
-	&lspr[NOLIGHT],     // SPR_CNTA
-	&lspr[NOLIGHT],     // SPR_CNTB
-	&lspr[NOLIGHT],     // SPR_CNTC
-	&lspr[NOLIGHT],     // SPR_CNTD
-	&lspr[NOLIGHT],     // SPR_CNTE
-	&lspr[NOLIGHT],     // SPR_CNTF
-	&lspr[NOLIGHT],     // SPR_POPP
-	&lspr[NOLIGHT],     // SPR_PRUP
-	&lspr[NOLIGHT],     // SPR_BKTV
-	&lspr[NOLIGHT],     // SPR_SCRA
-	&lspr[NOLIGHT],     // SPR_SCRB
-	&lspr[NOLIGHT],     // SPR_SCRC
-	&lspr[NOLIGHT],     // SPR_SCRD
-	&lspr[SUPERSPARK_L],     // SPR_SSPK
-	&lspr[NOLIGHT],     // SPR_YSPR
-	&lspr[NOLIGHT],     // SPR_RSPR
-	&lspr[NOLIGHT],     // SPR_YSUD
-	&lspr[NOLIGHT],     // SPR_RSUD
-	&lspr[NOLIGHT],     // SPR_SKIM
-	&lspr[NOLIGHT],     // SPR_MINE
-	&lspr[NOLIGHT],     // SPR_FISH
-	&lspr[NOLIGHT],     // SPR_GARG
-	&lspr[NOLIGHT],     // SPR_SPLH
-	&lspr[NOLIGHT],     // SPR_THOK
-	&lspr[NOLIGHT],     // SPR_THZP
-	&lspr[NOLIGHT],     // SPR_SIGN
-	&lspr[RINGLIGHT_L],     // SPR_RRNG
-	&lspr[NOLIGHT],     // SPR_TTAG
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
-	&lspr[NOLIGHT],     // SPR_STEM
-	#endif
-	&lspr[NOLIGHT],     // SPR_GFLG
-	&lspr[GREENSHINE_L],     // SPR_CEMG
-	&lspr[ORANGESHINE_L],     // SPR_CEMO
-	&lspr[PINKSHINE_L],     // SPR_CEMP
-	&lspr[BLUESHINE_L],     // SPR_CEMB
-	&lspr[REDSHINE_L],     // SPR_CEMR
-	&lspr[LBLUESHINE_L],     // SPR_CEML
-	&lspr[GREYSHINE_L],     // SPR_CEMY
-	&lspr[NOLIGHT],     // SPR_JETB
-	&lspr[NOLIGHT],     // SPR_JETG
-	&lspr[NOLIGHT],     // SPR_JBUL
-	&lspr[NOLIGHT],     // SPR_DETN
-	&lspr[NOLIGHT],     // SPR_XPLD
-	&lspr[NOLIGHT],     // SPR_CHAN
-	&lspr[NOLIGHT],     // SPR_SNO1
-	&lspr[NOLIGHT],     // SPR_SANT
-	&lspr[NOLIGHT],     // SPR_SBLL
-	&lspr[NOLIGHT],     // SPR_SPIK
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
-	&lspr[NOLIGHT],     // SPR_CCOM
-	#endif
-	&lspr[NOLIGHT],     // SPR_RAIN
-
-	&lspr[NOLIGHT],     // SPR_DSPK
-	&lspr[NOLIGHT],     // SPR_USPK
-	
-	//Fab:
-	&lspr[NOLIGHT],     // SPR_STPT
-	&lspr[RINGLIGHT_L],     // SPR_RNGM
-	&lspr[RINGLIGHT_L],     // SPR_RNGR
-	&lspr[RINGLIGHT_L],     // SPR_RNGS
-	&lspr[RINGLIGHT_L],     // SPR_RNGA
-	&lspr[RINGLIGHT_L],     // SPR_RNGE
-	&lspr[RINGLIGHT_L],     // SPR_TAEH
-	&lspr[RINGLIGHT_L],     // SPR_TAER
-	&lspr[RINGLIGHT_L],     // SPR_THER
-	&lspr[RINGLIGHT_L],     // SPR_TAHR
-	&lspr[RINGLIGHT_L],     // SPR_THOM
-	&lspr[RINGLIGHT_L],     // SPR_TAUT
-	&lspr[RINGLIGHT_L],     // SPR_TEXP
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
-	&lspr[NOLIGHT],     // SPR_BUS1
-	&lspr[NOLIGHT],     // SPR_BUS2
-	&lspr[NOLIGHT],     // SPR_FWR2
-	&lspr[NOLIGHT],     // SPR_FWR3
-	#endif
-	&lspr[REDBALL_L],     // SPR_FLAM // Tails 09-06-2002
-
-	// Mario-specific stuff Tails 09-10-2002
-	&lspr[NOLIGHT],     // SPR_HAMM
-	&lspr[NOLIGHT],     // SPR_KOOP
-	&lspr[NOLIGHT],     // SPR_SHLL
-	&lspr[NOLIGHT],     // SPR_MAXE	
-	&lspr[NOLIGHT],     // SPR_FFWR
-
-	&lspr[NIGHTSLIGHT_L],     // SPR_SEED // Sonic CD flower seed
-	&lspr[JETLIGHT_L],     // SPR_JETF // Boss jet fumes
-	&lspr[NOLIGHT],     // SPR_HOOP
-	&lspr[NOLIGHT],     // SPR_NWNG
-	&lspr[NOLIGHT],     // SPR_EGGN
-	&lspr[NOLIGHT],     // SPR_GOOP
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
-	&lspr[SUPERSPARK_L],     // SPR_BPLD
-	#endif
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
-	&lspr[NOLIGHT],     // SPR_RDTV
-	&lspr[REDSHIELD_L],     // SPR_RORB
-	&lspr[NOLIGHT],     // SPR_EGGB
-	#endif
+	&lspr[NOLIGHT], // SPR_MISL
+	&lspr[NOLIGHT], // SPR_PLAY
+	&lspr[NOLIGHT], // SPR_POSS
+	&lspr[NOLIGHT], // SPR_SPOS
+	&lspr[NOLIGHT], // SPR_EGGM
+	&lspr[RINGLIGHT_L], // SPR_BON1
+	&lspr[NOLIGHT], // SPR_STIM
+	&lspr[NOLIGHT], // SPR_MEDI
+	&lspr[NOLIGHT], // SPR_EMMY
+	&lspr[NOLIGHT], // SPR_PINV
+	&lspr[NOLIGHT], // SPR_BLTV
+	&lspr[NOLIGHT], // SPR_SPRY
+	&lspr[NOLIGHT], // SPR_SUDY
+	&lspr[NOLIGHT], // SPR_SHTV
+	&lspr[NOLIGHT], // SPR_FANS
+	&lspr[NOLIGHT], // SPR_BUBL
+	&lspr[NOLIGHT], // SPR_YLTV
+	&lspr[NOLIGHT], // SPR_COL5
+	&lspr[NOLIGHT], // SPR_SPRR
+	&lspr[NOLIGHT], // SPR_SUDR
+	&lspr[NOLIGHT], // SPR_SMOK
+	&lspr[NOLIGHT], // SPR_SPLA
+	&lspr[NOLIGHT], // SPR_TNT1
+	&lspr[NOLIGHT], // SPR_BIRD
+	&lspr[NOLIGHT], // SPR_SQRL
+	&lspr[YELLOWSHIELD_L], // SPR_YORB
+	&lspr[BLUESHIELD_L], // SPR_BORB
+	&lspr[BLACKSHIELD_L], // SPR_KORB
+	&lspr[RINGSPARK_L], // SPR_SPRK
+	&lspr[INVINCIBLE_L], // SPR_IVSP
+	&lspr[INVINCIBLE_L], // SPR_IVSQ
+	&lspr[NOLIGHT], // SPR_DISS
+	&lspr[NOLIGHT], // SPR_BUBP
+	&lspr[NOLIGHT], // SPR_BUBO
+	&lspr[NOLIGHT], // SPR_BUBN
+	&lspr[NOLIGHT], // SPR_BUBM
+	&lspr[NOLIGHT], // SPR_CNTA
+	&lspr[NOLIGHT], // SPR_CNTB
+	&lspr[NOLIGHT], // SPR_CNTC
+	&lspr[NOLIGHT], // SPR_CNTD
+	&lspr[NOLIGHT], // SPR_CNTE
+	&lspr[NOLIGHT], // SPR_CNTF
+	&lspr[NOLIGHT], // SPR_POPP 
+	&lspr[NOLIGHT], // SPR_PRUP
+	&lspr[NOLIGHT], // SPR_BKTV
+	&lspr[NOLIGHT], // SPR_SCRA
+	&lspr[NOLIGHT], // SPR_SCRB
+	&lspr[NOLIGHT], // SPR_SCRC
+	&lspr[NOLIGHT], // SPR_SCRD
+	&lspr[SUPERSPARK_L], // SPR_SSPK
+	&lspr[NOLIGHT], // SPR_YSPR
+	&lspr[NOLIGHT], // SPR_RSPR
+	&lspr[NOLIGHT], // SPR_YSUD
+	&lspr[NOLIGHT], // SPR_RSUD
+	&lspr[NOLIGHT], // SPR_SKIM
+	&lspr[NOLIGHT], // SPR_MINE
+	&lspr[NOLIGHT], // SPR_FISH
+	&lspr[NOLIGHT], // SPR_GARG
+	&lspr[NOLIGHT], // SPR_SPLH
+	&lspr[NOLIGHT], // SPR_THOK
+	&lspr[NOLIGHT], // SPR_THZP
+	&lspr[NOLIGHT], // SPR_SIGN
+	&lspr[RINGLIGHT_L], // SPR_RRNG
+	&lspr[NOLIGHT], // SPR_TTAG
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+	&lspr[NOLIGHT], // SPR_STEM
+#endif
+	&lspr[NOLIGHT], // SPR_GFLG
+	&lspr[GREENSHINE_L], // SPR_CEMG
+	&lspr[ORANGESHINE_L], // SPR_CEMO
+	&lspr[PINKSHINE_L], // SPR_CEMP
+	&lspr[BLUESHINE_L], // SPR_CEMB
+	&lspr[REDSHINE_L], // SPR_CEMR
+	&lspr[LBLUESHINE_L], // SPR_CEML
+	&lspr[GREYSHINE_L], // SPR_CEMY
+	&lspr[NOLIGHT], // SPR_JETB
+	&lspr[NOLIGHT], // SPR_JETG
+	&lspr[NOLIGHT], // SPR_JBUL
+	&lspr[NOLIGHT], // SPR_DETN
+	&lspr[NOLIGHT], // SPR_CHAN
+	&lspr[NOLIGHT], // SPR_SNO1
+	&lspr[NOLIGHT], // SPR_SANT
+	&lspr[NOLIGHT], // SPR_SBLL
+	&lspr[NOLIGHT], // SPR_SPIK
+	&lspr[NOLIGHT], // SPR_CCOM
+	&lspr[NOLIGHT], // SPR_RAIN
+	&lspr[NOLIGHT], // SPR_DSPK
+	&lspr[NOLIGHT], // SPR_USPK
+	&lspr[NOLIGHT], // SPR_STPT
+	&lspr[RINGLIGHT_L], // SPR_RNGM
+	&lspr[RINGLIGHT_L], // SPR_RNGR
+	&lspr[RINGLIGHT_L], // SPR_RNGS
+	&lspr[RINGLIGHT_L], // SPR_RNGA
+	&lspr[RINGLIGHT_L], // SPR_RNGE
+	&lspr[RINGLIGHT_L], // SPR_TAEH
+	&lspr[RINGLIGHT_L], // SPR_TAER
+	&lspr[RINGLIGHT_L], // SPR_THER
+	&lspr[RINGLIGHT_L], // SPR_TAHR
+	&lspr[RINGLIGHT_L], // SPR_THOM
+	&lspr[RINGLIGHT_L], // SPR_TAUT
+	&lspr[RINGLIGHT_L], // SPR_TEXP
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+	&lspr[NOLIGHT], // SPR_BUS1
+	&lspr[NOLIGHT], // SPR_BUS2
+	&lspr[NOLIGHT], // SPR_FWR2
+	&lspr[NOLIGHT], // SPR_FWR3
+#endif
+	&lspr[REDBALL_L], // SPR_FLAM
+	&lspr[NOLIGHT], // SPR_HAMM
+	&lspr[NOLIGHT], // SPR_KOOP
+	&lspr[NOLIGHT], // SPR_SHLL
+	&lspr[NOLIGHT], // SPR_MAXE
+	&lspr[NOLIGHT], // SPR_FFWR
+	&lspr[NIGHTSLIGHT_L], // SPR_SEED
+	&lspr[JETLIGHT_L], // SPR_JETF
+	&lspr[NOLIGHT], // SPR_NWNG
+	&lspr[NOLIGHT], // SPR_EGGN
+	&lspr[NOLIGHT], // SPR_GOOP
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
+	&lspr[SUPERSPARK_L], // SPR_BPLD
+#endif
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+	&lspr[NOLIGHT], // SPR_RDTV
+	&lspr[REDSHIELD_L], // SPR_RORB
+	&lspr[NOLIGHT], // SPR_EGGB
+#endif
 	&lspr[NOLIGHT], // SPR_SFLM
 	&lspr[NOLIGHT], // SPR_TNKA
 	&lspr[NOLIGHT], // SPR_TNKB
@@ -283,8 +273,13 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[SMALLREDBALL_L], // SPR_TRLS
 #endif
 	&lspr[NOLIGHT], // SPR_FWR4
+	&lspr[NOLIGHT], // SPR_GOOM
 	&lspr[NOLIGHT], // SPR_MUS1
 	&lspr[NOLIGHT], // SPR_MUS2
+	&lspr[NOLIGHT], // SPR_TOAD
+	&lspr[NOLIGHT], // SPR_XMS1
+	&lspr[NOLIGHT], // SPR_XMS2
+	&lspr[NOLIGHT], // SPR_XMS3
 	&lspr[SUPERSONIC_L], // SPR_SUPT
 	&lspr[NOLIGHT], // SPR_ROIA
 	&lspr[NOLIGHT], // SPR_ROIB
@@ -303,41 +298,37 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT], // SPR_ROIO
 	&lspr[NOLIGHT], // SPR_ROIP
 	&lspr[NOLIGHT], // SPR_REDX
-	&lspr[NOLIGHT], // SPR_SPRB Graue 01-08-2004
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
-	&lspr[NOLIGHT], // SPR_BUZZ Graue 03-10-2004
-	&lspr[NOLIGHT], // SPR_RBUZ Graue 03-10-2004
-	#endif
-	&lspr[GREYSHINE_L], // SPR_CEMK, // 8th Emerald
+	&lspr[NOLIGHT], // SPR_SPRB
 #if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
-	&lspr[NOLIGHT],     // SPR_WHTV
-	&lspr[WHITESHIELD_L],     // SPR_WORB
-	&lspr[NOLIGHT], // SPR_TURR
+	&lspr[NOLIGHT], // SPR_BUZZ
+	&lspr[NOLIGHT], // SPR_RBUZ
 #endif
-	&lspr[NOLIGHT],     // SPR_GRTV
-	&lspr[GREENSHIELD_L],     // SPR_GORB
-	&lspr[NOLIGHT],     // SPR_SARG
-	&lspr[NOLIGHT],     // SPR_TROO
-	&lspr[NOLIGHT],     // SPR_CAND
-	&lspr[NOLIGHT],     // SPR_TRE2
-	&lspr[NOLIGHT],     // SPR_SMIT
-	&lspr[NOLIGHT],     // SPR_HDB4
-
-	&lspr[NOLIGHT],		// SPR_MCRT
-	
-	&lspr[NOLIGHT],		// SPR_CORL
-	&lspr[NOLIGHT],		// SPR_DSWE
-	&lspr[NOLIGHT],		// SPR_BCRY
-	
-	&lspr[NOLIGHT],		// SPR_JJAW
-
-	&lspr[NOLIGHT],		// SPR_POL5
-	&lspr[NOLIGHT],		// SPR_MRTS
-	&lspr[NOLIGHT],		// SPR_STLG
-	&lspr[NOLIGHT],		// SPR_GOR2
-	&lspr[NOLIGHT],		// SPR_BUSH
-	&lspr[NOLIGHT],		// SPR_BTUR
-
+	&lspr[GREYSHINE_L], // SPR_CEMK
+#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
+	&lspr[NOLIGHT], // SPR_WHTV
+	&lspr[WHITESHIELD_L], // SPR_WORB
+#endif
+	&lspr[NOLIGHT], // SPR_TURR
+	&lspr[GREENSHIELD_L], // SPR_GRTV
+	&lspr[NOLIGHT], // SPR_GORB
+	&lspr[NOLIGHT], // SPR_POL3
+	&lspr[NOLIGHT], // SPR_SARG
+	&lspr[NOLIGHT], // SPR_TROO
+	&lspr[NOLIGHT], // SPR_CAND
+	&lspr[NOLIGHT], // SPR_TRE2
+	&lspr[NOLIGHT], // SPR_SMIT
+	&lspr[NOLIGHT], // SPR_HDB4
+	&lspr[NOLIGHT], // SPR_MCRT
+	&lspr[NOLIGHT], // SPR_CORL
+	&lspr[NOLIGHT], // SPR_DSWE
+	&lspr[NOLIGHT], // SPR_BCRY
+	&lspr[NOLIGHT], // SPR_JJAW
+	&lspr[NOLIGHT], // SPR_POL5
+	&lspr[NOLIGHT], // SPR_MRTS
+	&lspr[NOLIGHT], // SPR_STLG
+	&lspr[NOLIGHT], // SPR_GOR2
+	&lspr[NOLIGHT], // SPR_BUSH
+	&lspr[NOLIGHT], // SPR_BTUR
 
 	// Free slots
 	&lspr[NOLIGHT],

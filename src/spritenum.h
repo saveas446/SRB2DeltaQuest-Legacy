@@ -138,9 +138,7 @@ typedef enum
 	SPR_SEED, // Sonic CD flower seed
 	SPR_JETF, // Boss jet fumes
 	SPR_NWNG, // NiGHTS Wing collectable item.
-	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 0)
 	SPR_EGGN, // Boss 2
-	#endif
 	SPR_GOOP, // Boss 2 Goop
 	#if defined(TH_TOLERANCE) && (TH_TOLERANCE >= 1)
 	SPR_BPLD, // Boss Explosions

@@ -122,7 +122,7 @@
 	Controls "tiny" version number (0.0.x)
 	Increment this every day that work on Delta Quest is done
 	*/
-    #define TINYVER 19
+    #define TINYVER 20
 
 	/**
 	\brief Controls whether the title screen uses "TITLESKY" or "SKY1" as its BG
