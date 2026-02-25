@@ -131,7 +131,7 @@ light_t lspr[NUMLIGHTS] =
 	{ DYNLIGHT_SPR,   0.0f,   6.0f, 0x60ff00ff,  16.0f, 0x30ff00ff,  32.0f, 0.0f},
 
 	// STREETLIGHT_L
-	{ LIGHT_SPR,      0.0f,   0.0f, 0xe0ffffff,  64.0f, 0xe0ffffff, 384.0f, 0.0f},
+	{ LIGHT_SPR,      0.0f,   84.0f, 0xe0bbffff,  64.0f, 0xe0ffffff, 128.0f, 0.0f},
 };
 
 light_t *t_lspr[NUMSPRITES] =
