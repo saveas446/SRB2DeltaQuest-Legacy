@@ -1982,11 +1982,17 @@ static void F_SkyScroll
 #ifdef HWRENDER
 	else if (rendermode != render_none) /// \note do equivalent for hw mode?
 	{
-		if (scrolled > 0)
-			V_DrawScaledPatch(width - scrolled, 0, V_WRAPX, pat);
 
-		if (scrolled < width)
+		// Hack to try to fix the sky on OGL mode
+		if (scrolled > 0) {
+			V_DrawScaledPatch(width - scrolled, 0, V_WRAPX, pat);
+			V_DrawScaledPatch((width - scrolled) + width, 0, V_WRAPX, pat);
+		}
+
+		if (scrolled < width) {
 			V_DrawScaledPatch(-scrolled, 0, V_WRAPX, pat);
+			V_DrawScaledPatch((-scrolled) + width, 0, V_WRAPX, pat);
+		}
 	}
 #endif
 }
