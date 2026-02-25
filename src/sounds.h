@@ -215,6 +215,7 @@ typedef enum
     mus_gmover, // Tails 03-14-2000
     mus_xtlife, // Tails 03-14-2000
     mus_racent,
+    mus_credit,
     NUMMUSIC
 } musicenum_t;
 

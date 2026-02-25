@@ -90,7 +90,7 @@ musicinfo_t S_music[NUMMUSIC] =
     { "boss\0\0"  , 0 },
     { "gez1\0\0\0", 0 },
     { "gez2\0\0\0", 0 },
-    { "boss\0\0"  , 0 },
+    { "gez3\0\0\0", 0 },
     { "rrz1\0\0\0", 0 },
     { "rrz2\0\0\0", 0 },
     { "final\0\0" , 0 },    
@@ -118,7 +118,8 @@ musicinfo_t S_music[NUMMUSIC] =
     { "drown\0" , 0 }, // drowning Tails 03-06-2000
     { "gmover"  , 0 }, // Tails 03-14-2000
     { "xtlife"  , 0 }, // Tails 03-14-2000
-    { "racent"  , 0 }
+    { "racent"  , 0 }, // For Time Attack
+    { "credits" , 0 } // Placeholder Final Demo credits
 };
 
 

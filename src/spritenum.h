@@ -210,7 +210,7 @@ typedef enum
 
 	SPR_TURR, // Heavy Turrets Guy
 
-	// START OF D2U CUSTOM THINGS
+	// START OF DELTA QUEST CUSTOM THINGS
 	
 	SPR_GRTV,
 	SPR_GORB,

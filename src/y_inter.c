@@ -1251,7 +1251,8 @@ void Y_EndGame(void)
 	// Only do evaluation and credits in coop games.
 	if (gametype == GT_COOP)
 	{
-		if (nextmap == 1102-1) // end game with credits
+		// We'll add separate credits for FFZ and FSZ2 later
+		if (nextmap == 28 || nextmap == 39) // end game with credits
 		{
 			if ((!modifiedgame
 			|| savemoddata) // <-- ULTIMATE MODE SHOULD BE UNLOCKABLE IN MODS TOO!
@@ -1320,7 +1321,7 @@ static void Y_FollowIntermission(void)
 		return;
 	}
 	#else
-	if (nextmap < 39)
+	if (nextmap != 28 && nextmap != 39)
 	{
 		// normal level
 		G_AfterIntermission();

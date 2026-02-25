@@ -1684,16 +1684,16 @@ static void ST_overlayDrawer(void)
 	int splity;
 	double temp, temp2;
 	char* creditstxt;
-	char d2uver[33];
+	char sdqver[33];
 
 	if (cv_splitscreen.value)
 		splity = 24;
 	else
 		splity = 0;
 
-	sprintf(d2uver, "SRB2 DELTA QUEST v%d.%d.%d", MAJORVER, MINORVER, TINYVER);
+	sprintf(sdqver, "SRB2 DELTA QUEST v%d.%d.%d", MAJORVER, MINORVER, TINYVER);
 
-	V_DrawString(0, 320 - V_StringWidth(d2uver), 0, 0, d2uver);
+	V_DrawString(0, 320 - V_StringWidth(sdqver), 0, 0, sdqver);
 
 	if (stplyr->linkcount > 1)
 	{

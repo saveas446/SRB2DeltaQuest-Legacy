@@ -767,9 +767,9 @@ void F_StartCredits(void)
 	CON_ToggleOff();
 	CON_ClearHUD();
 	S_StopMusic();
-	//Credits, at least as they appear in Final Demo, won't be a thing in D2U
-	//Save 17-05-2025
-	//S_ChangeMusic(mus_credit, false);
+	//This isn't true anymore
+	//Save 25-02-2026
+	S_ChangeMusic(mus_credit, false);
 	finalecount = 0;
 	animtimer = 0;
 
@@ -780,10 +780,12 @@ void F_StartCredits(void)
 		timetonext = 5*TICRATE-1;
 
 	// Initalize the credits table
-	strcpy(credits[i].header, "Sonic Team Junior\n");
-	strcpy(credits[i].fakenames[0], "Staff\n");
-	strcpy(credits[i].realnames[0], "Staff\n");
-	credits[i].numnames = 1;
+	strcpy(credits[i].header, "Placeholder credits\n");
+	strcpy(credits[i].fakenames[0], "One one seven\n");
+	strcpy(credits[i].fakenames[1], "Funny number\n");
+	strcpy(credits[i].realnames[0], "One one seven\n");
+	strcpy(credits[i].realnames[1], "Funny number\n");
+	credits[i].numnames = 2;
 	i++;
 	strcpy(credits[i].header, "Producer\n");
 	strcpy(credits[i].fakenames[0], "SSNTails\n");
@@ -933,15 +935,15 @@ void F_StartCredits(void)
 	strcpy(credits[i].realnames[3], "Alex Fuller\n");
 	credits[i].numnames = 4;
 	i++;
-	strcpy(credits[i].header, "In Fond Memory Of\n");
-	strcpy(credits[i].fakenames[0], "Naoto Oshima\n");
-	strcpy(credits[i].fakenames[1], "Howard Drossin\n");
-	strcpy(credits[i].fakenames[2], "\n");
-	strcpy(credits[i].fakenames[3], "\n");
-	strcpy(credits[i].realnames[0], "Naoto Oshima\n");
-	strcpy(credits[i].realnames[1], "Howard Drossin\n");
-	strcpy(credits[i].realnames[2], "\n");
-	strcpy(credits[i].realnames[3], "\n");
+	strcpy(credits[i].header, "What the hell\n");
+	strcpy(credits[i].fakenames[0], "Neither of these\n");
+	strcpy(credits[i].fakenames[1], "people are dead\n");
+	strcpy(credits[i].fakenames[2], "Whats the point of\n");
+	strcpy(credits[i].fakenames[3], "this screen\n");
+	strcpy(credits[i].realnames[0], "Neither of these\n");
+	strcpy(credits[i].realnames[1], "people are dead\n");
+	strcpy(credits[i].realnames[2], "Whats the point of\n");
+	strcpy(credits[i].realnames[3], "this screen\n");
 	credits[i].numnames = 4;
 	i++;
 }

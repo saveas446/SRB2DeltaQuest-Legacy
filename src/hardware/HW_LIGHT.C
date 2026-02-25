@@ -323,7 +323,7 @@ light_t *t_lspr[NUMSPRITES] =
 	&lspr[NOLIGHT], // SPR_DSWE
 	&lspr[NOLIGHT], // SPR_BCRY
 	&lspr[NOLIGHT], // SPR_JJAW
-	&lspr[NOLIGHT], // SPR_POL5
+	&lspr[STREETLIGHT_L], // SPR_POL5
 	&lspr[NOLIGHT], // SPR_MRTS
 	&lspr[NOLIGHT], // SPR_STLG
 	&lspr[NOLIGHT], // SPR_GOR2
