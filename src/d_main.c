@@ -276,7 +276,7 @@ static void D_Display(void)
 	{
 		if (wipe)
 		{
-			V_DrawFill(0, 0, vid.width, vid.height, 0);
+			V_DrawFill(0, 0, vid.width, vid.height, 31);
 			F_WipeEndScreen(0, 0, vid.width, vid.height);
 
 			wipestart = I_GetTime() - 1;
@@ -290,7 +290,7 @@ static void D_Display(void)
 					if (!tics) I_Sleep();
 				} while (!tics);
 				wipestart = nowtime;
-				done = F_ScreenWipe(0, 0, vid.width, vid.height, tics);
+				done = F_ScreenWipe(31, 31, vid.width, vid.height, tics);
 				I_OsPolling();
 				I_UpdateNoBlit();
 				if (gamestate != GS_TIMEATTACK)

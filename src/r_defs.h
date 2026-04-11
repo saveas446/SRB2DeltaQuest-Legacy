@@ -369,6 +369,8 @@ typedef struct
 	sector_t *sector;
 
 	int special; // the special of the linedef this side belongs to
+
+	char* text; // a concatination of all top, bottom, and mid texture names, for linedef specials that require a string.
 } side_t;
 
 //

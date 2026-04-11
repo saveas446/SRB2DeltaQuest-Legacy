@@ -1460,15 +1460,22 @@ static void M_DrawSetupMultiPlayerMenu(void)
 	// draw player sprite
 	if (!setupm_cvcolor->value)
 	{
-		V_DrawScaledPatch(mx + 98 + (PLBOXW*8/2), my + 16 + (PLBOXH*8) - 8, 0, patch);
+		if (atoi(skins[setupm_cvskin->value].highres))
+			V_DrawScaledPatch(mx + 98 + (PLBOXW*8/2), my + 16 + (PLBOXH*8) - 8, 0, patch);
+		else
+			V_DrawScaledPatch(mx + 98 + (PLBOXW*8/2), my + 16 + (PLBOXH*8) - 8, 0, patch);
 	}
 	else
 	{
-		//CONS_Printf("drew player sprite\n");
-		colormap = (byte *)translationtables[setupm_player->skin] - 256
+		const UINT8 *colormap = (const UINT8 *)translationtables[setupm_player->skin] - 256
 			+ (setupm_cvcolor->value<<8);
-		V_DrawMappedPatch(mx + 98 + (PLBOXW*8/2), my + 16 + (PLBOXH*8) - 8, 0, patch, colormap);
+
+		if (atoi(skins[setupm_cvskin->value].highres))
+			V_DrawSmallMappedPatch(mx + 98 + (PLBOXW*8/2), my + 16 + (PLBOXH*8) - 8, 0, patch, colormap);
+		else
+			V_DrawMappedPatch(mx + 98 + (PLBOXW*8/2), my + 16 + (PLBOXH*8) - 8, 0, patch, colormap);
 	}
+
 }
 
 // Tails 11-19-2002

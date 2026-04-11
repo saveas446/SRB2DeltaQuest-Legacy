@@ -769,15 +769,12 @@ static void ST_DrawNightsOverlayNum(int x /* right border */, int y, int num,
 	byte *colormap;
 	int flags = 0;
 
-	if (colornum == 0)
+		if (colornum == 0)
 		colormap = colormaps;
 	else
 	{
 		// Uses the player colors.
-		flags = (flags & ~MF_TRANSLATION) | (colornum<<MF_TRANSSHIFT);
-
-		colormap = (byte *)defaulttranslationtables - 256
-			+ ((flags & MF_TRANSLATION)>>(MF_TRANSSHIFT-8));
+		colormap = (UINT8 *)defaulttranslationtables - 256 + (colornum<<8);
 	}
 
 	// special case for 0

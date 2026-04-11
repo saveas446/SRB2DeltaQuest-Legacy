@@ -127,7 +127,7 @@ const char *Color_Names[MAXSKINCOLORS] =
 	"None",
 	"Grey",
 	"Peach",
-	"Dark_Red",
+	"Lavender", // Replaced dark red with lavender since there is no dark red in 2.0 - Sam 04/11/26 11:18 AM
 	"Silver",
 	"Orange",
 	"Red",
@@ -154,10 +154,9 @@ CV_PossibleValue_t Color_cons_t[] = {{0, NULL}, {1, NULL}, {2, NULL}, {3, NULL},
 	This is precalculated for drawing the player sprites in the player's
 	chosen color
 */
-
 void R_LoadSkinTable(void)
 {
-	int i;
+	INT32 i;
 
 	for (i = 0; i < MAXSKINS; i++)
 		translationtables[i] = Z_MallocAlign (256*(MAXSKINCOLORS-1), PU_STATIC, NULL, 16);
@@ -191,172 +190,84 @@ void R_InitTranslationTables(void)
 	// Translate the colors specified by the skin information.
 	for (i = 0; i < 256; i++)
 	{
-		if (i >= 112 && i <= 127)
+		if (i >= 160 && i <= 175)
 		{
-			bi = (byte)(i & 0xf);
+			bi = (UINT8)(i & 0xf);
 
-			defaulttranslationtables[i      ] = (byte)(0x60 + bi); // Grey
-			defaulttranslationtables[i+  256] = (byte)(0x30 + bi); // Peach // Tails 02-19-2000
-			defaulttranslationtables[i+2*256] = (byte)(0x20 + bi); // Dark Red
-			defaulttranslationtables[i+3*256] = (byte)(0x50 + bi); // silver // tails 02-19-2000
-			defaulttranslationtables[i+4*256] = (byte)(0xd0 + bi); // orange // tails 02-19-2000
-			defaulttranslationtables[i+5*256] = (byte)(0xb0 + bi); // light red
-			defaulttranslationtables[i+6*256] = (byte)(0xc0 + bi); // light blue
+			defaulttranslationtables[i      ] = (byte)(0xd0 + bi); // Grey 2.0 - Samwise 04/11/26 11:06 AM
+			defaulttranslationtables[i+  256] = (UINT8)(0x40 + bi); // Peach 2.0 - Samwise 04/11/26 11:06 AM
+			defaulttranslationtables[i+2*256] = (UINT8)(0xf8 + bi/2); // Lavender - Samwise 04/11/26 11:18 AM
+			defaulttranslationtables[i+3*256] = (UINT8)(0x00 + bi); // Silver 2.0 - Samwise 04/11/26 11:06 AM
+			defaulttranslationtables[i+4*256] = (UINT8)(0x50 + bi); // Orange 2.0 - Samwise 04/11/26 11:06 AM
+			defaulttranslationtables[i+5*256] = (UINT8)(0x80 + bi); // Light Red 2.0 - Samwise 04/11/26 11:07 AM
+            defaulttranslationtables[i+6*256] = (UINT8)(0xe0 + bi); // Light Blue 2.0 - Samwise 04/11/26 11:07 AM
 
-			// Dark blue
-			if (bi < 9)
-				defaulttranslationtables[i+7*256] = (byte)(0xc7 + bi);
-			else
-				defaulttranslationtables[i+7*256] = (byte)(0xe7 + bi);
+			// Steel blue 2.0 - Samwise 04/11/26 11:08 PM
+			defaulttranslationtables[i+7*256] = (UINT8)(0xE7 + bi);
 
-			defaulttranslationtables[i+8*256] = (byte)(0x10 + bi); // Pink
-			defaulttranslationtables[i+9*256] = (byte)(0x80 + bi); // Beige
+			defaulttranslationtables[i+8*256] = (UINT8)(0x90 + bi/2); // Pink 2.0 - Samwise 04/11/26 11:07 AM
+			defaulttranslationtables[i+9*256] = (UINT8)(0x20 + bi); // Beige 2.0 - Samwise 04/11/26 11:07 AM
 
-			// Purple
-			switch (bi)
-			{
-			case 0:
-			case 1:
-			case 2:
-				defaulttranslationtables[i+10*256] = 0xfa;
-				break;
-			case 3:
-			case 4:
-			case 5:
-				defaulttranslationtables[i+10*256] = 0xfb;
-				break;
-			case 6:
-			case 7:
-			case 8:
-				defaulttranslationtables[i+10*256] = 0xfc;
-				break;
-			case 9:
-			case 10:
-			case 11:
-				defaulttranslationtables[i+10*256] = 0xfd;
-				break;
-			default:
-				defaulttranslationtables[i+10*256] = 0xfe;
-				break;
-			}
+			// Purple 2.0 - Samwise 04/11/26 11:07 PM
+			defaulttranslationtables[i+10*256] = (UINT8)(0xc0 + bi/2);
 
-			// Green
-			defaulttranslationtables[i+11*256] = (byte)(0x70 + bi);
+			// Green 2.0 - Samwise 04/11/26 11:07 PM
+			defaulttranslationtables[i+11*256] = (UINT8)(0xa0 + bi);
 
-			// White
-			switch (bi)
-			{
-			case 0:
-			case 1:
-			case 2:
-				defaulttranslationtables[i+12*256] = 0x04;
-				break;
-			case 3:
-			case 4:
-			case 5:
-				defaulttranslationtables[i+12*256] = 0x30;
-				break;
-			case 6:
-			case 7:
-			case 8:
-				defaulttranslationtables[i+12*256] = 0x50;
-				break;
-			case 9:
-			case 10:
-			case 11:
-				defaulttranslationtables[i+12*256] = 0x31;
-				break;
-			default:
-				defaulttranslationtables[i+12*256] = 0x51;
-				break;
-			}
+			// White 2.0 - Samwise 04/11/26 11:07 PM
+			defaulttranslationtables[i+12*256] = (UINT8)(0x00 + bi/2);
 
-			// Gold
+			// Gold 2.0 - Samwise 04/11/26 11:08 PM
+			defaulttranslationtables[i+13*256] = (UINT8)(0x70 + bi/2);
+
+			// Yellow 2.0 - Samwise 04/11/26 11:08 PM
 			switch (bi)
 			{
 				case 0:
 				case 1:
-					defaulttranslationtables [i+13*256] = 0xa0;
+					defaulttranslationtables[i+14*256] = 0x70;   // yellow
 					break;
 				case 2:
 				case 3:
-					defaulttranslationtables [i+13*256] = 0xa1;
+					defaulttranslationtables[i+14*256] = 0x71;   // yellow
 					break;
 				case 4:
 				case 5:
-					defaulttranslationtables [i+13*256] = 0xa2;
+					defaulttranslationtables[i+14*256] = 0x72;   // yellow
 					break;
 				case 6:
 				case 7:
-					defaulttranslationtables [i+13*256] = 0xa3;
+					defaulttranslationtables[i+14*256] = 0x73;   // yellow
 					break;
 				case 8:
 				case 9:
-					defaulttranslationtables [i+13*256] = 0xa4;
+					defaulttranslationtables[i+14*256] = 0x74;   // yellow
 					break;
 				case 10:
 				case 11:
-					defaulttranslationtables [i+13*256] = 0xa5;
+					defaulttranslationtables[i+14*256] = 0x75;   // yellow
 					break;
 				case 12:
 				case 13:
-					defaulttranslationtables [i+13*256] = 0xa6;
+					defaulttranslationtables[i+14*256] = 0x76;   // yellow
 					break;
 				default:
-					defaulttranslationtables [i+13*256] = 0xa7;
-					break;
-			}
-
-			// Yellow
-			switch (bi)
-			{
-				case 0:
-				case 1:
-					defaulttranslationtables[i+14*256] = 0xa0;   // yellow
-					break;
-				case 2:
-				case 3:
-					defaulttranslationtables[i+14*256] = 0xa1;   // yellow
-					break;
-				case 4:
-				case 5:
-					defaulttranslationtables[i+14*256] = 0xa2;   // yellow
-					break;
-				case 6:
-				case 7:
-					defaulttranslationtables[i+14*256] = 0xa3;   // yellow
-					break;
-				case 8:
-				case 9:
-					defaulttranslationtables[i+14*256] = 0xa4;   // yellow
-					break;
-				case 10:
-				case 11:
-					defaulttranslationtables[i+14*256] = 0xa5;   // yellow
-					break;
-				case 12:
-				case 13:
-					defaulttranslationtables[i+14*256] = 0xa6;   // yellow
-					break;
-				default:
-					defaulttranslationtables[i+14*256] = 0xa7;   // yellow
+					defaulttranslationtables[i+14*256] = 0x77;   // yellow
 					break;
 			}
 		}
 		else // Keep other colors as is.
 		{
-			for (j = 0; j < MAXSKINCOLORS*256; j += 256)
-				defaulttranslationtables[i+j] = (byte)i;
+			for (j = 0; j < MAXSKINCOLORS; j++)
+				defaulttranslationtables[i+j*256] = (UINT8)i;
 		}
 	}
 
 	bosstranslationtables = Z_MallocAlign(256, PU_STATIC, NULL, 16);
 
 	for (i = 0; i < 256; i++)
-	{
-		if (i == 0) bosstranslationtables[i] = 4; // White!
-		else bosstranslationtables[i] = (byte)i;
-	}
+		bosstranslationtables[i] = (UINT8)i;
+	bosstranslationtables[31] = 0; // White 2.0 - Samwise 04/11/26 11:08 PM
 }
 
 /**	\brief	The R_InitSkinTranslationTables function
@@ -379,164 +290,80 @@ void R_InitSkinTranslationTables(int starttranscolor, int endtranscolor, int ski
 	// Translate the colors specified by the skin information.
 	for (i = 0; i < 256; i++)
 	{
-		if (i >= starttranscolor && i <= endtranscolor)
+		if (i >= 160 && i <= 175)
 		{
-			bi = (byte)((i - starttranscolor) & 0xf);
-			translationtables[skinnum][i      ] = (byte)(0x60 + bi); // Grey
-			translationtables[skinnum][i+  256] = (byte)(0x30 + bi); // Peach // Tails 02-19-2000
-			translationtables[skinnum][i+2*256] = (byte)(0x20 + bi); // Dark Red
-			translationtables[skinnum][i+3*256] = (byte)(0x50 + bi); // silver // tails 02-19-2000
-			translationtables[skinnum][i+4*256] = (byte)(0xd0 + bi); // orange // tails 02-19-2000
-			translationtables[skinnum][i+5*256] = (byte)(0xb0 + bi); // light red
-			translationtables[skinnum][i+6*256] = (byte)(0xc0 + bi); // light blue
+			bi = (UINT8)((i - 160) & 0xf);
 
-			// Dark blue
-			if (bi < 9)
-				translationtables[skinnum][i+7*256] = (byte)(0xc7 + bi);
-			else
-				translationtables[skinnum][i+7*256] = (byte)(0xe7 + bi);
+			translationtables[skinnum][i      ] = (UINT8)(0xd0 + bi); // Cyan
+			translationtables[skinnum][i+  256] = (UINT8)(0x40 + bi); // Peach // Tails 02-19-2000
+			translationtables[skinnum][i+2*256] = (UINT8)(0xf8 + bi/2); // Lavender
+			translationtables[skinnum][i+3*256] = (UINT8)(0x00 + bi); // silver // tails 02-19-2000
+			translationtables[skinnum][i+4*256] = (UINT8)(0x50 + bi); // orange // tails 02-19-2000
+			translationtables[skinnum][i+5*256] = (UINT8)(0x7d + bi); // light red
+			translationtables[skinnum][i+6*256] = (UINT8)(0xe0 + bi); // light blue
 
-			translationtables[skinnum][i+8*256] = (byte)(0x10 + bi); // Pink
-			translationtables[skinnum][i+9*256] = (byte)(0x80 + bi); // Beige
+			// Steel blue
+			translationtables[skinnum][i+7*256] = (UINT8)(0xE7 + bi);
+
+			translationtables[skinnum][i+8*256] = (UINT8)(0x90 + bi/2); // Pink
+			translationtables[skinnum][i+9*256] = (UINT8)(0x20 + bi); // Beige
 
 			// Purple
-			switch (bi)
-			{
-			case 0:
-			case 1:
-			case 2:
-				translationtables[skinnum][i+10*256] = 0xfa;
-				break;
-			case 3:
-			case 4:
-			case 5:
-				translationtables[skinnum][i+10*256] = 0xfb;
-				break;
-			case 6:
-			case 7:
-			case 8:
-				translationtables[skinnum][i+10*256] = 0xfc;
-				break;
-			case 9:
-			case 10:
-			case 11:
-				translationtables[skinnum][i+10*256] = 0xfd;
-				break;
-			default:
-				translationtables[skinnum][i+10*256] = 0xfe;
-				break;
-			}
+			translationtables[skinnum][i+10*256] = (UINT8)(0xc0 + bi/2);
 
-			translationtables[skinnum][i+11*256] = (byte)(0x70 + bi); // Green
+			// Green
+			translationtables[skinnum][i+11*256] = (UINT8)(0xa0 + bi);
 
 			// White
-			switch (bi)
-			{
-			case 0:
-			case 1:
-			case 2:
-				translationtables[skinnum][i+12*256] = 0x04;
-				break;
-			case 3:
-			case 4:
-			case 5:
-				translationtables[skinnum][i+12*256] = 0x30;
-				break;
-			case 6:
-			case 7:
-			case 8:
-				translationtables[skinnum][i+12*256] = 0x50;
-				break;
-			case 9:
-			case 10:
-			case 11:
-				translationtables[skinnum][i+12*256] = 0x31;
-				break;
-			default:
-				translationtables[skinnum][i+12*256] = 0x51;
-				break;
-			}
+			translationtables[skinnum][i+12*256] = (UINT8)(0x00 + bi/2);
 
 			// Gold
-			switch (bi)
-			{
-				case 0:
-				case 1:
-					translationtables[skinnum][i+13*256] = 0xa0;
-					break;
-				case 2:
-				case 3:
-					translationtables[skinnum][i+13*256] = 0xa1;
-					break;
-				case 4:
-				case 5:
-					translationtables[skinnum][i+13*256] = 0xa2;
-					break;
-				case 6:
-				case 7:
-					translationtables[skinnum][i+13*256] = 0xa3;
-					break;
-				case 8:
-				case 9:
-					translationtables[skinnum][i+13*256] = 0xa4;
-					break;
-				case 10:
-				case 11:
-					translationtables[skinnum][i+13*256] = 0xa5;
-					break;
-				case 12:
-				case 13:
-					translationtables[skinnum][i+13*256] = 0xa6;
-					break;
-				default:
-					translationtables[skinnum][i+13*256] = 0xa7;
-					break;
-			}
+			translationtables[skinnum][i+13*256] = (UINT8)(0x70 + bi/2);
 
 			// Yellow
 			switch (bi)
 			{
 				case 0:
-					translationtables[skinnum][i+14*256] = 225;
+					translationtables[skinnum][i+14*256] = 97;
 					break;
 				case 1:
-					translationtables[skinnum][i+14*256] = 226;   // yellow
+					translationtables[skinnum][i+14*256] = 98;   // yellow
 					break;
 				case 2:
-					translationtables[skinnum][i+14*256] = 227; // yellow
+					translationtables[skinnum][i+14*256] = 99; // yellow
 					break;
 				case 3:
-					translationtables[skinnum][i+14*256] = 228;   // yellow
+					translationtables[skinnum][i+14*256] = 100;   // yellow
 					break;
 				case 4:
-					translationtables[skinnum][i+14*256] = 160; // yellow
+					translationtables[skinnum][i+14*256] = 101; // yellow
 					break;
 				case 5:
-					translationtables[skinnum][i+14*256] = 229;   // yellow
+					translationtables[skinnum][i+14*256] = 102;   // yellow
 					break;
 				case 6:
-					translationtables[skinnum][i+14*256] = 230; // yellow
+					translationtables[skinnum][i+14*256] = 103; // yellow
 					break;
 				case 7:
-					translationtables[skinnum][i+14*256] = 231;   // yellow
+					translationtables[skinnum][i+14*256] = 104;   // yellow
 					break;
 				case 8:
 				case 9:
-					translationtables[skinnum][i+14*256] = 161;   // yellow
+					translationtables[skinnum][i+14*256] = 113;   // yellow
 					break;
 				case 10:
-					translationtables[skinnum][i+14*256] = 162;   // yellow
+					translationtables[skinnum][i+14*256] = 114;   // yellow
 					break;
 				case 11:
 				case 12:
 				case 13:
-					translationtables[skinnum][i+14*256] = 163;   // yellow
+					translationtables[skinnum][i+14*256] = 115;   // yellow
 					break;
 				case 15:
-					translationtables[skinnum][i+14*256] = 165; // yellow
+					translationtables[skinnum][i+14*256] = 117; // yellow
 					break;
 				default:
-					translationtables[skinnum][i+14*256] = 164;   // yellow
+					translationtables[skinnum][i+14*256] = 116;   // yellow
 					break;
 			}
 		}
@@ -545,7 +372,7 @@ void R_InitSkinTranslationTables(int starttranscolor, int endtranscolor, int ski
 			// NOTE: Why MAXSKINCOLORS-1 here, but MAXSKINCOLORS
 			// in the above R_InitTranslationTables?
 			for (j = 0; j < (MAXSKINCOLORS-1) * 256; j += 256)
-				translationtables[skinnum][i+j] = (byte)i;
+				translationtables[skinnum][i+j] = (UINT8)i;
 		}
 	}
 }

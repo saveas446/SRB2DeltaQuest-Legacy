@@ -1121,18 +1121,14 @@ static void AM_drawLineCharacter(const mline_t *lineguy, int lineguylines, fixed
 
 static inline void AM_drawPlayers(void)
 {
-	int i;
+	INT32 i;
 	player_t *p;
-	int color;
+	INT32 color;
 
 	if (!multiplayer)
 	{
-		if (am_cheating)
-			AM_drawLineCharacter(cheat_player_arrow, NUMCHEATPLYRLINES, 0,
-				plr->mo->angle, DWHITE, plr->mo->x, plr->mo->y);
-		else
-			AM_drawLineCharacter(player_arrow, NUMPLYRLINES, 0,
-				plr->mo->angle, DWHITE, plr->mo->x, plr->mo->y);
+		AM_drawLineCharacter(player_arrow, NUMPLYRLINES, 0,
+			plr->mo->angle, DWHITE, plr->mo->x, plr->mo->y);
 		return;
 	}
 
@@ -1153,9 +1149,9 @@ static inline void AM_drawPlayers(void)
 	}
 }
 
-static inline void AM_drawThings(int colors, int colorrange)
+static inline void AM_drawThings(INT32 colors, INT32 colorrange)
 {
-	int i;
+	size_t i;
 	mobj_t *t;
 
 	colorrange = 0;
@@ -1170,6 +1166,7 @@ static inline void AM_drawThings(int colors, int colorrange)
 		}
 	}
 }
+
 
 static inline void AM_drawMarks(void)
 {
