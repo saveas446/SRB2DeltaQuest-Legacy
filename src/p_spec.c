@@ -4383,8 +4383,8 @@ void P_SpawnSpecials(void)
 			case 303: // Crumbling platform
 				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL|FF_CRUMBLE);
 				break;
-			//l304 Solid, Invisible
-			case 304:
+			
+			case 304: //l304 Solid, Invisible
 				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_NOSHADE);
 				break;
 
@@ -4415,7 +4415,7 @@ void P_SpawnSpecials(void)
 
 				// Cool idea sam but this isn't working
 				// Shut up jacob im trying
-			case 308: // Flat alignment
+			/*case 308: // Flat alignment
 				if (lines[i].flags & ML_EFFECT4) // Align angle
 				{
 					if (!(lines[i].flags & ML_EFFECT5)) // Align floor unless ALLTRIGGER flag is set
@@ -4429,7 +4429,6 @@ void P_SpawnSpecials(void)
 						for (s = -1; (s = P_FindSectorFromLineTag(lines + i, s)) >= 0;)
 							sectors[s].ceilingpic_angle = sectors[s].ceilingpic_angle = R_PointToAngle2(lines[i].v1->x, lines[i].v1->y, lines[i].v2->x, lines[i].v2->y);
 					}
-				}
 				else // Do offsets
 				{
 					if (!(lines[i].flags & ML_BLOCKMONSTERS)) // Align floor unless BLOCKMONSTERS flag is set
@@ -4450,6 +4449,10 @@ void P_SpawnSpecials(void)
 						}
 					}
 				}
+				break;*/
+
+			case 308: // Crumbling platform that will not return
+				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL|FF_CRUMBLE|FF_NORETURN);
 				break;
 
 			case 309: // Float/bob platform
@@ -4528,6 +4531,30 @@ void P_SpawnSpecials(void)
 					EV_AddLaserThinker(P_AddFakeFloor(&sectors[s], &sectors[sec], lines + i,
 						FF_EXISTS|FF_RENDERALL|FF_NOSHADE|FF_EXTRA|FF_CUTEXTRA), &sectors[s]);
 				break;	
+
+			case 324: // Translucent crumbling platform that will not return
+				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL|FF_CRUMBLE|FF_NORETURN|FF_TRANSLUCENT);
+				break;
+			case 325: // Translucent crumbling platform
+				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL|FF_CRUMBLE|FF_TRANSLUCENT);
+				break;
+
+			case 326: // Translucent "platform"
+				// If line has no-climb set, don't give it shadows, otherwise do
+				ffloorflags = FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL|FF_PLATFORM|FF_TRANSLUCENT|FF_BOTHPLANES|FF_ALLSIDES;
+				if (lines[i].flags & ML_NOCLIMB)
+					ffloorflags |= FF_NOSHADE;
+
+				P_AddFakeFloorsByLine(i, ffloorflags);
+				break;
+
+			case 327: // Translucent "platform" that crumbles and returns
+				ffloorflags = FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL|FF_PLATFORM|FF_CRUMBLE|FF_TRANSLUCENT|FF_BOTHPLANES|FF_ALLSIDES;
+				if (lines[i].flags & ML_NOCLIMB) // shade it unless no-climb
+					ffloorflags |= FF_NOSHADE;
+
+				P_AddFakeFloorsByLine(i, ffloorflags);
+				break;
 			
 			//l400 Once
 			case 400:
@@ -4799,8 +4826,7 @@ void P_SpawnSpecials(void)
 				break;
 
 			case 35: // Crumbling platform that will not return
-				P_AddFakeFloorsByLine(i,
-					FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL|FF_CRUMBLE|FF_NORETURN);
+				P_AddFakeFloorsByLine(i, FF_EXISTS|FF_SOLID|FF_RENDERALL|FF_CUTLEVEL|FF_CRUMBLE|FF_NORETURN);
 				break;
 
 			case 36: // Crumbling platform

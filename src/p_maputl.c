@@ -342,7 +342,7 @@ void P_CameraLineOpening(line_t *linedef)
 	}
 }
 
-void P_LineOpening(line_t *linedef)
+void P_LineOpening(line_t *linedef, mobj_t *mobj)
 {
 	sector_t *front, *back;
 
@@ -358,12 +358,9 @@ void P_LineOpening(line_t *linedef)
 	I_Assert(front != NULL);
 	I_Assert(back != NULL);
 
-	if (tmthing)
+	if (mobj)
 	{
-		fixed_t thingbot, thingtop;
-
-		thingbot = tmthing->z;
-		thingtop = thingbot + tmthing->height;
+		fixed_t thingtop = mobj->z + mobj->height;
 
 		// Check for collision with front side's midtexture if Effect 4 is set
 		if (linedef->flags & ML_EFFECT4)
@@ -371,7 +368,7 @@ void P_LineOpening(line_t *linedef)
 			side_t *side = &sides[linedef->sidenum[0]];
 			fixed_t textop, texbottom, texheight;
 			fixed_t texmid, delta1, delta2;
-			INT32 texnum = R_CheckTextureNumForName(side->midtexture); // make sure the texture is actually valid
+			INT32 texnum = R_GetTextureNum(side->midtexture); // make sure the texture is actually valid
 
 			if (texnum) {
 				// Get the midtexture's height
@@ -379,21 +376,18 @@ void P_LineOpening(line_t *linedef)
 
 				// Set texbottom and textop to the Z coordinates of the texture's boundaries
 				{
-					if (linedef->flags & ML_EFFECT5) { // "infinite" repeat
+					if (!!(linedef->flags & ML_DONTPEGBOTTOM) ^ !!(linedef->flags & ML_NOHARD)) {
 						texbottom = openbottom + side->rowoffset;
-						textop = opentop + side->rowoffset;
-					} else if (!!(linedef->flags & ML_DONTPEGBOTTOM) ^ !!(linedef->flags & ML_NOHARD)) {
-						texbottom = openbottom + side->rowoffset;
-						textop = texbottom + texheight;
+						textop = texbottom + texheight*1;
 					} else {
 						textop = opentop + side->rowoffset;
-						texbottom = textop - texheight;
+						texbottom = textop - texheight*1;
 					}
 				}
 
 				texmid = texbottom+(textop-texbottom)/2;
 
-				delta1 = abs(tmthing->z - texmid);
+				delta1 = abs(mobj->z - texmid);
 				delta2 = abs(thingtop - texmid);
 
 				if (delta1 > delta2) { // Below
@@ -405,6 +399,14 @@ void P_LineOpening(line_t *linedef)
 				}
 			}
 		}
+	}
+
+	if (tmthing)
+	{
+		fixed_t thingbot, thingtop;
+
+		thingbot = tmthing->z;
+		thingtop = thingbot + tmthing->height;
 
 		if (front->ceilingheight < back->ceilingheight)
 			opentop = front->ceilingheight;

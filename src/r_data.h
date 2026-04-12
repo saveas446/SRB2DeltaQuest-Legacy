@@ -95,6 +95,8 @@ extern CV_PossibleValue_t Color_cons_t[];
 void R_LoadTextures(void);
 void R_FlushTextureCache(void);
 
+INT32 R_GetTextureNum(INT32 texnum);
+
 // Retrieve column data for span blitting.
 byte *R_GetColumn(fixed_t tex, int col);
 

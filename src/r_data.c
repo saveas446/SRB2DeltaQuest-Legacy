@@ -1073,6 +1073,20 @@ int R_CheckTextureNumForName(const char *name)
 }
 
 //
+// R_GetTextureNum
+//
+// Returns the actual texture id that we should use.
+// This can either be texnum, the current frame for texnum's anim (if animated),
+// or 0 if not valid.
+//
+INT32 R_GetTextureNum(INT32 texnum)
+{
+	if (texnum < 0 || texnum >= numtextures)
+		return 0;
+	return texturetranslation[texnum];
+}
+
+//
 // R_TextureNumForName
 //
 // Calls R_CheckTextureNumForName, aborts with error message.
