@@ -66,6 +66,7 @@ typedef struct visplane_s
 
 extern visplane_t *floorplane;
 extern visplane_t *ceilingplane;
+extern visplane_t*    waterplane;
 
 // Visplane related.
 extern short *lastopening, *openings;

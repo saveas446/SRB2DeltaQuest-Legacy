@@ -951,6 +951,40 @@ static void R_RenderSegLoop (void)
             }
         }
 
+		if (markwater)
+        {
+            //added:18-02-98:WATER!
+            yw = waterfrac>>HEIGHTBITS;
+      
+            
+            // the markwater stuff...
+            if (waterplane->height<viewz)
+            {
+                top = yw;
+                bottom = waterclip[rw_x]-1;
+                
+                if (top <= ceilingclip[rw_x])
+                    top = ceilingclip[rw_x]+1;
+            }
+            else  //view from under
+            {
+                top = waterclip[rw_x]+1;
+                bottom = yw;
+                
+                if (bottom >= floorclip[rw_x])
+                    bottom = floorclip[rw_x]-1;
+            }
+            if (top <= bottom)
+            {
+                waterplane->top[rw_x] = top;
+                waterplane->bottom[rw_x] = bottom;
+            }
+            
+            // do it only if markwater else not needed!
+            waterfrac += waterstep;   //added:18-02-98:WATER!
+            //dc_wcolormap = colormaps+(32<<8);
+        }
+
 		if (numffloors)
 		{
           firstseg->frontscale[rw_x] = frontscale[rw_x];
@@ -1111,7 +1145,11 @@ static void R_RenderSegLoop (void)
                     ceilingclip[rw_x] = (short)((short)yl - 1);
             }
 			else if (markceiling) // no top wall
-				ceilingclip[rw_x] = (short)((short)yl - 1);
+                {
+                    ceilingclip[rw_x] = yl-1;
+                    if (markwater)
+                    if (!waterplane || markwater)
+                         waterclip[rw_x] = yl-1;
 
             if (bottomtexture)
             {
@@ -1135,11 +1173,15 @@ static void R_RenderSegLoop (void)
 					colfunc();
 					floorclip[rw_x] = (short)mid;
                 }
+				if (waterplane && waterz<worldlow)
+                        waterclip[rw_x] = mid;
                 else
 					floorclip[rw_x] = (short)((short)yh + 1);
 			}
 			else if (markfloor) // no bottom wall
 				floorclip[rw_x] = (short)((short)yh + 1);
+            if (!waterplane || markwater)
+				waterclip[rw_x] = yh+1;
 		}
 
         if (maskedtexture || numthicksides)
@@ -1300,6 +1342,15 @@ void R_StoreWallRange(int start, int stop)
     worldtop = frontsector->ceilingheight - viewz;
     worldbottom = frontsector->floorheight - viewz;
 
+    //added:18-02-98:WATER!
+    if (waterplane)
+    {
+        waterz = waterplane->height - viewz;
+        if (waterplane->height >= frontsector->ceilingheight)
+            I_Error("this was french before so i removed it");
+    }
+
+
     midtexture = toptexture = bottomtexture = maskedtexture = 0;
     ds_p->maskedtexturecol = NULL;
     ds_p->numthicksides = numthicksides = 0;
@@ -1324,6 +1375,12 @@ void R_StoreWallRange(int start, int stop)
         midtexture = texturetranslation[sidedef->midtexture];
         // a single sided line is terminal, so it must mark ends
         markfloor = markceiling = true;
+
+		//added:18-02-98:WATER! onesided thingy idk this was in french
+        if (waterplane)
+            markwater = true;
+        else
+            markwater = false;
 
         if (linedef->flags & ML_DONTPEGBOTTOM)
         {
@@ -1470,6 +1527,11 @@ void R_StoreWallRange(int start, int stop)
         // check TOP TEXTURE
         if (worldhigh < worldtop)
         {
+			//added:18-02-98:WATER! toptexture thingy idk this was in french
+            if (waterplane &&
+                waterz > worldhigh &&
+                waterz < worldtop)
+                markwater = true;
             // top texture
             toptexture = texturetranslation[sidedef->toptexture];
             if (linedef->flags & ML_DONTPEGTOP)
@@ -1487,8 +1549,13 @@ void R_StoreWallRange(int start, int stop)
             }
         }
         // check BOTTOM TEXTURE
-        if (worldlow > worldbottom)     //seulement si VISIBLE!!!
+        if (worldlow > worldbottom)     //eughh french
         {
+            //added:18-02-98:WATER! bottomtexture idk this was in french
+            if (waterplane &&
+                waterz < worldlow &&
+                waterz > worldbottom)
+                markwater = true;
             // bottom texture
 			
 			//! NULL POINTER PROTECTION
@@ -1736,6 +1803,17 @@ void R_StoreWallRange(int start, int stop)
     topstep = -FixedMul (rw_scalestep, worldtop);
     topfrac = (centeryfrac>>4) - FixedMul (worldtop, rw_scale);
 
+	//added:18-02-98:WATER!
+    waterz >>= 4;
+
+    if (markwater)
+    {
+        if (waterplane==NULL)
+            I_Error("fuck no waterplane!");
+        waterstep = -FixedMul (rw_scalestep, waterz);
+        waterfrac = (centeryfrac>>4) - FixedMul (waterz, rw_scale);
+    }
+
     bottomstep = -FixedMul (rw_scalestep,worldbottom);
     bottomfrac = (centeryfrac>>4) - FixedMul (worldbottom, rw_scale);
 
@@ -1904,6 +1982,14 @@ void R_StoreWallRange(int start, int stop)
         floorplane = R_CheckPlane (floorplane, rw_x, rw_stopx-1);
       else
         markfloor = 0;
+    }
+
+	//added:18-02-98: more french eughh
+    if (markwater)
+    {
+        if (waterplane==NULL)
+            I_Error("pas de waterplane avec markwater!?");
+        waterplane = R_CheckPlane (waterplane, rw_x, rw_stopx-1);
     }
 
 	ds_p->numffloorplanes = 0;
