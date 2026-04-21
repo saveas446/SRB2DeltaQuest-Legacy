@@ -56,13 +56,13 @@ void R_DrawColumn_8(void)
 
 	ccount = count;
 
-//#ifdef RANGECHECK
+#ifdef RANGECHECK
 	if ((unsigned)dc_x >= (unsigned)vid.width || dc_yl < 0 || dc_yh >= vid.height)
 	{
 		//CONS_Printf("R_DrawColumn_8: %d to %d at %d, from %d\n", dc_yl, dc_yh, dc_x, whereitsfrom);
 		return;
 	}
-//#endif
+#endif
 
 	// Framebuffer destination address.
 	// Use ylookup LUT to avoid multiply with ScreenWidth.
@@ -71,9 +71,8 @@ void R_DrawColumn_8(void)
 	dest = ylookup[dc_yl] + columnofs[dc_x];
 
 	// Determine scaling, which is the only mapping to be done.
-
 	fracstep = dc_iscale;
-	frac = dc_texturemid + (dc_yl - centery)*fracstep;
+	frac = (dc_texturemid + FixedMul((dc_yl << FRACBITS) - centeryfrac, fracstep))*(!dc_hires);
 
 	// Inner loop that does the actual texture mapping, e.g. a DDA-like scaling.
 	// This is as fast as it gets.
@@ -101,6 +100,12 @@ void R_DrawColumn_8(void)
 				// heightmask is the Tutti-Frutti fix
 				*dest = colormap[source[frac>>FRACBITS]];
 				dest += vid.width;
+				// Avoid overflow.
+				if (fracstep > 0x7FFFFFFF - frac)
+					frac += fracstep - heightmask;
+				else
+					frac += fracstep;
+
 				if ((frac += fracstep) >= heightmask)
 					frac -= heightmask;
 			} while (--count);
@@ -206,8 +211,8 @@ void R_DrawSkyColumn_8(void)
 */
 void R_DrawShadeColumn_8(void)
 {
-	register int count;
-	register byte *dest;
+	register INT32 count;
+	register UINT8 *dest;
 	register fixed_t frac, fracstep;
 
 	// check out coords for src*
@@ -224,11 +229,11 @@ void R_DrawShadeColumn_8(void)
 #endif
 
 	// FIXME. As above.
-	dest = ylookup[dc_yl] + columnofs[dc_x];
+	dest = &topleft[dc_yl*vid.width + dc_x];
 
 	// Looks familiar.
 	fracstep = dc_iscale;
-	frac = dc_texturemid + (dc_yl - centery)*fracstep;
+	frac = (dc_texturemid + FixedMul((dc_yl << FRACBITS) - centeryfrac, fracstep))*(!dc_hires);
 
 	// Here we do an additional index re-mapping.
 	do
@@ -250,7 +255,7 @@ void R_DrawTranslucentColumn_8(void)
 	register byte *dest;
 	register fixed_t frac, fracstep;
 
-	count = dc_yh - dc_yl + 1;
+	count = dc_yh - dc_yl;
 
 	if (count <= 0) // Zero length, column does not exceed a pixel.
 		return;
@@ -445,76 +450,161 @@ void R_DrawTranslatedColumn_8(void)
 */
 void R_DrawSpan_8(void)
 {
-	register ULONG xfrac, yfrac;
-	register byte *dest;
-	register int count;
+	UINT32 xposition;
+	UINT32 yposition;
+	UINT32 xstep, ystep;
 
-#ifdef RANGECHECK
-	if (ds_x2 < ds_x1 || ds_x1 < 0 || ds_x2 >= vid.width || (unsigned)ds_y > (unsigned)vid.height)
-		I_Error("R_DrawSpan_8: %d to %d at %d", ds_x1, ds_x2, ds_y);
-#endif
+	byte *source;
+	byte *colormap;
+	byte *dest;
+	const byte *deststop = screens[0] + vid.rowbytes * vid.height;
 
-	xfrac = ds_xfrac & ((flatsize<<FRACBITS)-1);
-	yfrac = ds_yfrac;
+	size_t count;
 
+	// SoM: we only need 6 bits for the integer part (0 thru 63) so the rest
+	// can be used for the fraction part. This allows calculation of the memory address in the
+	// texture with two shifts, an OR and one AND. (see below)
+	// for texture sizes > 64 the amount of precision we can allow will decrease, but only by one
+	// bit per power of two (obviously)
+	// Ok, because I was able to eliminate the variable spot below, this function is now FASTER
+	// than the original span renderer. Whodathunkit?
+	xposition = ds_xfrac << nflatshiftup; yposition = ds_yfrac << nflatshiftup;
+	xstep = ds_xstep << nflatshiftup; ystep = ds_ystep << nflatshiftup;
+
+	source = ds_source;
+	colormap = ds_colormap;
 	dest = ylookup[ds_y] + columnofs[ds_x1];
+	count = ds_x2 - ds_x1 + 1;
 
-	// We do not check for zero spans here?
-	count = ds_x2 - ds_x1;
+	if (dest+8 > deststop)
+		return;
 
-	do
+	while (count >= 8)
 	{
-		count = count;
-		// Lookup pixel from flat texture tile, re-index using light/colormap.
-		*dest++ = ds_colormap[ds_source[((yfrac>>(16-flatsubtract))&(flatmask)) | (xfrac>>16)]];
+		// SoM: Why didn't I see this earlier? the spot variable is a waste now because we don't
+		// have the uber complicated math to calculate it now, so that was a memory write we didn't
+		// need!
+		dest[0] = colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]];
+		xposition += xstep;
+		yposition += ystep;
 
-		// Next step in u, v.
-		xfrac += ds_xstep;
-		yfrac += ds_ystep;
-		xfrac &= (flatsize<<FRACBITS)-1;
-	} while (count--);
+		dest[1] = colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]];
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[2] = colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]];
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[3] = colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]];
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[4] = colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]];
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[5] = colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]];
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[6] = colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]];
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[7] = colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]];
+		xposition += xstep;
+		yposition += ystep;
+
+		dest += 8;
+		count -= 8;
+	}
+	while (count-- && dest <= deststop)
+	{
+		*dest++ = colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]];
+		xposition += xstep;
+		yposition += ystep;
+	}
 }
+
 
 /**	\brief The R_DrawTranslucentSpan_8 function
 	Draws the actual span with translucent.
 */
 void R_DrawTranslucentSpan_8(void)
 {
-	fixed_t xfrac, yfrac, xstep, ystep;
+	UINT32 xposition;
+	UINT32 yposition;
+	UINT32 xstep, ystep;
+
+	byte *source;
+	byte *colormap;
 	byte *dest;
-	int count;
 
-#ifdef RANGECHECK
-	if (ds_x2 < ds_x1 || ds_x1 < 0 || ds_x2 >= vid.width || (unsigned)ds_y > (unsigned)vid.height)
-		I_Error("R_DrawTranslucentSpan_8: %d to %d at %d", ds_x1, ds_x2, ds_y);
-#endif
+	size_t count;
 
-	xfrac = ds_xfrac & ((flatsize<<FRACBITS)-1);
-	yfrac = ds_yfrac;
+	// SoM: we only need 6 bits for the integer part (0 thru 63) so the rest
+	// can be used for the fraction part. This allows calculation of the memory address in the
+	// texture with two shifts, an OR and one AND. (see below)
+	// for texture sizes > 64 the amount of precision we can allow will decrease, but only by one
+	// bit per power of two (obviously)
+	// Ok, because I was able to eliminate the variable spot below, this function is now FASTER
+	// than the original span renderer. Whodathunkit?
+	xposition = ds_xfrac << nflatshiftup; yposition = ds_yfrac << nflatshiftup;
+	xstep = ds_xstep << nflatshiftup; ystep = ds_ystep << nflatshiftup;
 
+	source = ds_source;
+	colormap = ds_colormap;
 	dest = ylookup[ds_y] + columnofs[ds_x1];
-
-	// We do not check for zero spans here?
 	count = ds_x2 - ds_x1 + 1;
 
-	xstep = ds_xstep;
-	ystep = ds_ystep;
-
-	do
+	while (count >= 8)
 	{
-		// Current texture index in u, v.
+		// SoM: Why didn't I see this earlier? the spot variable is a waste now because we don't
+		// have the uber complicated math to calculate it now, so that was a memory write we didn't
+		// need!
+		dest[0] = *(ds_transmap + (colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]] << 8) + dest[0]);
+		xposition += xstep;
+		yposition += ystep;
 
-		// Lookup pixel from flat texture tile,
-		//  re-index using light/colormap.
-		*dest = ds_colormap[*(ds_transmap + (ds_source[((yfrac>>(16-flatsubtract))&(flatmask))
-			| (xfrac>>16)] << 8) + (*dest))];
+		dest[1] = *(ds_transmap + (colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]] << 8) + dest[1]);
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[2] = *(ds_transmap + (colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]] << 8) + dest[2]);
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[3] = *(ds_transmap + (colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]] << 8) + dest[3]);
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[4] = *(ds_transmap + (colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]] << 8) + dest[4]);
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[5] = *(ds_transmap + (colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]] << 8) + dest[5]);
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[6] = *(ds_transmap + (colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]] << 8) + dest[6]);
+		xposition += xstep;
+		yposition += ystep;
+
+		dest[7] = *(ds_transmap + (colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]] << 8) + dest[7]);
+		xposition += xstep;
+		yposition += ystep;
+
+		dest += 8;
+		count -= 8;
+	}
+	while (count--)
+	{
+		*dest = *(ds_transmap + (colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]] << 8) + *dest);
 		dest++;
-
-		// Next step in u, v.
-		xfrac += xstep;
-		yfrac += ystep;
-		xfrac &= ((flatsize<<FRACBITS)-1);
-	} while (--count);
+		xposition += xstep;
+		yposition += ystep;
+	}
 }
 
 /**	\brief The R_DrawFogSpan_8 function
