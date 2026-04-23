@@ -73,10 +73,6 @@ extern byte *ds_transmap;
 extern ULONG flatsize;
 extern ULONG flatmask;
 extern ULONG flatsubtract;
-extern UINT32 nflatxshift;
-extern UINT32 nflatyshift;
-extern UINT32 nflatshiftup;
-extern UINT32 nflatmask;
 
 /// \brief Top border
 #define BRDR_T 0

@@ -31,7 +31,6 @@
 #include "r_state.h"
 #include "r_splats.h" // faB(21jan):testing
 #include "r_sky.h"
-#include "p_tick.h"
 #include "v_video.h"
 #include "w_wad.h"
 #include "z_zone.h"
@@ -73,14 +72,6 @@ short *openings, *lastopening;
 //
 short floorclip[MAXVIDWIDTH], ceilingclip[MAXVIDWIDTH];
 fixed_t frontscale[MAXVIDWIDTH];
-
-//
-// Water
-// maybe idk
-//
-
-short                   waterclip[MAXVIDWIDTH];   //added:18-02-98:WATER!
-boolean                 itswater;       //added:24-02-98:WATER!
 
 //
 // spanstart holds the start of a plane span
@@ -150,9 +141,6 @@ void R_InitPlanes(void)
 // BASIC PRIMITIVE
 //
 
-static int bgofs;
-static int wtofs=0;
-
 void R_MapPlane(int y, int x1, int x2)
 {
 	angle_t angle;
@@ -190,23 +178,6 @@ void R_MapPlane(int y, int x1, int x2)
 	ds_yfrac = yoffs - FixedMul(finesine[angle], length);
 
 	pindex = distance >> LIGHTZSHIFT;
-
-	if (itswater)
-	{
-		const INT32 yay = (wtofs + (distance>>9) ) & 8191;
-		// ripples da water texture
-		bgofs = FixedDiv(finesine[yay], (1<<12) + (distance>>11))>>FRACBITS;
-		angle = (viewangle + xtoviewangle[x1])>>ANGLETOFINESHIFT;
-
-		angle = (angle + 2048) & 8191;  // 90 degrees
-		ds_xfrac += FixedMul(finecosine[angle], (bgofs<<FRACBITS));
-		ds_yfrac += FixedMul(finesine[angle], (bgofs<<FRACBITS));
-
-		if (y+bgofs>=viewheight)
-			bgofs = viewheight-y-1;
-		if (y+bgofs<0)
-			bgofs = -y;
-	}
 
 	if (pindex >= MAXLIGHTZ)
 		pindex = MAXLIGHTZ - 1;
@@ -560,86 +531,6 @@ void R_DrawPlanes(void)
 
 			R_DrawSinglePlane(pl, true);
 		}
-	waterofs = (leveltime & 1)*16384;
-	wtofs = leveltime * 140;
-	}
-}
-
-static void R_DrawTranslucentWaterSpan_8(void)
-{
-	UINT32 xposition;
-	UINT32 yposition;
-	UINT32 xstep, ystep;
-
-	byte *source;
-	byte *colormap;
-	byte *dest;
-	byte *dsrc;
-
-	size_t count;
-
-	// SoM: we only need 6 bits for the integer part (0 thru 63) so the rest
-	// can be used for the fraction part. This allows calculation of the memory address in the
-	// texture with two shifts, an OR and one AND. (see below)
-	// for texture sizes > 64 the amount of precision we can allow will decrease, but only by one
-	// bit per power of two (obviously)
-	// Ok, because I was able to eliminate the variable spot below, this function is now FASTER
-	// than the original span renderer. Whodathunkit?
-	xposition = ds_xfrac << nflatshiftup; yposition = (ds_yfrac + waterofs) << nflatshiftup;
-	xstep = ds_xstep << nflatshiftup; ystep = ds_ystep << nflatshiftup;
-
-	source = ds_source;
-	colormap = ds_colormap;
-	dest = ylookup[ds_y] + columnofs[ds_x1];
-	dsrc = screens[1] + (ds_y+bgofs)*vid.width + ds_x1;
-	count = ds_x2 - ds_x1 + 1;
-
-	while (count >= 8)
-	{
-		// SoM: Why didn't I see this earlier? the spot variable is a waste now because we don't
-		// have the uber complicated math to calculate it now, so that was a memory write we didn't
-		// need!
-		dest[0] = *(ds_transmap + (colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]] << 8) + dest[0]);
-		xposition += xstep;
-		yposition += ystep;
-
-		dest[1] = *(ds_transmap + (colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]] << 8) + dest[1]);
-		xposition += xstep;
-		yposition += ystep;
-
-		dest[2] = *(ds_transmap + (colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]] << 8) + dest[2]);
-		xposition += xstep;
-		yposition += ystep;
-
-		dest[3] = *(ds_transmap + (colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]] << 8) + dest[3]);
-		xposition += xstep;
-		yposition += ystep;
-
-		dest[4] = *(ds_transmap + (colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]] << 8) + dest[4]);
-		xposition += xstep;
-		yposition += ystep;
-
-		dest[5] = *(ds_transmap + (colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]] << 8) + dest[5]);
-		xposition += xstep;
-		yposition += ystep;
-
-		dest[6] = *(ds_transmap + (colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]] << 8) + dest[6]);
-		xposition += xstep;
-		yposition += ystep;
-
-		dest[7] = *(ds_transmap + (colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]] << 8) + dest[7]);
-		xposition += xstep;
-		yposition += ystep;
-
-		dest += 8;
-		count -= 8;
-	}
-	while (count--)
-	{
-		*dest = *(ds_transmap + (colormap[source[((yposition >> nflatyshift) & nflatmask) | (xposition >> nflatxshift)]] << 8) + *dest);
-		dest++;
-		xposition += xstep;
-		yposition += ystep;
 	}
 }
 
@@ -648,118 +539,127 @@ void R_DrawSinglePlane(visplane_t *pl, boolean handlesource)
 	int light = 0;
 	int x;
 	int stop, angle;
-	size_t size;
 
 	if (pl->minx > pl->maxx)
 		return;
 
-	itswater = false;
 	spanfunc = basespanfunc;
-
-  if (pl->ffloor)
-  {
-	  if (pl->ffloor->flags & (FF_TRANSLUCENT|FF_SWIMMABLE))
-	  {
-		spanfunc = R_DrawTranslucentSpan_8;
-		ds_transmap = ((1)<<FF_TRANSSHIFT) - 0x10000 + transtables;
-
-		if (!pl->extra_colormap)
-			light = (pl->lightlevel >> LIGHTSEGSHIFT)+extralight;
-		else
-			light = LIGHTLEVELS-1;
-	  }
-	  else light = (pl->lightlevel >> LIGHTSEGSHIFT)+extralight;
-
-	  if (pl->ffloor->flags & FF_SWIMMABLE) {
-		itswater = true;
-		if (spanfunc == R_DrawTranslucentSpan_8) {
-			ds_transmap = (tr_translo<<FF_TRANSSHIFT) - 0x10000 + transtables;
-			spanfunc = R_DrawTranslucentWaterSpan_8;
-		}
-	  }
-  }
-  else light = (pl->lightlevel >> LIGHTSEGSHIFT)+extralight;
-
-  currentplane = pl;
-
-   ds_source = (byte *) W_CacheLumpNum (levelflats[pl->picnum].lumpnum, PU_STATIC);
-
-  size = W_LumpLength(levelflats[pl->picnum].lumpnum);
-
-  switch (size)
+	if (pl->ffloor)
 	{
-		case 4194304: // 2048x2048 lump
-			nflatmask = 0x3FF800;
-			nflatxshift = 21;
-			nflatyshift = 10;
-			nflatshiftup = 5;
-			break;
-		case 1048576: // 1024x1024 lump
-			nflatmask = 0xFFC00;
-			nflatxshift = 22;
-			nflatyshift = 12;
-			nflatshiftup = 6;
-			break;
-		case 262144:// 512x512 lump'
-			nflatmask = 0x3FE00;
-			nflatxshift = 23;
-			nflatyshift = 14;
-			nflatshiftup = 7;
-			break;
-		case 65536: // 256x256 lump
-			nflatmask = 0xFF00;
-			nflatxshift = 24;
-			nflatyshift = 16;
-			nflatshiftup = 8;
-			break;
-		case 16384: // 128x128 lump
-			nflatmask = 0x3F80;
-			nflatxshift = 25;
-			nflatyshift = 18;
-			nflatshiftup = 9;
-			break;
-		case 1024: // 32x32 lump
-			nflatmask = 0x3E0;
-			nflatxshift = 27;
-			nflatyshift = 22;
-			nflatshiftup = 11;
-			break;
-		default: // 64x64 lump
-			nflatmask = 0xFC0;
-			nflatxshift = 26;
-			nflatyshift = 20;
-			nflatshiftup = 10;
-			break;
+		if (pl->ffloor->flags & FF_TRANSLUCENT)
+		{
+			spanfunc = R_DrawTranslucentSpan_8;
+
+			// Hacked up support for alpha value in software mode
+			if (pl->ffloor->alpha < 64)
+				ds_transmap = ((3)<<FF_TRANSSHIFT) - 0x10000 + transtables;
+			else if (pl->ffloor->alpha < 128)
+				ds_transmap = ((2)<<FF_TRANSSHIFT) - 0x10000 + transtables;
+			else if (pl->ffloor->alpha < 192)
+				ds_transmap = ((1)<<FF_TRANSSHIFT) - 0x10000 + transtables;
+			else // Opaque like in R_RenderThickSideRange
+				spanfunc = basespanfunc;
+
+			if (pl->extra_colormap && pl->extra_colormap->fog)
+				light = (pl->lightlevel >> LIGHTSEGSHIFT);
+			else
+				light = LIGHTLEVELS-1;
+		}
+		else if (pl->ffloor->flags & FF_FOG)
+		{
+			spanfunc = R_DrawFogSpan_8;
+			light = (pl->lightlevel >> LIGHTSEGSHIFT);
+		}
+		else light = (pl->lightlevel >> LIGHTSEGSHIFT);
+	}
+	else light = (pl->lightlevel >> LIGHTSEGSHIFT);
+
+	if (viewangle != pl->viewangle)
+	{
+		memset(cachedheight, 0, sizeof (cachedheight));
+		angle = (pl->viewangle-ANG90)>>ANGLETOFINESHIFT;
+		basexscale = FixedDiv(finecosine[angle],centerxfrac);
+		baseyscale = -FixedDiv(finesine[angle],centerxfrac);
+		viewangle = pl->viewangle;
 	}
 
-  xoffs = pl->xoffs;
-  yoffs = pl->yoffs;
-  planeheight = abs(pl->height-viewz);
+	currentplane = pl;
 
-    if (light >= LIGHTLEVELS)
-      light = LIGHTLEVELS-1;
+	if (handlesource)
+ 	{
+ 		int size;
+		ds_source = (byte *)
+			W_CacheLumpNum(levelflats[pl->picnum].lumpnum,
+				PU_STATIC); // Stay here until Z_ChangeTag
 
-  if (light < 0)
-      light = 0;
+		size = W_LumpLength(levelflats[pl->picnum].lumpnum);
 
-  planezlight = zlight[light];
+		switch (size)
+ 		{
+		case 4194304: // 2048x2048 lump
+			flatsize = 2048;
+			flatmask = 2047<<11;
+			flatsubtract = 11;
+			break;
+		case 1048576: // 1024x1024 lump
+			flatsize = 1024;
+			flatmask = 1023<<10;
+			flatsubtract = 10;
+			break;
+		case 262144:// 512x512 lump
+			flatsize = 512;
+			flatmask = 511<<9;
+			flatsubtract = 9;
+			break;
+		case 65536: // 256x256 lump
+			flatsize = 256;
+			flatmask = 255<<8;
+			flatsubtract = 8;
+			break;
+		case 16384: // 128x128 lump
+			flatsize = 128;
+			flatmask = 127<<7;
+			flatsubtract = 7;
+			break;
+		case 1024: // 32x32 lump
+			flatsize = 32;
+			flatmask = 31<<5;
+			flatsubtract = 5;
+			break;
+		default: // 64x64 lump
+			flatsize = 64;
+			flatmask = 63<<6;
+			flatsubtract = 6;
+			break;
+		}
+	}
 
-  //set the MAXIMUM value for unsigned
-  pl->top[pl->maxx+1] = 0xffff;
-  pl->top[pl->minx-1] = 0xffff;
-  pl->bottom[pl->maxx+1] = 0x0000;
-  pl->bottom[pl->minx-1] = 0x0000;
+	xoffs = pl->xoffs;
+	yoffs = pl->yoffs;
+	planeheight = abs(pl->height - pl->viewz);
 
-  stop = pl->maxx + 1;
+	if (light >= LIGHTLEVELS)
+		light = LIGHTLEVELS-1;
 
-  for (x=pl->minx ; x<= stop ; x++)
-  {
-    R_MakeSpans(x,pl->top[x-1],
-                pl->bottom[x-1],
-                pl->top[x],
-                pl->bottom[x]);
-  }
-  Z_ChangeTag (ds_source, PU_CACHE);
+	if (light < 0)
+		light = 0;
+
+	planezlight = zlight[light];
+
+	// set the maximum value for unsigned
+	pl->top[pl->maxx+1] = 0xffff;
+	pl->top[pl->minx-1] = 0xffff;
+	pl->bottom[pl->maxx+1] = 0x0000;
+	pl->bottom[pl->minx-1] = 0x0000;
+
+	stop = pl->maxx + 1;
+
+	for (x = pl->minx; x <= stop; x++)
+		R_MakeSpans(x, pl->top[x-1], pl->bottom[x-1],
+			pl->top[x], pl->bottom[x]);
+
+	if (handlesource)
+		Z_ChangeTag(ds_source, PU_CACHE);
 }
 
 void R_PlaneBounds(visplane_t *plane)
@@ -772,9 +672,11 @@ void R_PlaneBounds(visplane_t *plane)
 
 	for (i = plane->minx + 1; i <= plane->maxx; i++)
 	{
-  		if (plane->top[i] < *hi)
-  		*hi = plane->top[i];
-  		if (plane->bottom[i] > *low)
-  		*low = plane->bottom[i];
+		if (plane->top[i] < hi)
+		hi = plane->top[i];
+		if (plane->bottom[i] > low)
+		low = plane->bottom[i];
 	}
+	plane->high = hi;
+	plane->low = low;
 }

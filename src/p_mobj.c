@@ -1661,35 +1661,9 @@ void P_MobjCheckWater(mobj_t *mobj)
 				mobj->eflags &= ~MF_UNDERWATER;
 		}
 	}
-	if(sector->ffloors)
-    {
-      ffloor_t*  rover;
+	else
+		mobj->eflags &= ~(MF_UNDERWATER|MF_TOUCHWATER);
 
-      mobj->eflags &= ~(MF_UNDERWATER|MF_TOUCHWATER);
-
-      for(rover = sector->ffloors; rover; rover = rover->next)
-      {
-        if(!(rover->flags & FF_SWIMMABLE) || rover->flags & FF_SOLID)
-          continue;
-
-		if (*rover->topheight <= mobj->z)
-			mobj->watertop = *rover->topheight;
-
-        if(*rover->topheight < mobj->z || *rover->bottomheight > (mobj->z + (mobj->height / 2)))
-          continue;
-
-		mobj->watertop = *rover->topheight;
-
-        if(mobj->z + mobj->height > *rover->topheight)
-            mobj->eflags |= MF_TOUCHWATER;
-        else
-            mobj->eflags &= ~MF_TOUCHWATER;
-            mobj->eflags &= ~MF_UNDERWATER;
-      }
-      return;
-    }
-    else
-        mobj->eflags &= ~(MF_UNDERWATER|MF_TOUCHWATER);
 	if (leveltime < 1)
 		wasinwater = mobj->eflags & MF_UNDERWATER;
 
