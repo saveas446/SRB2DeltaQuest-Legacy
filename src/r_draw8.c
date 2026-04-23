@@ -229,7 +229,7 @@ void R_DrawShadeColumn_8(void)
 #endif
 
 	// FIXME. As above.
-	dest = ylookup[dc_yl] + columnofs[dc_x];
+	dest = &topleft[dc_yl*vid.width + dc_x];
 
 	// Looks familiar.
 	fracstep = dc_iscale;

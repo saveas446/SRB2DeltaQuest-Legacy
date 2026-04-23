@@ -53,7 +53,6 @@ static visplane_t **freehead = &freetail;
 
 visplane_t *floorplane;
 visplane_t *ceilingplane;
-visplane_t* waterplane;
 static visplane_t *currentplane;
 
 planemgr_t ffloor[MAXFFLOORS];
