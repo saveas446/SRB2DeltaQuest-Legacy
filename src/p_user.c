@@ -599,7 +599,7 @@ void P_DoSuperTransformation(player_t *player, boolean giverings)
 	if (!mapheaderinfo[gamemap-1].nossmusic && P_IsLocalPlayer(player))
 	{
 		S_StopMusic();
-		S_ChangeMusic(mus_invinc, true);
+		S_ChangeMusic(mus_supers, true);
 	}
 	//S_StartSound(player->mo, sfx_supert); 26-05-2025
 

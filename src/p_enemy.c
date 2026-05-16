@@ -1938,7 +1938,7 @@ void A_SuperSneakers(mobj_t *actor)
 	if (P_IsLocalPlayer(player) && (!player->powers[pw_super] && !mapheaderinfo[gamemap-1].nossmusic))
 	{
 		S_StopMusic();
-		S_ChangeMusic(mus_invinc, false);
+		S_ChangeMusic(mus_shoes, false);
 	}
 }
 

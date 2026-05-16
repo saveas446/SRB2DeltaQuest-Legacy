@@ -211,6 +211,8 @@ typedef enum
     mus_inter, // Intermission - Sam 12/09/25 1:45 PM
 	mus_lvclr, // Level Clear - Sam 12/09/25 1:46 PM
     mus_invinc, // invincibility Tails
+	mus_shoes, // i am SURROUNDED by MORONS - Samwise 05/16/26 16:09 PM
+	mus_supers, // i am SURROUNDED by MORONS - Samwise 05/16/26 16:09 PM
     mus_drown, // drowning Tails 03-06-2000
     mus_gmover, // Tails 03-14-2000
     mus_xtlife, // Tails 03-14-2000

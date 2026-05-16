@@ -115,6 +115,8 @@ musicinfo_t S_music[NUMMUSIC] =
     { "inter"  , 0 },
     { "lvclr"  , 0 },
     { "invinc"  , 0 }, // invincibility Tails
+	{ "shoes"  , 0 }, // i am SURROUNDED by MORONS - Samwise 05/16/26 16:07 PM
+	{ "supers"  , 0 }, // i am SURROUNDED by MORONS - Samwise 05/16/26 16:07 PM
     { "drown\0" , 0 }, // drowning Tails 03-06-2000
     { "gmover"  , 0 }, // Tails 03-14-2000
     { "xtlife"  , 0 }, // Tails 03-14-2000
