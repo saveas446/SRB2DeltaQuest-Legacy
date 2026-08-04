@@ -361,7 +361,7 @@ void R_LoadTextures(void)
 			patch->originy = SHORT(mpatch->originy);
 			patch->patch = patchlookup[SHORT(mpatch->patch)];
 			if (patch->patch == -1)
-				I_Error("R_LoadTextures: Missing patch in texture %s", texture->name);
+				CONS_Printf("R_LoadTextures: Missing patch in texture %s", texture->name);
 		}
 
 		j = 1;
@@ -385,7 +385,7 @@ void R_LoadTextures(void)
 	if (texturetranslation)
 		Z_Free(texturetranslation);
 
-	texturetranslation = Z_Malloc((numtextures+1)*4, PU_STATIC, NULL);
+	texturetranslation = Z_Malloc((numtextures+1)*sizeof(*texturetranslation), PU_STATIC, NULL);
 
 	for (i = 0; i < numtextures; i++)
 		texturetranslation[i] = i;
@@ -526,10 +526,10 @@ static void R_InitSpriteLumps(void)
 	// FIXME: find a better solution for adding new sprites dynamically
 	numspritelumps = 0;
 
-	spritewidth = Z_Malloc(MAXSPRITELUMPS*4, PU_STATIC, NULL);
-	spriteoffset = Z_Malloc(MAXSPRITELUMPS*4, PU_STATIC, NULL);
-	spritetopoffset = Z_Malloc(MAXSPRITELUMPS*4, PU_STATIC, NULL);
-	spriteheight = Z_Malloc(MAXSPRITELUMPS*4, PU_STATIC, NULL);
+	spritewidth = Z_Malloc(MAXSPRITELUMPS*sizeof(*spritewidth), PU_STATIC, NULL);
+	spriteoffset = Z_Malloc(MAXSPRITELUMPS*sizeof(*spriteoffset), PU_STATIC, NULL);
+	spritetopoffset = Z_Malloc(MAXSPRITELUMPS*sizeof(*spritetopoffset), PU_STATIC, NULL);
+	spriteheight = Z_Malloc(MAXSPRITELUMPS*sizeof(*spriteheight), PU_STATIC, NULL);
 }
 
 //

@@ -19,8 +19,10 @@ byte keyboard_started = 0;
 
 ULONG I_GetFreeMem(ULONG *total)
 {
-	total = NULL;
-	return 0;
+	// Guess 48 MB.
+	if (total)
+		*total = 48<<20;
+	return 48<<20;
 }
 
 #ifdef _WIN32

@@ -129,11 +129,11 @@ typedef struct JoyFF_s
 	//All
 	unsigned long Duration; ///< The total duration of the effect, in microseconds
 	long Gain; //< /The gain to be applied to the effect, in the range from 0 through 10,000.
-	//All, CONSTANTFORCE –10,000 to 10,000
+	//All, CONSTANTFORCE ï¿½10,000 to 10,000
 	long Magnitude; ///< Magnitude of the effect, in the range from 0 through 10,000.
 	//RAMPFORCE
-	long Start; ///< Magnitude at the start of the effect, in the range from –10,000 through 10,000.
-	long End; ///< Magnitude at the end of the effect, in the range from –10,000 through 10,000.
+	long Start; ///< Magnitude at the start of the effect, in the range from ï¿½10,000 through 10,000.
+	long End; ///< Magnitude at the end of the effect, in the range from ï¿½10,000 through 10,000.
 	//PERIODIC
 	long Offset; ///< Offset of the effect.
 	unsigned long Phase; ///< Position in the cycle of the periodic effect at which playback begins, in the range from 0 through 35,999

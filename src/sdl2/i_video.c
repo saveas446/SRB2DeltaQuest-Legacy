@@ -30,7 +30,6 @@ void VID_Command_Listmodes(void);
 
 SDL_Window* SDL_window = NULL;
 
-SDL_Renderer* SDL_renderer;
 SDL_Surface* surface;
 SDL_Surface* window_surface;
 SDL_Surface* icon_surface;
@@ -161,7 +160,6 @@ void I_ToggleFullscreen(void) {
 
 void I_ShutdownGraphics(void){
 	CONS_Printf("I_ShutdownGraphics...\n");
-	SDL_DestroyRenderer(SDL_renderer);
 	SDL_DestroyWindow(SDL_window);
 	SDL_FreeSurface(surface);
 	free(vid.buffer);
@@ -246,9 +244,6 @@ int VID_SetMode(int modenum)
 	if (SDL_window != NULL)
 		SDL_DestroyWindow(SDL_window);
 
-	if (SDL_renderer != NULL)
-		SDL_DestroyRenderer(SDL_renderer);
-
 	if (surface != NULL)
 		SDL_FreeSurface(surface);
 
@@ -272,10 +267,6 @@ int VID_SetMode(int modenum)
 
 	if (!SDL_window)
 		I_Error("VID_SetMode(): Could not create window!");
-
-	SDL_renderer = SDL_CreateRenderer(SDL_window, -1, SDL_RENDERER_ACCELERATED);
-	if (!SDL_renderer)
-		I_Error("VID_SetMode(): Could not create renderer!");
 
 	surface = SDL_CreateRGBSurfaceWithFormat(0, vid.width, vid.height, 8, SDL_PIXELFORMAT_INDEX8);
 
