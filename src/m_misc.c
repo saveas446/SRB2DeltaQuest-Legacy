@@ -35,7 +35,7 @@
 #endif
 
 #include "console.h"
-#include "M_filewriter.h"
+#include "m_filewriter.h"
 
 #include "zlib.h"
 
@@ -61,8 +61,9 @@
 #include "m_argv.h"
 #include "i_system.h"
 
+#ifdef WINDOWS
 #include <windows.h>
-#include <gl/GL.h>
+#endif
 
 #ifdef _WIN32_WCE
 #include "sdl/SRB2CE/cehelp.h"

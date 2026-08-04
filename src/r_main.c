@@ -33,7 +33,7 @@
 #include "p_local.h"
 #include "am_map.h"
 #include "d_main.h"
-#include "M_argv.h"
+#include "m_argv.h"
 
 #ifdef HWRENDER
 #include "hardware/hw_main.h"

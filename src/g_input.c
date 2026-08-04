@@ -25,7 +25,7 @@
 #include "keys.h"
 #include "d_net.h"
 #include "console.h"
-#include "M_cheat.h"
+#include "m_cheat.h"
 
 static CV_PossibleValue_t mousesens_cons_t[] = {{1, "MIN"}, {MAXMOUSESENSITIVITY, "MAXCURSOR"},
 	{MAXINT, "MAX"}, {0, NULL}};

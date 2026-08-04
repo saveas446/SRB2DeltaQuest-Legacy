@@ -125,6 +125,6 @@ enum {
 	NUMDEVMODEOPTIONS
 };
 
-boolean devmodedraw[NUMDEVMODEOPTIONS];
+extern boolean devmodedraw[NUMDEVMODEOPTIONS];
 
 #endif

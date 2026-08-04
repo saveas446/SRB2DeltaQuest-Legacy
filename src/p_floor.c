@@ -25,8 +25,8 @@
 #include "z_zone.h"
 #include "g_game.h"
 #include "r_main.h"
-#include "P_spec.h"
-#include "M_random.h"
+#include "p_spec.h"
+#include "m_random.h"
 
 // ==========================================================================
 //                              FLOORS

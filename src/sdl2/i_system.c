@@ -10,8 +10,8 @@
 #include "../m_misc.h"
 #include "../screen.h"
 
-#include <SDL.h>
-#include <SDL_keycode.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_keycode.h>
 
 byte graphics_started = 0;
 
@@ -465,8 +465,7 @@ void I_GetMouseEvents(void){}
 
 char *I_GetEnv(const char *name)
 {
-	name = NULL;
-	return NULL;
+	return getenv(name);
 }
 
 int I_PutEnv(char *variable)

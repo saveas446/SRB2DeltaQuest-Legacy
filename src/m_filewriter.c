@@ -1,6 +1,6 @@
-#include "M_filewriter.h"
+#include "m_filewriter.h"
 #include "doomtype.h"
-#include "Doomdef.h"
+#include "doomdef.h"
 
 #include <stdio.h>
 

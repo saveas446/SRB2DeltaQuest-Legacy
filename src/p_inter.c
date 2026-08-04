@@ -28,7 +28,7 @@
 #include "r_main.h"
 #include "st_stuff.h"
 #include "tables.h"
-#include "M_fixed.h"
+#include "m_fixed.h"
 
 // Touch debug dump.
 static char debuginfo[] = {

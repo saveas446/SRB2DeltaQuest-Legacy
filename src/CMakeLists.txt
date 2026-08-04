@@ -1,8 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
-
-project(demo2ultimate C)
-
-add_executable(${PROJECT_NAME}
+set(GENERAL_SOURCES
   am_map.c
   command.c
   comptime.c
@@ -21,6 +17,7 @@ add_executable(${PROJECT_NAME}
   m_argv.c
   m_bbox.c
   m_cheat.c
+  m_filewriter.c
   m_fixed.c
   m_misc.c
   m_random.c
@@ -69,49 +66,36 @@ add_executable(${PROJECT_NAME}
   r_bsp.c
   r_things.c
   s_sound.c
-  
-  win32/dx_error.c  
-  win32/mid2strm.c	
-  win32/win_dbg.c  
-  win32/win_net.c  
-  win32/win_sys.c
-  win32/fabdxlib.c  
-  win32/win_cd.c	
-  win32/win_dll.c  
-  win32/win_snd.c
-  win32/win_main.c
-  win32/win_vid.c
 )
 
+list(TRANSFORM GENERAL_SOURCES PREPEND "${CMAKE_SOURCE_DIR}/src/")
 
+# OS specific stuff
+# i dont know if windows works
+if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
+    set(SRB2DQ_LINKDIRS "${CMAKE_SOURCE_DIR}/../lib")
+    set(SRB2DQ_INCLUDEDIRS "${CMAKE_SOURCE_DIR}/../include")
+    set(SRB2DQ_COMPILEOPTS
+      $<$<C_COMPILER_ID:GNU,Clang>:
+        -fno-pie
+        -Wno-int-conversion
+        -fpermissive
+      >
+      $<$<C_COMPILER_ID:MSVC>:
+        /wd4244         # disable conversion warnings
+        /permissive-    # make MSVC less permissive (closer to standard)
+      >
+    )
+    set(SRB2DQ_DEFINITIONS WINDOWS)
+elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+    set(SRB2DQ_LINKLIBS m z png) # math
+    set(SRB2DQ_DEFINITIONS UNIXLIKE)
+endif()
 
-target_link_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/../lib")
-
-target_link_libraries(${PROJECT_NAME} PRIVATE 
-	fmod
-	dinput
-	dxguid 
-	dsound 
-	ddraw 
-	gdi32
-	winmm 
-	wsock32
-)
-
-# NOW I do. 
-target_compile_options(${PROJECT_NAME} PRIVATE
-  $<$<C_COMPILER_ID:GNU,Clang>:
-    -fno-pie
-    -Wno-int-conversion
-    -fpermissive
-  >
-  $<$<C_COMPILER_ID:MSVC>:
-    /wd4244         # disable conversion warnings
-    /permissive-    # make MSVC less permissive (closer to standard)
-  >
-)
-
-
-target_include_directories(${PROJECT_NAME} PRIVATE 
-	"${CMAKE_SOURCE_DIR}/../include"
-)
+if ("${SRB2DQ_CONFIG_BACKEND}" STREQUAL "sdl2")
+  add_subdirectory(sdl2)
+elseif ("${SRB2DQ_CONFIG_BACKEND}" STREQUAL "win32")
+  add_subdirectory(win32)
+else()
+  message(FATAL_ERROR "Unknown Backend")
+endif()

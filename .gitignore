@@ -99,6 +99,7 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 CMakeUserPresets.json
+build/
 
 
 
@@ -155,3 +156,6 @@ lib/libpng.lib
 
 # Music folder, for obvious reasons
 dev/music
+
+# CCLS cache, i (xdf) use vscode with a language server plugin soo..
+.ccls-cache/

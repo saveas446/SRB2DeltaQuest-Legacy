@@ -1,8 +1,9 @@
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #include "../command.h"
 #include "../d2udef.h"
 #include "../doomdef.h"
+#include "../m_argv.h"
 #include "../i_system.h"
 #include "../i_video.h"
 #include "../screen.h"
@@ -264,7 +265,7 @@ int VID_SetMode(int modenum)
 	if (cv_fullscreen.value)
 		flags = SDL_WINDOW_FULLSCREEN;
 	else
-		flags = NULL;
+		flags = 0;
 
 	// Init window (hardcoded to 640x400 for now) in the center of the screen
 	SDL_window = SDL_CreateWindow(va("SRB2 Delta Quest v%d.%d.%d", MAJORVER, MINORVER, TINYVER), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vid.width, vid.height, flags);

@@ -192,7 +192,6 @@ boolean nonumber = false;
 boolean targetreached = false;
 
 patch_t* lvlttl; // Patch that will point to whatever level title is appropriate for this level
-patch_t* ttlnum;
 
 
 //

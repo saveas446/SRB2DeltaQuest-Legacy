@@ -22,8 +22,9 @@
 
 #include "d_event.h"
 
-//TODO: FIX FOR CROSS-PLATFORM
+#ifdef WINDOWS
 #include "win32/win_main.h"
+#endif
 
 typedef struct
 {
