@@ -1,0 +1,40 @@
+SRB2 DELTAQUEST DEMO 2
+
+GENERAL ROADMAP
+
+* Include Greenflower, Techno hill, Deep sea & Mine maze for the main campaign, have rocky mountain zone 1 as a bonus through getting all those chaos emeralds before mine maze 2 like how demo 4 cez works
+* Have sweet tooth as a bonus level through getting all emblems
+* There will be no real new bosses for demo 2, it will just be the final demo egg zapper for every single boss act
+
+PRE-POLISHING STAGE
+
+TO DO (highest to lowest priority)
+* Small engine changes & new linedef actions being added to allow for v1.09.4 linedef executor bullcrap
+   * Crushers, floor friction, all linedef executors present in v1.09.4, change floor height.
+     * You can all blame save_as for being fault of removing these features as in development she wanted the engine to be compatible with the demo 2 IWAD.
+* Finish dsz1 & 2 layout
+* Finish thz2's layout
+* Finish rmz1's layout (75% there)
+* thok barrier up the latter half of the campaign & get the enemy placements in
+* Get all secrets & bonus stuff working
+* Possible retexturing before polishing stage? This shouldnt really break anything in the code
+* Finish up the credits
+
+POLISHING STAGE
+
+After the basic layouts are all done & enemy placements are in, we are going to POLISH THE HELL OUT OF THE CAMPAIGN.
+* Renovate the layouts of all of the stages in the campaign for this demo to be more fun & flow better, this is #1 priority before everything else.
+* Look out for bugs like vultures, this is where the playtesters come in.
+* EXPAND EXPAND EXPAND. Add as many secrets as you can until it fits the polishing precedent samwise did for gfz 1 & 2
+* Balance all SFX to be more "equal" to eachother (woke in my sarby??????)
+* Redo some of the music & have the midis match with their digital versions (latter is optional)
+* BUGTESTING BUGTESTING BUGTESTING
+After all of that, we will finally be releasing sdq demo 2 on the bespoke SDQ youtube channel.
+
+MISC:
+
+* Trailer with faust doing the renders & promo art
+* Speaking of promo art, we will be creating a new topic on the MB about SDQ and have faust's promo art for it
+* And speaking of THAT, it will contain info on it, a download, etc etc. Usual stuff.
+
+Afterwards we will be taking a 2 week break for our own good before starting development once more. Next stop is demo 3, dont worry about that for now though :3
