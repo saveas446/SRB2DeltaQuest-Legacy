@@ -1234,7 +1234,8 @@ boolean P_TryCameraMove(fixed_t x, fixed_t y, camera_t *thiscam)
 //
 // P_TryMove
 // Attempt to move to a new position.
-//
+// fix by hennkrido				
+//				
 boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y, boolean allowdropoff)
 {
     fixed_t oldx, oldy;
