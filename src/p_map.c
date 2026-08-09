@@ -1330,24 +1330,22 @@ boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y, boolean allowdropoff)
     P_SetThingPosition(thing);
     
     // Restore P_CrossSpecialLine Save 18-05-2025
-    while(numspechit) {
+    while(numspechit > 0) {
+        numspechit--;
+
         // see if the line was crossed
         ld = lines + spechit[numspechit];
-        side = P_PointOnLineSide (thing->x, thing->y, ld);
-        oldside = P_PointOnLineSide (oldx, oldy, ld);
-        if (side != oldside)
-        {
-            if (ld->special)
-                P_CrossSpecialLine (ld-lines, oldside, thing);
-        }
+        side = P_PointOnLineSide(thing->x, thing->y, ld);
+        oldside = P_PointOnLineSide(oldx, oldy, ld);
 
-        numspechit--;
+        if(side != oldside) {
+            if(ld->special)
+                P_CrossSpecialLine(ld-lines, oldside, thing);
+        }
     }
 
     return true;
 }
-
-
 boolean P_SceneryTryMove(mobj_t *thing, fixed_t x, fixed_t y)
 {
 	fixed_t oldx, oldy;
