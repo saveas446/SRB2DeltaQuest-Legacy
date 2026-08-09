@@ -1,0 +1,181 @@
+GetArgcArgv() ...
+lpCmdLine is '"D:\Games\SRB2\demo_2\dev\sdqwin32.exe"  -addmap 11 12 13  14 15 16 17 18 19 20 21 22 23 24 25 29 31 32 37 -devmode  -width 1280 -height 800 -win -warp 37 -file  "maps\protos\mmz_new.wad"   "maps\extras\SWEET_TOOTH_old.wad"   "maps\extras\DUST_HILL_old.wad"   "maps\extras\CRYSTAL_CAVE_old.wad"   "maps\extras\efzfog.wad"  +skin SONIC +color 1 '
+Myargc: 39
+myargv[0] : 'D:\Games\SRB2\demo_2\dev\sdqwin32.exe'
+myargv[1] : '-addmap'
+myargv[2] : '11'
+myargv[3] : '12'
+myargv[4] : '13'
+myargv[5] : '14'
+myargv[6] : '15'
+myargv[7] : '16'
+myargv[8] : '17'
+myargv[9] : '18'
+myargv[10] : '19'
+myargv[11] : '20'
+myargv[12] : '21'
+myargv[13] : '22'
+myargv[14] : '23'
+myargv[15] : '24'
+myargv[16] : '25'
+myargv[17] : '29'
+myargv[18] : '31'
+myargv[19] : '32'
+myargv[20] : '37'
+myargv[21] : '-devmode'
+myargv[22] : '-width'
+myargv[23] : '1280'
+myargv[24] : '-height'
+myargv[25] : '800'
+myargv[26] : '-win'
+myargv[27] : '-warp'
+myargv[28] : '37'
+myargv[29] : '-file'
+myargv[30] : 'maps\protos\mmz_new.wad'
+myargv[31] : 'maps\extras\SWEET_TOOTH_old.wad'
+myargv[32] : 'maps\extras\DUST_HILL_old.wad'
+myargv[33] : 'maps\extras\CRYSTAL_CAVE_old.wad'
+myargv[34] : 'maps\extras\efzfog.wad'
+myargv[35] : '+skin'
+myargv[36] : 'SONIC'
+myargv[37] : '+color'
+myargv[38] : '1'
+I_StartupSystem() ...
+D_SRB2Main() ...
+ Feb 25 2026                   Sonic Robo Blast 2                      17:53:51 
+Sonic Robo Blast 2
+set initial warp vars
+Z_Init: Init zone memory allocation daemon. 
+system memory 2047MB free 2047MB
+64 megabytes requested for Z_Init.
+W_Init: Init WADfiles.
+I_StartupTimer...
+Added file D:\Games\SRB2\demo_2\dev\srb2.srb (1637 lumps)
+Loading main config from D:\Games\SRB2\demo_2\dev\srb2.srb
+Added file D:\Games\SRB2\demo_2\dev\supp.wad (2014 lumps)
+Added file D:\Games\SRB2\demo_2\dev\music.wad (72 lumps)
+Added file ./maps/MINE_MAZE_2.wad (11 lumps)
+Added file ./maps/MINE_MAZE_3.wad (11 lumps)
+Added file ./maps/ROCKY_MOUNTAIN_1.wad (11 lumps)
+Added file ./maps/ROCKY_MOUNTAIN_2.wad (11 lumps)
+Added file ./maps/ROCKY_MOUNTAIN_3.wad (11 lumps)
+Added file ./maps/RED_VOLCANO_1.wad (11 lumps)
+Added file ./maps/RED_VOLCANO_2.wad (11 lumps)
+Added file ./maps/RED_VOLCANO_3.wad (11 lumps)
+Added file ./maps/DARK_CITY_1.wad (11 lumps)
+Added file ./maps/DARK_CITY_2.wad (11 lumps)
+Added file ./maps/DARK_CITY_3.wad (11 lumps)
+Added file ./maps/GRAND_EGGSHIP_1.wad (11 lumps)
+File GRAND_EGGSHIP_2.wad not found.
+Added file ./maps/GRAND_EGGSHIP_3.wad (11 lumps)
+Added file ./maps/ROBOTNIROCK_1.wad (11 lumps)
+Added file ./maps/WOOD.wad (11 lumps)
+Added file ./maps/SPDHWY.wad (11 lumps)
+Added file ./maps/HIDDEN_PALACE.wad (11 lumps)
+Added file ./maps/FREAK_SHOW_1.wad (12 lumps)
+Added file maps\protos\mmz_new.wad (11 lumps)
+Added file maps\extras\SWEET_TOOTH_old.wad (11 lumps)
+Added file maps\extras\DUST_HILL_old.wad (11 lumps)
+Added file maps\extras\CRYSTAL_CAVE_old.wad (11 lumps)
+Added file maps\extras\efzfog.wad (11 lumps)
+===========================================================================
+                   We hope you enjoy this game as
+                     much as we did making it!
+                            ...wait. =P
+===========================================================================
+I_StartupGraphics...
+#00: 640x400x1bpp (desc: '320x200W')
+VID_SetMode(0)
+HU_Init: Setting up heads up display.
+
+executing config.cfg
+Using resolution: 1280 x 800
+M_Init: Init miscellaneous info.
+R_Init: Init SRB2 refresh daemon - 
+InitTextures...
+InitFlats...
+InitSprites...
+6 sprites added from file D:\Games\SRB2\demo_2\dev\srb2.srb
+126 sprites added from file D:\Games\SRB2\demo_2\dev\supp.wad
+R_AddSkins: Unknown keyword 'name' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'face' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'facename' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'ability' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'normalspeed' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'runspeed' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'thrustfactor' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'accelstart' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'acceleration' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'spin' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'startcolor' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'endcolor' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'prefcolor' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'jumpheight' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'boxindex' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'runonwater' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'allowsuper' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'actionspd' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'mindash' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'maxdash' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+R_AddSkins: Unknown keyword 'waterskip' in S_SKIN lump# 763 (WAD D:\Games\SRB2\demo_2\dev\srb2.srb)
+added skin 'tails'
+R_AddSkins: Unknown keyword 'name' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'face' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'facename' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'ability' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'normalspeed' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'runspeed' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'thrustfactor' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'accelstart' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'acceleration' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'spin' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'startcolor' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'endcolor' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'prefcolor' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'jumpheight' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'boxindex' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'allowsuper' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'actionspd' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'mindash' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'maxdash' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+R_AddSkins: Unknown keyword 'waterskip' in S_SKIN lump# 236 (WAD D:\Games\SRB2\demo_2\dev\supp.wad)
+added skin 'knuckles'
+
+InitColormaps...
+S_Init: Setting up sound.
+I_StartupSound:  Compacting onboard sound-memory... done
+sound initialised.
+I_InitDigMusic()
+I_InitMIDIMusic()
+MIDI product name: Microsoft MIDI Mapper
+MIDI technology: Microsoft MIDI Mapper
+MIDI caps:
+-Direct support for midiStreamOut()
+-Volume control
+Loading sounds...  pre-cached all sound data
+ST_Init: Init status bar.
+D_CheckNetGame: Checking network game status.
+Starting Server....
+Press ESC to abort
+Contacting the server...
+Checking files...
+Send join request...
+Join accepted, wait next map change...
+Entering main app loop...
+I_StartupKeyboard...
+I_StartupMouse...
+VID_SetMode(0)
+Player 1 is in the game (node 0)
+Speeding off to level...
+Lowest mare found: 255
+Current mare is 255
+Player 1 renamed to save_as
+I_ShutdownMouse()
+I_ShutdownKeyboard()
+I_ShutdownDigMusic: 
+I_ShutdownMIDIMusic: 
+I_ShutdownSound()
+I_ShutdownDigMusic: 
+I_ShutdownMIDIMusic: 
+I_ShutdownGraphics()
+I_Quit(): end of logstream.

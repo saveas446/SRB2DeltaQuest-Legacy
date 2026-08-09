@@ -1,28 +1,30 @@
-# Delta Quest
-Delta Quest is a mod for Demo 2 that overhauls the existing 4 levels and various assets as well as adding a plethora of new content (notably a full 32-map campaign).
+# SRB2 Retro
 
-You will need to get the music.dta from https://github.com/jimmyjamescool/Srb2deltaquest-Musicdta-launcher, then drop that file into the /dev folder.
+SRB2 Retro is an updated fork of [Sonic Robo Blast 2](https://srb2.org) 2.0.7.  
+The goal of SRB2 Retro is to include essential fixes and QOL improvements seen in 2.1 and later versions.
 
-It currently has two builds: SDL2 and Win32, both found in the `/dev/` folder.
-While the Win32 build is functionally worse, such as being limited to 640x400, the SDL2 build has much better functionality, but currently has no MIDI or digital audio support. 
+## Dependencies
+- SDL2
+- SDL2-Mixer
+- libpng
+- zlib
 
-## Launcher
-This mod has its own dedicated launcher based off of startSRB2 by Shardvexs.
-The source code can be found in https://github.com/jimmyjamescool/Srb2deltaquest-Musicdta-launcher/tree/main/launcher and the binary is in /dev
+## Compiling
 
-> [!NOTE]  
-> When a new build of the launcher is made, you will most likely have to delete your autosave.xml file or else saving will not work.
+See [SRB2 Wiki/Source code compiling](http://wiki.srb2.org/wiki/Source_code_compiling)  
+Alternatively, you can also use [srb2bld](https://mb.srb2.org/addons/srb2bld-srb2-build-package-manager-cli.3727/)
 
-## Editing
-Legacy Builder is currently the best option for editing Delta Quest levels due to its ability to preview FOFs and other special linedefs, a config for it is in the `/tools/` folder. https://github.com/saveas446/LegacyBuilder
-Ultimate Doom Builder has been historically used due to its high stability with older SRB2 versions. A configuration for it is also present in the `/tools/` folder.
+## Nightlies
 
-## Building
-While options for platforms besides Windows are planned, currently the only supported ways to build are through Visual Studio.
+Nightly builds can be obtained below
 
-### Visual Studio 2008
-This is the main way to build the game.
-The VS2008 project files can be found at `src/win32/DQ_Win32.sln` and `src/sdl2/DQ_SDL2.sln` for the Win32 and SDL2 builds respectively. Once those have been located, *insert tutorial on how to add additional library directories and other stuff*
+- [Windows](https://nightly.link/srb2-preservation/srb2-retro/workflows/windows/master)
+- [Linux](https://nightly.link/srb2-preservation/srb2-retro/workflows/ubuntu/master)
+- [macOS](https://nightly.link/srb2-preservation/srb2-retro/workflows/macos/master)
 
-### Visual Studio 2022
-The VS2022 project files can be found at `{insert path for Win32}` and `{insert path for SDL2}` for the Win32 and SDL2 builds respectively. Once those have been located, *insert tutorial on how to add additional library directories and other stuff*
+## Interact
+- Join the [srb2-preservation Matrix space](https://matrix.to/#/#srb2-preservation:merrycorps.xyz)
+- Join the [srb2-preservation Discord server (Git updates only)](https://discord.gg/2bakGxA5DY)
+
+## Disclaimer
+Sonic Team Junior is in no way affiliated with SEGA or Sonic Team. We do not claim ownership of any of SEGA's intellectual property used in SRB2.

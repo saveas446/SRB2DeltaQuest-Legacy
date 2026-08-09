@@ -1,0 +1,46 @@
+type = "Doom Builder Map Settings Configuration";
+gameconfig = "SRB2_D2U.cfg";
+strictpatches = 0;
+
+maps
+{
+	
+	MAP19
+	{
+		defaultfloortexture = "-";
+		overrideceilheight = false;
+		
+		resources
+		{
+		}
+		defaulttoptexture = "-";
+		overridemiddletexture = false;
+		viewpositionx = -2522.417f;
+		viewpositiony = 5675.698f;
+		viewscale = 0.6548828f;
+		overridefloortexture = false;
+		customceilheight = 128;
+		customfloorheight = 0;
+		
+		grid
+		{
+			background = "";
+			backoffsetx = 0;
+			backoffsety = 0;
+			backscalex = 100;
+			backscaley = 100;
+			backsource = 0;
+			gridsize = 32;
+		}
+		defaultceiltexture = "-";
+		overridebrightness = false;
+		uselongtexturenames = false;
+		overridebottomtexture = false;
+		overridefloorheight = false;
+		overridetoptexture = false;
+		custombrightness = 196;
+		overrideceiltexture = false;
+		defaultwalltexture = "-";
+		defaultbottomtexture = "-";
+	}
+}

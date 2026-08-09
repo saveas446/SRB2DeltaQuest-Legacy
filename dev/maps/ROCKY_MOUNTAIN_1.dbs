@@ -1,0 +1,92 @@
+type = "Doom Builder Map Settings Configuration";
+gameconfig = "SRB2_D2U.cfg";
+strictpatches = 0;
+
+maps
+{
+	
+	MAP13
+	{
+		defaultfloortexture = "FLOOR7_2";
+		overrideceilheight = false;
+		
+		resources
+		{
+		}
+		defaulttoptexture = "ROCKY1";
+		overridemiddletexture = false;
+		viewpositionx = 11964.42f;
+		viewpositiony = 7595.128f;
+		viewscale = 0.2915617f;
+		overridefloortexture = false;
+		customceilheight = 128;
+		customfloorheight = 0;
+		
+		grid
+		{
+			backoffsety = 0;
+			backoffsetx = 0;
+			backscalex = 100;
+			gridsize = 32;
+			background = "";
+			backsource = 0;
+			backscaley = 100;
+		}
+		defaultceiltexture = "FLOOR7_1";
+		overridebrightness = false;
+		uselongtexturenames = false;
+		overridebottomtexture = false;
+		overridefloorheight = false;
+		overridetoptexture = false;
+		custombrightness = 196;
+		overrideceiltexture = false;
+		defaultwalltexture = "ROCKY1";
+		defaultbottomtexture = "ROCKY1";
+		
+		plugins
+		{
+			
+			stairsectorbuilder
+			{
+				
+				prefabs
+				{
+					
+					prefab1
+					{
+						name = "[Previous]";
+						numberofsectors = 16;
+						outervertexmultiplier = 1;
+						innervertexmultiplier = 1;
+						stairtype = 0;
+						sectordepth = 64;
+						spacing = 0;
+						frontside = true;
+						singlesectors = false;
+						distinctsectors = false;
+						singledirection = false;
+						distinctbaseheights = false;
+						flipping = 0;
+						numberofcontrolpoints = 1;
+						applyfloormod = true;
+						floormod = 0;
+						applyceilingmod = true;
+						ceilingmod = 0;
+						applyfloortexture = false;
+						floortexture = "";
+						applyceilingtexture = false;
+						ceilingtexture = "";
+						applyuppertexture = false;
+						uppertexture = "-";
+						upperunpegged = false;
+						applymiddletexture = false;
+						middletexture = "-";
+						applylowertexture = false;
+						lowertexture = "-";
+						lowerunpegged = false;
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<ChildForm>
+  <Control Type="System.Windows.Forms.Button" Name="start_button">
+    <Visible>True</Visible>
+  </Control>
+  <Control Type="System.Windows.Forms.TabControl" Name="devMaps">
+    <SelectedIndex>0</SelectedIndex>
+    <Visible>True</Visible>
+    <Control Type="System.Windows.Forms.TabPage" Name="main_tab">
+      <Visible>True</Visible>
+      <Control Type="System.Windows.Forms.Button" Name="browse_btn">
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.GroupBox" Name="render_group">
+        <Visible>True</Visible>
+        <Control Type="System.Windows.Forms.RadioButton" Name="software_radio">
+          <Checked>True</Checked>
+          <Visible>True</Visible>
+        </Control>
+        <Control Type="System.Windows.Forms.RadioButton" Name="opengl_radio">
+          <Checked>False</Checked>
+          <Visible>True</Visible>
+        </Control>
+      </Control>
+      <Control Type="System.Windows.Forms.TextBox" Name="path_tbox">
+        <Text>D:\Games\SRB2\demo_2\dev\sdqsdl2.exe</Text>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.PictureBox" Name="color_pic">
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.GroupBox" Name="misc_group">
+        <Visible>True</Visible>
+        <Control Type="System.Windows.Forms.CheckBox" Name="debug_check">
+          <Checked>False</Checked>
+          <Visible>True</Visible>
+        </Control>
+        <Control Type="System.Windows.Forms.CheckBox" Name="warp_check">
+          <Checked>True</Checked>
+          <Visible>True</Visible>
+        </Control>
+        <Control Type="System.Windows.Forms.TextBox" Name="warp_tbox">
+          <Text>13</Text>
+          <Visible>True</Visible>
+        </Control>
+        <Control Type="System.Windows.Forms.ComboBox" Name="sound_combo">
+          <Text>No Sound</Text>
+          <SelectedIndex>3</SelectedIndex>
+          <Visible>True</Visible>
+        </Control>
+      </Control>
+      <Control Type="System.Windows.Forms.PictureBox" Name="character_pic">
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.ComboBox" Name="color_combo">
+        <Text>Grey</Text>
+        <SelectedIndex>1</SelectedIndex>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.GroupBox" Name="res_group">
+        <Visible>True</Visible>
+        <Control Type="System.Windows.Forms.CheckBox" Name="manualres_check">
+          <Checked>True</Checked>
+          <Visible>True</Visible>
+        </Control>
+        <Control Type="System.Windows.Forms.TextBox" Name="hres_tbox">
+          <Text>800</Text>
+          <Visible>True</Visible>
+        </Control>
+        <Control Type="System.Windows.Forms.TextBox" Name="wres_tbox">
+          <Text>1280</Text>
+          <Visible>True</Visible>
+        </Control>
+        <Control Type="System.Windows.Forms.CheckBox" Name="winmode_check">
+          <Checked>True</Checked>
+          <Visible>True</Visible>
+        </Control>
+      </Control>
+      <Control Type="System.Windows.Forms.ComboBox" Name="player_combo">
+        <Text>Sonic</Text>
+        <SelectedIndex>0</SelectedIndex>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.TextBox" Name="parameters_textbox">
+        <Text>-addmap 11 12 13  14 15 16 17 18 19 20 21 22 23 24 25 29 31 32 37 -devmode</Text>
+        <Visible>True</Visible>
+      </Control>
+    </Control>
+    <Control Type="System.Windows.Forms.TabPage" Name="network_tab">
+      <Visible>False</Visible>
+      <Control Type="System.Windows.Forms.CheckBox" Name="multi_check">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.TabControl" Name="joinhost_tab">
+        <SelectedIndex>0</SelectedIndex>
+        <Visible>True</Visible>
+        <Control Type="System.Windows.Forms.TabPage" Name="join_tab">
+          <Visible>True</Visible>
+          <Control Type="System.Windows.Forms.CheckBox" Name="dedicjoin_check">
+            <Checked>False</Checked>
+            <Visible>True</Visible>
+          </Control>
+          <Control Type="System.Windows.Forms.TextBox" Name="ip_tbox">
+            <Text>0.0.0.0</Text>
+            <Visible>True</Visible>
+          </Control>
+          <Control Type="System.Windows.Forms.CheckBox" Name="nofiles_check">
+            <Checked>False</Checked>
+            <Visible>True</Visible>
+          </Control>
+          <Control Type="System.Windows.Forms.CheckBox" Name="nocheck_check">
+            <Checked>False</Checked>
+            <Visible>True</Visible>
+          </Control>
+        </Control>
+        <Control Type="System.Windows.Forms.TabPage" Name="host_tab">
+          <Visible>False</Visible>
+          <Control Type="System.Windows.Forms.GroupBox" Name="groupBox4">
+            <Visible>True</Visible>
+            <Control Type="System.Windows.Forms.CheckBox" Name="online_check">
+              <Checked>True</Checked>
+              <Visible>True</Visible>
+            </Control>
+            <Control Type="System.Windows.Forms.CheckBox" Name="dedicated_check">
+              <Checked>False</Checked>
+              <Visible>True</Visible>
+            </Control>
+            <Control Type="System.Windows.Forms.TextBox" Name="room_tbox">
+              <Text>33</Text>
+              <Visible>True</Visible>
+            </Control>
+            <Control Type="System.Windows.Forms.TextBox" Name="password_tbox">
+              <Text>password</Text>
+              <Visible>True</Visible>
+            </Control>
+            <Control Type="System.Windows.Forms.CheckBox" Name="password_check">
+              <Checked>False</Checked>
+              <Visible>True</Visible>
+            </Control>
+            <Control Type="System.Windows.Forms.TextBox" Name="servname_tbox">
+              <Text>SRB2 Server</Text>
+              <Visible>True</Visible>
+            </Control>
+          </Control>
+          <Control Type="System.Windows.Forms.GroupBox" Name="groupBox3">
+            <Visible>True</Visible>
+            <Control Type="System.Windows.Forms.TextBox" Name="forceskin_tbox">
+              <Text>0</Text>
+              <Visible>True</Visible>
+            </Control>
+            <Control Type="System.Windows.Forms.TextBox" Name="multiwarp_tbox">
+              <Text>41</Text>
+              <Visible>True</Visible>
+            </Control>
+            <Control Type="System.Windows.Forms.CheckBox" Name="multiwarp_check">
+              <Checked>False</Checked>
+              <Visible>True</Visible>
+            </Control>
+            <Control Type="System.Windows.Forms.CheckBox" Name="death_check">
+              <Checked>False</Checked>
+              <Visible>True</Visible>
+            </Control>
+            <Control Type="System.Windows.Forms.CheckBox" Name="forceskin_check">
+              <Checked>False</Checked>
+              <Visible>True</Visible>
+            </Control>
+            <Control Type="System.Windows.Forms.CheckBox" Name="noadvance_check">
+              <Checked>False</Checked>
+              <Visible>True</Visible>
+            </Control>
+            <Control Type="System.Windows.Forms.CheckBox" Name="norings_check">
+              <Checked>False</Checked>
+              <Visible>True</Visible>
+            </Control>
+            <Control Type="System.Windows.Forms.ComboBox" Name="gametype_combo">
+              <Text>Tag</Text>
+              <SelectedIndex>5</SelectedIndex>
+              <Visible>True</Visible>
+            </Control>
+            <Control Type="System.Windows.Forms.TextBox" Name="point_tbox">
+              <Text>1000</Text>
+              <Visible>True</Visible>
+            </Control>
+            <Control Type="System.Windows.Forms.CheckBox" Name="timelimit_check">
+              <Checked>False</Checked>
+              <Visible>True</Visible>
+            </Control>
+            <Control Type="System.Windows.Forms.TextBox" Name="max_tbox">
+              <Text>4</Text>
+              <Visible>True</Visible>
+            </Control>
+            <Control Type="System.Windows.Forms.TextBox" Name="time_tbox">
+              <Text>5</Text>
+              <Visible>True</Visible>
+            </Control>
+            <Control Type="System.Windows.Forms.CheckBox" Name="pointlimit_check">
+              <Checked>False</Checked>
+              <Visible>True</Visible>
+            </Control>
+            <Control Type="System.Windows.Forms.CheckBox" Name="max_check">
+              <Checked>False</Checked>
+              <Visible>True</Visible>
+            </Control>
+          </Control>
+        </Control>
+      </Control>
+      <Control Type="System.Windows.Forms.TextBox" Name="name_tbox">
+        <Text>Sonic</Text>
+        <Visible>True</Visible>
+      </Control>
+    </Control>
+    <Control Type="System.Windows.Forms.TabPage" Name="wad_tab">
+      <Visible>False</Visible>
+      <Control Type="System.Windows.Forms.Button" Name="clear_btn">
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.Button" Name="delete_button">
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.Button" Name="add_button">
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.Button" Name="down_btn">
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.Button" Name="up_btn">
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.ListBox" Name="wad_list">
+        <Item>D:\Games\SRB2\demo_2\dev\maps\protos\mmz_new.wad</Item>
+        <Item>D:\Games\SRB2\demo_2\dev\maps\extras\SWEET_TOOTH_old.wad</Item>
+        <Item>D:\Games\SRB2\demo_2\dev\maps\extras\DUST_HILL_old.wad</Item>
+        <Item>D:\Games\SRB2\demo_2\dev\maps\extras\CRYSTAL_CAVE_old.wad</Item>
+        <Item>D:\Games\SRB2\demo_2\dev\maps\extras\efzfog.wad</Item>
+        <Item>D:\Games\SRB2\demo_2\dev\maps\extras\CREDITS_old.wad</Item>
+        <Item>D:\Games\SRB2\demo_2\dev\maps\extras\turrets.wad</Item>
+        <Item>D:\Games\SRB2\demo_2\dev\maps\extras\jelly.wad</Item>
+        <Item>D:\Games\SRB2\demo_2\dev\maps\extras\minecart_test.wad</Item>
+        <Item>D:\Games\SRB2\demo_2\dev\maps\extras\dsz_zoo.wad</Item>
+        <Item>D:\Games\SRB2\demo_2\dev\maps\protos\rmz1_janice_a3.wad</Item>
+        <SelectedIndex>-1</SelectedIndex>
+        <Visible>True</Visible>
+      </Control>
+    </Control>
+    <Control Type="System.Windows.Forms.TabPage" Name="tabPage1">
+      <Visible>False</Visible>
+      <Control Type="System.Windows.Forms.CheckBox" Name="checkBox21">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="checkBox22">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="checkBox23">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="checkBox24">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="checkBox17">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="checkBox18">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="checkBox19">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="checkBox20">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="checkBox13">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="checkBox14">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="checkBox15">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="checkBox16">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="checkBox9">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="checkBox10">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="checkBox11">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="checkBox12">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="mmz3">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="mmz2">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="mmz1">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="dsz3">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="dsz2">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="dsz1">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="thz3">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="thz2">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="thz1">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="gfz3">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="gfz2">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+      <Control Type="System.Windows.Forms.CheckBox" Name="gfz1">
+        <Checked>False</Checked>
+        <Visible>True</Visible>
+      </Control>
+    </Control>
+  </Control>
+  <Control Type="System.Windows.Forms.MenuStrip" Name="menuStrip1">
+    <Visible>True</Visible>
+  </Control>
+</ChildForm>

@@ -1,0 +1,102 @@
+type = "Doom Builder Map Settings Configuration";
+gameconfig = "SRB2_D2U.cfg";
+strictpatches = 0;
+
+maps
+{
+	
+	MAP13
+	{
+		
+		resources
+		{
+		}
+		defaultfloortexture = "PIT";
+		defaultceiltexture = "F_SKY1";
+		defaulttoptexture = "SHALE1";
+		defaultwalltexture = "SHALE1";
+		defaultbottomtexture = "SHALE1";
+		custombrightness = 196;
+		customfloorheight = 0;
+		customceilheight = 128;
+		overridefloortexture = false;
+		overrideceiltexture = false;
+		overridetoptexture = false;
+		overridemiddletexture = false;
+		overridebottomtexture = false;
+		overridefloorheight = false;
+		overrideceilheight = false;
+		overridebrightness = false;
+		uselongtexturenames = false;
+		viewpositionx = 779.1041f;
+		viewpositiony = 493.362f;
+		viewscale = 1.098498f;
+		
+		grid
+		{
+			background = "";
+			backsource = 0;
+			backoffsetx = 0;
+			backoffsety = 0;
+			backscalex = 100;
+			backscaley = 100;
+			gridsize = 64;
+		}
+		
+		plugins
+		{
+			
+			stairsectorbuilder
+			{
+				
+				prefabs
+				{
+					
+					prefab1
+					{
+						name = "[Previous]";
+						numberofsectors = 12;
+						outervertexmultiplier = 1;
+						innervertexmultiplier = 1;
+						stairtype = 0;
+						sectordepth = 128;
+						spacing = 0;
+						frontside = true;
+						singlesectors = false;
+						distinctsectors = false;
+						singledirection = false;
+						distinctbaseheights = false;
+						flipping = 0;
+						numberofcontrolpoints = 1;
+						applyfloormod = true;
+						floormod = 0;
+						applyceilingmod = true;
+						ceilingmod = 0;
+						applyfloortexture = false;
+						floortexture = "";
+						applyceilingtexture = false;
+						ceilingtexture = "";
+						applyuppertexture = false;
+						uppertexture = "-";
+						upperunpegged = false;
+						applymiddletexture = false;
+						middletexture = "-";
+						applylowertexture = false;
+						lowertexture = "-";
+						lowerunpegged = false;
+					}
+				}
+			}
+		}
+		
+		taglabels
+		{
+			
+			taglabel1
+			{
+				tag = 11;
+				label = "11'";
+			}
+		}
+	}
+}

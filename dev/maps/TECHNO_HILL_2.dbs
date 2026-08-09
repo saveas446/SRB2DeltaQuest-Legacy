@@ -1,0 +1,112 @@
+type = "Doom Builder Map Settings Configuration";
+gameconfig = "SRB2_D2U.cfg";
+strictpatches = 0;
+
+maps
+{
+	
+	MAP05
+	{
+		defaultfloortexture = "THZFLR01";
+		overrideceilheight = false;
+		
+		resources
+		{
+		}
+		defaulttoptexture = "THZBARRR";
+		overridemiddletexture = false;
+		viewpositionx = -4647.344f;
+		viewpositiony = -5848.66f;
+		viewscale = 0.08157296f;
+		overridefloortexture = false;
+		customceilheight = 128;
+		customfloorheight = 0;
+		
+		grid
+		{
+			backoffsety = 0;
+			backoffsetx = 0;
+			backscalex = 100;
+			gridsize = 32;
+			background = "";
+			backsource = 0;
+			backscaley = 100;
+		}
+		defaultceiltexture = "THZFLR01";
+		
+		plugins
+		{
+			
+			stairsectorbuilder
+			{
+				
+				prefabs
+				{
+					
+					prefab1
+					{
+						name = "[Previous]";
+						numberofsectors = 16;
+						outervertexmultiplier = 1;
+						innervertexmultiplier = 1;
+						stairtype = 0;
+						sectordepth = 64;
+						spacing = 0;
+						frontside = true;
+						singlesectors = false;
+						distinctsectors = false;
+						singledirection = false;
+						distinctbaseheights = false;
+						flipping = 0;
+						numberofcontrolpoints = 1;
+						applyfloormod = true;
+						floormod = 0;
+						applyceilingmod = true;
+						ceilingmod = 0;
+						applyfloortexture = false;
+						floortexture = "";
+						applyceilingtexture = false;
+						ceilingtexture = "";
+						applyuppertexture = false;
+						uppertexture = "-";
+						upperunpegged = false;
+						applymiddletexture = false;
+						middletexture = "-";
+						applylowertexture = false;
+						lowertexture = "-";
+						lowerunpegged = false;
+					}
+				}
+			}
+		}
+		overridebrightness = false;
+		uselongtexturenames = false;
+		overridebottomtexture = false;
+		overridefloorheight = false;
+		overridetoptexture = false;
+		custombrightness = 196;
+		overrideceiltexture = false;
+		defaultwalltexture = "THZBARRR";
+		defaultbottomtexture = "THZBARRR";
+		
+		taglabels
+		{
+			
+			taglabel1
+			{
+				tag = 4;
+				label = "61'";
+			}
+		}
+		
+		scriptfiles
+		{
+			
+			file
+			{
+				filename = "OBJCTCFG";
+				hash = 484659484;
+			}
+		}
+	}
+}
