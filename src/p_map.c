@@ -1237,101 +1237,100 @@ boolean P_TryCameraMove(fixed_t x, fixed_t y, camera_t *thiscam)
 //
 boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y, boolean allowdropoff)
 {
-	fixed_t oldx, oldy;
-	int side, oldside;
-	line_t* ld;
+    fixed_t oldx, oldy;
+    int side, oldside;
+    line_t* ld;
 
-	floatok = false;
+    floatok = false;
 
-	if (!P_CheckPosition(thing, x, y))
-	{
-		CheckMissileImpact(thing);
-		return false; // solid wall or thing
-	}
-
-	if (!(thing->flags & MF_NOCLIP))
-	{
-		fixed_t maxstep = MAXSTEPMOVE;
-
-		// Don't 'step up' while springing.
-		if (thing->player && thing->state == &states[S_PLAY_PLG1])
-			maxstep = 0;
-
-		// Only step up "if needed".
-		if (thing->player && thing->momz > FRACUNIT)
-			maxstep = 0;
-
-		if (thing->type == MT_SKIM)
-			maxstep = 0;
-
-		if (tmceilingz - tmfloorz < thing->height)
-		{
-			CheckMissileImpact(thing);
-			return false; // doesn't fit
-		}
-
-		floatok = true;
-
-		if (tmceilingz - thing->z < thing->height)
-		{
-			CheckMissileImpact(thing);
-			return false; // mobj must lower itself to fit
-		}
-
-		// If using type 992, double the maxstep.
-		if (thing->player && thing->player->specialsector == 992)
-			maxstep <<= 1;
-
-		// Ramp test
-		if (thing->player && (thing->player->specialsector != 996
-			&& R_PointInSubsector(x, y)->sector->special != 996) && thing->z == thing->floorz
-			&& tmfloorz < thing->z && thing->z - tmfloorz <= maxstep)
-		{
-			// If the floor difference is MAXSTEPMOVE or less, and the sector isn't 996, ALWAYS
-			// step down! Formerly required a 992 sector for the full MAXSTEPMOVE, but no more.
-			thing->z = tmfloorz;
-			thing->eflags |= MF_JUSTSTEPPEDDOWN;
-		}
-
-		if (tmfloorz - thing->z > maxstep)
-		{
-			CheckMissileImpact(thing);
-			return false; // too big a step up
-		}
-
-		if (tmfloorz > thing->z)
-		{
-			if ((thing->flags & MF_MISSILE))
-				CheckMissileImpact(thing);
-		}
-
-		if (!allowdropoff)
-			if (!(thing->flags & (MF_FLOAT)) && thing->type != MT_SKIM && !tmfloorthing
-				&& tmfloorz - tmdropoffz > MAXSTEPMOVE)
-				return false; // don't stand over a dropoff
-	}
-
-	// the move is ok,
-	// so link the thing into its new position
-	P_UnsetThingPosition(thing);
-
-	oldx = thing->x;
-	oldy = thing->y;
-	thing->floorz = tmfloorz;
-	thing->ceilingz = tmceilingz;
-	thing->x = x;
-	thing->y = y;
-
-	if (tmfloorthing)
-		thing->eflags &= ~MF_ONGROUND; // not on real floor
-	else
-		thing->eflags |= MF_ONGROUND;
-
-	P_SetThingPosition(thing);
-	
-	// Restore P_CrossSpecialLine Save 18-05-2025
-    while (numspechit--)
+    if (!P_CheckPosition(thing, x, y))
     {
+        CheckMissileImpact(thing);
+        return false; // solid wall or thing
+    }
+
+    if (!(thing->flags & MF_NOCLIP))
+    {
+        fixed_t maxstep = MAXSTEPMOVE;
+
+        // Don't 'step up' while springing.
+        if (thing->player && thing->state == &states[S_PLAY_PLG1])
+            maxstep = 0;
+
+        // Only step up "if needed".
+        if (thing->player && thing->momz > FRACUNIT)
+            maxstep = 0;
+
+        if (thing->type == MT_SKIM)
+            maxstep = 0;
+
+        if (tmceilingz - tmfloorz < thing->height)
+        {
+            CheckMissileImpact(thing);
+            return false; // doesn't fit
+        }
+
+        floatok = true;
+
+        if (tmceilingz - thing->z < thing->height)
+        {
+            CheckMissileImpact(thing);
+            return false; // mobj must lower itself to fit
+        }
+
+        // If using type 992, double the maxstep.
+        if (thing->player && thing->player->specialsector == 992)
+            maxstep <<= 1;
+
+        // Ramp test
+        if (thing->player && (thing->player->specialsector != 996
+            && R_PointInSubsector(x, y)->sector->special != 996) && thing->z == thing->floorz
+            && tmfloorz < thing->z && thing->z - tmfloorz <= maxstep)
+        {
+            // If the floor difference is MAXSTEPMOVE or less, and the sector isn't 996, ALWAYS
+            // step down! Formerly required a 992 sector for the full MAXSTEPMOVE, but no more.
+            thing->z = tmfloorz;
+            thing->eflags |= MF_JUSTSTEPPEDDOWN;
+        }
+
+        if (tmfloorz - thing->z > maxstep)
+        {
+            CheckMissileImpact(thing);
+            return false; // too big a step up
+        }
+
+        if (tmfloorz > thing->z)
+        {
+            if ((thing->flags & MF_MISSILE))
+                CheckMissileImpact(thing);
+        }
+
+        if (!allowdropoff)
+            if (!(thing->flags & (MF_FLOAT)) && thing->type != MT_SKIM && !tmfloorthing
+                && tmfloorz - tmdropoffz > MAXSTEPMOVE)
+                return false; // don't stand over a dropoff
+    }
+
+    // the move is ok,
+    // so link the thing into its new position
+    P_UnsetThingPosition(thing);
+
+    oldx = thing->x;
+    oldy = thing->y;
+    thing->floorz = tmfloorz;
+    thing->ceilingz = tmceilingz;
+    thing->x = x;
+    thing->y = y;
+
+    if (tmfloorthing)
+        thing->eflags &= ~MF_ONGROUND; // not on real floor
+    else
+        thing->eflags |= MF_ONGROUND;
+
+    P_SetThingPosition(thing);
+    
+    // Restore P_CrossSpecialLine Save 18-05-2025
+    while(numspechit) {
         // see if the line was crossed
         ld = lines + spechit[numspechit];
         side = P_PointOnLineSide (thing->x, thing->y, ld);
@@ -1339,11 +1338,15 @@ boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y, boolean allowdropoff)
         if (side != oldside)
         {
             if (ld->special)
-				P_CrossSpecialLine (ld-lines, oldside, thing);
+                P_CrossSpecialLine (ld-lines, oldside, thing);
         }
+
+        numspechit--;
     }
-	return true;
+
+    return true;
 }
+
 
 boolean P_SceneryTryMove(mobj_t *thing, fixed_t x, fixed_t y)
 {
