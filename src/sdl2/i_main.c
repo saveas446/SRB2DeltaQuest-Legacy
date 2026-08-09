@@ -3,7 +3,7 @@
 #include "../d_main.h"
 #include "../m_argv.h"
 
-int main(int argc, char **argv)
+int SDL_main(int argc, char **argv)
 {
 	myargc = argc;
 	myargv = argv; /// \todo pull out path to exe from this string

@@ -23,7 +23,9 @@
 #ifndef __DOOMTYPE__
 #define __DOOMTYPE__
 
+#ifdef LINUX
 #include <stdint.h>
+#endif
 
 #if (defined (_WIN32) && !defined (_XBOX)) || (defined (_WIN32_WCE) && !defined (__GNUC__)) || defined (_WIN64)
 //#define WIN32_LEAN_AND_MEAN
@@ -47,12 +49,14 @@ typedef unsigned short USHORT;
 "Warning, need 64 bit type for this compiler"
 #endif
 
+#ifdef LINUX
 // not sure where to put these but they're supposed to already exist tho?
 typedef int32_t INT32;
 typedef int16_t INT16;
 typedef uint8_t UINT8;
 typedef uint16_t UINT16;
 typedef uint32_t UINT32;
+#endif
 
 #ifdef __APPLE_CC__
 #define DIRECTFULLSCREEN

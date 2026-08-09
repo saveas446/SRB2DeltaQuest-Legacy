@@ -1961,6 +1961,7 @@ static boolean P_IsFlagAtBase(mobjtype_t flag)
 static void P_ProcessSpecialSector(player_t *player, sector_t *sector)
 {
 	line_t junk;
+	int i = 0;
 
 	//if (sector->special < 32)
 	//{
@@ -2000,7 +2001,15 @@ static void P_ProcessSpecialSector(player_t *player, sector_t *sector)
 
 				return;
 			}
-			// ew
+			case 970: // Tells pushable things to check FOFs
+			case 971: // Linedef executor for pushable things
+				return;
+			case 972: // Linedef executor requires all players present+doesn't require touching floor
+			case 973: // Linedef executor requires all players present
+				/// \todo take FOFs into account (+continues for proper splitscreen support?)
+				for (i = 0; i < MAXPLAYERS; i++)
+					if (playeringame[i] && players[i].mo && (gametype != GT_COOP || players[i].lives > 0) && players[i].mo->subsector->sector != sector)
+						return;
 			case 974: // Linedef executor that doesn't require touching floor
 			case 975: // Linedef executor
 				P_LinedefExecute(sector->tag, player->mo, sector);

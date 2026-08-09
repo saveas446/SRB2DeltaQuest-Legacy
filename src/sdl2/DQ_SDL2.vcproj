@@ -183,7 +183,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MD"
-				AdditionalDependencies="SDL2.lib SDL2main.lib SDL2_mixer.lib zlib.lib opengl32.lib glu32.lib wsock32.lib"
+				AdditionalDependencies="SDL2.lib SDL2main.lib zlib.lib opengl32.lib glu32.lib wsock32.lib"
 				OutputFile="$(OutDir)\sdqsdl2.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"

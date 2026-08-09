@@ -124,7 +124,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)dev"
+			OutputDirectory="$(SolutionDir)/dev"
 			IntermediateDirectory="$(SolutionDir).obj/$(ProjectName)_$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
