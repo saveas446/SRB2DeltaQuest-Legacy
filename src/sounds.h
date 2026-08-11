@@ -218,6 +218,7 @@ typedef enum
     mus_xtlife, // Tails 03-14-2000
     mus_racent,
     mus_credit,
+	mus_chrsel,
     NUMMUSIC
 } musicenum_t;
 
