@@ -121,6 +121,7 @@ musicinfo_t S_music[NUMMUSIC] =
     { "gmover"  , 0 }, // Tails 03-14-2000
     { "xtlife"  , 0 }, // Tails 03-14-2000
     { "racent"  , 0 }, // For Time Attack
+	{ "chrsel"  , 0 }, // Character select screen
     { "credits" , 0 } // Placeholder Final Demo credits
 };
 
