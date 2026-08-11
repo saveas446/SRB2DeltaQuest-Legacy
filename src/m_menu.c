@@ -1642,7 +1642,8 @@ static inline void M_SetupChoosePlayer(int choice)
 	choice = 0;
 	if (Playing() == false)
 		S_StopMusic();
-
+		S_ChangeMusic(mus_chrsel, true);
+	
 	M_SetupNextMenu (&PlayerDef);
 }
 
