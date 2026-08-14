@@ -1,3 +1,21 @@
+# OUTDATED REPOSITORY, USE https://github.com/jimmyjamescool/SRB2deltaquestdemo2 INSTEAD.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Delta Quest
 Delta Quest is a mod for Demo 2 that overhauls the existing 4 levels and various assets as well as adding a plethora of new content (notably a full 32-map campaign).
 
